@@ -1,0 +1,193 @@
+<div class="html-element-wrapper">
+  <p class="header">
+    <strong>General questions</strong>
+  </p>
+</div>
+<cml:radios label="Have you read and understood the above instructions?" class="" validates="required">
+  <cml:radio label="Yes" id="" value="yes"/>
+  <cml:radio label="No" id="" value="no"/>
+</cml:radios>
+<cml:radios label="What is your gender?" class="" validates="required">
+  <cml:radio label="Male" value="male"/>
+  <cml:radio label="Female" value="female"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:text label="What is your age?" class="" validates="required positiveInteger"/>
+<cml:radios label="In which type of place are you located now?" class="" id="" validates="required">
+  <cml:radio label="Indoor, dark" id="" value="indoor_dark"/>
+  <cml:radio label="Indoor, dim light" id="" value="indoor_dimlight"/>
+  <cml:radio label="Indoor, bright light" id="" value="indoor_brightlight"/>
+  <cml:radio label="Outdoor, dark" id="" value="outdoor_dark"/>
+  <cml:radio label="Outdoor, dim light" id="" value="outdoor_dimlight"/>
+  <cml:radio label="Outdoor, bright light" id="" value="outdoor_brightlight"/>
+  <cml:radio label="Other" id="" value="other"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:text label="If you answered 'Other' in the previous question, please describe the place where you are located now below."/>
+<cml:radios label="Which input device are you using now?" class="" id="" validates="required">
+  <cml:radio label="Laptop keyboard" id="" value="laptop_keyboard"/>
+  <cml:radio label="Desktop keyboard" id="" value="desktop_keyboard"/>
+  <cml:radio label="Tablet on-screen keyboard" id="" value="tablet_keyboard"/>
+  <cml:radio label="Mobile phone on-screen keyboard" id="" value="mobile_keyboard"/>
+  <cml:radio label="Other" id="" value="other"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:text label="If you answered 'Other' in the previous question, please describe your input device below."/>
+<cml:text label="At which age did you obtain your first license for driving a car or motorcycle?" class="" validates="positiveInteger"/>
+<cml:radios label="What is your primary mode of transportation?" class="" validates="required">
+  <cml:radio label="Private vehicle" value="private_vehicle"/>
+  <cml:radio label="Public transportation" value="public_transportation"/>
+  <cml:radio label="Motorcycle" value="motorcycle"/>
+  <cml:radio label="Walking/Cycling" id="" value="walkingcycling"/>
+  <cml:radio label="Other" id="" value="other"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="What is your knowledge of English?" class="" validates="required">
+  <cml:radio label="No proficiency" value="no_proficiency"/>
+  <cml:radio label="Limited working proficiency" value="limited_working_proficiency"/>
+  <cml:radio label="Professional working proficiency" value="professional_working_proficiency"/>
+  <cml:radio label="Full professional proficiency" id="" value="full_professional_proficiency"/>
+  <cml:radio label="Native or bilingual proficiency" id="" value="native_or_bilingual_proficiency"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="What is your knowledge of Spanish?" class="" validates="required">
+  <cml:radio label="No proficiency" value="no_proficiency"/>
+  <cml:radio label="Limited working proficiency" value="limited_working_proficiency"/>
+  <cml:radio label="Professional working proficiency" value="professional_working_proficiency"/>
+  <cml:radio label="Full professional proficiency" id="" value="full_professional_proficiency"/>
+  <cml:radio label="Native or bilingual proficiency" id="" value="native_or_bilingual_proficiency"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="On average, how often did you drive a vehicle in the last 12 months?" class="" validates="required">
+  <cml:radio label="Every day" value="every_day"/>
+  <cml:radio label="4 to 6 days a week" value="4_to_6_days_a_week"/>
+  <cml:radio label="1 to 3 days a week" value="1_to_3_days_a_week"/>
+  <cml:radio label="Once a month to once a week" id="" value="once_a_month_to_once_a_week"/>
+  <cml:radio label="Less than once a month" id="" value="less_than_once_a_month"/>
+  <cml:radio label="Never" id="" value="never"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="About how many kilometers (miles) did you drive in the last 12 months?" class="" id="" validates="required">
+  <cml:radio label="0 km / mi" id="" value="0_km__mi"/>
+  <cml:radio label="1 - 1,000 km (1 - 621 mi)" id="" value="1__1000_km_1__621_mi"/>
+  <cml:radio label="1,001 - 5,000 km (622 - 3,107 mi)" id="" value="1001__5000_km_622__3107_mi"/>
+  <cml:radio label="5,001 - 15,000 km (3,108 - 9,321 mi)" id="" value="5001__15000_km_3108__9321_mi"/>
+  <cml:radio label="15,001 - 20,000 km (9,322 - 12,427 mi)" id="" value="15001__20000_km_9322__12427_mi"/>
+  <cml:radio label="20,001 - 25,000 km (12,428 - 15,534 mi)" id="" value="20001__25000_km_12428__15534_mi"/>
+  <cml:radio label="25,001 - 35,000 km (15,535 - 21,748 mi)" id="" value="25001__35000_km_15535__21748_mi"/>
+  <cml:radio label="35,001 - 50,000 km (21,749 - 31,069 mi)" id="" value="35001__50000_km_21749__31069_mi"/>
+  <cml:radio label="50,001 - 100,000 km (31,070 - 62,137 mi)" id="" value="50001__100000_km_31070__62137_mi"/>
+  <cml:radio label="More than 100,000 km (more than 62,137 mi)" id="" value="more_than_100000_km_more_than_62137_mi"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="How many accidents were you involved in when driving a car in the last 3 years? (please include all accidents, regardless of how they were caused, how slight they were, or where they happened)" class="" id="" validates="required">
+  <cml:radio label="0" id="" value="0"/>
+  <cml:radio label="1" id="" value="1"/>
+  <cml:radio label="2" id="" value="2"/>
+  <cml:radio label="3" id="" value="3"/>
+  <cml:radio label="4" id="" value="4"/>
+  <cml:radio label="5" id="" value="5"/>
+  <cml:radio label="More than 5" id="" value="more_than_5"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="How often do you do the following?: Becoming angered by a particular type of driver, and indicate your hostility by whatever means you can." class="" id="" validates="required">
+  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
+  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
+  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
+  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
+  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="How often do you do the following?: Disregarding the speed limit on a motorway." class="" id="" validates="required">
+  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
+  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
+  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
+  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
+  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="How often do you do the following?: Disregarding the speed limit on a residential road." class="" id="" validates="required">
+  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
+  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
+  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
+  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
+  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="How often do you do the following?: Driving so close to the car in front that it would be difficult to stop in an emergency." class="" id="" validates="required">
+  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
+  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
+  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
+  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
+  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="How often do you do the following?: Racing away from traffic lights with the intention of beating the driver next to you." class="" id="" validates="required">
+  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
+  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
+  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
+  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
+  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="How often do you do the following?: Sounding your horn to indicate your annoyance with another road user." class="" id="" validates="required">
+  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
+  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
+  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
+  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
+  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="How often do you do the following?: Using a mobile phone without a hands free kit." class="" id="" validates="required">
+  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
+  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
+  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
+  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
+  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<p class="header">
+  <strong>For the questions below, please choose the best option to complete the conversation</strong>
+</p>
+<cml:radios label="Can I park here?" class="" validates="required">
+  <cml:radio label="Sorry, I did that." value="a0"/>
+  <cml:radio label="It's the same place." value="a1"/>
+  <cml:radio label="Only for half an hour." value="a2"/>
+</cml:radios>
+<cml:radios label="What colour will you paint the children's bedroom?" class="" validates="required">
+  <cml:radio label="I hope it was right." value="a0"/>
+  <cml:radio label="We can't decide." value="a1"/>
+  <cml:radio label="It wasn't very difficult." value="a2"/>
+</cml:radios>
+<cml:radios label="I can't understand this email." class="" validates="required">
+  <cml:radio label="Would you like some help?" value="a0"/>
+  <cml:radio label="Don't you know?" value="a1"/>
+  <cml:radio label="I suppose you can." value="a2"/>
+</cml:radios>
+<cml:radios label="I'd like two tickets for tomorrow night." class="" validates="required">
+  <cml:radio label="How much did you pay?" value="a0"/>
+  <cml:radio label="Afternoon and evening." value="a1"/>
+  <cml:radio label="I'll just check for you." value="a2"/>
+</cml:radios>
+<cml:radios label="Shall we go to the gym now?" class="" validates="required">
+  <cml:radio label="I'm too tired." value="a0"/>
+  <cml:radio label="It's very good." value="a1"/>
+  <cml:radio label="Not at all." value="a2"/>
+</cml:radios>
+<p class="header">
+  <strong>Experiment to measure clarity of textual external Human Machine Interfaces for automated vehicles</strong>
+  In this experiment, you will see multiple images of a vehicle with a textual message on a display on the front bumper. You will be asked to leave Appen to participate in the experiment. You will need to open the link below. Do not close this tab. At the end of the experiment, you will be given a code to input in the next question on this tab. Please take a note of the code. Without the code, you will not be able to receive money for your participation. All images will be downloaded before the start of the experiment. It may take a few minutes. Please do not close your browser during that time.
+  <br/>
+</p>
+<p class="header2">Open 
+  <strong>
+    <a target="_blank" href="https://text-crowdsourced.herokuapp.com">this link</a>
+  </strong> to start the experiment.
+</p>
+<cml:text label="Type the code that you received at the end of the experiment." class="" validates="required regex" data-validates-regex="^M2\d+\s?RL\d+\s?8M\s?$" data-validates-regex-message="Please enter the correct code to receive your money."/>
+
+<p class="header">
+  <strong>Miscellaneous questions</strong>
+</p>
+<cml:text label="In which year do you think that most cars will be able to drive fully automatically in your country of residence?" class="" validates="required"/>
+<cml:textarea label="Please provide any suggestions that could help engineers to build safe and enjoyable automated cars." class=""/>

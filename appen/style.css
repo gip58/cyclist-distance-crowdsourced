@@ -1,0 +1,54 @@
+.header {
+  background-color: #D5EEf4;
+  padding: 9px;
+  border-radius: 9px;
+  color: #3a87ad;
+  margin: 10px 0 10px 0;
+}
+
+.header2 {
+  background-color: #EDF3F5;
+  padding: 9px;
+  border-radius: 9px;
+  color: #3a87ad;
+  margin: 10px 0 10px 0;
+}
+
+.header_main {
+  background-color: #99FFCC;
+  padding: 9px;
+  border-radius: 9px;
+  color: #3a87ad;
+  margin: 10px 0 10px 0;
+}
+
+#right {
+  float: right;
+  width: 50%;
+}
+#left {
+  float: left;
+  width: 50%;
+}
+.left {
+  margin-right: 2px;
+}
+.right {
+  margin-left: 3px;
+}
+
+.concept img {
+    max-width: 680px;
+}
+
+.conceptObject {
+  text-align:center;
+  width:100%;
+}
+
+.conceptObject iframe {
+    width: 680px;
+    /*height: 480;*/
+}
+
+ol, li { margin: 0; padding: 0; list-style-type: none }
