@@ -1,3 +1,5 @@
+process.env.PWD = process.cwd();
+
 // --- LOADING MODULES
 var express = require('express'),
     body_parser = require('body-parser'),
@@ -7,7 +9,7 @@ var express = require('express'),
 var app = express();
 
 // --- MONGOOSE SETUP
-mongoose.connect(process.env.CONNECTION || 'mongodb://localhost/jspsych'); 
+mongoose.connect(process.env.CONNECTION || 'mongodb://localhost/jspsychdb'); 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
 db.once('open', function callback() {
@@ -18,8 +20,8 @@ var emptySchema = new mongoose.Schema({}, { strict: false });
 var Entry = mongoose.model('Entry', emptySchema);
 
 // --- STATIC MIDDLEWARE 
-app.use(express.static(__dirname + '/public'));
-app.use('/jsPsych', express.static(__dirname + "/jsPsych"));
+app.use(express.static(process.env.PWD + '/public'));
+app.use('/jspsych', express.static(process.env.PWD + "/jspsych"));
 
 // --- BODY PARSING MIDDLEWARE
 app.use(body_parser.json()); // to support JSON-encoded bodies
