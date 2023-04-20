@@ -88385,9 +88385,9 @@ function setUserMediaVariable(){
  * @returns {*}
  */
 src_webgazer.begin = function(onFail) {
-  if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.chrome){
-    alert("WebGazer works only over https. If you are doing local development, you need to run a local server.");
-  }
+  // if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.chrome){
+  //   alert("WebGazer works only over https. If you are doing local development, you need to run a local server.");
+  // }
 
   // Load model data stored in localforage.
   if (window.saveDataAcrossSessions) {
