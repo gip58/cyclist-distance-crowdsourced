@@ -2,33 +2,42 @@
 <html>
   <head>
     <title>Experiment page</title>
-    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
-    <script src='jsPsych/jspsych.js'></script>
-    <script src='jsPsych/plugins/jspsych-html-keyboard-response.js'></script>
-    <script src='jsPsych/plugins/jspsych-video-keyboard-multiple-responses-release.js'></script>
-    <script src='jsPsych/plugins/jspsych-call-function.js'></script>
-    <script src='jsPsych/plugins/jspsych-survey-html-form.js'></script>
-    <script src='jsPsych/plugins/jspsych-survey-multi-choice.js'></script>
-    <script src='jsPsych/plugins/jspsych-survey-html-form-slider.js'></script>
-    <script src='jsPsych/plugins/jspsych-html-slider-response.js'></script>
-    <script src='jsPsych/plugins/jspsych-fullscreen.js'></script>
-    <link href='jsPsych/css/jspsych.css' rel='stylesheet' type='text/css'></link>
-    <link href='css/experiment.css' rel='stylesheet' type='text/css'></link>
-    <link rel='icon' type='image/png' href='/img/favicon.png' />
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- jspsych -->
+    <script src="jspsych/jspsych.js"></script>
+    <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="jspsych/plugin-fullscreen.js"></script>
+    <script src="jspsych/plugin-html-keyboard-response.js"></script>
+    <script src="jspsych/plugin-call-function.js"></script>
+    <script src="jspsych/plugin-survey-html-form-slider.js"></script>
+    <script src="jspsych/plugin-html-slider-response.js"></script>
+    <script src="jspsych/plugin-preload.js"></script>
+    <script src="jspsych/plugin-video-keyboard-multiple-responses-release.js"></script>
+    <!-- jspsych version of webgazer -->
+    <script src="jspsych/webgazer/webgazer.js"></script>
+    <script src="jspsych/extension-webgazer.js"></script>
+    <script src="jspsych/plugin-webgazer-init-camera.js"></script>
+    <script src="jspsych/plugin-webgazer-calibrate.js"></script>
+    <script src="jspsych/plugin-webgazer-validate.js"></script>
     <!-- bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <!-- custom css -->
+    <link href="css/experiment.css" rel='stylesheet' type='text/css'></link>
+    <!-- favicon -->
+    <link rel='icon' type='image/png' href='img/favicon.png' />
   </head>
   <body>
   </body>
   <script>
 
-// by Pavlo Bazilinskyy <p.bazilinskyy@tudelft.nl>
+// by Pavlo Bazilinskyy <p.bazilinskyy@tue.nl>
 
 // Constants
-var n_videos = 12; // number of videos
-var n_videos_per_participant = 12; // number of videos
-var n_videos_repeat = 3; // number of repeats of each condition
+var n_videos = 20;  // number of videos
+var n_videos_per_participant = 20; // number of videos per perticipant
+var n_videos_repeat = 1; // number of repeats of each condition
 var n_videos_break = 10; // number of videos between each break
 var image_pfefix = 'img/'; // prefix for images
 // var video_pfefix = 'https://multiped-crowdsourced.s3.eu-central-1.amazonaws.com/video_'; // prefix for videos
@@ -101,13 +110,13 @@ if (isNaN(br_major_version)) {
     br_major_version = parseInt(navigator.appVersion, 10);
 }
 
- /**
- * Returns a random integer between min (inclusive) and max (inclusive).
- * The value is no lower than min (or the next integer greater than min
- * if min isn't an integer) and no greater than max (or the next integer
- * lower than max if max isn't an integer).
- * Using Math.round() will give you a non-uniform distribution!
- */
+/**
+* Returns a random integer between min (inclusive) and max (inclusive).
+* The value is no lower than min (or the next integer greater than min
+* if min isn't an integer) and no greater than max (or the next integer
+* lower than max if max isn't an integer).
+* Using Math.round() will give you a non-uniform distribution!
+*/
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -176,6 +185,19 @@ if (!save_data) {
     save_data = SAVE_DATA;
 }
 
+/* initialize jsPsych */
+var jsPsych = initJsPsych({
+    on_finish: function() {
+        window.location.href = 'finish?work=' + worker_code;
+    },
+    on_interaction_data_update: function(data) {
+        interactions.push(data)
+    },
+    extensions: [
+        {type: jsPsychExtensionWebgazer}
+    ]
+});
+
 /**
  * Save data.
  */
@@ -229,9 +251,8 @@ var video_stimuli = []; // blocks with videos
 
 // define instructions block
 var instructions_block = {
-    type: 'html-keyboard-response',
-    stimulus: '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Instructions</h1><p class="lead">You will watch ' + n_videos_per_participant * n_videos_repeat + ' videos of traffic situations involving pedestrians. Some pedestrians will cross the road and some will make eye contact. All videos are recorded within urban Toronto.</p><p class="lead">Each video starts with a black screen. As soon as you see the black screen, press \'F\' to start the video.</p><p class="lead">When you feel the situation could become risky, PRESS and HOLD \'F\' until you feel the situation is safe again. Press \'F\' for any type of risk, including very small risk. You can press and release the key as many times as you want per video. There is no audio involved.</p><p class="lead">The window of your browser should be at least 1300px wide and 800px tall.</p><hr><p>Press \'C\' to proceed to the questions.</p></div></div>',
-
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Instructions</h1><p class="lead">You will watch ' + n_videos_per_participant * n_videos_repeat + ' videos of traffic situations. You will see videos from the perspective of the driver.</p><p class="lead">Each video starts with a black screen. As soon as you see the black screen, press \'F\' to start the video.</p><p class="lead">When you DO NOT feel comfortable as a driver, PRESS and HOLD \'F\' until you feel comfortable again. You can press and release the key as many times as you want per video. There will be audio involved.</p><p class="lead">The window of your browser should be at least 1300px wide and 800px tall.</p><hr><p>Press \'C\' to proceed to the questions.</p></div></div>',
     choices: ['C'],
     data: {
         browser_name: br_name,
@@ -245,40 +266,47 @@ var instructions_block = {
     }
 };
 
-// populate array with video IDs
+// populate array with video IDs for group 0
 for (var i = 0; i < n_videos; i++) {
     for (var j = 0; j < n_videos_repeat; j++) {
         video_ids.push(i);
     }
 }
-
-// shuffle ids
-video_ids = shuffle(video_ids);
+video_ids = shuffle(video_ids);  // shuffle ids
 
 // build array with videos with stimuli
+video_preload = []; // array for preloading of videos
 for (var i = 0; i < n_videos_per_participant * n_videos_repeat; i++) {
+    video_preload.push(video_pfefix + video_ids[i] + '.mp4');
     video_stimuli.push({
-        type: 'video-keyboard-multiple-responses-release',
+        type: jsPsychVideoKeyboardMultipleResponsesRelease,
         autoplay: true,
         controls: false,
+        trial_ends_after_video: true,
         width: 1280,
-        height: 720,
+        // height: 720,
         choices: ['F'],
-        sources: [video_pfefix + video_ids[i] + '.mp4'],
-        prompt: '<p>PRESS \'F\' when you feel the situation could become risky. RELEASE the key when you feel safe again.</p>'
+        stimulus: [video_pfefix + video_ids[i] + '.mp4'],
+        prompt: '<p>PRESS \'F\' when you DO NOT feel comfortable as a driver. RELEASE the key when you feel comfortable again.</p>',
+        extensions: [
+          {
+            type: jsPsychExtensionWebgazer, 
+            params: {targets: ['#jspsych-image-keyboard-response-stimulus']}
+          }
+        ]
     });
 }
 
 // black with image to be added before each video
 var image_block = {
-    type: 'html-keyboard-response',
-    stimulus: '<img src=\'' + image_pfefix + 'black_frame.png\'/><p>PRESS \'F\' when you feel the situation could become risky. RELEASE the key when you feel safe again.</p>',
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: '<img src=\'' + image_pfefix + 'black_frame.png\'/ style="width: 1280px"><p>PRESS \'F\' when you DO NOT feel comfortable as a driver. RELEASE the key when you feel comfortable again.</p>',
     choices: ['F'],
 };
 
 // continue before showing the image
 var continue_block = {
-    type: 'html-keyboard-response',
+    type: jsPsychHtmlKeyboardResponse,
     stimulus: '<p>Press \'C\' to continue to the next video.</p>',
     choices: ['C']
 };
@@ -287,7 +315,7 @@ var continue_block = {
 for (var i = 1; i < n_videos_per_participant * n_videos_repeat / n_videos_break; i++) {
     var videos_done = n_videos_break * i;
     between_blocks.push({
-        type: 'html-keyboard-response',
+        type: jsPsychHtmlKeyboardResponse,
         stimulus: '<div class="alert alert-primary" role="alert" style="text-align: left;"><h4 class="alert-heading">Break</h4><p>You have now completed ' + videos_done + ' videos out of ' + n_videos_per_participant * n_videos_repeat + '.</p><hr><p class="mb-0">When ready press \'N\' to proceed to the next batch.</p></div>',
         choices: ['N']
     });
@@ -295,48 +323,114 @@ for (var i = 1; i < n_videos_per_participant * n_videos_repeat / n_videos_break;
 
 // questions after each stimulus
 var qs_video = {
-    type: 'survey-html-form-slider',
+    type: jsPsychSurveyHtmlFormSlider,
     require_movement: true,
-    html: '<div style="position:relative; margin: 3em auto 1.5em auto; width:1000px;"><label for="slider-0" class="form-label"><strong>I found the behaviour of the pedestrian(s) to be risky.</strong><br>Provide your answer by moving the slider. You will not be able to continue before moving the slider.</label><div id="jspsych-html-slider-response-wrapper" style="margin-top: 0px; margin-bottom: 100px;"><div id="jspsych-html-slider-response-stimulus"><p></p></div><div class="jspsych-html-slider-response-container" style="position:relative; margin: 0 auto 3em auto; width:1000px;"><input type="range" value="50" min="0" max="100" step="1" style="width: 100%;" id="slider-0" name="risky_slider"><div><div style="display: inline-block; position: absolute; left:-10%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">0</span></div><div style="display: inline-block; position: absolute; left:10%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">20</span></div><div style="display: inline-block; position: absolute; left:30%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">40</span></div><div style="display: inline-block; position: absolute; left:50%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">60</span></div><div style="display: inline-block; position: absolute; left:70%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">80</span></div><div style="display: inline-block; position: absolute; left:90%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">100</span></div></div></div></div><div id="jspsych-survey-multi-choice-0" class="jspsych-survey-multi-choice-question" style="text-align: left"><p class="eye-contact-text survey-multi-choice"></p><div><p><strong>The pedestrian(s) made eye contact with me</strong></p></div><p></p><div id="eye-contact-option-0-0" class="eye-contact-option"><label class="eye-contact-text" for="eye-contact-response-0-0"><input type="radio" name="eye-contact" id="eye-contact-response-0-0" value="Yes" required="" style="margin-right: 1em">Yes</label></div><div id="eye-contact-option-0-1" class="eye-contact-option"><label class="eye-contact-text" for="eye-contact-response-0-1"><input type="radio" name="eye-contact" id="eye-contact-response-0-1" value="Yes but too late" required="" style="margin-right: 1em">Yes but too late</label></div><div id="eye-contact-option-0-2" class="eye-contact-option"><label class="eye-contact-text" for="eye-contact-response-0-2"><input type="radio" name="eye-contact" id="eye-contact-response-0-2" value="No" required="" style="margin-right: 1em">No</label></div><div id="eye-contact-option-0-3" class="eye-contact-option"><label class="eye-contact-text" for="eye-contact-response-0-3"><input type="radio" name="eye-contact" id="eye-contact-response-0-3" value="I don’t know" required="" style="margin-right: 1em">I don’t know</label></div></div><div>',
-    items: 1,
-    require_movement: true
+    html: '<div id="jspsych-html-slider-response-wrapper" style="margin: 100px 0px;"><div id="jspsych-html-slider-response-stimulus"><strong>The white car\'s behaviour made me feel unsafe.</strong><br>Provide your answer by moving the slider. You will not be able to continue before moving the slider.</div><div class="jspsych-html-slider-response-container" style="position:relative; margin: 0 auto 3em auto; width:1000px;" id="slider-0"><input type="range" class="jspsych-slider" value="50" min="0" max="100" step="1" id="jspsych-html-slider-response-response"><div><div style="border: 1px solid transparent; display: inline-block; position: absolute; left:calc(0% - (25% / 2) - -7.5px); text-align: center; width: 25%;"><span style="text-align: center; font-size: 80%;">Completely<br>disagree</span></div><div style="border: 1px solid transparent; display: inline-block; position: absolute; left:calc(25% - (25% / 2) - -3.75px); text-align: center; width: 25%;"><span style="text-align: center; font-size: 80%;">Disagree</span></div><div style="border: 1px solid transparent; display: inline-block; position: absolute; left:calc(50% - (25% / 2) - 0px); text-align: center; width: 25%;"><span style="text-align: center; font-size: 80%;">Neither disagree<br>no agree</span></div><div style="border: 1px solid transparent; display: inline-block; position: absolute; left:calc(75% - (25% / 2) - 3.75px); text-align: center; width: 25%;"><span style="text-align: center; font-size: 80%;">Agree</span></div><div style="border: 1px solid transparent; display: inline-block; position: absolute; left:calc(100% - (25% / 2) - 7.5px); text-align: center; width: 25%;"><span style="text-align: center; font-size: 80%;">Completely<br>agree</span></div></div></div></div><div id="jspsych-html-slider-response-wrapper" style="margin: 100px 0px;"><div id="jspsych-html-slider-response-stimulus"><strong>The white car\'s behaviour is different from what I expected.</strong><br>Provide your answer by moving the slider. You will not be able to continue before moving the slider.</div><div class="jspsych-html-slider-response-container" style="position:relative; margin: 0 auto 3em auto; width:1000px;" id="slider-1"><input type="range" class="jspsych-slider" value="50" min="0" max="100" step="1" id="jspsych-html-slider-response-response"><div><div style="border: 1px solid transparent; display: inline-block; position: absolute; left:calc(0% - (25% / 2) - -7.5px); text-align: center; width: 25%;"><span style="text-align: center; font-size: 80%;">Completely<br>disagree</span></div><div style="border: 1px solid transparent; display: inline-block; position: absolute; left:calc(25% - (25% / 2) - -3.75px); text-align: center; width: 25%;"><span style="text-align: center; font-size: 80%;">Disagree</span></div><div style="border: 1px solid transparent; display: inline-block; position: absolute; left:calc(50% - (25% / 2) - 0px); text-align: center; width: 25%;"><span style="text-align: center; font-size: 80%;">Neither disagree<br>no agree</span></div><div style="border: 1px solid transparent; display: inline-block; position: absolute; left:calc(75% - (25% / 2) - 3.75px); text-align: center; width: 25%;"><span style="text-align: center; font-size: 80%;">Agree</span></div><div style="border: 1px solid transparent; display: inline-block; position: absolute; left:calc(100% - (25% / 2) - 7.5px); text-align: center; width: 25%;"><span style="text-align: center; font-size: 80%;">Completely<br>agree</span></div></div></div></div>',
+    items: 2,
 };
 
-var signs_options = ["The maximum allowed speed is 50 miles/hour", "The maximum allowed speed is 100 miles/hour", "Traffic only goes in one direction", "You have to stop and give way to all traffic", "This is a priority lane", "Pedestrians not permitted", "Pedestrian crossing area"];
-
-var qs_signs = {
-  type: 'survey-multi-choice',
-  // preamble: 'As a driver, what does it mean when you encounter these traffic signs? (*: answers to questions are required)',
-  questions: [
-    {prompt: "<div><p>As a driver, what does it mean when you encounter this traffic sign?</p></div><div class='center'><img src=\'" + image_pfefix + "sign_0.png\'/></div>", name: 'sign_0', options: signs_options, required:true}, 
-    {prompt: "<div><p>As a driver, what does it mean when you encounter this traffic sign?</p></div><div class='center'><img src=\'" + image_pfefix + "sign_1.png\'/></div>", name: 'sign_1', options: signs_options, required:true}, 
-    {prompt: "<div><p>As a driver, what does it mean when you encounter this traffic sign?</p></div><div class='center'><img src=\'" + image_pfefix + "sign_2.png\'/></div>", name: 'sign_2', options: signs_options, required:true}, 
-    {prompt: "<div><p>As a driver, what does it mean when you encounter this traffic sign?</p></div><div class='center'><img src=\'" + image_pfefix + "sign_3.png\'/></div>", name: 'sign_3', options: signs_options, required:true}
-  ],
-  randomize_question_order: true
+var trial = {
+    type: jsPsychHtmlSliderResponse,
+    stimulus: 'The white car\'s behaviour made me feel unsafe.',
+    require_movement: true,
+    slider_width: 1000,
+    labels: ['Completely disagree', 'Disagree', 'Neither disagree no agree', 'Agree', 'Completely agree']
 };
 
-// Likert
-var scale_likert = [
-  "Completely disagree", 
-  "Disagree",
-  "Neither disagree nor agree",
-  "Agree",
-  "Completely agree" 
-];
 
 // build page with questions
 var qs_end = {
-    type: 'survey-html-form-slider',
+    type: jsPsychSurveyHtmlFormSlider,
     preamble: 'You will not be able to continue before moving all sliders.',
     require_movement: true,
         html: '<div id="jspsych-content" class="jspsych-content"></p><div id="jspsych-html-slider-response-wrapper" style="margin: 100px 0px;"><div><p style="width: 1000px">How important do you consider each of the following pedestrian\'s behaviours for increasing the feeling of safety for the driver?</p></div><div class="jspsych-html-slider-response-container" style="position:relative; margin: 3em auto 1.5em auto; width:1000px;"><input type="range" value="50" min="0" max="100" step="1" style="width: 100%;" id="slider-0" name="slider-0" size="5"><div><div style="display: inline-block; position: absolute; left:-44%; text-align: center; width: 100%;"><span style="text-align: center; font-size: 80%;">Very unimportant</span></div><div style="display: inline-block; position: absolute; left:45%; text-align: center; width: 100%;"><span style="text-align: center; font-size: 80%;">Very important</span></div></div></div><p style="width: 1000px"><strong>Eye contact</strong></p><div class="jspsych-html-slider-response-container" style="position:relative; margin: 3em auto 1.5em auto; width:1000px;"><input type="range" value="50" min="0" max="100" step="1" style="width: 100%;" id="slider-1" name="slider-1"><div><div style="display: inline-block; position: absolute; left:-44%; text-align: center; width: 100%;"><span style="text-align: center; font-size: 80%;">Very unimportant</span></div><div style="display: inline-block; position: absolute; left:45%; text-align: center; width: 100%;"><span style="text-align: center; font-size: 80%;">Very important</span></div></div></div><p style="width: 1000px"><strong>Hand gestures</strong></p><div id="jspsych-html-slider-response-wrapper" style="margin: 100px 0px;"><div><p style="width: 1000px">How important do you consider each of the following driver\'s behaviours for increasing the feeling of safety for the pedestrian?</p></div><div class="jspsych-html-slider-response-container" style="position:relative; margin: 3em auto 1.5em auto; width:1000px;"><input type="range" value="50" min="0" max="100" step="1" style="width: 100%;" id="slider-2" name="slider-2"><div><div style="display: inline-block; position: absolute; left:-44%; text-align: center; width: 100%;"><span style="text-align: center; font-size: 80%;">Very unimportant</span></div><div style="display: inline-block; position: absolute; left:45%; text-align: center; width: 100%;"><span style="text-align: center; font-size: 80%;">Very important</span></div></div></div><p style="width: 1000px"><strong>Eye contact</strong></p><div class="jspsych-html-slider-response-container" style="position:relative; margin: 3em auto 1.5em auto; width:1000px;"><input type="range" value="50" min="0" max="100" step="1" style="width: 100%;" id="slider-3" name="slider-3"><div><div style="display: inline-block; position: absolute; left:-44%; text-align: center; width: 100%;"><span style="text-align: center; font-size: 80%;">Very unimportant</span></div><div style="display: inline-block; position: absolute; left:45%; text-align: center; width: 100%;"><span style="text-align: center; font-size: 80%;">Very important</span></div></div></div><p style="width: 1000px"><strong>Headlight signaling</strong></p><div class="jspsych-html-slider-response-container" style="position:relative; margin: 3em auto 1.5em auto; width:1000px;"><input type="range" value="50" min="0" max="100" step="1" style="width: 100%;" id="slider-4" name="slider-4"><div><div style="display: inline-block; position: absolute; left:-44%; text-align: center; width: 100%;"><span style="text-align: center; font-size: 80%;">Very unimportant</span></div><div style="display: inline-block; position: absolute; left:45%; text-align: center; width: 100%;"><span style="text-align: center; font-size: 80%;">Very important</span></div></div></div><p style="width: 1000px"><strong>Car slowing down</strong></p>',
     items: 4
 };
 
+var camera_instructions = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `
+    <div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Configuration of camera</h1><p class="lead">In order to participate you must allow the experiment to use your camera. You will be prompted to do this on the next screen. If you do not wish to allow use of your camera, you cannot participate in this experiment. It may take up to 30 seconds for the camera to initialize after you give permission. No video recording from your camera will be saved. Only information about where you looked at the screen will be saved.<hr><p>Press \'C\' to proceed.</p></div></div>
+    `,
+    choices: ['C'],
+}
+
+var init_camera = {
+    type: jsPsychWebgazerInitCamera
+}
+
+var calibration_instructions = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `
+      <div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Calibration of eye tracker</h1><p class="lead">Now you will calibrate the eye tracking, so that the software can use the image of your eyes to predict where you are looking. You will see a series of dots appear on the screen. Look at each dot and click on it.<hr><p>Press \'C\' to proceed.</p></div></div>
+    `,
+    choices: ['C'],
+}
+
+var calibration = {
+    type: jsPsychWebgazerCalibrate,
+    calibration_points: [
+      [25,25],[75,25],[50,50],[25,75],[75,75]
+    ],
+    repetitions_per_point: 2,
+    randomize_calibration_order: true
+}
+
+var validation_instructions = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `
+      <div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Accuracy of the calibration</h1><p class="lead">Now we will measure the accuracy of the calibration. Look at each dot as it appears on the screen. <span style="font-weight: bold;">You do not need to click on the dots this time.</span><hr><p>Press \'C\' to proceed.</p></div></div>
+    `,
+    choices: ['C'],
+    post_trial_gap: 1000
+}
+
+var validation = {
+    type: jsPsychWebgazerValidate,
+    validation_points: [
+        [25,25],[75,25],[50,50],[25,75],[75,75]
+    ],
+    roi_radius: 200,
+    time_to_saccade: 1000,
+    validation_duration: 2000,
+    data: {
+        task: 'validate'
+    }
+}
+
+var recalibrate_instructions = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `
+        <div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Insufficient accuracy of calibration</h1><p class="lead">The accuracy of the calibration is a lower than we would like. Let's try calibrating one more time. On the next screen, look at the dots and click on them.<hr><p>Press \'C\' to proceed.</p></div></div>
+    `,
+    choices: ['C'],
+}
+
+var recalibrate = {
+    timeline: [recalibrate_instructions, calibration, validation_instructions, validation],
+    conditional_function: function(){
+        var validation_data = jsPsych.data.get().filter({task: 'validate'}).values()[0];
+        return validation_data.percent_in_roi.some(function(x){
+            var minimum_percent_acceptable = 50;
+            return x < minimum_percent_acceptable;
+        });
+    },
+    data: {
+        phase: 'recalibration'
+    }
+}
+
+var calibration_done = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `
+        <div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Calibration completed</h1><p class="lead">Calibration of eye tracking is complete, thank you for your patience. <hr><p>Press \'C\' to proceed to the instructions for the experiment.</p>
+    `,
+    choices: ['C'],
+}
+
 // block for sending data
 var save_data_block = {
-    type: 'call-function',
+    type: jsPsychCallFunction,
     func: function() {
         saveData(); // save data
     }
@@ -344,23 +438,42 @@ var save_data_block = {
 
 // enter full screen
 var fullscreen_enter = {
-    type: 'fullscreen',
+    type: jsPsychFullscreen,
     fullscreen_mode: true
 }
 
 // exit full screen
 var fullscreen_exit = {
-    type: 'fullscreen',
+    type: jsPsychFullscreen,
     fullscreen_mode: false
 }
 
 // create experiment timeline array
 var timeline = [];
+
+/* preload images */
+var preload = {
+  type: jsPsychPreload,
+  show_progress_bar: true,
+  auto_preload: true,
+  max_load_time: 3000000,
+  images: [image_pfefix + 'black_frame.png'],
+  video: video_preload,
+};
+timeline.push(preload);
+console.log('finished with preloading');
+
 var between_blocks_count = 0;  // counter of shown between blocks
-// timeline.push(slider_block_1);
 timeline.push(fullscreen_enter);  // enter full screen
+timeline.push(camera_instructions); 
+timeline.push(init_camera); 
+timeline.push(calibration_instructions); 
+timeline.push(calibration); 
+timeline.push(validation_instructions); 
+timeline.push(validation); 
+timeline.push(recalibrate);
+timeline.push(calibration_done);
 timeline.push(instructions_block);
-timeline.push(save_data_block);
 // iterate over blocks
 for (var i = 0; i < n_videos_per_participant * n_videos_repeat; i++) {
     timeline.push(continue_block);
@@ -379,7 +492,6 @@ for (var i = 0; i < n_videos_per_participant * n_videos_repeat; i++) {
     } 
 }
 timeline.push(qs_end);  // questions in the end
-timeline.push(qs_signs);  // radio box questions with signs
 timeline.push(fullscreen_exit);  // exit full screen
 timeline.push(save_data_block);  // save data
 
@@ -392,18 +504,8 @@ if (debug) {
 }
 
 /* Start the experiment */
-jsPsych.init({
-    // auto_preload: false,
-    show_preload_progress_bar: true,
-    preload_images: [image_pfefix + 'black_frame.png', image_pfefix + 'sign_0.png', image_pfefix + 'sign_1.png', image_pfefix + 'sign_2.png', image_pfefix + 'sign_3.png'],
-    timeline: timeline,
-    max_load_time: 3000000,
-    on_finish: function() {
-        window.location.href = 'finish?work=' + worker_code;
-    },
-    on_interaction_data_update: function(data) {
-        interactions.push(data)
-    }
-});
+jsPsych.run(timeline);
+
 </script>
 </html>
+ 
