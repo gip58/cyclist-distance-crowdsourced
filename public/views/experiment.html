@@ -464,15 +464,15 @@ timeline.push(preload);
 console.log('finished with preloading');
 
 var between_blocks_count = 0;  // counter of shown between blocks
-// timeline.push(fullscreen_enter);  // enter full screen
-// timeline.push(camera_instructions); 
-// timeline.push(init_camera); 
-// timeline.push(calibration_instructions); 
-// timeline.push(calibration); 
-// timeline.push(validation_instructions); 
-// timeline.push(validation); 
-// timeline.push(recalibrate);
-// timeline.push(calibration_done);
+timeline.push(fullscreen_enter);  // enter full screen
+timeline.push(camera_instructions); 
+timeline.push(init_camera); 
+timeline.push(calibration_instructions); 
+timeline.push(calibration); 
+timeline.push(validation_instructions); 
+timeline.push(validation); 
+timeline.push(recalibrate);
+timeline.push(calibration_done);
 timeline.push(instructions_block);
 // iterate over blocks
 for (var i = 0; i < n_videos_per_participant * n_videos_repeat; i++) {
