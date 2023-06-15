@@ -42,6 +42,8 @@ def check_config(config_file_name: str = 'config',
     Check if config file has at least as many rows as deault.config.
     """
     # load config file
+    with open(os.path.join(tr.settings.root_dir, config_file_name)) as f:
+            config = json.load(f)
     try:
         with open(os.path.join(tr.settings.root_dir, config_file_name)) as f:
             config = json.load(f)
