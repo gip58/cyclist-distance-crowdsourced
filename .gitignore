@@ -124,5 +124,8 @@ secret
 !__init__.py
 
 # Pickle files
-multiped/analysis/*.p
-multiped/*.p
+trust/analysis/*.p
+trust/*.p
+
+# video files
+public/videos/compressed/*.mp4
