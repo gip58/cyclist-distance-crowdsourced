@@ -35,8 +35,8 @@
 // by Pavlo Bazilinskyy <p.bazilinskyy@tue.nl>
 
 // Constants
-var n_videos = 20;  // number of videos
-var n_videos_per_participant = 20; // number of videos per perticipant
+var n_videos = 86;  // number of videos
+var n_videos_per_participant = 40; // number of videos per perticipant
 var n_videos_repeat = 1; // number of repeats of each condition
 var n_videos_break = 10; // number of videos between each break
 var image_pfefix = 'img/'; // prefix for images
@@ -44,6 +44,7 @@ var image_pfefix = 'img/'; // prefix for images
 var video_pfefix = 'videos/video_'; // prefix for videos
 var SHOW_DEBUG = false; // switch for debugging output
 var SAVE_DATA = true; // save data or not
+var EYE_TRACKING = true; // use eye_tracking or not
 
 // Arrays
 var video_ids = [];
@@ -171,21 +172,53 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
+// fetch from the URL param
 var debug = getUrlParameter('debug');
-if (!debug) {
+// if not provided, use CONST
+debug = /^true$/i.test(debug); 
+if (typeof debug == 'undefined') {
     debug = SHOW_DEBUG;
+} else {
+    // convert from string to bool
+    debug = /^true$/i.test(debug);
 }
 
 if (debug) {
     console.log('debug', debug);
 }
 
+// fetch from the URL param
 var save_data = getUrlParameter('save_data');
-if (!save_data) {
+// if not provided, use CONST
+save_data = /^true$/i.test(save_data);
+if (typeof save_data == 'undefined') {
     save_data = SAVE_DATA;
+} else {
+    // convert from string to bool
+    save_data = /^true$/i.test(save_data);
 }
 
-/* initialize jsPsych */
+if (debug) {
+    console.log('save_data', save_data);
+}
+
+// fetch from the URL param
+var eye_tracking = getUrlParameter('eye_tracking');
+// if not provided, use CONST
+if (typeof eye_tracking == 'undefined') {
+    eye_tracking = EYE_TRACKING;
+} else {
+    // convert from string to bool
+    eye_tracking = /^true$/i.test(eye_tracking);
+}
+
+if (debug) {
+    console.log('eye_tracking', eye_tracking);
+}
+
+/**
+ * Initialise jsPsych.
+ */
 var jsPsych = initJsPsych({
     on_finish: function() {
         window.location.href = 'finish?work=' + worker_code;
@@ -461,18 +494,22 @@ var preload = {
   video: video_preload,
 };
 timeline.push(preload);
-console.log('finished with preloading');
+if (debug) {
+    console.log('finished with preloading');
+}
 
 var between_blocks_count = 0;  // counter of shown between blocks
 timeline.push(fullscreen_enter);  // enter full screen
-timeline.push(camera_instructions); 
-timeline.push(init_camera); 
-timeline.push(calibration_instructions); 
-timeline.push(calibration); 
-timeline.push(validation_instructions); 
-timeline.push(validation); 
-timeline.push(recalibrate);
-timeline.push(calibration_done);
+if (eye_tracking) {  // toggle for using eye tracking
+    timeline.push(camera_instructions); 
+    timeline.push(init_camera); 
+    timeline.push(calibration_instructions); 
+    timeline.push(calibration); 
+    timeline.push(validation_instructions); 
+    timeline.push(validation); 
+    timeline.push(recalibrate);
+    timeline.push(calibration_done);
+}
 timeline.push(instructions_block);
 // iterate over blocks
 for (var i = 0; i < n_videos_per_participant * n_videos_repeat; i++) {
