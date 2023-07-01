@@ -284,22 +284,6 @@ var between_blocks = []; // instructions between blocks
 var video_stimuli = []; // blocks with videos
 
 // define instructions block
-// var instructions_block = {
-//     type: jsPsychHtmlKeyboardResponse,
-//     stimulus: '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Instructions</h1><p class="lead">You will watch ' + n_videos_per_participant * n_videos_repeat + ' videos of traffic situations. You will see videos from the perspective of the driver.</p><p class="lead">Each video starts with a black screen. As soon as you see the black screen, press \'F\' to start the video.</p><p class="lead">When you DO NOT feel comfortable as a driver, PRESS and HOLD \'F\' until you feel comfortable again. You can press and release the key as many times as you want per video. There will be audio involved. Please use headphones and an adequate volume level during this study.</p><p class="lead">The window of your browser should be at least 1300px wide and 800px tall.</p><hr><p>Press \'C\' to proceed to the questions.</p></div></div>',
-//     choices: ['C'],
-//     data: {
-//         browser_name: br_name,
-//         browser_full_version: br_full_version,
-//         browser_major_version: br_major_version,
-//         browser_app_name: navigator.appName,
-//         browser_user_agent: navigator.userAgent,
-//         video_ids: video_ids,
-//         window_height_init: window_height,
-//         window_width_init: window_width
-//     }
-// };
-
 var instructions_block = {
     type: jsPsychInstructions,
     pages: [
@@ -515,7 +499,13 @@ var preload = {
   show_progress_bar: true,
   auto_preload: true,
   max_load_time: 3000000,
-  images: [image_pfefix + 'black_frame.png'],
+  images: [image_pfefix + 'black_frame.png', 
+           image_pfefix + 'brightness_adjustment.jpg',
+           image_pfefix + 'drivers_view.jpg',
+           image_pfefix + 'white_car.jpg',
+           image_pfefix + 'red_cars.jpg',
+           image_pfefix + 'white_car_av.jpg'
+          ],
   video: video_preload,
 };
 timeline.push(preload);
