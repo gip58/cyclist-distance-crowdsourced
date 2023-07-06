@@ -18,7 +18,6 @@
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
 <cml:text label="What is your age?" class="" validates="required positiveInteger"/>
-<cml:text label="What is your country of residence?" class="" validates="text"/>
 <cml:radios label="In which type of place are you located now?" class="" id="" validates="required">
   <cml:radio label="Indoor, dark" id="" value="indoor_dark"/>
   <cml:radio label="Indoor, dim light" id="" value="indoor_dimlight"/>
