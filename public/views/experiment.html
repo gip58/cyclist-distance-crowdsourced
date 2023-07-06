@@ -176,8 +176,7 @@ var getUrlParameter = function getUrlParameter(sParam) {
 // fetch from the URL param
 var debug = getUrlParameter('debug');
 // if not provided, use CONST
-debug = /^true$/i.test(debug); 
-if (typeof debug == 'undefined') {
+if (typeof debug == undefined) {
     debug = SHOW_DEBUG;
 } else {
     // convert from string to bool
@@ -191,8 +190,7 @@ if (debug) {
 // fetch from the URL param
 var save_data = getUrlParameter('save_data');
 // if not provided, use CONST
-save_data = /^true$/i.test(save_data);
-if (typeof save_data == 'undefined') {
+if (save_data == undefined) {
     save_data = SAVE_DATA;
 } else {
     // convert from string to bool
@@ -206,7 +204,7 @@ if (debug) {
 // fetch from the URL param
 var eye_tracking = getUrlParameter('eye_tracking');
 // if not provided, use CONST
-if (typeof eye_tracking == 'undefined') {
+if (typeof eye_tracking == undefined) {
     eye_tracking = EYE_TRACKING;
 } else {
     // convert from string to bool
