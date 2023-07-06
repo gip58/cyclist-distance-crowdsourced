@@ -3,11 +3,11 @@
     <strong>General questions</strong>
   </p>
 </div>
-<cml:radios label="Have you read and understood the above instructions?" class="" validates="required">
+<cml:radios label="Do you consent to participate in this study in the way that is described in the information shown above?" class="" validates="required">
   <cml:radio label="Yes" id="" value="yes"/>
   <cml:radio label="No" id="" value="no"/>
 </cml:radios>
-<cml:radios label="Do you consent to participate in this study in the way that is described in the information shown above?" class="" validates="required">
+<cml:radios label="Have you read and understood the above instructions?" class="" validates="required">
   <cml:radio label="Yes" id="" value="yes"/>
   <cml:radio label="No" id="" value="no"/>
 </cml:radios>
