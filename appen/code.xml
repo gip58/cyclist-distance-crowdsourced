@@ -7,12 +7,18 @@
   <cml:radio label="Yes" id="" value="yes"/>
   <cml:radio label="No" id="" value="no"/>
 </cml:radios>
+<cml:radios label="Do you consent to participate in this study in the way that is described in the information shown above?" class="" validates="required">
+  <cml:radio label="Yes" id="" value="yes"/>
+  <cml:radio label="No" id="" value="no"/>
+</cml:radios>
 <cml:radios label="What is your gender?" class="" validates="required">
   <cml:radio label="Male" value="male"/>
   <cml:radio label="Female" value="female"/>
+  <cml:radio label="Other" value="Other"/>
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
 <cml:text label="What is your age?" class="" validates="required positiveInteger"/>
+<cml:text label="What is your country of residence?" class="" validates="text"/>
 <cml:radios label="In which type of place are you located now?" class="" id="" validates="required">
   <cml:radio label="Indoor, dark" id="" value="indoor_dark"/>
   <cml:radio label="Indoor, dim light" id="" value="indoor_dimlight"/>
@@ -33,6 +39,10 @@
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
 <cml:text label="If you answered 'Other' in the previous question, please describe your input device below."/>
+<cml:radios label="Do you have a current, valid CAR driving license?" class="" validates="required">
+  <cml:radio label="Yes" id="" value="yes"/>
+  <cml:radio label="No" id="" value="no"/>
+</cml:radios>
 <cml:text label="At which age did you obtain your first license for driving a car or motorcycle?" class="" validates="positiveInteger"/>
 <cml:radios label="What is your primary mode of transportation?" class="" validates="required">
   <cml:radio label="Private vehicle" value="private_vehicle"/>
@@ -40,22 +50,6 @@
   <cml:radio label="Motorcycle" value="motorcycle"/>
   <cml:radio label="Walking/Cycling" id="" value="walkingcycling"/>
   <cml:radio label="Other" id="" value="other"/>
-  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
-</cml:radios>
-<cml:radios label="What is your knowledge of English?" class="" validates="required">
-  <cml:radio label="No proficiency" value="no_proficiency"/>
-  <cml:radio label="Limited working proficiency" value="limited_working_proficiency"/>
-  <cml:radio label="Professional working proficiency" value="professional_working_proficiency"/>
-  <cml:radio label="Full professional proficiency" id="" value="full_professional_proficiency"/>
-  <cml:radio label="Native or bilingual proficiency" id="" value="native_or_bilingual_proficiency"/>
-  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
-</cml:radios>
-<cml:radios label="What is your knowledge of Spanish?" class="" validates="required">
-  <cml:radio label="No proficiency" value="no_proficiency"/>
-  <cml:radio label="Limited working proficiency" value="limited_working_proficiency"/>
-  <cml:radio label="Professional working proficiency" value="professional_working_proficiency"/>
-  <cml:radio label="Full professional proficiency" id="" value="full_professional_proficiency"/>
-  <cml:radio label="Native or bilingual proficiency" id="" value="native_or_bilingual_proficiency"/>
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
 <cml:radios label="On average, how often did you drive a vehicle in the last 12 months?" class="" validates="required">
@@ -146,37 +140,10 @@
   <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
+
 <p class="header">
-  <strong>For the questions below, please choose the best option to complete the conversation</strong>
-</p>
-<cml:radios label="Can I park here?" class="" validates="required">
-  <cml:radio label="Sorry, I did that." value="a0"/>
-  <cml:radio label="It's the same place." value="a1"/>
-  <cml:radio label="Only for half an hour." value="a2"/>
-</cml:radios>
-<cml:radios label="What colour will you paint the children's bedroom?" class="" validates="required">
-  <cml:radio label="I hope it was right." value="a0"/>
-  <cml:radio label="We can't decide." value="a1"/>
-  <cml:radio label="It wasn't very difficult." value="a2"/>
-</cml:radios>
-<cml:radios label="I can't understand this email." class="" validates="required">
-  <cml:radio label="Would you like some help?" value="a0"/>
-  <cml:radio label="Don't you know?" value="a1"/>
-  <cml:radio label="I suppose you can." value="a2"/>
-</cml:radios>
-<cml:radios label="I'd like two tickets for tomorrow night." class="" validates="required">
-  <cml:radio label="How much did you pay?" value="a0"/>
-  <cml:radio label="Afternoon and evening." value="a1"/>
-  <cml:radio label="I'll just check for you." value="a2"/>
-</cml:radios>
-<cml:radios label="Shall we go to the gym now?" class="" validates="required">
-  <cml:radio label="I'm too tired." value="a0"/>
-  <cml:radio label="It's very good." value="a1"/>
-  <cml:radio label="Not at all." value="a2"/>
-</cml:radios>
-<p class="header">
-  <strong>Experiment to measure clarity of textual external Human Machine Interfaces for automated vehicles</strong>
-  In this experiment, you will see multiple images of a vehicle with a textual message on a display on the front bumper. You will be asked to leave Appen to participate in the experiment. You will need to open the link below. Do not close this tab. At the end of the experiment, you will be given a code to input in the next question on this tab. Please take a note of the code. Without the code, you will not be able to receive money for your participation. All images will be downloaded before the start of the experiment. It may take a few minutes. Please do not close your browser during that time.
+  <strong>Experiment to investigate factors that play a role in MDV-AV interaction (manually driven vehicles (MDV) and automated vehicles (AV))</strong>
+  In this experiment, you will see multiple videos and are asked to answer questions based on your feelings about the content of videos. During the survey, the videos will contain manual-driven cars as well as automated cars. Automated cars are displayed with a blue marking on their front window. You will be asked to leave Appen to participate in the experiment. You will need to open the link below. Do not close this tab. At the end of the experiment, you will be given a code to input in the next question on this tab. Please take a note of the code. Without the code, you will not be able to receive money for your participation. All images will be downloaded before the start of the experiment. It may take a few minutes. Please do not close your browser during that time.
   <br/>
 </p>
 <p class="header2">Open 
