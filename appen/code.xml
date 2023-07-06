@@ -142,7 +142,7 @@
 
 <p class="header">
   <strong>Experiment to investigate factors that play a role in MDV-AV interaction (manually driven vehicles (MDV) and automated vehicles (AV))</strong>
-  In this experiment, you will see multiple videos and are asked to answer questions based on your feelings about the content of videos. During the survey, the videos will contain manual-driven cars as well as automated cars. Automated cars are displayed with a blue marking on their front window. You will be asked to leave Appen to participate in the experiment. You will need to open the link below. Do not close this tab. At the end of the experiment, you will be given a code to input in the next question on this tab. Please take a note of the code. Without the code, you will not be able to receive money for your participation. All images will be downloaded before the start of the experiment. It may take a few minutes. Please do not close your browser during that time.
+  In this experiment, you will see multiple videos and are asked to answer questions based on your feelings about the content of videos. During the experiment, the videos will contain manual-driven cars as well as automated cars. Automated cars are displayed with a blue marking on their front window. You will be asked to leave Appen to participate in the experiment. You will need to open the link below. Do not close this tab. At the end of the experiment, you will be given a code to input in the next question on this tab. Please take a note of the code. Without the code, you will not be able to receive money for your participation. All images will be downloaded before the start of the experiment. It may take a few minutes. Please do not close your browser during that time.
   <br/>
 </p>
 <p class="header2">Open 
@@ -150,7 +150,7 @@
     <a target="_blank" href="https://trust-crowdsourced.herokuapp.com">this link</a>
   </strong> to start the experiment.
 </p>
-<cml:text label="Type the code that you received at the end of the experiment." class="" validates="required regex" data-validates-regex="^M2\d+\s?RL\d+\s?8M\s?$" data-validates-regex-message="Please enter the correct code to receive your money."/>
+<cml:text label="Type the code that you received at the end of the experiment." class="" validates="required regex" data-validates-regex="^B9\d+\s?KF\d+\s?7W\s?$" data-validates-regex-message="Please enter the correct code to receive your money."/>
 
 <p class="header">
   <strong>Miscellaneous questions</strong>
