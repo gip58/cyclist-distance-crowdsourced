@@ -17,7 +17,7 @@ for index, row in df.iterrows():
               " -i " + in_file +
               " -c:v libx264 -crf 23 -profile:v baseline -level 3.0 -pix_fmt yuv420p" +  # noqa: E501
               " -c:a aac -b:a 32k" +
-              " -vf scale=1080:720" +
+              " -vf scale=1280:720" +
               " -movflags faststart" +
               " -crf 24 " +
               out_file)
