@@ -120,7 +120,7 @@ secret
 *.egg-info/
 
 # Ignore all files starting with an underscore.
-**/_*
+# **/_*
 !__init__.py
 
 # Pickle files
