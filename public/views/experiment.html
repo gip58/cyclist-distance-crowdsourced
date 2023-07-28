@@ -36,7 +36,10 @@
 // by Pavlo Bazilinskyy <p.bazilinskyy@tue.nl>
 
 // Constants
-var n_videos = 84;  // number of videos
+var videos_mv_first = 0;  // first videos with ego-mv (manual vehicle)
+var videos_mv_last = 41;  // last videos with ego-mv (manual vehicle)
+var videos_av_first = 42;  // first videos with ego-av (automated vehicle)
+var videos_av_last = 83;  //first videos with ego-av (automated vehicle)
 var n_videos_per_participant = 42; // number of videos per participant
 var n_videos_repeat = 1; // number of repeats of each condition
 var n_videos_break = 10; // number of videos between each break
@@ -138,6 +141,11 @@ function getWorkerCode() {
 
 var worker_code = getWorkerCode();
 
+// groups of participant. either 0 or 1
+var participant_group = getRandomInt(0,1);
+if (debug) {
+    console.log('participant_group', participant_group);
+}
 /**
  * Shuffles array in place.
  * @param {Array} a items An array containing the items.
@@ -282,7 +290,7 @@ var between_blocks = []; // instructions between blocks
 var video_stimuli = []; // blocks with videos
 
 // define instructions block
-var instructions_block = {
+var instructions_block_av = {
     type: jsPsychInstructions,
     pages: [
         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Adjustment of brightness</h1><p class="lead">Before the experiment starts, please adjust the brightness of your screen until you can see clearly the image below.</br><img src=\'' + image_pfefix + 'brightness_adjustment.jpg\'/ style="width: 60%; margin: auto; display: block;"></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
@@ -302,16 +310,56 @@ var instructions_block = {
         browser_user_agent: navigator.userAgent,
         video_ids: video_ids,
         window_height_init: window_height,
-        window_width_init: window_width
+        window_width_init: window_width,
+        worker_code: worker_code,
+        participant_group: participant_group
     }
 }
 
-// populate array with video IDs for group 0
-for (var i = 0; i < n_videos; i++) {
-    for (var j = 0; j < n_videos_repeat; j++) {
-        video_ids.push(i);
+// define instructions block
+var instructions_block_mv = {
+    type: jsPsychInstructions,
+    pages: [
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Adjustment of brightness</h1><p class="lead">Before the experiment starts, please adjust the brightness of your screen until you can see clearly the image below.</br><img src=\'' + image_pfefix + 'brightness_adjustment.jpg\'/ style="width: 60%; margin: auto; display: block;"></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Adjustment of volume</h1><p class="lead">Before the experiment starts, please adjust the volume to a moderate level.</p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Introduction about the scenarios</h1><p class="lead">You will see videos from the perspective of the driver. See image below.</br><div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'drivers_view.jpg\'/ style="width: 60%; margin: auto; display: block;"></div></div><div class="row"><div class="col"><p class="text-center">Your view.</p></div></div></div></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Objects involved in the experiment</h1><h1 class="display-6">White cars</h1><p class="lead">Each scenario will have one or more white car(s). See image below. Please pay attention to their behaviour. After each video, you will answer questions on how you feel about the behaviour of the white car(s).<div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'white_car.jpg\'/ style="width: 60%; margin: auto; display: block;"></div></div><div class="row"><div class="col"><p class="text-center">The white car.</p></div></div></div></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Objects involved in the experiment</h1><h1 class="display-6">Red cars</h1><p class="lead">Other cars are all in red colour to let the white car(s) stand out. See image below.</br><div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'red_cars.jpg\'/ style="width: 60%; margin: auto; display: block;"></div></div><div class="row"><div class="col"><p class="text-center">Red cars.</p></div></div></div></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Objects involved in the experiment</h1><h1 class="display-6">Automated mode</h1><p class="lead">In <strong>some of the videos</strong>, the white car(s) will have blue markings on the windows (see the images below with the white cars), which indicate that in those scenarios, the white car is a self-driving car and is driving autonomously.<div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'white_car.jpg\'/ style="width: 100%"></div><div class="col"><img src=\'' + image_pfefix + 'white_car_av.jpg\'/ style="width: 100%"></div></div><div class="row"><div class="col"><p class="text-center">The white car without blue markings (left) and the white car with blue markings (right)</p></div></div></div></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
+         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Task description</h1><p class="lead">You will watch ' + n_videos_per_participant * n_videos_repeat + ' videos of traffic situations. Each video starts with a black screen. As soon as you see the black screen, press \'F\' to start the video.</p><p class="lead">PRESS and HOLD \'F\' key when you experience any discomfort with the traffic situation, and release it when you feel comfortable again. You can press and release the key as many times as you want per video. After each video, you will answer questions about the behaviours of the white car(s) based on your feelings.</p><p class="lead">There will be audio involved. Please use headphones and an adequate volume level during this study.</p><p class="lead">The window of your browser should be at least 1300px wide and 800px tall.</p><hr><p>Press \'Next\' to proceed to the first video.</p></div></div>',
+    ],
+    show_clickable_nav: true,
+    data: {
+        browser_name: br_name,
+        browser_full_version: br_full_version,
+        browser_major_version: br_major_version,
+        browser_app_name: navigator.appName,
+        browser_user_agent: navigator.userAgent,
+        video_ids: video_ids,
+        window_height_init: window_height,
+        window_width_init: window_width,
+        worker_code: worker_code,
+        participant_group: participant_group
     }
 }
+
+// choose correct video stimuli
+if (participant_group) { // positive = 1 (ego-mv)
+    for (var i = videos_mv_first; i <= videos_mv_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids.push(i);
+        }
+    }
+} else { // negative = 0 (ego_av)
+    for (var i = videos_av_first; i <= videos_av_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids.push(i);
+        }
+    }
+}
+// populate array with video IDs for group 0
+
+
 video_ids = shuffle(video_ids);  // shuffle ids
 
 // build array with videos with stimuli
@@ -524,7 +572,12 @@ if (eye_tracking) {  // toggle for using eye tracking
     timeline.push(recalibrate);
     timeline.push(calibration_done);
 }
-timeline.push(instructions_block);
+// choose correct instructions page
+if (participant_group) { // positive = 1
+    timeline.push(instructions_block_mv);
+} else { // negative = 0
+    timeline.push(instructions_block_av);
+}
 // iterate over blocks
 for (var i = 0; i < n_videos_per_participant * n_videos_repeat; i++) {
     timeline.push(continue_block);
