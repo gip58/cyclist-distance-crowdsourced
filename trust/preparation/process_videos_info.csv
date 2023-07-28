@@ -13,7 +13,7 @@ in,out,start,end
 11_11_slow_roleIdx-0_target_labeled-false_ego_labeled-false_23-06-27_07-44.mp4,video_11.mp4,00:00:00.333,00:00:30.333
 12_12_changing_lines_roleIdx-0_target_labeled-false_ego_labeled-false_23-06-27_07-47.mp4,video_12.mp4,00:00:00.033,00:00:27.033
 13_13_center_line_roleIdx-0_target_labeled-false_ego_labeled-false_23-06-27_07-50.mp4,video_13.mp4,00:00:00.250,00:00:30.250
-14_14_platoon_lowers_speed_roleIdx-0_target_labeled-false_ego_labeled-false_23-06-27_07-54.mp4,video_14.mp4,00:00:00.350,00:00:42.350
+14_14_platoon_lowers_speed_roleIdx-0_target_labeled-false_ego_labeled-false_23-06-27_07-54.mp4,video_14.mp4,00:00:00.200,00:00:42.200
 15_15_pedestrian_roleIdx-0_target_labeled-false_ego_labeled-false_23-06-27_07-57.mp4,video_15.mp4,00:00:00.033,00:00:24.033
 16_16_large_gap_roleIdx-0_target_labeled-false_ego_labeled-false_23-06-27_08-01.mp4,video_16.mp4,00:00:00.016,00:00:25.016
 17_17_traffic_lights_roleIdx-0_target_labeled-false_ego_labeled-false_23-06-27_08-04.mp4,video_17.mp4,00:00:01.983,00:00:36.983
