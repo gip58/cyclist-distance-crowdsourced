@@ -43,14 +43,6 @@
   <cml:radio label="No" id="" value="no"/>
 </cml:radios>
 <cml:text label="At which age did you obtain your first license for driving a car or motorcycle?" class="" validates="positiveInteger"/>
-<cml:radios label="What is your primary mode of transportation?" class="" validates="required">
-  <cml:radio label="Private vehicle" value="private_vehicle"/>
-  <cml:radio label="Public transportation" value="public_transportation"/>
-  <cml:radio label="Motorcycle" value="motorcycle"/>
-  <cml:radio label="Walking/Cycling" id="" value="walkingcycling"/>
-  <cml:radio label="Other" id="" value="other"/>
-  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
-</cml:radios>
 <cml:radios label="On average, how often did you drive a vehicle in the last 12 months?" class="" validates="required">
   <cml:radio label="Every day" value="every_day"/>
   <cml:radio label="4 to 6 days a week" value="4_to_6_days_a_week"/>
@@ -73,16 +65,7 @@
   <cml:radio label="More than 100,000 km (more than 62,137 mi)" id="" value="more_than_100000_km_more_than_62137_mi"/>
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
-<cml:radios label="How many accidents were you involved in when driving a car in the last 3 years? (please include all accidents, regardless of how they were caused, how slight they were, or where they happened)" class="" id="" validates="required">
-  <cml:radio label="0" id="" value="0"/>
-  <cml:radio label="1" id="" value="1"/>
-  <cml:radio label="2" id="" value="2"/>
-  <cml:radio label="3" id="" value="3"/>
-  <cml:radio label="4" id="" value="4"/>
-  <cml:radio label="5" id="" value="5"/>
-  <cml:radio label="More than 5" id="" value="more_than_5"/>
-  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
-</cml:radios>
+
 <cml:radios label="How often do you do the following?: Becoming angered by a particular type of driver, and indicate your hostility by whatever means you can." class="" id="" validates="required">
   <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
   <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
@@ -139,6 +122,59 @@
   <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
+<p class="header">
+    <strong>To what extent do you agree or disagree with the following statements?</strong>(Response options: Strongly agree, Agree, Neither agree nor disagree, Strongly disagree, Don’t know)
+</p>
+<cml:ratings label="Science and technology make our way of life change too fast." points="5" >
+  <cml:rating label="Strongly Disagree"/>
+  <cml:rating label="Disagree"/>
+  <cml:rating label="Neither Agree nor Disagree"/>
+  <cml:rating label="Agree"/>
+  <cml:rating label="Strongly Agree"/>
+</cml:ratings>
+<cml:ratings label="I'm not interested in new technologies" points="5" >
+  <cml:rating label="Strongly Disagree"/>
+  <cml:rating label="Disagree"/>
+  <cml:rating label="Neither Agree nor Disagree"/>
+  <cml:rating label="Agree"/>
+  <cml:rating label="Strongly Agree"/>
+</cml:ratings>
+<cml:ratings label="Science and technology are making our lives healthier, easier and more comfortable" points="5" >
+  <cml:rating label="Strongly Disagree"/>
+  <cml:rating label="Disagree"/>
+  <cml:rating label="Neither Agree nor Disagree"/>
+  <cml:rating label="Agree"/>
+  <cml:rating label="Strongly Agree"/>
+</cml:ratings>
+<cml:ratings label="I enjoy making use of the latest technological products and services when I have the opportunity" points="5" >
+  <cml:rating label="Strongly Disagree"/>
+  <cml:rating label="Disagree"/>
+  <cml:rating label="Neither Agree nor Disagree"/>
+  <cml:rating label="Agree"/>
+  <cml:rating label="Strongly Agree"/>
+</cml:ratings>
+<cml:ratings label="New technologies are all about making profits rather than making people's lives better" points="5" >
+  <cml:rating label="Strongly Disagree"/>
+  <cml:rating label="Disagree"/>
+  <cml:rating label="Neither Agree nor Disagree"/>
+  <cml:rating label="Agree"/>
+  <cml:rating label="Strongly Agree"/>
+</cml:radios>
+<cml:ratings label="I am worried about where all this technology is leading" points="5" >
+  <cml:rating label="Strongly Disagree"/>
+  <cml:rating label="Disagree"/>
+  <cml:rating label="Neither Agree nor Disagree"/>
+  <cml:rating label="Agree"/>
+</cml:radios>
+<cml:ratings label="Machines are taking over some of the roles that humans should have" points="5" >
+  <cml:rating label="Strongly Disagree"/>
+  <cml:rating label="Disagree"/>
+  <cml:rating label="Neither Agree nor Disagree"/>
+  <cml:rating label="Agree"/>
+  <cml:rating label="Strongly Agree"/>
+</cml:radios>
+
+
 
 <p class="header">
   <strong>Experiment to investigate factors that play a role in interaction between manually driven and automated vehicles</strong>
@@ -150,8 +186,37 @@
     <a target="_blank" href="https://trust-crowdsourced.herokuapp.com">this link</a>
   </strong> to start the experiment.
 </p>
-<cml:text label="Type the code that you received at the end of the experiment." class="" validates="required regex" data-validates-regex="^B9\d+\s?KF\d+\s?7W\s?$" data-validates-regex-message="Please enter the correct code to receive your money."/>
+<cml:ratings label="After watching all the videos, do you feel differently about AVs, compared to your answers at the begining?" points="5" >
+  <cml:rating label="Strongly Disagree"/>
+  <cml:rating label="Disagree"/>
+  <cml:rating label="Neither Agree nor Disagree"/>
+  <cml:rating label="Agree"/>
+  <cml:rating label="Strongly Agree"/>
+</cml:ratings>
+<cml:ratings label="Did your feeling about the AVs become more positive or more negative?" points="5" >
+  <cml:ratings label="Rate me" points="4" validates="required" from="Much More Negative" to="Much More Positive" />
+</cml:ratings>
+<cml:ratings label="When the automated vehicle is on the road, I would like to have the AV recognizable" points="5" >
+  <cml:rating label="Strongly Disagree"/>
+  <cml:rating label="Disagree"/>
+  <cml:rating label="Neither Agree nor Disagree"/>
+  <cml:rating label="Agree"/>
+  <cml:rating label="Strongly Agree"/>
+  <cml:ratings label="If the situations that were shown in the videos happened on a real road, I think I would behave differently toward the white car (s) because of the marking" points="5" >
+  <cml:rating label="Strongly Disagree"/>
+  <cml:rating label="Disagree"/>
+  <cml:rating label="Neither Agree nor Disagree"/>
+  <cml:rating label="Agree"/>
+  <cml:rating label="Strongly Agree"/>
+    <cml:ratings label="If the same situations happen on the real road, I will feel differently toward the white car(s) because of the marking
+" points="5" >
+  <cml:rating label="Strongly Disagree"/>
+  <cml:rating label="Disagree"/>
+  <cml:rating label="Neither Agree nor Disagree"/>
+  <cml:rating label="Agree"/>
+  <cml:rating label="Strongly Agree"/>
 
+<cml:text label="Type the code that you received at the end of the experiment." class="" validates="required regex" data-validates-regex="^B9\d+\s?KF\d+\s?7W\s?$" data-validates-regex-message="Please enter the correct code to receive your money."/>
 <p class="header">
   <strong>Miscellaneous questions</strong>
 </p>
