@@ -38,10 +38,7 @@
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
 <cml:text label="If you answered 'Other' in the previous question, please describe your input device below."/>
-<cml:radios label="Do you have a current, valid CAR driving license?" class="" validates="required">
-  <cml:radio label="Yes" id="" value="yes"/>
-  <cml:radio label="No" id="" value="no"/>
-</cml:radios>
+
 <cml:text label="At which age did you obtain your first license for driving a car or motorcycle?" class="" validates="positiveInteger"/>
 <cml:radios label="On average, how often did you drive a vehicle in the last 12 months?" class="" validates="required">
   <cml:radio label="Every day" value="every_day"/>
@@ -123,55 +120,63 @@
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
 <p class="header">
-    <strong>To what extent do you agree or disagree with the following statements?</strong>(Response options: Strongly agree, Agree, Neither agree nor disagree, Strongly disagree, Don’t know)
+    <strong>To what extent do you agree or disagree with the following statements?</strong>
 </p>
-<cml:ratings label="Science and technology make our way of life change too fast." points="5" >
-  <cml:rating label="Strongly Disagree"/>
-  <cml:rating label="Disagree"/>
-  <cml:rating label="Neither Agree nor Disagree"/>
-  <cml:rating label="Agree"/>
-  <cml:rating label="Strongly Agree"/>
-</cml:ratings>
-<cml:ratings label="I'm not interested in new technologies" points="5" >
-  <cml:rating label="Strongly Disagree"/>
-  <cml:rating label="Disagree"/>
-  <cml:rating label="Neither Agree nor Disagree"/>
-  <cml:rating label="Agree"/>
-  <cml:rating label="Strongly Agree"/>
-</cml:ratings>
-<cml:ratings label="Science and technology are making our lives healthier, easier and more comfortable" points="5" >
-  <cml:rating label="Strongly Disagree"/>
-  <cml:rating label="Disagree"/>
-  <cml:rating label="Neither Agree nor Disagree"/>
-  <cml:rating label="Agree"/>
-  <cml:rating label="Strongly Agree"/>
-</cml:ratings>
-<cml:ratings label="I enjoy making use of the latest technological products and services when I have the opportunity" points="5" >
-  <cml:rating label="Strongly Disagree"/>
-  <cml:rating label="Disagree"/>
-  <cml:rating label="Neither Agree nor Disagree"/>
-  <cml:rating label="Agree"/>
-  <cml:rating label="Strongly Agree"/>
-</cml:ratings>
-<cml:ratings label="New technologies are all about making profits rather than making people's lives better" points="5" >
-  <cml:rating label="Strongly Disagree"/>
-  <cml:rating label="Disagree"/>
-  <cml:rating label="Neither Agree nor Disagree"/>
-  <cml:rating label="Agree"/>
-  <cml:rating label="Strongly Agree"/>
+<cml:radios label="Science and technology make our way of life change too fast." class="" id="" validates="required">
+  <cml:radio label="Strongly disagree"/>
+  <cml:radio label="Disagree"/>
+  <cml:radio label="Neither disagree nor agree"/>
+  <cml:radio label="Agree"/>
+  <cml:radio label="Strongly agree"/>
+  <cml:radio label="Don't know"/>
 </cml:radios>
-<cml:ratings label="I am worried about where all this technology is leading" points="5" >
-  <cml:rating label="Strongly Disagree"/>
-  <cml:rating label="Disagree"/>
-  <cml:rating label="Neither Agree nor Disagree"/>
-  <cml:rating label="Agree"/>
+<cml:radios label="I'm not interested in new technologies." class="" id="" validates="required">
+  <cml:radio label="Strongly disagree"/>
+  <cml:radio label="Disagree"/>
+  <cml:radio label="Neither disagree nor agree"/>
+  <cml:radio label="Agree"/>
+  <cml:radio label="Strongly agree"/>
+  <cml:radio label="Don't know"/>
 </cml:radios>
-<cml:ratings label="Machines are taking over some of the roles that humans should have" points="5" >
-  <cml:rating label="Strongly Disagree"/>
-  <cml:rating label="Disagree"/>
-  <cml:rating label="Neither Agree nor Disagree"/>
-  <cml:rating label="Agree"/>
-  <cml:rating label="Strongly Agree"/>
+<cml:radios label="Science and technology are making our lives healthier, easier and more comfortable." class="" id="" validates="required">
+  <cml:radio label="Strongly disagree"/>
+  <cml:radio label="Disagree"/>
+  <cml:radio label="Neither disagree nor agree"/>
+  <cml:radio label="Agree"/>
+  <cml:radio label="Strongly agree"/>
+  <cml:radio label="Don't know"/>
+</cml:radios>
+<cml:radios label="I enjoy making use of the latest technological products and services when I have the opportunity." class="" id="" validates="required">
+  <cml:radio label="Strongly disagree"/>
+  <cml:radio label="Disagree"/>
+  <cml:radio label="Neither disagree nor agree"/>
+  <cml:radio label="Agree"/>
+  <cml:radio label="Strongly agree"/>
+  <cml:radio label="Don't know"/>
+</cml:radios>
+<cml:radios label="New technologies are all about making profits rather than making people's lives better." class="" id="" validates="required">
+  <cml:radio label="Strongly disagree"/>
+  <cml:radio label="Disagree"/>
+  <cml:radio label="Neither disagree nor agree"/>
+  <cml:radio label="Agree"/>
+  <cml:radio label="Strongly agree"/>
+  <cml:radio label="Don't know"/>
+</cml:radios>
+<cml:radios label="I am worried about where all this technology is leading." class="" id="" validates="required">
+  <cml:radio label="Strongly disagree"/>
+  <cml:radio label="Disagree"/>
+  <cml:radio label="Neither disagree nor agree"/>
+  <cml:radio label="Agree"/>
+  <cml:radio label="Strongly agree"/>
+  <cml:radio label="Don't know"/>
+</cml:radios>
+<cml:radios label="Machines are taking over some of the roles that humans should have." class="" id="" validates="required">
+  <cml:radio label="Strongly disagree"/>
+  <cml:radio label="Disagree"/>
+  <cml:radio label="Neither disagree nor agree"/>
+  <cml:radio label="Agree"/>
+  <cml:radio label="Strongly agree"/>
+  <cml:radio label="Don't know"/>
 </cml:radios>
 
 
@@ -186,35 +191,6 @@
     <a target="_blank" href="https://trust-crowdsourced.herokuapp.com">this link</a>
   </strong> to start the experiment.
 </p>
-<cml:ratings label="After watching all the videos, do you feel differently about AVs, compared to your answers at the begining?" points="5" >
-  <cml:rating label="Strongly Disagree"/>
-  <cml:rating label="Disagree"/>
-  <cml:rating label="Neither Agree nor Disagree"/>
-  <cml:rating label="Agree"/>
-  <cml:rating label="Strongly Agree"/>
-</cml:ratings>
-<cml:ratings label="Did your feeling about the AVs become more positive or more negative?" points="5" >
-  <cml:ratings label="Rate me" points="4" validates="required" from="Much More Negative" to="Much More Positive" />
-</cml:ratings>
-<cml:ratings label="When the automated vehicle is on the road, I would like to have the AV recognizable" points="5" >
-  <cml:rating label="Strongly Disagree"/>
-  <cml:rating label="Disagree"/>
-  <cml:rating label="Neither Agree nor Disagree"/>
-  <cml:rating label="Agree"/>
-  <cml:rating label="Strongly Agree"/>
-  <cml:ratings label="If the situations that were shown in the videos happened on a real road, I think I would behave differently toward the white car (s) because of the marking" points="5" >
-  <cml:rating label="Strongly Disagree"/>
-  <cml:rating label="Disagree"/>
-  <cml:rating label="Neither Agree nor Disagree"/>
-  <cml:rating label="Agree"/>
-  <cml:rating label="Strongly Agree"/>
-    <cml:ratings label="If the same situations happen on the real road, I will feel differently toward the white car(s) because of the marking
-" points="5" >
-  <cml:rating label="Strongly Disagree"/>
-  <cml:rating label="Disagree"/>
-  <cml:rating label="Neither Agree nor Disagree"/>
-  <cml:rating label="Agree"/>
-  <cml:rating label="Strongly Agree"/>
 
 <cml:text label="Type the code that you received at the end of the experiment." class="" validates="required regex" data-validates-regex="^B9\d+\s?KF\d+\s?7W\s?$" data-validates-regex-message="Please enter the correct code to receive your money."/>
 <p class="header">
