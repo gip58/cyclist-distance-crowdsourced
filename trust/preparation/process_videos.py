@@ -32,6 +32,6 @@ for index, row in df.iterrows():
     # based on https://stackoverflow.com/a/22688066/46687
     os.system("ffmpeg -i " + black_file +
               " -i " + out_file +
-              " -filter_complex \"[0:v:0] [0:a:0] [1:v:0] [1:a:0]" + 
+              " -filter_complex \"[0:v:0] [0:a:0] [1:v:0] [1:a:0]" +
               " concat=n=2:v=1:a=1 [v] [a]\" -map \"[v]\" -map \"[a]\" -y " +
               merged_file)
