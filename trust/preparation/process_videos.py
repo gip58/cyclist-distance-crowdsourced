@@ -4,15 +4,19 @@ import os
 import pandas as pd
 import trust as tr
 
+print(os.path.join(tr.common.get_configs('path_stimuli'), "out.mp4"))
+
 # Read mapping csv
 df = pd.read_csv('process_videos_info.csv')
 # black file to be added in the beginning of the stimuli
-black_file = os.path.join(tr.common.get_configs('path_source'),
-                          'black_video.mp4')
-# go over all stimuli
+black_file = 'black_video.mp4'
+# Go over all stimuli
 for index, row in df.iterrows():
     in_file = os.path.join(tr.common.get_configs('path_source'), row['in'])
-    out_file = os.path.join(tr.common.get_configs('path_stimuli'), row['out'])
+    out_file = os.path.join(tr.common.get_configs('path_stimuli'),
+                            'noblack_' + row['out'])
+    merged_file = os.path.join(tr.common.get_configs('path_stimuli'),
+                               row['out'])
     # Using FFmpeg command to process video and compress audio
     os.system("ffmpeg -r 60" +
               " -ss " + str(row['start']) +
@@ -25,12 +29,9 @@ for index, row in df.iterrows():
               " -crf 24 " +
               out_file)
     # Using FFmpeg command to add 1 sec of black in the beginning
-    # # based on https://stackoverflow.com/a/22688066/46687
-    # os.system("ls " + black_file + " " + out_file + " |" +
-    #           "perl -ne 'print \"file $_\"' |"
-    #           "ffmpeg -f concat -i - -c copy " + out_file)
-    # based on https://stackoverflow.com/a/22958746/46687
+    # based on https://stackoverflow.com/a/22688066/46687
     os.system("ffmpeg -i " + black_file +
               " -i " + out_file +
-              " -filter_complex \"concat=n=2:v=0:a=1\" -vn -y " +
-              out_file)
+              " -filter_complex \"[0:v:0] [0:a:0] [1:v:0] [1:a:0]" + 
+              " concat=n=2:v=1:a=1 [v] [a]\" -map \"[v]\" -map \"[a]\" -y " +
+              merged_file)
