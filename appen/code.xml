@@ -38,7 +38,6 @@
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
 <cml:text label="If you answered 'Other' in the previous question, please describe your input device below."/>
-
 <cml:text label="At which age did you obtain your first license for driving a car or motorcycle?" class="" validates="positiveInteger"/>
 <cml:radios label="On average, how often did you drive a vehicle in the last 12 months?" class="" validates="required">
   <cml:radio label="Every day" value="every_day"/>
@@ -120,7 +119,7 @@
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
 <p class="header">
-    <strong>To what extent do you agree or disagree with the following statements?</strong>
+  <strong>To what extent do you agree or disagree with the following statements?</strong>
 </p>
 <cml:radios label="Science and technology make our way of life change too fast." class="" id="" validates="required">
   <cml:radio label="Strongly disagree"/>
@@ -130,7 +129,7 @@
   <cml:radio label="Strongly agree"/>
   <cml:radio label="Don't know"/>
 </cml:radios>
-<cml:radios label="I'm not interested in new technologies." class="" id="" validates="required">
+<cml:radios label="I'm not interested in new technologies" class="" id="" validates="required">
   <cml:radio label="Strongly disagree"/>
   <cml:radio label="Disagree"/>
   <cml:radio label="Neither disagree nor agree"/>
@@ -138,7 +137,7 @@
   <cml:radio label="Strongly agree"/>
   <cml:radio label="Don't know"/>
 </cml:radios>
-<cml:radios label="Science and technology are making our lives healthier, easier and more comfortable." class="" id="" validates="required">
+<cml:radios label="Science and technology are making our lives healthier, easier and more comfortable" class="" id="" validates="required">
   <cml:radio label="Strongly disagree"/>
   <cml:radio label="Disagree"/>
   <cml:radio label="Neither disagree nor agree"/>
@@ -146,7 +145,7 @@
   <cml:radio label="Strongly agree"/>
   <cml:radio label="Don't know"/>
 </cml:radios>
-<cml:radios label="I enjoy making use of the latest technological products and services when I have the opportunity." class="" id="" validates="required">
+<cml:radios label="I enjoy making use of the latest technological products and services when I have the opportunity" class="" id="" validates="required">
   <cml:radio label="Strongly disagree"/>
   <cml:radio label="Disagree"/>
   <cml:radio label="Neither disagree nor agree"/>
@@ -154,7 +153,7 @@
   <cml:radio label="Strongly agree"/>
   <cml:radio label="Don't know"/>
 </cml:radios>
-<cml:radios label="New technologies are all about making profits rather than making people's lives better." class="" id="" validates="required">
+<cml:radios label="New technologies are all about making profits rather than making people's lives better" class="" id="" validates="required">
   <cml:radio label="Strongly disagree"/>
   <cml:radio label="Disagree"/>
   <cml:radio label="Neither disagree nor agree"/>
@@ -162,7 +161,7 @@
   <cml:radio label="Strongly agree"/>
   <cml:radio label="Don't know"/>
 </cml:radios>
-<cml:radios label="I am worried about where all this technology is leading." class="" id="" validates="required">
+<cml:radios label="I am worried about where all this technology is leading" class="" id="" validates="required">
   <cml:radio label="Strongly disagree"/>
   <cml:radio label="Disagree"/>
   <cml:radio label="Neither disagree nor agree"/>
@@ -170,7 +169,7 @@
   <cml:radio label="Strongly agree"/>
   <cml:radio label="Don't know"/>
 </cml:radios>
-<cml:radios label="Machines are taking over some of the roles that humans should have." class="" id="" validates="required">
+<cml:radios label="Machines are taking over some of the roles that humans should have" class="" id="" validates="required">
   <cml:radio label="Strongly disagree"/>
   <cml:radio label="Disagree"/>
   <cml:radio label="Neither disagree nor agree"/>
@@ -178,8 +177,6 @@
   <cml:radio label="Strongly agree"/>
   <cml:radio label="Don't know"/>
 </cml:radios>
-
-
 
 <p class="header">
   <strong>Experiment to investigate factors that play a role in interaction between manually driven and automated vehicles</strong>

@@ -433,21 +433,21 @@ var trial = {
 // build page with questions
 
 var likert_scale = [
-  "Strongly disagree", 
-  "Disagree", 
-  "Neither disagree nor agree", 
-  "Agree", 
-  "Strongly agree"
+    "Strongly disagree", 
+    "Disagree", 
+    "Neither disagree nor agree", 
+    "Agree", 
+    "Strongly agree"
 ];
 
 var qs_end = {
   type: jsPsychSurveyLikert,
   questions: [
-    {prompt: "After watching all the videos, I feel differently about AVs, compared to my answers at the begining.", name: 'compare feeling', labels: likert_scale},
-    {prompt: "My general feeling about the AVs becomes more positive.", name: 'feelingchange', labels: likert_scale},
-    {prompt: "When the automated vehicle is on the road, I would like to have the AV recognizable.", name: 'recognizability', labels: likert_scale},
-    {prompt: "If the same situations happen on the real road, I will feel differently toward the white car(s) because of the marking.", name: 'recognizability', labels: likert_scale},
-    {prompt: "If the situations that were shown in the videos happened on a real road, I think I would behave differently toward the white car (s) because of the marking.", name: 'recognizability', labels: likert_scale},
+    {prompt: 'After watching all the videos, I feel differently about AVs, compared to my answers at the begining.', name: 'compare-feeling', labels: likert_scale, required: true},
+    {prompt: 'My general feeling about the AVs becomes more positive.', name: 'feeling-change', labels: likert_scale, required: true},
+    {prompt: 'When the automated vehicle is on the road, I would like to have the AV recognizable.', name: 'recognizability', labels: likert_scale, required: true},
+    {prompt: 'If the same situations happen on the real road, I will feel differently toward the white car(s) because of the marking.', name: 'marking', labels: likert_scale, required: true},
+    {prompt: 'If the situations that were shown in the videos happened on a real road, I think I would behave differently toward the white car(s) because of the marking.', name: 'recognizability', labels: likert_scale, required: true},
   ],
   randomize_question_order: false
 };
@@ -578,6 +578,7 @@ if (debug) {
 
 var between_blocks_count = 0;  // counter of shown between blocks
 timeline.push(fullscreen_enter);  // enter full screen
+timeline.push(qs_end);  // enter full screen
 if (eye_tracking) {  // toggle for using eye tracking
     timeline.push(camera_instructions); 
     timeline.push(init_camera); 
