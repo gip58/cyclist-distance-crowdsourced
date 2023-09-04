@@ -16,6 +16,7 @@
     <script src="jspsych/plugin-preload.js"></script>
     <script src="jspsych/plugin-video-keyboard-multiple-responses-release.js"></script>
     <script src="jspsych/plugin-survey-likert.js"></script>
+    <script src="jspsych/plugin-survey-multi-choice.js"></script>
     <!-- jspsych version of webgazer -->
     <script src="jspsych/webgazer/webgazer.js"></script>
     <script src="jspsych/extension-webgazer.js"></script>
@@ -468,7 +469,9 @@ var likert_scale = [
 var qs_end = {
   type: jsPsychSurveyLikert,
   questions: [
-    {prompt: 'After watching all the videos, I feel differently about AVs, compared to my answers at the begining.', name: 'compare-feeling', labels: likert_scale, required: true},
+    {prompt: 'When the automated vehicle is on the road, I would feel comfortable about driving on roads alongside autonomous cars.', name: 'feeling-alongside', labels: likert_scale, required: true},
+    {prompt: 'When the automated vehicle is on the road, I would feel comfortable about using an autonomous car instead of driving a traditional car.', name: 'feeling-using', labels:likert_scale, required: true},
+    {prompt: 'After watching all the videos, I feel differently about AVs, compared to my feeling before the experiment.', name: 'compare-feeling', labels: likert_scale, required: true},
     {prompt: 'My general feeling about the AVs becomes more positive.', name: 'feeling-change', labels: likert_scale, required: true},
     {prompt: 'When the automated vehicle is on the road, I would like to have the AV recognizable.', name: 'recognizability', labels: likert_scale, required: true},
     {prompt: 'If the same situations happen on the real road, I will feel differently toward the white car(s) because of the marking.', name: 'marking', labels: likert_scale, required: true},
