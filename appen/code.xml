@@ -61,7 +61,6 @@
   <cml:radio label="More than 100,000 km (more than 62,137 mi)" id="" value="more_than_100000_km_more_than_62137_mi"/>
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
-
 <cml:radios label="How often do you do the following?: Becoming angered by a particular type of driver, and indicate your hostility by whatever means you can." class="" id="" validates="required">
   <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
   <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
@@ -111,6 +110,22 @@
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
 <cml:radios label="How often do you do the following?: Using a mobile phone without a hands free kit." class="" id="" validates="required">
+  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
+  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
+  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
+  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
+  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="How often do you do the following?: Doing my best not to be obstacle for other drivers." class="" id="" validates="required">
+  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
+  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
+  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
+  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
+  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:radios label="How often do you do the following?: Avoiding close following not to disturb the car driver in front." class="" id="" validates="required">
   <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
   <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
   <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
@@ -177,7 +192,24 @@
   <cml:radio label="Strongly agree"/>
   <cml:radio label="Don't know"/>
 </cml:radios>
-
+<p class="header2">
+ Before answering the following two questions, please note that in this study, the term <strong>"autonomous"</strong> refers to the state where the car driving system is taking control and operating without direct human intervention.
+ <br/>
+</p>
+<cml:ratings label="When the autonomous vehicle is on the road, I would feel comfortable about driving on roads alongside autonomous cars." class="" id="" validates="required">
+  <cml:rating label="Strongly disagree"/>
+  <cml:rating label="Disagree"/>
+  <cml:rating label="Neither disagree nor agree"/>
+  <cml:rating label="Agree"/>
+  <cml:rating label="Strongly agree"/>
+</cml:ratings>
+<cml:ratings label="When the autonomous vehicle is on the road, I would feel comfortable about using an autonomous car instead of driving a traditional car." class="" id="" validates="required">
+  <cml:rating label="Strongly disagree"/>
+  <cml:rating label="Disagree"/>
+  <cml:rating label="Neither disagree nor agree"/>
+  <cml:rating label="Agree"/>
+  <cml:rating label="Strongly agree"/>
+</cml:ratings>
 <p class="header">
   <strong>Experiment to investigate factors that play a role in interaction between manually driven and automated vehicles</strong>
   In this experiment, you will see multiple videos and are asked to answer questions based on your feelings about the content of videos. During the experiment, the videos will contain manual-driven cars as well as automated cars. Automated cars are displayed with a blue marking on their front window. You will be asked to leave Appen to participate in the experiment. You will need to open the link below. Do not close this tab. At the end of the experiment, you will be given a code to input in the next question on this tab. Please take a note of the code. Without the code, you will not be able to receive money for your participation. All images will be downloaded before the start of the experiment. It may take a few minutes. Please do not close your browser during that time.
