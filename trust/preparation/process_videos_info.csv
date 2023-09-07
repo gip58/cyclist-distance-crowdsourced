@@ -17,8 +17,8 @@ in,out,start,end
 15_15_pedestrian_roleIdx-0_target_labeled-false_ego_labeled-false_23-09-05_10-29.mp4,video_15.mp4,00:00:01.033,00:00:23.033
 16_16_large_gap_roleIdx-0_target_labeled-false_ego_labeled-false_23-09-05_10-32.mp4,video_16.mp4,00:00:01.016,00:00:24.016
 17_17_traffic_lights_roleIdx-0_target_labeled-false_ego_labeled-false_23-09-05_10-36.mp4,video_17.mp4,00:00:01.983,00:00:36.983
-18_18_overtaken_roleIdx-0_target_labeled-false_ego_labeled-false_23-09-05_10-40.mp4,video_18.mp4,00:00:01.250,00:00:29.250
-19_19_speed_limit_roleIdx-0_target_labeled-false_ego_labeled-false_23-09-05_10-44.mp4,video_19.mp4,00:00:01.033,00:00:22.033
+18_18_overtaken_roleIdx-0_target_labeled-false_ego_labeled-false_23-09-05_10-40.mp4,video_18.mp4,00:00:01.166,00:00:29.166
+19_19_speed_limit_roleIdx-0_target_labeled-false_ego_labeled-false_23-09-05_10-44.mp4,video_19.mp4,00:00:01.416,00:00:16.416
 20_21_avoid_pedestrian_roleIdx-0_target_labeled-false_ego_labeled-false_23-09-05_10-47.mp4,video_20.mp4,00:00:07.616,00:00:35.616
 21_0_baseline_roleIdx-0_target_labeled-true_ego_labeled-false_23-09-05_10-51.mp4,video_21.mp4,00:00:00.016,00:00:35.016
 22_1_overtake_roleIdx-0_target_labeled-true_ego_labeled-false_23-09-05_10-55.mp4,video_22.mp4,00:00:00.400,00:00:32.400
@@ -38,8 +38,8 @@ in,out,start,end
 36_15_pedestrian_roleIdx-0_target_labeled-true_ego_labeled-false_23-09-05_11-46.mp4,video_36.mp4,00:00:01.033,00:00:23.033
 37_16_large_gap_roleIdx-0_target_labeled-true_ego_labeled-false_23-09-05_11-49.mp4,video_37.mp4,00:00:01.016,00:00:24.016
 38_17_traffic_lights_roleIdx-0_target_labeled-true_ego_labeled-false_23-09-05_11-53.mp4,video_38.mp4,00:00:01.983,00:00:36.983
-39_18_overtaken_roleIdx-0_target_labeled-true_ego_labeled-false_23-09-05_11-57.mp4,video_39.mp4,00:00:01.250,00:00:29.250
-40_19_speed_limit_roleIdx-0_target_labeled-true_ego_labeled-false_23-09-06_12-00.mp4,video_40.mp4,00:00:01.033,00:00:22.033
+39_18_overtaken_roleIdx-0_target_labeled-true_ego_labeled-false_23-09-05_11-57.mp4,video_39.mp4,00:00:01.166,00:00:29.166
+40_19_speed_limit_roleIdx-0_target_labeled-true_ego_labeled-false_23-09-06_12-00.mp4,video_40.mp4,00:00:01.416,00:00:16.416
 41_21_avoid_pedestrian_roleIdx-0_target_labeled-true_ego_labeled-false_23-09-06_12-04.mp4,video_41.mp4,00:00:07.616,00:00:35.616
 42_0_baseline_roleIdx-0_target_labeled-false_ego_labeled-true_23-09-06_12-08.mp4,video_42.mp4,00:00:00.016,00:00:35.016
 43_1_overtake_roleIdx-0_target_labeled-false_ego_labeled-true_23-09-06_12-11.mp4,video_43.mp4,00:00:00.400,00:00:32.400
@@ -59,8 +59,8 @@ in,out,start,end
 57_15_pedestrian_roleIdx-0_target_labeled-false_ego_labeled-true_23-09-06_01-03.mp4,video_57.mp4,00:00:01.033,00:00:23.033
 58_16_large_gap_roleIdx-0_target_labeled-false_ego_labeled-true_23-09-06_01-06.mp4,video_58.mp4,00:00:01.016,00:00:24.016
 59_17_traffic_lights_roleIdx-0_target_labeled-false_ego_labeled-true_23-09-06_01-10.mp4,video_59.mp4,00:00:01.983,00:00:36.983
-60_18_overtaken_roleIdx-0_target_labeled-false_ego_labeled-true_23-09-06_01-13.mp4,video_60.mp4,00:00:01.250,00:00:29.250
-61_19_speed_limit_roleIdx-0_target_labeled-false_ego_labeled-true_23-09-06_01-17.mp4,video_61.mp4,00:00:01.033,00:00:22.033
+60_18_overtaken_roleIdx-0_target_labeled-false_ego_labeled-true_23-09-06_01-13.mp4,video_60.mp4,00:00:01.166,00:00:29.166
+61_19_speed_limit_roleIdx-0_target_labeled-false_ego_labeled-true_23-09-06_01-17.mp4,video_61.mp4,00:00:01.416,00:00:16.416
 62_21_avoid_pedestrian_roleIdx-0_target_labeled-false_ego_labeled-true_23-09-06_01-21.mp4,video_62.mp4,00:00:07.616,00:00:35.616
 63_0_baseline_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-06_01-24.mp4,video_63.mp4,00:00:00.016,00:00:35.016
 64_1_overtake_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-06_01-28.mp4,video_64.mp4,00:00:00.400,00:00:32.400
@@ -80,6 +80,6 @@ in,out,start,end
 78_15_pedestrian_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-06_02-19.mp4,video_78.mp4,00:00:01.033,00:00:23.033
 79_16_large_gap_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-06_02-23.mp4,video_79.mp4,00:00:01.016,00:00:24.016
 80_17_traffic_lights_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-06_02-26.mp4,video_80.mp4,00:00:01.983,00:00:36.983
-81_18_overtaken_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-06_02-30.mp4,video_81.mp4,00:00:01.250,00:00:29.250
-82_19_speed_limit_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-06_02-34.mp4,video_82.mp4,00:00:01.033,00:00:22.033
+81_18_overtaken_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-06_02-30.mp4,video_81.mp4,00:00:01.166,00:00:29.166
+82_19_speed_limit_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-06_02-34.mp4,video_82.mp4,00:00:01.416,00:00:16.416
 83_21_avoid_pedestrian_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-06_02-37.mp4,video_83.mp4,00:00:07.616,00:00:35.616
