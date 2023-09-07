@@ -125,13 +125,12 @@
   <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
-<cml:radios label="How often do you do the following?: Avoiding close following not to disturb the car driver in front." class="" id="" validates="required">
-  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
-  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
-  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
-  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
-  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
-  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+<cml:radios label="I need to be able to communicate with other road users when I'm driving." class="" id="" validates="required">
+  <cml:radio label="Strongly disagree"/>
+  <cml:radio label="Disagree"/>
+  <cml:radio label="Neither disagree nor agree"/>
+  <cml:radio label="Agree"/>
+  <cml:radio label="Strongly agree"/>
 </cml:radios>
 <p class="header">
   <strong>To what extent do you agree or disagree with the following statements?</strong>
