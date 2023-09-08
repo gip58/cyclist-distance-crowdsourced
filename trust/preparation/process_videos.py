@@ -22,11 +22,11 @@ for index, row in df.iterrows():
               " -ss " + str(row['start']) +
               " -to " + str(row['end']) +
               " -i " + in_file +
-              " -c:v libx264 -crf 23 -profile:v baseline -level 3.0 -pix_fmt yuv420p" +  # noqa: E501
+              " -c:v libx264 -profile:v baseline -level 3.0 -pix_fmt yuv420p" +  # noqa: E501
               " -c:a aac -b:a 32k" +
               " -vf scale=1280:720" +
               " -movflags faststart" +
-              " -crf 24 " +
+              " -crf 23 " +
               out_file)
     # Using FFmpeg command to add 1 sec of black in the beginning
     # based on https://stackoverflow.com/a/22688066/46687
