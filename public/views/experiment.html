@@ -299,8 +299,8 @@ var instructions_block_av = {
         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-6">White cars</h1><p class="lead">Each scenario will have one or more white car(s). See the image below. Please pay attention to their behaviour. After each video, you will answer questions on how you feel about the behaviour of the white car(s).<div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'white_mv_ego_av_8.5s.jpg\'/ style="width: 60%; margin: auto; display: block;"></div></div><div class="row"><div class="col"><p class="text-center">The white car.</p></div></div></div></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',//white car intro and what pps are supposed to do
         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-6">Red cars</h1><p class="lead">Other cars are all in red colour to let the white car(s) stand out. See the image below.</br><div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'red_ego_av_8.5s.jpg\'/ style="width: 60%; margin: auto; display: block;"></div></div><div class="row"><div class="col"><p class="text-center">Red cars.</p></div></div></div></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',//red car
         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-6">Driving mode</h1><p class="lead">In <strong>some of the videos</strong>, the white car(s) will also have blue markings on the windows (see the images below with the white cars), which indicate that in those scenarios, the white car is <span style="font-weight: bold;">driving autonomously</span>.<div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'white_mv_ego_av_8.5s.jpg\'/ style="width: 100%"></div><div class="col"><img src=\'' + image_pfefix + 'white_av_ego_av_8.5s.jpg\'/ style="width: 100%"></div></div><div class="row"><div class="col"><p class="text-center">The white car drives manually (left) and autonomously (right)</p></div></div></div></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',//blue markings
-        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Task description</h1><p class="lead">Please imagine that you are the driver in the autonomously driving car in all the videos you will watch.</p><p class="lead">You will watch ' + n_videos_per_participant * n_videos_repeat + ' videos of traffic situations. Each video starts with a black screen.</p><p class="lead">As soon as you see the black screen, press \'F\' to start the video.</p><p class="lead">After the video starts, PRESS and HOLD \'F\' key when you experience any discomfort with the traffic situation, and release it when you feel comfortable again. You can press and release the key as many times as you want per video. After each video, you will answer questions about the behaviour of the white car(s) based on your feelings.</p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p><p class="lead">The window of your browser should be at least 1300px wide and 800px tall.</p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
-        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Test trial</h1><p class="lead">On the next page, you will have the opportunity to familiarise yourself with the task that you will be required to perform.</p><p class="lead">During the test trial, please also:<ol><li>Adjust the volume to a moderate level where you can hear the sound of the video well.</li><li>Adjust the brightness of the screen until you can clearly see the video.</li></ol></p><hr><p>Press \'Next\' to proceed to the test trial.</p></div></div>'
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Task description</h1><p class="lead">Please imagine that you are the driver in the autonomously driving car in all the videos you will watch.</p><p class="lead">You will watch ' + n_videos_per_participant * n_videos_repeat + ' videos of traffic situations. Each video starts with a black screen.</p><p class="lead">As soon as you see the black screen, press \'F\' to start the video.</p><p class="lead">After the video starts, PRESS and HOLD \'F\' key when you experience any discomfort with the traffic situation, and release it when you feel comfortable again. You can press and release the key as many times as you want per video. After each video, you will answer questions about the behaviour of the white car(s) based on your feelings.</p><hr><p class="lead">The window of your browser should be at least 1300px wide and 800px tall.</p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Test trial</h1><p class="lead">In the next phase, you will encounter 3 test trials. These test trials provide you with an opportunity to become familiar with the tasks you will be required to perform.</p><p class="lead">During the test trials, please also:<ol><li>Adjust the volume to a moderate level where you can hear the sound of the video well.</li><li>Adjust the brightness of the screen until you can clearly see the video.</li></ol></p><hr><p>Press \'Next\' to proceed to the test trial.</p></div></div>'
     ],
     show_clickable_nav: true,
     data: {
@@ -317,7 +317,41 @@ var instructions_block_av = {
     }
 }
 
-var test_trial_av = {
+var test_trial_av_1 = {
+    type: jsPsychVideoKeyboardMultipleResponsesRelease,
+    autoplay: true,
+    controls: false,
+    trial_ends_after_video: true,
+    width: 1280,
+    // height: 720,
+    choices: ['F'],
+    stimulus: [video_pfefix_local + 'test_av.mp4'],
+    prompt: '<p>PRESS \'F\' when you DO NOT feel comfortable about the traffic situation. RELEASE the key when you feel comfortable again.</p>',
+    extensions: [
+      {
+        type: jsPsychExtensionWebgazer, 
+        params: {targets: ['#jspsych-image-keyboard-response-stimulus']}
+      }
+    ]
+}
+var test_trial_av_2 = {
+    type: jsPsychVideoKeyboardMultipleResponsesRelease,
+    autoplay: true,
+    controls: false,
+    trial_ends_after_video: true,
+    width: 1280,
+    // height: 720,
+    choices: ['F'],
+    stimulus: [video_pfefix_local + 'test_av.mp4'],
+    prompt: '<p>PRESS \'F\' when you DO NOT feel comfortable about the traffic situation. RELEASE the key when you feel comfortable again.</p>',
+    extensions: [
+      {
+        type: jsPsychExtensionWebgazer, 
+        params: {targets: ['#jspsych-image-keyboard-response-stimulus']}
+      }
+    ]
+}
+var test_trial_av_3 = {
     type: jsPsychVideoKeyboardMultipleResponsesRelease,
     autoplay: true,
     controls: false,
@@ -343,8 +377,8 @@ var instructions_block_mv = {
         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-6">White cars</h1><p class="lead">Each scenario will have one or more white car(s). See the image below. Please pay attention to their behaviour. After each video, you will answer questions on how you feel about the behaviour of the white car(s).<div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'white_mv_ego_mv_8.5s.jpg\'/ style="width: 60%; margin: auto; display: block;"></div></div><div class="row"><div class="col"><p class="text-center">The white car.</p></div></div></div></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-6">Red cars</h1><p class="lead">Other cars are all in red colour to let the white car(s) stand out. See image below.</br><div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'red_ego_mv_8.5s.jpg\'/ style="width: 60%; margin: auto; display: block;"></div></div><div class="row"><div class="col"><p class="text-center">Red cars.</p></div></div></div></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-6">Driving mode</h1><p class="lead">In <strong>some of the videos</strong>, the white car(s) will have blue markings on the windows (see the images below with the white cars), which indicate that in those scenarios, the white car is <span style="font-weight: bold;">driving autonomously*</span>.<div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'white_mv_ego_mv_8.5s.jpg\'/ style="width: 100%"></div><div class="col"><img src=\'' + image_pfefix + 'white_av_ego_mv_8.5s.jpg\'/ style="width: 100%"></div></div><div class="row"><div class="col"><p class="text-center">The white car drives manually (left) and autonomously (right)</p></div></div></div></p><hr><p>*Please note that in this study, the term "autonomous" refers to the state where the car driving system is taking control and operating without direct human intervention.</p><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
-        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Task description</h1><p class="lead">Please imagine that you are the driver in the manual car in all the videos you will watch.</p><p class="lead">You will watch ' + n_videos_per_participant * n_videos_repeat + ' videos of traffic situations. Each video starts with a black screen.</p><p class="lead">As soon as you see the black screen, press \'F\' to start the video.</p><p class="lead">After the video starts, PRESS and HOLD \'F\' key when you experience any discomfort with the traffic situation, and release it when you feel comfortable again. You can press and release the key as many times as you want per video. After each video, you will answer questions about the behaviour of the white car(s) based on your feelings.</p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p><p class="lead">The window of your browser should be at least 1300px wide and 800px tall.</p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',//tasks
-        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Test trial</h1><p class="lead">On the next page, you will have the opportunity to familiarise yourself with the task that you will be required to perform.</p><p class="lead">During the test trial, please also:<ol><li>Adjust the volume to a moderate level where you can hear the sound of the video well.</li><li>Adjust the brightness of the screen until you can clearly see the video.</li></ol></p><hr><p>Press \'Next\' to proceed to the test trial.</p></div></div>'
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Task description</h1><p class="lead">Please imagine that you are the driver in the manual car in all the videos you will watch.</p><p class="lead">You will watch ' + n_videos_per_participant * n_videos_repeat + ' videos of traffic situations. Each video starts with a black screen.</p><p class="lead">As soon as you see the black screen, always press \'F\' to start the video.</p><p class="lead">After the video starts, PRESS and HOLD \'F\' key when you experience any discomfort with the traffic situation, and release it when you feel comfortable again. You can press and release the key as many times as you want per video. After each video, you will answer questions about the behaviour of the white car(s) based on your feelings.</p><hr><p class="lead">The window of your browser should be at least 1300px wide and 800px tall.</p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',//tasks
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Test trial</h1><p class="lead">In the next phase, you will encounter 3 test trials. These test trials provide you with an opportunity to become familiar with the tasks you will be required to perform.</p><p class="lead">During the test trials, please also:<ol><li>Adjust the volume to a moderate level where you can hear the sound of the video well.</li><li>Adjust the brightness of the screen until you can clearly see the video.</li></ol></p><hr><p>Press \'Next\' to proceed to the test trial.</p></div></div>'
     ],
     show_clickable_nav: true,
     data: {
@@ -361,7 +395,41 @@ var instructions_block_mv = {
     }
 }
 
-var test_trial_mv = {
+var test_trial_mv_1 = {
+    type: jsPsychVideoKeyboardMultipleResponsesRelease,
+    autoplay: true,
+    controls: false,
+    trial_ends_after_video: true,
+    width: 1280,
+    // height: 720,
+    choices: ['F'],
+    stimulus: [video_pfefix_local + 'test_mv.mp4'],
+    prompt: '<p>PRESS \'F\' when you DO NOT feel comfortable about the traffic situation. RELEASE the key when you feel comfortable again.</p>',
+    extensions: [
+      {
+        type: jsPsychExtensionWebgazer, 
+        params: {targets: ['#jspsych-image-keyboard-response-stimulus']}
+      }
+    ]
+}
+var test_trial_mv_2 = {
+    type: jsPsychVideoKeyboardMultipleResponsesRelease,
+    autoplay: true,
+    controls: false,
+    trial_ends_after_video: true,
+    width: 1280,
+    // height: 720,
+    choices: ['F'],
+    stimulus: [video_pfefix_local + 'test_mv.mp4'],
+    prompt: '<p>PRESS \'F\' when you DO NOT feel comfortable about the traffic situation. RELEASE the key when you feel comfortable again.</p>',
+    extensions: [
+      {
+        type: jsPsychExtensionWebgazer, 
+        params: {targets: ['#jspsych-image-keyboard-response-stimulus']}
+      }
+    ]
+}
+var test_trial_mv_3 = {
     type: jsPsychVideoKeyboardMultipleResponsesRelease,
     autoplay: true,
     controls: false,
@@ -434,9 +502,12 @@ var image_block = {
 // continue before showing the image
 var continue_block = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: '<p>Press \'C\' to continue to the next page with a video.</p>',
+    stimulus: '<p>Press \'C\' to continue to the next page with a video.</p><p>As soon as you see the black screen in the next page, press \'F\' to start the video.</p>',
     choices: ['C']
 };
+
+
+
 // define 'continue to experiment' block
 var continue_to_experiment = {
     type: jsPsychHtmlKeyboardResponse,
@@ -623,14 +694,32 @@ if (eye_tracking) {  // toggle for using eye tracking
 // choose correct instructions page
 if (participant_group) { // positive = ego_mv
     timeline.push(instructions_block_mv);  // instructions
+    timeline.push(continue_block); // page to continue to next trial
     timeline.push(image_block);  // page with an image asking to press the key
-    timeline.push(test_trial_mv); // test trial
+    timeline.push(test_trial_mv_1); // test trial1
+    timeline.push(qs_video);
+    timeline.push(continue_block); // page to continue to next trial
+    timeline.push(image_block);  // page with an image asking to press the key
+    timeline.push(test_trial_mv_2); // test trial2
+    timeline.push(qs_video);
+    timeline.push(continue_block); // page to continue to next trial
+    timeline.push(image_block);  // page with an image asking to press the key
+    timeline.push(test_trial_mv_3); // test trial3
     timeline.push(qs_video);
     timeline.push(continue_to_experiment)
 } else { // negative = ego_av
     timeline.push(instructions_block_av);  // instructions
+    timeline.push(continue_block); // page to continue to next trial
     timeline.push(image_block);  // page with an image asking to press the key
-    timeline.push(test_trial_av);  // test trial
+    timeline.push(test_trial_av_1);  // test trial1
+    timeline.push(qs_video);
+    timeline.push(continue_block); // page to continue to next trial
+    timeline.push(image_block);  // page with an image asking to press the key
+    timeline.push(test_trial_av_2);  // test trial2
+    timeline.push(qs_video);
+    timeline.push(continue_block); // page to continue to next trial
+    timeline.push(image_block);  // page with an image asking to press the key
+    timeline.push(test_trial_av_3);  // test trial3
     timeline.push(qs_video);
     timeline.push(continue_to_experiment)
 }
