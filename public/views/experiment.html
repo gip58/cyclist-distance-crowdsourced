@@ -437,8 +437,10 @@ video_ids = shuffle(video_ids);  // shuffle ids
 // build array with videos with stimuli
 video_preload = []; // array for preloading of videos
 // add videos from test trials to preload
-video_preload.push(video_pfefix_local + 'test_av.mp4');
-video_preload.push(video_pfefix_local + 'test_mv.mp4');
+video_preload.push(video_pfefix_local + 'test_av_0.mp4');
+video_preload.push(video_pfefix_local + 'test_av_1.mp4');
+video_preload.push(video_pfefix_local + 'test_mv_0.mp4');
+video_preload.push(video_pfefix_local + 'test_mv_1.mp4');
 for (var i = 0; i < n_videos_per_participant * n_videos_repeat; i++) {
     video_preload.push(video_pfefix + video_ids[i] + '.mp4');
     video_stimuli.push({
