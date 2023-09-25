@@ -352,23 +352,6 @@ var test_trial_av_2 = {
       }
     ]
 }
-var test_trial_av_3 = {
-    type: jsPsychVideoKeyboardMultipleResponsesRelease,
-    autoplay: true,
-    controls: false,
-    trial_ends_after_video: true,
-    width: 1280,
-    // height: 720,
-    choices: ['F'],
-    stimulus: [video_pfefix_local + 'test_av_1.mp4'],
-    prompt: '<p>PRESS \'F\' when you DO NOT feel comfortable about the traffic situation. RELEASE the key when you feel comfortable again.</p>',
-    extensions: [
-      {
-        type: jsPsychExtensionWebgazer, 
-        params: {targets: ['#jspsych-image-keyboard-response-stimulus']}
-      }
-    ]
-}
 
 // define instructions block
 var instructions_block_mv = {
@@ -415,23 +398,6 @@ var test_trial_mv_1 = {
     ]
 }
 var test_trial_mv_2 = {
-    type: jsPsychVideoKeyboardMultipleResponsesRelease,
-    autoplay: true,
-    controls: false,
-    trial_ends_after_video: true,
-    width: 1280,
-    // height: 720,
-    choices: ['F'],
-    stimulus: [video_pfefix_local + 'test_mv_1.mp4'],
-    prompt: '<p>PRESS \'F\' when you DO NOT feel comfortable about the traffic situation. RELEASE the key when you feel comfortable again.</p>',
-    extensions: [
-      {
-        type: jsPsychExtensionWebgazer, 
-        params: {targets: ['#jspsych-image-keyboard-response-stimulus']}
-      }
-    ]
-}
-var test_trial_mv_3 = {
     type: jsPsychVideoKeyboardMultipleResponsesRelease,
     autoplay: true,
     controls: false,
