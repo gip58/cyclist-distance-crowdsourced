@@ -3,7 +3,7 @@ using UnityEngine;
 public class TakeScreenshot : MonoBehaviour
 {
     // The time at which you want to capture the screenshot (in seconds)
-    public float screenshotTime = 5.0f; // Default value of 5 seconds
+    public float screenshotTime = 8.5f; // Default value of 5 seconds
 
     private bool screenshotTaken = false;
 
@@ -13,7 +13,8 @@ public class TakeScreenshot : MonoBehaviour
         if (!screenshotTaken && Time.time >= screenshotTime)
         {
             // Generate a filename for the screenshot based on the time
-            string screenshotFilename = "screenshot_" + screenshotTime.ToString("F1") + "s.jpg";
+            string currentTime = System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+            string screenshotFilename = "screenshot_" + currentTime + "_" + screenshotTime.ToString("F1") + "s.jpg";
 
             // Capture the screenshot and save it with the generated filename
             ScreenCapture.CaptureScreenshot(screenshotFilename);
