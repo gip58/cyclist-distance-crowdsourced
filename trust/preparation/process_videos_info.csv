@@ -83,7 +83,7 @@ in,out,start,end
 81_18_overtaken_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-28_05-10.mp4,video_81.mp4,00:00:01.166,00:00:29.166
 82_19_speed_limit_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-28_05-14.mp4,video_82.mp4,00:00:01.416,00:00:16.416
 83_21_avoid_pedestrian_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-28_05-17.mp4,video_83.mp4,00:00:07.616,00:00:35.616
-84_0_test-trial-video_roleIdx-0_target_labeled-true_ego_labeled-false_23-09-28_05-21.mp4,video_test_mv_0.mp4,00:00:00.200,00:00:35.200
-85_0_test-trial-video_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-28_05-24.mp4,video_test_av_0.mp4,00:00:00.200,00:00:35.200
-86_0_test-trial-video_roleIdx-0_target_labeled-false_ego_labeled-true_23-09-28_05-28.mp4,video_test_mv_1.mp4,00:00:00.200,00:00:35.200
-87_0_test-trial-video_roleIdx-0_target_labeled-false_ego_labeled-false_23-09-28_05-32.mp4,video_test_av_1.mp4,00:00:00.200,00:00:35.200
+84_0_test-trial-video_roleIdx-0_target_labeled-true_ego_labeled-false_23-09-28_05-21.mp4,video_test_mv_0.mp4,00:00:00.200,00:00:25.200
+85_0_test-trial-video_roleIdx-0_target_labeled-true_ego_labeled-true_23-09-28_05-24.mp4,video_test_av_0.mp4,00:00:00.200,00:00:25.200
+86_0_test-trial-video_roleIdx-0_target_labeled-false_ego_labeled-true_23-09-28_05-28.mp4,video_test_mv_1.mp4,00:00:00.200,00:00:25.200
+87_0_test-trial-video_roleIdx-0_target_labeled-false_ego_labeled-false_23-09-28_05-32.mp4,video_test_av_1.mp4,00:00:00.200,00:00:25.200
