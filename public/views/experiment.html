@@ -477,12 +477,12 @@ var continue_block = {
 // ask if pps understand the required task
 var continue_test_1 = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: '<p>Press \'C\' to continue to the next page with test trial 1.</p>',
+    stimulus: '<p>Press \'C\' to continue to the next page with the first test trial.</p>',
     choices: ['C']
 };
 var continue_test_2 = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: '<p>Press \'C\' to continue to the next page with test trial 2.</p>',
+    stimulus: '<p>Press \'C\' to continue to the next page with the second test trial.</p>',
     choices: ['C']
 };
 
@@ -679,6 +679,7 @@ if (eye_tracking) {  // toggle for using eye tracking
     timeline.push(validation); 
     timeline.push(recalibrate);
     timeline.push(calibration_done);
+    timeline.push(save_data_block);  // save data
 }
 // choose correct instructions page
 if (participant_group) { // positive = ego_mv
@@ -691,7 +692,7 @@ if (participant_group) { // positive = ego_mv
     timeline.push(image_block);  // page with an image asking to press the key
     timeline.push(test_trial_mv_2); // test trial2
     timeline.push(qs_video);
-    timeline.push(continue_to_experiment)
+    timeline.push(continue_to_experiment);
 } else { // negative = ego_av
     timeline.push(instructions_block_av);  // instructions
     timeline.push(continue_test_1);
@@ -702,8 +703,9 @@ if (participant_group) { // positive = ego_mv
     timeline.push(image_block);  // page with an image asking to press the key
     timeline.push(test_trial_av_2);  // test trial2
     timeline.push(qs_video);
-    timeline.push(continue_to_experiment)
+    timeline.push(continue_to_experiment);
 }
+timeline.push(save_data_block);  // save data
 // iterate over blocks
 for (var i = 0; i < n_videos_per_participant * n_videos_repeat; i++) {
     timeline.push(continue_block); // page to continue to next trial
