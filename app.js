@@ -24,8 +24,8 @@ app.use(express.static(process.env.PWD + '/public'));
 app.use('/jspsych', express.static(process.env.PWD + "/jspsych"));
 
 // --- BODY PARSING MIDDLEWARE
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(body_parser.json({limit: '50mb'}));
+app.use(body_parser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.json());
 
 // --- VIEW LOCATION, SET UP SERVING STATIC HTML
