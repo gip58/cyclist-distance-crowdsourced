@@ -38,10 +38,15 @@
 // by Pavlo Bazilinskyy <p.bazilinskyy@tue.nl>
 
 // Constants
-var videos_mv_first = 0;  // first videos with ego-mv (manual vehicle)
-var videos_mv_last = 41;  // last videos with ego-mv (manual vehicle)
-var videos_av_first = 42;  // first videos with ego-av (automated vehicle)
-var videos_av_last = 83;  //first videos with ego-av (automated vehicle)
+// TODO: Ruolin double check video ids
+var videos_mv_mv_first = 0; // first videos with ego-mv (manual vehicle) and target-mv
+var videos_mv_mv_last = 20;   // last videos with ego-mv and target-mv
+var videos_mv_av_first = 21;  // first videos with ego-mv and target-av (automated)
+var videos_mv_av_last = 41;  // last videos with ego-mv and target-av
+var videos_av_mv_first = 42;  // first videos with ego-av and target-mv
+var videos_av_mv_last = 62;  // last videos with ego-av and target-mv
+var videos_av_av_first = 63;  // first videos with ego-av and target-av
+var videos_av_av_last = 83;  // last videos with ego-av and target-av
 var n_videos_per_participant = 42; // number of videos per participant
 var n_videos_repeat = 1; // number of repeats of each condition
 var n_videos_break = 10; // number of videos between each break
@@ -143,8 +148,8 @@ function getWorkerCode() {
 
 var worker_code = getWorkerCode();
 
-// groups of participant. either 0 or 1
-var participant_group = getRandomInt(0,1);
+// groups of participant. either 0 or 3
+var participant_group = getRandomInt(0, 3);
 if (debug) {
     console.log('participant_group', participant_group);
 }
@@ -300,7 +305,7 @@ var instructions_block_av = {
         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-6">Red cars</h1><p class="lead">Other cars are all in red colour to let the white car(s) stand out. See the image below.</br><div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'red_ego_av_8500ms.jpg\'/ style="width: 60%; margin: auto; display: block;"></div></div><div class="row"><div class="col"><p class="text-center">Red cars.</p></div></div></div></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',//red car
         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-6">Driving mode</h1><p class="lead">In <strong>some of the videos</strong>, the white car(s) will also have blue overlay on the windows (see the images below with the white cars), which indicates that in those scenarios, the white car is <span style="font-weight: bold;">driving autonomously</span>.<p>Please pay attention to the driving mode of the target car during the experiment.</p><div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'white_mv_ego_av_8500ms.jpg\'/ style="width: 100%"></div><div class="col"><img src=\'' + image_pfefix + 'white_av_ego_av_8500ms.jpg\'/ style="width: 100%"></div></div><div class="row"><div class="col"><p class="text-center">The white car drives manually (left) and autonomously (right)</p></div></div></div></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',//blue overlay
         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Task description</h1><p class="lead">Please imagine that you are the driver in the autonomously driving car in all the videos you will watch.</p><p class="lead">You will watch ' + n_videos_per_participant * n_videos_repeat + ' videos of traffic situations. Each video starts with a black screen.</p><p class="lead">As soon as you see the black screen, press \'F\' to start the video.</p><p class="lead">After the video starts, PRESS and HOLD \'F\' key when you experience any discomfort with the traffic situation, and release it when you feel comfortable again. You can press and release the key as many times as you want per video. After each video, you will answer questions about the behaviour of the white car(s) based on your feelings.</p><p class="lead">The window of your browser should be at least 1300px wide and 800px tall.</p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
-        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Test trial</h1><p class="lead">In the next phase, you will encounter 2 test trials. Each trial contains one video and multiple questions. These test trials provide you with an opportunity to become familiar with the tasks you will be required to perform.</p><p class="lead">During the test trials, please also:<ol><li>Adjust the volume level until you can hear the sound of the video well.</li><li>Adjust the brightness of the screen until you can see the video clearly.</li></ol></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>'
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Test trial</h1><p class="lead">In the next phase, you will encounter two test trials. Each trial contains one video and multiple questions. These test trials provide you with an opportunity to become familiar with the tasks you will be required to perform.</p><p class="lead">During the test trials, please also:<ol><li>Adjust the volume level until you can hear the sound of the video well.</li><li>Adjust the brightness of the screen until you can see the video clearly.</li></ol></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>'
     ],
     show_clickable_nav: true,
     data: {
@@ -317,7 +322,7 @@ var instructions_block_av = {
     }
 }
 
-var test_trial_av_1 = {
+var test_trial_av_0 = {
     type: jsPsychVideoKeyboardMultipleResponsesRelease,
     autoplay: true,
     controls: false,
@@ -334,7 +339,7 @@ var test_trial_av_1 = {
       }
     ]
 }
-var test_trial_av_2 = {
+var test_trial_av_1 = {
     type: jsPsychVideoKeyboardMultipleResponsesRelease,
     autoplay: true,
     controls: false,
@@ -361,7 +366,7 @@ var instructions_block_mv = {
         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-6">Red cars</h1><p class="lead">Other cars are all in red colour to let the white car(s) stand out. See the image below.</br><div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'red_ego_mv_8500ms.jpg\'/ style="width: 60%; margin: auto; display: block;"></div></div><div class="row"><div class="col"><p class="text-center">Red cars.</p></div></div></div></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-6">Driving mode</h1><p class="lead">In <strong>some of the videos</strong>, the white car(s) will have blue overlay on the windows (see the images below with the white cars), which indicates that in those scenarios, the white car is <span style="font-weight: bold;">driving autonomously*</span>.<p>Please pay attention to the driving mode of the target car during the experiment.</p><div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'white_mv_ego_mv_8500ms.jpg\'/ style="width: 100%"></div><div class="col"><img src=\'' + image_pfefix + 'white_av_ego_mv_8500ms.jpg\'/ style="width: 100%"></div></div><div class="row"><div class="col"><p class="text-center">The white car drives manually (left) and autonomously (right)</p></div></div></div></p><p>* Please note that in this study, the term "autonomous" refers to the state where the car driving system is taking control and operating without direct human intervention.</p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
         '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Task description</h1><p class="lead">Please imagine that you are the driver in the manual car in all the videos you will watch.</p><p class="lead">You will watch ' + n_videos_per_participant * n_videos_repeat + ' videos of traffic situations. Each video starts with a black screen.</p><p class="lead">As soon as you see the black screen, press \'F\' to start the video.</p><p class="lead">After the video starts, PRESS and HOLD \'F\' key when you experience any discomfort with the traffic situation, and release it when you feel comfortable again. You can press and release the key as many times as you want per video. After each video, you will answer questions about the behaviour of the white car(s) based on your feelings.</p><p class="lead">The window of your browser should be at least 1300px wide and 800px tall.</p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',//tasks
-        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Test trial</h1><p class="lead">In the next phase, you will encounter 2 test trials. Each trial contains one video and multiple questions. These test trials provide you with an opportunity to become familiar with the tasks you will be required to perform.</p><p class="lead">During the test trials, please also:<ol><li>Adjust the volume level until you can hear the sound of the video well.</li><li>Adjust the brightness of the screen until you can see the video clearly.</li></ol></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>'
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Test trial</h1><p class="lead">In the next phase, you will encounter two test trials. Each trial contains one video and multiple questions. These test trials provide you with an opportunity to become familiar with the tasks you will be required to perform.</p><p class="lead">During the test trials, please also:<ol><li>Adjust the volume level until you can hear the sound of the video well.</li><li>Adjust the brightness of the screen until you can see the video clearly.</li></ol></p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>'
     ],
     show_clickable_nav: true,
     data: {
@@ -378,7 +383,7 @@ var instructions_block_mv = {
     }
 }
 
-var test_trial_mv_1 = {
+var test_trial_mv_0 = {
     type: jsPsychVideoKeyboardMultipleResponsesRelease,
     autoplay: true,
     controls: false,
@@ -395,7 +400,7 @@ var test_trial_mv_1 = {
       }
     ]
 }
-var test_trial_mv_2 = {
+var test_trial_mv_1 = {
     type: jsPsychVideoKeyboardMultipleResponsesRelease,
     autoplay: true,
     controls: false,
@@ -414,24 +419,73 @@ var test_trial_mv_2 = {
 }
 
 // choose correct video stimuli
-if (participant_group) { // positive = ego-mv
-    for (var i = videos_mv_first; i <= videos_mv_last; i++) {
+video_ids_0 = [];  // placeholder for videos of first batch
+video_ids_1 = [];  // placeholder for videos of second batch
+// TODO: Ruolin check these numbers
+if (participant_group == 0) {  // group 0
+   // ego-mv - target-mv
+    for (var i = videos_mv_mv_first; i <= videos_mv_mv_last; i++) {
         for (var j = 0; j < n_videos_repeat; j++) {
-            video_ids.push(i);
+            video_ids_0.push(i);
         }
     }
+    video_ids_0 = shuffle(video_ids_0);  // shuffle video IDs
+    // ego-mv - target-av
+    for (var i = videos_mv_av_first; i <= videos_mv_av_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_1.push(i);
+        }
+    }
+    video_ids_1 = shuffle(video_ids_1);  // shuffle video IDs
+} if (participant_group == 1) { // group 1
+    // ego-mv - target-av
+    for (var i = videos_mv_av_first; i <= videos_mv_av_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_0.push(i);
+        }
+    }
+    video_ids_0 = shuffle(video_ids_0);  // shuffle video IDs
+    // ego-mv - target-mv
+    for (var i = videos_mv_mv_first; i <= videos_mv_mv_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_1.push(i);
+        }
+    }
+    video_ids_1 = shuffle(video_ids_1);  // shuffle video IDs
+} if (participant_group == 2) {  // group 2
+    // ego-av - target-mv
+    for (var i = videos_av_mv_first; i <= videos_av_mv_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_0.push(i);
+        }
+    }
+    video_ids_0 = shuffle(video_ids_0);  // shuffle video IDs
+    // ego-av - target-av
+    for (var i = videos_av_av_first; i <= videos_av_av_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_1.push(i);
+        }
+    }
+    video_ids_1 = shuffle(video_ids_1);  // shuffle video IDs
+} if (participant_group == 3) {  // group 3
+    // ego-av - target-av
+    for (var i = videos_av_av_first; i <= videos_av_av_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_0.push(i);
+        }
+    }
+    video_ids_0 = shuffle(video_ids_0);  // shuffle video IDs
+    // target-av
+    for (var i = videos_av_mv_first; i <= videos_av_mv_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_1.push(i);
+        }
+    }
+    video_ids_0 = shuffle(video_ids_1);  // shuffle video IDs
 } else { // negative = ego_av
-    for (var i = videos_av_first; i <= videos_av_last; i++) {
-        for (var j = 0; j < n_videos_repeat; j++) {
-            video_ids.push(i);
-        }
-    }
+    console.log('wrong participant_group id of ', participant_group);
 }
-// populate array with video IDs for group 0
-
-
-video_ids = shuffle(video_ids);  // shuffle ids
-
+video_ids = video_ids_0.concat(video_ids_1);  // shuffle ids
 // build array with videos with stimuli
 video_preload = []; // array for preloading of videos
 // add videos from test trials to preload
@@ -475,12 +529,12 @@ var continue_block = {
 };
 
 // ask if pps understand the required task
-var continue_test_1 = {
+var continue_test_0 = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: '<p>Press \'C\' to continue to the next page with the first test trial.</p>',
     choices: ['C']
 };
-var continue_test_2 = {
+var continue_test_1 = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: '<p>Press \'C\' to continue to the next page with the second test trial.</p>',
     choices: ['C']
@@ -682,28 +736,53 @@ if (eye_tracking) {  // toggle for using eye tracking
     timeline.push(save_data_block);  // save data
 }
 // choose correct instructions page
-if (participant_group) { // positive = ego_mv
+// TODO: Ruolin finish instructions per group
+if (participant_group == 0) { // group 0
     timeline.push(instructions_block_mv);  // instructions
+    timeline.push(continue_test_0);
+    timeline.push(image_block);  // page with an image asking to press the key
+    timeline.push(test_trial_mv_0); // test trial1
+    timeline.push(qs_video);
     timeline.push(continue_test_1);
     timeline.push(image_block);  // page with an image asking to press the key
-    timeline.push(test_trial_mv_1); // test trial1
-    timeline.push(qs_video);
-    timeline.push(continue_test_2);
-    timeline.push(image_block);  // page with an image asking to press the key
-    timeline.push(test_trial_mv_2); // test trial2
+    timeline.push(test_trial_mv_1); // test trial2
     timeline.push(qs_video);
     timeline.push(continue_to_experiment);
-} else { // negative = ego_av
-    timeline.push(instructions_block_av);  // instructions
+} else if (participant_group == 1) { // group 1
+    timeline.push(instructions_block_mv);  // instructions
+    timeline.push(continue_test_0);
+    timeline.push(image_block);  // page with an image asking to press the key
+    timeline.push(test_trial_mv_0); // test trial1
+    timeline.push(qs_video);
     timeline.push(continue_test_1);
     timeline.push(image_block);  // page with an image asking to press the key
-    timeline.push(test_trial_av_1);  // test trial1
-    timeline.push(qs_video);
-    timeline.push(continue_test_2);
-    timeline.push(image_block);  // page with an image asking to press the key
-    timeline.push(test_trial_av_2);  // test trial2
+    timeline.push(test_trial_mv_1); // test trial2
     timeline.push(qs_video);
     timeline.push(continue_to_experiment);
+} else if (participant_group == 2) { // group 2
+    timeline.push(instructions_block_mv);  // instructions
+    timeline.push(continue_test_0);
+    timeline.push(image_block);  // page with an image asking to press the key
+    timeline.push(test_trial_mv_0); // test trial1
+    timeline.push(qs_video);
+    timeline.push(continue_test_1);
+    timeline.push(image_block);  // page with an image asking to press the key
+    timeline.push(test_trial_mv_1); // test trial2
+    timeline.push(qs_video);
+    timeline.push(continue_to_experiment);
+} else if (participant_group == 0) { // group 3
+    timeline.push(instructions_block_mv);  // instructions
+    timeline.push(continue_test_0);
+    timeline.push(image_block);  // page with an image asking to press the key
+    timeline.push(test_trial_mv_0); // test trial1
+    timeline.push(qs_video);
+    timeline.push(continue_test_1);
+    timeline.push(image_block);  // page with an image asking to press the key
+    timeline.push(test_trial_mv_1); // test trial2
+    timeline.push(qs_video);
+    timeline.push(continue_to_experiment);
+} else {
+    console.log('wrong participant_group of ', participant_group);
 }
 timeline.push(save_data_block);  // save data
 // iterate over blocks
@@ -732,6 +811,7 @@ if (debug) {
     console.log('video_stimuli', video_stimuli);
     console.log('qs_video', qs_video);
     console.log('between_blocks', between_blocks);
+    console.log('participant_group', participant_group);
 }
 
 /* Start the experiment */
