@@ -112,7 +112,7 @@
   <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
-<cml:radios label="Using a mobile phone without a hands free kit." class="" id="" validates="required">
+<cml:radios label="Using a smartphone in your hands while driving." class="" id="" validates="required">
   <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
   <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
   <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
@@ -215,7 +215,7 @@
 </cml:ratings>
 <p class="header">
   <strong>Experiment to investigate factors that play a role in interaction between manually driven and automated vehicles</strong>
-  In this experiment, you will see multiple videos and are asked to answer questions based on your feelings about the content of videos. During the experiment, the videos will contain manually-driven cars as well as automated cars. Automated cars are displayed with a blue marking on their windows. You will be asked to leave Appen to participate in the experiment. You will need to open the link below. Do not close this tab. At the end of the experiment, you will be given a code to input in the next question on this tab. Please take a note of the code. Without the code, you will not be able to receive money for your participation. All videos will be downloaded before the start of the experiment. It may take a few minutes. Please do not close your browser during that time.
+  In this experiment, you will see multiple videos and are asked to answer questions based on your feelings about the content of videos. During the experiment, the videos will contain manually-driven cars as well as automated cars. Automated cars are displayed with a blue marking on their windows. You will be asked to leave Appen to participate in the experiment. You will need to open the link below. Do not close this Appen tab. At the end of the experiment, you will be given a code to input in the next question on this tab. Please take a note of the code. Without the code, you will not be able to receive money for your participation. All videos will be downloaded before the start of the experiment. It may take a few minutes. Please do not close your browser during that time.
   <br/>
 </p>
 <p class="header2">Open 
