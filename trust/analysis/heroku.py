@@ -397,7 +397,7 @@ class Heroku:
                 video_len = self.mapping.loc[video_id]['video_length']
                 rt_data = []
                 counter_data = 0
-                for (col_name, col_data) in self.heroku_data.iteritems():
+                for (col_name, col_data) in self.heroku_data.items():
                     # find the right column to loop through
                     if video_rt == col_name:
                         # loop through rows in column
@@ -514,7 +514,7 @@ class Heroku:
                 video_as = 'video_' + str(num) + '-as-' + str(rep)
                 video_order = 'video_' + str(num) + '-qs-' + str(rep)
                 # loop over columns
-                for col_name, col_data in self.heroku_data.iteritems():
+                for col_name, col_data in self.heroku_data.items():
                     # when col_name equals video, then check
                     if col_name == video_as:
                         # loop over rows in column
@@ -635,7 +635,8 @@ class Heroku:
                 if counter_filtered / data_count > self.allowed_length:
                     # if threshold reached, append data of this participant to
                     # df_1
-                    df_1 = df_1.append(row)
+                    df_1 = pd.concat([df_1, pd.DataFrame([row])],
+                                     ignore_index=True)
         logger.info('Filter-h1. People who had more than {} share of stimuli'
                     + ' of unexpected length: {}.',
                     self.allowed_length,
@@ -661,7 +662,8 @@ class Heroku:
                             counter_filtered = counter_filtered + 1
             if counter_filtered > self.allowed_signs:
                 # append participant if too much mistakes in signs_answers
-                df_2 = df_2.append(row)
+                df_2 = pd.concat([df_2, pd.DataFrame([row])],
+                                 ignore_index=True)
         # people that made too many mistakes with questions with traffic signs
         logger.info('Filter-h2. People who made more than {} mistakes with '
                     + 'questions of traffic signs: {}',
@@ -701,10 +703,13 @@ class Heroku:
             # arrays to store in data of one video
             bin_data = []
             # convert data from string to array
-            if type(row[col_name]) != list:
-                data = ast.literal_eval(row[col_name])
+            if type(row[col_name]) != float:
+                if type(row[col_name]) != list:
+                    data = ast.literal_eval(row[col_name])
+                else:
+                    data = row[col_name]
             else:
-                data = row[col_name]
+                data = ''
             # check if there is actually data to process
             if len(data) > 1:
                 bin_count = 0
@@ -722,7 +727,7 @@ class Heroku:
                         # append average of the data of new bin size
                 updated_col.append(bin_data)
             else:
-                updated_col.append(['no data found'])
+                updated_col.append('')
         # add data to mapping
         df[col_name] = updated_col
         return df
@@ -797,6 +802,26 @@ class Heroku:
         df[col_name] = col_data
         return df
 
+    def check_dist_type(self, df, col_name):
+        """Check distance type
+
+        Args:
+            df (TYPE): dataframe with data.
+            col_name (TYPE): column to check in df.
+
+        Returns:
+            dataframe: updated dataframe.
+        """
+        # todo: improve documentation
+        new_array = []
+        for index, row in df.iterrows():
+            if re.search('nan', str(row[col_name])) is None:
+                new_array.append(float(row[col_name]))
+            else:
+                new_array.append('')
+        df[col_name] = new_array
+        return df
+
     def verify_looking(self, df):
         """Check if looking is correctly perceived by the participants
 
@@ -821,11 +846,12 @@ class Heroku:
         df['looking_fails'] = failedarray
         return df
 
-    def add_binary_data(self, df, col_name, key, new_col_name):
+    def add_binary_data(self, df, tf, col_name, key, new_col_name):
         """Check for a certain key in rows
 
         Args:
             df: dataframe of mapping file
+            tf: logical statement for the check of the value.
             row: Which row to retrieve from
             key: keyword of which to retrieve
 
@@ -836,7 +862,7 @@ class Heroku:
         # loop over rows in dataframe
         for index, row in df.iterrows():
             # if key is found in rows, then
-            if re.search(key, row[col_name]) is not None:
+            if re.search(key, row[col_name]) is tf:
                 value = 0
             else:
                 value = 1
@@ -846,8 +872,7 @@ class Heroku:
         return df
 
     def add_data_at_time(self, df, col, time_array):
-
-        """retrieve column with data at a certain time.
+        """Retrieve column with data at a certain time.
 
         Args:
             df: dataframe of mapping file
@@ -871,25 +896,25 @@ class Heroku:
                 if type(array) == list:
                     # check if correct data is contained in list
                     if len(array) < 2:
-                        data_array.append(['no data found'])
+                        data_array.append('')
                     else:
                         data_array.append(array[vel_index])
                 # create array if data is perceived as string
                 elif type(array) == str:
-                    array = ast.literal_eval(array)
-                    # Check if values exist in array
-                    if len(array) < 2:
-                        data_array.append(['no data found'])
-                    else:
+                    if len(array) > 1:
+                        array = ast.literal_eval(array)
                         data_array.append(array[vel_index])
-
+                    else:
+                        data_array.append('')
+                        continue
+                else:
+                    data_array.append('')
             name = col + '_at_' + str(time/1000)
             df[name] = data_array
-
         return df
 
     def add_velocity_at_time(self, df, time_array):
-        """retrieve column with velocity data at a certain time.
+        """Retrieve column with velocity data at a certain time.
 
         Args:
             time (s): The speed on which time you want to receive
@@ -917,6 +942,88 @@ class Heroku:
 
             name = 'velocity_at_' + str(time/1000)
             df[name] = velocity_data
+        return df
+
+    def add_district_data(self, df):
+        """Add column with data containing district
+
+        Args:
+            df: dataframe containing data of districts
+
+        Returns:
+            df: containing an extra column with binary district data
+        """
+        # time from s to ms
+        district = []
+        for index, row in df.iterrows():
+            if row['district'] == 'urbs':
+                district.append(1)
+            elif row['district'] == 'suburbs':
+                district.append(2)
+            elif row['district'] == 'outskirt':
+                district.append(3)
+            else:
+                district.append(0)
+        df['district_new'] = district
+        return df
+
+    def add_avg(self, df, col, col_name):
+        """Add column with avg value of time-series.
+
+        Args:
+            df (s): dataframe containing all data
+            col: column which contains time series data
+            col_name: name of column
+
+        Returns:
+            df: containing an extra column with speed data at specific time.
+        """
+        avg_col = []
+        for index, row in df.iterrows():
+            array = row[col]
+            value = 0
+            count = 0
+            if len(array) > 1:
+                for i, data in enumerate(array):
+                    # disregard the first second (blackscreen)
+                    if i > 9:
+                        value = value + data
+                        count = count + 1
+                avg_col.append(value/count)
+            else:
+                avg_col.append('')
+
+        col_name = 'avg_' + col_name
+        df[col_name] = avg_col
+        return df
+
+    def add_cols_avg(self, df, cols, col_name):
+        """Add averages of columns
+
+        Args:
+            df (TYPE): Description
+            cols (TYPE): Description
+            col_name (TYPE): Description
+
+        Returns:
+            TYPE: Description
+        """
+        # todo: improve documentation
+        avg_col = []
+        for index, row in df.iterrows():
+            value = 0
+            count = 0
+            for col in cols:
+                if type(row[col]) == str:
+                    break
+                value = value + row[col]
+                count = count + 1
+            if count == 0:
+                avg_col.append('')
+            else:
+                avg_col.append(value/count)
+        col_name = 'avg_' + col_name
+        df[col_name] = avg_col
         return df
 
     def show_info(self):
