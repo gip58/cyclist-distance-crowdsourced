@@ -857,6 +857,8 @@ for (var i = 0; i < n_videos_per_participant * n_videos_repeat; i++) {
             timeline.push(continue_session2_g2);
         } else if (participant_group === 3) {
             timeline.push(continue_session2_g3);
+        } else {
+            console.log('wrong participant_group of ', participant_group);
         }
     }
 }
