@@ -196,17 +196,17 @@
 </cml:radios>
 <p class="header2">
  Before answering the following two questions, please note that in this study, the term 
-  <strong>"autonomous"</strong> refers to the state where the car driving system is taking control and operating without direct human intervention.
+  <strong>'automated'</strong> refers to the state where the car driving system is taking control and operating without direct human intervention.
   <br/>
 </p>
-<cml:ratings label="When the autonomous vehicle is on the road, I would feel comfortable about driving on roads alongside autonomous cars." class="" id="" validates="required">
+<cml:ratings label="When the automated vehicle is on the road, I would feel comfortable about driving on roads alongside automated cars." class="" id="" validates="required">
   <cml:rating label="Strongly disagree"/>
   <cml:rating label="Disagree"/>
   <cml:rating label="Neither disagree nor agree"/>
   <cml:rating label="Agree"/>
   <cml:rating label="Strongly agree"/>
 </cml:ratings>
-<cml:ratings label="When the autonomous vehicle is on the road, I would feel comfortable about using an autonomous car instead of driving a traditional car." class="" id="" validates="required">
+<cml:ratings label="When the automated vehicle is on the road, I would feel comfortable about using an automated car instead of driving a traditional car." class="" id="" validates="required">
   <cml:rating label="Strongly disagree"/>
   <cml:rating label="Disagree"/>
   <cml:rating label="Neither disagree nor agree"/>
