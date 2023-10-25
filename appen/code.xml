@@ -61,6 +61,26 @@
   <cml:radio label="More than 100,000 km (more than 62,137 mi)" id="" value="more_than_100000_km_more_than_62137_mi"/>
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
+<cml:checkboxes label="Which option(s) best describe(s) your experience with automated vehicles?" class="" id="" validates="required">
+  <cml:checkbox label="I have never used or been in automated vehicles" value="i_have_never_used_or_been_in_automated_vehicles"/>
+  <cml:checkbox label="I have used advanced driver assistance systems (e.g., adaptive cruise control, lane-keeping assist, automatic emergency braking)" value="i_have_used_advanced_driver_assistance_systems"/>
+  <cml:checkbox label="I have been in an automated vehicle as a passenger" value="i_have_been_in_an_automated_vehicle_as_a_passenger"/>
+  <cml:checkbox label="I have driven an automated vehicle" id="" value="i_have_driven_an_automated_vehicle"/>
+  <cml:checkbox label="I have encountered vehicles with advanced driver assistance systems while driving" id="" value="i_have_encountered_vehicles_with_advanced_driver_assistance_systems_while_driving"/>
+  <cml:rcheckbox label="I have encountered automated vehicles while driving" id="" value="i_have_encountered_automated_vehicles_while_driving"/>
+  <cml:rcheckbox label="I work in a related field (e.g., autonomous vehicle development, ADAS technology, research, or regulation" id="" value="i_work_in_a_related_field"/>
+  <cml:rcheckbox label="Other" id="" value="other"/>
+  <cml:checkbox label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:checkboxes>
+<cml:text label="If you answered 'Other' in the previous question, please describe your input device below."/>
+</cml:radios>
+<cml:ratings label="Please indicate your general attitude towards automated vehicles." class="" id="" validates="required">
+  <cml:rating label="Very Negative" id="" value="very_negative"/>
+  <cml:rating label="Negative" id="" value="negative"/>
+  <cml:rating label="Neutral" id="" value="neutral"/>
+  <cml:rating label="Positive" id="" value="positive"/>
+  <cml:rating label="Very Positive" id="" value="very_positive"/>
+</cml:ratings>
 <p class="header">
   <strong>How often do you do the following?</strong>
 </p>
