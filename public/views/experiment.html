@@ -596,7 +596,7 @@ for (var i = 1; i < n_videos_per_participant * n_videos_repeat; i++) {
     if (videos_done === 10 || videos_done === 31) {
         between_blocks.push({
             type: jsPsychHtmlKeyboardResponse,
-            stimulus: '<div class="alert alert-primary" role="alert" style="text-align: left;"><h4 class="alert-heading">Break</h4><p>You have now completed ' + videos_done + ' videos out of ' + n_videos_per_participant * n_videos_repeat + '.</p><p>Please avoid moving around or changing your current position during the break.</p><hr><p class="mb-0">When ready press 'N' to proceed to the next batch.</p></div>',
+            stimulus: '<div class="alert alert-primary" role="alert" style="text-align: left;"><h4 class="alert-heading">Break</h4><p>You have now completed ' + videos_done + ' videos out of ' + n_videos_per_participant * n_videos_repeat + '.</p><p>Please avoid moving around or changing your current position during the break.</p><hr><p class="mb-0">When ready press \'N\' to proceed to the next batch.</p></div>',
             choices: ['N']
         });
     }
