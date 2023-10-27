@@ -63,14 +63,12 @@
 </cml:radios>
 <cml:checkboxes label="Which option(s) best describe(s) your experience with automated vehicles?" class="" id="" validates="required">
   <cml:checkbox label="I have never used or been in automated vehicles" value="i_have_never_used_or_been_in_automated_vehicles"/>
-  <cml:checkbox label="I have used advanced driver assistance systems (e.g., adaptive cruise control, lane-keeping assist, automatic emergency braking)" value="i_have_used_advanced_driver_assistance_systems"/>
-  <cml:checkbox label="I have been in an automated vehicle as a passenger" value="i_have_been_in_an_automated_vehicle_as_a_passenger"/>
-  <cml:checkbox label="I have driven an automated vehicle" id="" value="i_have_driven_an_automated_vehicle"/>
-  <cml:checkbox label="I have encountered vehicles with advanced driver assistance systems while driving" id="" value="i_have_encountered_vehicles_with_advanced_driver_assistance_systems_while_driving"/>
-  <cml:rcheckbox label="I have encountered automated vehicles while driving" id="" value="i_have_encountered_automated_vehicles_while_driving"/>
-  <cml:rcheckbox label="I work in a related field (e.g., autonomous vehicle development, ADAS technology, research, or regulation" id="" value="i_work_in_a_related_field"/>
-  <cml:rcheckbox label="Other" id="" value="other"/>
-  <cml:checkbox label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+  <cml:checkbox label="I own or have owned a car with automated functions (e.g., adaptive cruise control, lane-keeping system)." value="i_own_or_have_owned_a_car_with_automated_functions"/>
+  <cml:checkbox label="I have had a ride in an automated vehicle (e.g., robotaxi or automated shuttle) as a passenger." value="i_have_had_a_ride_in_an_automated_vehicle_as_a_passenger"/>
+  <cml:checkbox label=" I have encountered automated vehicles (e.g., robotaxis or automated shuttles)  while driving in real traffic." id="" value="i_have_encountered_automated_vehicles_while_driving"/>
+  <cml:checkbox label="I work in a related field (e.g., automated vehicle development, driver support technology, research on automated vehicle functions or regulation for automated driving technologies)." id="" value="i_work_in_a_related_field"/>
+  <cml:checkbox label="Other" id="" value="other"/>
+  <cml:checkbox label="I prefer not to respond." id="" value="i_prefer_not_to_respond"/>
 </cml:checkboxes>
 <cml:text label="If you answered 'Other' in the previous question, please describe your input device below."/>
 </cml:radios>
