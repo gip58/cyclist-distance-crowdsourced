@@ -61,7 +61,7 @@
   <cml:radio label="More than 100,000 km (more than 62,137 mi)" id="" value="more_than_100000_km_more_than_62137_mi"/>
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
-<cml:checkboxes label="Which option(s) best describe(s) your experience with automated vehicles?" class="" id="" validates="required">
+<cml:checkboxes label="Which option(s) best describe(s) your experience with automated* vehicles?" class="" id="" validates="required">
   <cml:checkbox label="I have never used or been in automated vehicles" value="i_have_never_used_or_been_in_automated_vehicles"/>
   <cml:checkbox label="I own or have owned a car with automated functions (e.g., adaptive cruise control, lane-keeping system)." value="i_own_or_have_owned_a_car_with_automated_functions"/>
   <cml:checkbox label="I have had a ride in an automated vehicle (e.g., robotaxi or automated shuttle) as a passenger." value="i_have_had_a_ride_in_an_automated_vehicle_as_a_passenger"/>
@@ -72,6 +72,11 @@
 </cml:checkboxes>
 <cml:text label="If you answered 'Other' in the previous question, please describe your input device below."/>
 </cml:radios>
+<p class="header2">
+ Please note that in this study, the term 
+  <strong>'automated'</strong> refers to the state where the car driving system is taking control and operating without direct human intervention.
+  <br/>
+</p>
 <cml:ratings label="Please indicate your general attitude towards automated vehicles." class="" id="" validates="required">
   <cml:rating label="Very Negative" id="" value="very_negative"/>
   <cml:rating label="Negative" id="" value="negative"/>
@@ -212,11 +217,6 @@
   <cml:radio label="Strongly agree"/>
   <cml:radio label="Don't know"/>
 </cml:radios>
-<p class="header2">
- Before answering the following two questions, please note that in this study, the term 
-  <strong>'automated'</strong> refers to the state where the car driving system is taking control and operating without direct human intervention.
-  <br/>
-</p>
 <cml:ratings label="When the automated vehicle is on the road, I would feel comfortable about driving on roads alongside automated cars." class="" id="" validates="required">
   <cml:rating label="Strongly disagree"/>
   <cml:rating label="Disagree"/>
