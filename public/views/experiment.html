@@ -38,7 +38,6 @@
 // by Pavlo Bazilinskyy <p.bazilinskyy@tue.nl>
 
 // Constants
-// TODO: Ruolin double check video ids
 var videos_mv_mv_first = 0; // first videos with ego-mv (manual vehicle) and target-mv
 var videos_mv_mv_last = 20;   // last videos with ego-mv and target-mv
 var videos_mv_av_first = 21;  // first videos with ego-mv and target-av (automated)
@@ -470,7 +469,6 @@ var continue_session2_g3 = {
 // choose correct video stimuli
 video_ids_0 = [];  // placeholder for videos of first batch
 video_ids_1 = [];  // placeholder for videos of second batch
-// TODO: Ruolin check these numbers
 if (participant_group == 0) {  // group 0
    // ego-mv - target-mv
     for (var i = videos_mv_mv_first; i <= videos_mv_mv_last; i++) {
@@ -789,7 +787,6 @@ if (eye_tracking) {  // toggle for using eye tracking
     timeline.push(save_data_block);  // save data
 }
 // choose correct instructions page
-// TODO: Ruolin finish instructions per group
 if (participant_group == 0) { // group 0
     timeline.push(instructions_block_mv);  // instructions
     timeline.push(continue_test_0);
