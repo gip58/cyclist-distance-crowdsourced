@@ -70,8 +70,7 @@
   <cml:checkbox label="Other" id="" value="other"/>
   <cml:checkbox label="I prefer not to respond." id="" value="i_prefer_not_to_respond"/>
 </cml:checkboxes>
-<cml:text label="If you answered 'Other' in the previous question, please describe your input device below."/>
-</cml:radios>
+<cml:text label="If you answered 'Other' in the previous question, please describe your experience(s) below."/>
 <p class="header2">
  Please note that in this study, the term 
   <strong>'automated'</strong> refers to the state where the car driving system is taking control and operating without direct human intervention.
