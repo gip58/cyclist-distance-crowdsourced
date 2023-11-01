@@ -216,14 +216,14 @@
   <cml:radio label="Strongly agree"/>
   <cml:radio label="Don't know"/>
 </cml:radios>
-<cml:ratings label="When the automated vehicle is on the road, I would feel comfortable about driving on roads alongside automated cars." class="" id="" validates="required">
+<cml:ratings label="When the automated cars are on the road, I will feel comfortable about driving on roads alongside automated cars." class="" id="" validates="required">
   <cml:rating label="Strongly disagree"/>
   <cml:rating label="Disagree"/>
   <cml:rating label="Neither disagree nor agree"/>
   <cml:rating label="Agree"/>
   <cml:rating label="Strongly agree"/>
 </cml:ratings>
-<cml:ratings label="When the automated vehicle is on the road, I would feel comfortable about using an automated car instead of driving a traditional car." class="" id="" validates="required">
+<cml:ratings label="When the automated cars are on the road, I will feel comfortable about using an automated car instead of driving a traditional car." class="" id="" validates="required">
   <cml:rating label="Strongly disagree"/>
   <cml:rating label="Disagree"/>
   <cml:rating label="Neither disagree nor agree"/>
