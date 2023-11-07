@@ -63,7 +63,7 @@
 </cml:radios>
 <cml:checkboxes label="Which option(s) best describe(s) your experience with automated* vehicles?" class="" id="" validates="required">
   <cml:checkbox label="I have never used or been in automated vehicles" value="i_have_never_used_or_been_in_automated_vehicles"/>
-  <cml:checkbox label="I own or have owned a car with automated functions (e.g., adaptive cruise control, lane-keeping system)." value="i_own_or_have_owned_a_car_with_automated_functions"/>
+  <cml:checkbox label="I have experience with driving a car with automated functions (e.g., adaptive cruise control, lane-keeping system)." value="i_own_or_have_owned_a_car_with_automated_functions"/>
   <cml:checkbox label="I have had a ride in an automated vehicle (e.g., robotaxi or automated shuttle) as a passenger." value="i_have_had_a_ride_in_an_automated_vehicle_as_a_passenger"/>
   <cml:checkbox label=" I have encountered automated vehicles (e.g., robotaxis or automated shuttles)  while driving in real traffic." id="" value="i_have_encountered_automated_vehicles_while_driving"/>
   <cml:checkbox label="I work in a related field (e.g., automated vehicle development, driver support technology, research on automated vehicle functions or regulation for automated driving technologies)." id="" value="i_work_in_a_related_field"/>
@@ -134,7 +134,7 @@
   <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
-<cml:radios label="Using a mobile phone without a hands free kit." class="" id="" validates="required">
+<cml:radios label="Using a phone in your hands while driving." class="" id="" validates="required">
   <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
   <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
   <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
