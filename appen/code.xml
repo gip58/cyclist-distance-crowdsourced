@@ -38,7 +38,7 @@
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
 <cml:text label="If you answered 'Other' in the previous question, please describe your input device below."/>
-<cml:text label="At which age did you obtain your first license for driving a car or motorcycle?" class="" validates="positiveInteger"/>
+<cml:text label="At which age did you obtain your first license for driving a car?" class="" validates="positiveInteger"/>
 <cml:radios label="On average, how often did you drive a vehicle in the last 12 months?" class="" validates="required">
   <cml:radio label="Every day" value="every_day"/>
   <cml:radio label="4 to 6 days a week" value="4_to_6_days_a_week"/>
