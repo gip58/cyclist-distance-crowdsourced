@@ -39,7 +39,7 @@
 </cml:radios>
 <cml:text label="If you answered 'Other' in the previous question, please describe your input device below."/>
 <cml:text label="At which age did you obtain your first license for driving a car?" class="" validates="positiveInteger"/>
-<cml:radios label="On average, how often did you drive a vehicle in the last 12 months?" class="" validates="required">
+<cml:radios label="On average, how often did you drive a car in the last 12 months?" class="" validates="required">
   <cml:radio label="Every day" value="every_day"/>
   <cml:radio label="4 to 6 days a week" value="4_to_6_days_a_week"/>
   <cml:radio label="1 to 3 days a week" value="1_to_3_days_a_week"/>
@@ -66,7 +66,7 @@
   <cml:checkbox label="I have experience with driving a car with automated functions (e.g. adaptive cruise control, lane-keeping system)." value="i_have_experience_with_driving_a_car_with_automated_functions"/>
   <cml:checkbox label="I have had a ride in an automated car (e.g. robotaxi or automated shuttle) as a passenger." value="i_have_had_a_ride_in_an_automated_car_as_a_passenger"/>
   <cml:checkbox label=" I have encountered automated cars (e.g. robotaxis or automated shuttles)  while driving." id="" value="i_have_encountered_automated_cars_while_driving"/>
-  <cml:checkbox label="I work in a related field (e.g. automated vehicle development, driver support technology, research on automated vehicle functions or regulation for automated driving technologies)." id="" value="i_work_in_a_related_field"/>
+  <cml:checkbox label="I work in a related field (e.g. automated car development, driver support technology, research on automated car functions or regulation for automated driving technologies)." id="" value="i_work_in_a_related_field"/>
   <cml:checkbox label="Other" id="" value="other"/>
   <cml:checkbox label="I prefer not to respond." id="" value="i_prefer_not_to_respond"/>
 </cml:checkboxes>
@@ -83,6 +83,12 @@
   <cml:rating label="Positive" id="" value="positive"/>
   <cml:rating label="Very Positive" id="" value="very_positive"/>
 </cml:ratings>
+<cml:radios label="Who do you think is more capable of conducting driving-related tasks?" class="" validates="required">
+  <cml:radio label="An automated car" id="" value="an_automated_car"/>
+  <cml:radio label="A human driver" id="" value="a_human_driver"/>
+  <cml:radio label="The automated car and the human driver are equally capable " id="" value="the_automated_car_and_the_human_driver_are_equally_capable"/>
+  <cml:radio label="I don't know" id="" value="i_dont_know"/>
+</cml:radios>
 <p class="header">
   <strong>How often do you do the following?</strong>
 </p>
@@ -232,7 +238,12 @@
 </cml:ratings>
 <p class="header">
   <strong>Experiment to investigate factors that play a role in interaction between manually driven and automated vehicles</strong>
-  In this experiment, you will see multiple videos and are asked to answer questions based on your feelings about the content of videos. During the experiment, the videos will contain manually-driven cars as well as automated cars. Automated cars are displayed with a blue marking on their windows. You will be asked to leave Appen to participate in the experiment. You will need to open the link below. Do not close this tab. At the end of the experiment, you will be given a code to input in the next question on this tab. Please take a note of the code. Without the code, you will not be able to receive money for your participation. All videos will be downloaded before the start of the experiment. It may take a few minutes. Please do not close your browser during that time.
+  <br/>
+  <br/>
+  In this experiment, you will see multiple videos and are asked to answer questions based on your feelings about the content of videos.   During the experiment, the videos will contain manually driven cars as well as automated cars. Automated cars are displayed with a blue overlay on the windows. 
+  <br/>
+  <br/>
+  <strong>Important:</strong> You will be asked to leave Appen to participate in the experiment. You will need to open the link below. Do not close this tab. At the end of the experiment, you will be given a code to input in the next question on this tab. Please take a note of the code. Without the code, you will not be able to receive money for your participation. All videos will be downloaded before the start of the experiment. It may take a few minutes. Please do not close your browser during that time.
   <br/>
 </p>
 <p class="header2">Open 
