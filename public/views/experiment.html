@@ -233,7 +233,7 @@ if (debug) {
  */
 var jsPsych = initJsPsych({
     on_finish: function() {
-        window.location.href = 'finish?work=' + worker_code;
+        window.location = 'finish?work=' + worker_code;
     },
     on_interaction_data_update: function(data) {
         interactions.push(data)
@@ -272,7 +272,7 @@ function saveData() {
             })
             .fail(function() {
                 alert('A problem occurred while writing to the database. Please contact the researcher for more information.')
-                window.location.href = '/';
+                window.location = '/';
             })
         if (debug) {
             console.log('data saved');
