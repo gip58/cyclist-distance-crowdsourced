@@ -450,13 +450,13 @@ var continue_session1_g2 = {
 // define 'continue to experiment' block for ego_av target_av for g2
 var continue_session2_g2 = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: '<p>In the upcoming session, please imagine yourself as <span style="font-weight: bold;">the passenger in the automated car</span> in all the videos you will watch.</p><p>The session contains ' + n_videos_per_participant / 2 + ' videos. <span style="font-weight: bold;">All the white cars in the videos are automated</span> cars.</br></br>Press \'C\' to continue to the next page where the experiment will start.</p>',
+    stimulus: '<p>In the upcoming session, please imagine yourself as <span style="font-weight: bold;">the passenger in the automated car</span> in all the videos you will watch.</p><p>The session contains ' + n_videos_per_participant / 2 + ' videos. <span style="font-weight: bold;">All the white cars in the videos are automated cars</span>.</br></br>Press \'C\' to continue to the next page where the experiment will start.</p>',
     choices: ['C']
 };
 // define 'continue to experiment' block for ego_av target_av for g3
 var continue_session1_g3 = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: '<p>In the upcoming session, please imagine yourself as <span style="font-weight: bold;">the passenger in the automated car</span> in all the videos you will watch.</p><p>The session contains ' + n_videos_per_participant / 2 + ' videos. <span style="font-weight: bold;">All the white cars in the videos are automated</span> cars.</br></br>Press \'C\' to continue to the next page where the experiment will start.</p>',
+    stimulus: '<p>In the upcoming session, please imagine yourself as <span style="font-weight: bold;">the passenger in the automated car</span> in all the videos you will watch.</p><p>The session contains ' + n_videos_per_participant / 2 + ' videos. <span style="font-weight: bold;">All the white cars in the videos are automated cars</span>.</br></br>Press \'C\' to continue to the next page where the experiment will start.</p>',
     choices: ['C']
 };
 // define 'continue to experiment' block for ego_av target_mv for g3
@@ -626,8 +626,8 @@ var likert_scale2 = [
 ];
 var preambleText = "Please answer the following questions based on your experience during the experiment.";
 var likertQuestions = [
-    {prompt: 'When automated car(s) is on the road, I will feel comfortable about driving on roads alongside automated cars.', name: 'feeling-alongside', labels: likert_scale1, required: true},
-    {prompt: 'When the automated car is on the road, I will feel comfortable about using an automated car instead of driving a traditional car.', name: 'feeling-using', labels:likert_scale1, required: true},
+    {prompt: 'When the automated cars are on the road, I will feel comfortable about driving on roads alongside automated cars.', name: 'feeling-alongside', labels: likert_scale1, required: true},
+    {prompt: 'When the automated cars are on the road, I will feel comfortable about using an automated car instead of driving a traditional car.', name: 'feeling-using', labels:likert_scale1, required: true},
     {prompt: 'When the automated car is on the road, I would like to have the automated car(s) to be recognizable as automated.', name: 'recognizability', labels: likert_scale1, required: true},
     {prompt: 'How I will feel about the other car(s) on the real road depends on whether the car(s) is automated or manual.', name: 'marking', labels: likert_scale1, required: true},
     {prompt: 'How I will behave toward the other car(s) on the real road depends on whether the car(s) is automated or manual.', name: 'recognizability', labels: likert_scale1, required: true},
