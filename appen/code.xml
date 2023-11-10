@@ -229,7 +229,7 @@
   <cml:rating label="Agree"/>
   <cml:rating label="Strongly agree"/>
 </cml:ratings>
-<cml:ratings label="When the automated cars are put into use, I will feel comfortable about using an automated car instead of driving a traditional car." class="" id="" validates="required">
+<cml:ratings label="When the automated cars are put into use, I will feel more comfortable about using an automated car instead of driving a traditional car." class="" id="" validates="required">
   <cml:rating label="Strongly disagree"/>
   <cml:rating label="Disagree"/>
   <cml:rating label="Neither disagree nor agree"/>
