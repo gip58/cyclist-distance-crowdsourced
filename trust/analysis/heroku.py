@@ -192,6 +192,12 @@ class Heroku:
                         else:
                             # previous values found
                             dict_row[stim_name + '-rt'].extend(rt)
+                    # eye tracking data
+                    if 'webgazer_data' in data_cell.keys() and stim_name != '':
+                        # record given keypresses
+                        et_data = data_cell['webgazer_data']
+                        logger.debug('Found {} points in eye tracking data.',
+                                     len(et_data))
                     # questions after stimulus
                     if 'responses' in data_cell.keys() and stim_name != '':
                         # record given keypresses
