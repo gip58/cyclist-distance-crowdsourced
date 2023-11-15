@@ -18,6 +18,13 @@
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
 <cml:text label="What is your age?" class="" validates="required positiveInteger"/>
+<cml:radios label="What is the highest level of education you have completed?" class="" validates="required">
+  <cml:radio label="Elementary or lower " value="elementary_or_lower "/>
+  <cml:radio label="High school" value="high_school"/>
+  <cml:radio label="Bachelor" id="" value="bachelor"/>
+  <cml:radio label="Postgraduate or higher" id="" value="postgraduate_or_higher"/>
+  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
 <cml:radios label="In which type of place are you located now?" class="" id="" validates="required">
   <cml:radio label="Indoor, dark" id="" value="indoor_dark"/>
   <cml:radio label="Indoor, dim light" id="" value="indoor_dimlight"/>
