@@ -72,7 +72,7 @@
 </cml:checkboxes>
 <cml:text label="If you answered 'Other' in the previous question, please describe your experience(s) below."/>
 <p class="header2">
- Please note that in this study, the term 
+ *Please note that in this study, the term 
   <strong>'automated'</strong> refers to the state where the car driving system is taking control and operating without direct human intervention.
   <br/>
 </p>
