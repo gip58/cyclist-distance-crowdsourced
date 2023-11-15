@@ -198,6 +198,32 @@ class Heroku:
                         et_data = data_cell['webgazer_data']
                         logger.debug('Found {} points in eye tracking data.',
                                      len(et_data))
+                        # extract x,y,t Values
+                        x = [point['x'] for point in et_data]
+                        y = [point['y'] for point in et_data]
+                        t = [point['t'] for point in et_data]
+                        # check if values not already recorded
+                        if stim_name + '-x' not in dict_row.keys():
+                            # first value
+                            dict_row[stim_name + '-x'] = x
+                        else:
+                            # previous values found
+                            dict_row[stim_name + '-x'].extend(x)
+                        # check if values not already recorded
+
+                            if stim_name + '-y' not in dict_row.keys():
+                            # first value
+                            dict_row[stim_name + '-y'] = y
+                        else:
+                            # previous values found
+                            dict_row[stim_name + '-y'].extend(y)
+                        # check if values not already recorded    
+                            if stim_name + '-t' not in dict_row.keys():
+                            # first value
+                            dict_row[stim_name + '-t'] = t
+                        else:
+                            # previous values found
+                            dict_row[stim_name + '-t'].extend(t)
                     # questions after stimulus
                     if 'responses' in data_cell.keys() and stim_name != '':
                         # record given keypresses
