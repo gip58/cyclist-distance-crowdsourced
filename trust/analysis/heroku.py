@@ -211,14 +211,14 @@ class Heroku:
                             dict_row[stim_name + '-x'].extend(x)
                         # check if values not already recorded
 
-                            if stim_name + '-y' not in dict_row.keys():
+                        if stim_name + '-y' not in dict_row.keys():
                             # first value
                             dict_row[stim_name + '-y'] = y
                         else:
                             # previous values found
                             dict_row[stim_name + '-y'].extend(y)
                         # check if values not already recorded    
-                            if stim_name + '-t' not in dict_row.keys():
+                        if stim_name + '-t' not in dict_row.keys():
                             # first value
                             dict_row[stim_name + '-t'] = t
                         else:
