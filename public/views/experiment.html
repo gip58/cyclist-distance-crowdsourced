@@ -133,19 +133,6 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-/**
- * Get code for the worker.
- */
-function getWorkerCode() {
-    var timestamp = window.performance.timing.navigationStart + window.performance.now();
-    var current_time = Math.round(timestamp);
-    var random_num = getRandomInt(1, 10000);
-    worker_code = 'R5' + current_time + 'JF' + random_num + '7X';
-    return worker_code;
-}
-
-var worker_code = getWorkerCode();
-
 // groups of participant. either 0 or 3
 var participant_group = getRandomInt(0, 3);
 if (debug) {
@@ -227,6 +214,27 @@ if (eye_tracking == undefined) {
 if (debug) {
     console.log('eye_tracking', eye_tracking);
 }
+
+/**
+ * Get code for the worker.
+ */
+function getWorkerCode() {
+    // fetch from the URL param
+    var worker_code = getUrlParameter('worker_code');
+    // if not provided, use CONST
+    if (worker_code == undefined) {
+        var timestamp = window.performance.timing.navigationStart + window.performance.now();
+        var current_time = Math.round(timestamp);
+        var random_num = getRandomInt(1, 10000);
+        worker_code = 'R5' + current_time + 'JF' + random_num + '7X';
+        return worker_code;
+    } else {
+        return worker_code;
+    }
+    
+}
+
+var worker_code = getWorkerCode();
 
 /**
  * Initialise jsPsych.
