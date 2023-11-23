@@ -103,10 +103,10 @@ class Analysis:
         height = gz.common.get_configs('stimulus_height')
         # add datapoints to corners for maximised heatmaps
         if add_corners:
-            if [0, 0] not in points:
-                points.append([0, 0])
-            if [width, height] not in points:
-                points.append([width - 1, height - 1])
+            if [0, 0] not in df:
+                df.append([0, 0])
+            if [width, height] not in df:
+                df.append([width - 1, height - 1])
         # convert points into np array
         xy = np.array(df)
         # split coordinates list for readability
