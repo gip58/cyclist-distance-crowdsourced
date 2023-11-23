@@ -289,6 +289,7 @@ class Heroku:
                         # extract pressed keys and rt values
                         responses_end = ast.literal_eval(re.search('({.+})',
                                                          responses_end).group(0))  # noqa: E501
+                        
                         # unpack questions and answers
                         questions = []
                         answers = []

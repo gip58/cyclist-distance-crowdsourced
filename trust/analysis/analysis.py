@@ -31,10 +31,169 @@ class Analysis:
     num_stimuli = tr.common.get_configs('num_stimuli')
     # folder for output
     folder = '/figures/'
+   
 
     def __init__(self):
         # set font to Times
         plt.rc('font', family='serif')
+
+    def create_gazes(self,
+                     image,
+                     df,
+                     suffix='_gazes.jpg',
+                     save_file=False):
+        """
+        Output gazes for image based on the list of lists of points.
+        """
+        # check if data is present
+        if not df:
+            logger.error('Not enough data. Gazes visualisation was not '
+                         + 'created for {}.', image)
+            return
+        # read original image
+        im = plt.imread(image)
+        # get dimensions
+        width = gz.common.get_configs('stimulus_width')
+        height = gz.common.get_configs('stimulus_height')
+        # show heatmap by plt
+        dpi = 150
+        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
+        plt.imshow(im)
+        for point in df:
+            plt.plot(point[0],
+                     point[1],
+                     color='red',
+                     marker='x',
+                     markersize=1)
+        # remove white spaces around figure
+        plt.gca().set_axis_off()
+        plt.subplots_adjust(top=1,
+                            bottom=0,
+                            right=1,
+                            left=0,
+                            hspace=0,
+                            wspace=0)
+        plt.margins(0, 0)
+        plt.gca().xaxis.set_major_locator(plt.NullLocator())
+        plt.gca().yaxis.set_major_locator(plt.NullLocator())
+        # save image
+        if save_file:
+            self.save_fig(image, fig, self.folder, suffix)
+
+    def create_heatmap(self,
+                       image,
+                       df,
+                       type_heatmap='contourf',
+                       add_corners=True,
+                       save_file=False):
+        """
+        Create heatmap for image based on the list of lists of points.
+        add_corners: add points to the corners to have the heatmap ovelay the
+                     whole image
+        type_heatmap: contourf, pcolormesh, kdeplot
+        """
+        # todo: remove datapoints in corners in heatmaps
+        # check if data is present
+        if not df:
+            logger.error('Not enough data. Heatmap was not created for {}.',
+                         image)
+            return
+        # get dimensions of base image
+        width = gz.common.get_configs('stimulus_width')
+        height = gz.common.get_configs('stimulus_height')
+        # add datapoints to corners for maximised heatmaps
+        if add_corners:
+            if [0, 0] not in points:
+                points.append([0, 0])
+            if [width, height] not in points:
+                points.append([width - 1, height - 1])
+        # convert points into np array
+        xy = np.array(df)
+        # split coordinates list for readability
+        x = xy[:, 0]
+        y = xy[:, 1]
+        # compute data for the heatmap
+        try:
+            k = gaussian_kde(np.vstack([x, y]))
+            xi, yi = np.mgrid[x.min():x.max():x.size**0.5*1j,
+                              y.min():y.max():y.size**0.5*1j]
+            zi = k(np.vstack([xi.flatten(), yi.flatten()]))
+        except (np.linalg.LinAlgError, np.linalg.LinAlgError, ValueError):
+            logger.error('Not enough data. Heatmap was not created for {}.',
+                         image)
+            return
+        # create figure object with given dpi and dimensions
+        dpi = 150
+        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
+        # alpha=0.5 makes the plot semitransparent
+        suffix_file = ''  # suffix to add to saved image
+        if type_heatmap == 'contourf':
+            try:
+                g = plt.contourf(xi, yi, zi.reshape(xi.shape),
+                                 alpha=0.5)
+                plt.margins(0, 0)
+                plt.gca().xaxis.set_major_locator(plt.NullLocator())
+                plt.gca().yaxis.set_major_locator(plt.NullLocator())
+            except TypeError:
+                logger.error('Not enough data. Heatmap was not created for '
+                             + '{}.',
+                             image)
+                plt.close(fig)  # clear figure from memory
+                return
+            suffix_file = '_contourf.jpg'
+        elif type_heatmap == 'pcolormesh':
+            try:
+                g = plt.pcolormesh(xi, yi, zi.reshape(xi.shape),
+                                   shading='auto',
+                                   alpha=0.5)
+                plt.margins(0, 0)
+                plt.gca().xaxis.set_major_locator(plt.NullLocator())
+                plt.gca().yaxis.set_major_locator(plt.NullLocator())
+            except TypeError:
+                logger.error('Not enough data. Heatmap was not created for '
+                             + '{}.',
+                             image)
+                plt.close(fig)  # clear figure from memory
+                return
+            suffix_file = '_pcolormesh.jpg'
+        elif type_heatmap == 'kdeplot':
+            try:
+                g = sns.kdeplot(x=x,
+                                y=y,
+                                alpha=0.5,
+                                shade=True,
+                                cmap="RdBu_r")
+            except TypeError:
+                logger.error('Not enough data. Heatmap was not created for '
+                             + '{}.',
+                             image)
+                fig.clf()  # clear figure from memory
+                return
+            suffix_file = '_kdeplot.jpg'
+        else:
+            logger.error('Wrong type_heatmap {} given.', type_heatmap)
+            plt.close(fig)  # clear from memory
+            return
+        # read original image
+        im = plt.imread(image)
+        plt.imshow(im)
+        # remove axis
+        plt.gca().set_axis_off()
+        # remove white spaces around figure
+        plt.subplots_adjust(top=1,
+                            bottom=0,
+                            right=1,
+                            left=0,
+                            hspace=0,
+                            wspace=0)
+        # save image
+        if save_file:
+            self.save_fig(image, fig, '/figures/', suffix_file)
+        # return graph objects
+        return fig, g
+        
+
+
 
     # TODO: fix error with value of string not used as float
     def corr_matrix(self, df, columns_drop, save_file=False):
