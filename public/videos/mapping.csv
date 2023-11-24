@@ -83,10 +83,3 @@ id,video_id,group,ego_car,target_car,num_target_ped,event_start,event_end,video_
 81,video_81,3,1,1,0,8000,Around 22000,29000,0,The target car attempts to overtake the ego car, but canceled the overtaking process and move back to original lane.
 82,video_82,3,1,1,0,4016,NA,16000,1,The target car obeys the 60 km/h speed limit when MDVs, the last one of which is the ego car, drive at 70 km/h on the other 2 lanes
 83,video_83,3,1,1,1,11033,Around 18000,29000,2,The target car is driving in front of the ego car and brakes abruptly to avoid collision with a pedestrian in front of the target car
-,,,,,,,,,,
-,,,,,,,,,,
-,,0:,0=mdv,0=av with no label,,,,,0=non-critical scenarios,AV=automated vehicle
-,,0: target car not labeled+ego car is mdv,1=av,1=av with label,,,,,1= middle level of criticality (e.g. can cause the accident if some measures is not taken/not taken correctly),MDV=manually driven vehicle
-,,1: target car labeled+ego car is mdv,,,,,,,2=critical scenarios (e.g. almost have collisions),Platoon of AVs serve as the target car (either label or no label on all of them)
-,,2: target car not labeled+ego is av,,,,,,,*the criticality here means the criticality from the participants' perspectives (e.g. how the participants may feel), and there's nothing about AVs' ability/function,VRU=vulnerable road user
-,,3: target car labeled+ego is av,,,,,,,,
