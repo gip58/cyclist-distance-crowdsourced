@@ -7,7 +7,7 @@ import trust as tr
 tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
 
-# Const
+# const
 SAVE_P = True  # save pickle files with data
 LOAD_P = False  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
@@ -90,7 +90,7 @@ if __name__ == '__main__':
         # export to pickle
         tr.common.save_to_p(file_mapping,
                             mapping,
-                            'mapping with keypress data')
+                            'mapping of stimuli')
     else:
         mapping = tr.common.load_from_p(file_mapping,
                                         'mapping of stimuli')

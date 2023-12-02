@@ -499,7 +499,7 @@ class Heroku:
         mapping_as = []
         # loop through all stimuli
         for num in tqdm(range(self.num_stimuli)):
-            # calculate length of of array with answers
+            # calculate length of array with answers
             length = 0
             for q in questions:
                 # 1 column required for numeric data
