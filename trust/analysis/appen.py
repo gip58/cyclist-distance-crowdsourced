@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import datetime as dt
 from collections import Counter
+from pycountry_convert import country_alpha2_to_country_name, country_name_to_country_alpha3  # noqa: E501
+
 
 import trust as tr
 
@@ -373,6 +375,8 @@ class Appen:
                                       how='left')
         # drop not needed columns
         df_country = df_country.drop(columns=['unit_id', 'id'])
+        # convert from to 3-letter codes
+        df_country['country'] = df_country['country'].apply(lambda x: country_name_to_country_alpha3(country_alpha2_to_country_name(x)))  # noqa: E501
         # assign to attribute
         self.countries_data = df_country
         # save to csv

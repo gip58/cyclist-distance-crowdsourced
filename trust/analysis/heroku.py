@@ -31,8 +31,6 @@ class Heroku:
     num_stimuli_participant = tr.common.get_configs('num_stimuli_participant')
     # number of repeats for each stimulus
     num_repeat = tr.common.get_configs('num_repeat')
-    # allowed number of stimuli with detected wrong duration
-    allowed_length = tr.common.get_configs('allowed_stimuli_wrong_duration')
     # pickle file for saving data
     file_p = 'heroku_data.p'
     # csv file for saving data
@@ -128,7 +126,6 @@ class Heroku:
                         if key in data_cell.keys():
                             # piece of meta data found, update dictionary
                             dict_row[key] = data_cell[key]
-                            print(key, data_cell[key])
                             if key == 'worker_code':
                                 logger.debug('{}: working with row with data.',
                                              data_cell['worker_code'])
@@ -210,7 +207,6 @@ class Heroku:
                             # previous values found
                             dict_row[stim_name + '-x'].extend(x)
                         # check if values not already recorded
-
                         if stim_name + '-y' not in dict_row.keys():
                             # first value
                             dict_row[stim_name + '-y'] = y
@@ -225,20 +221,21 @@ class Heroku:
                             # previous values found
                             dict_row[stim_name + '-t'].extend(t)
                     # questions after stimulus
-                    if 'responses' in data_cell.keys() and stim_name != '':
-                        # record given keypresses
-                        responses = data_cell['responses']
+                    if ('response' in data_cell.keys() and stim_name != '' and
+                       data_cell['response'] is not None):
+                        # check if it is not dictionary
+                        if 'slider-0' not in data_cell['response']:
+                            continue
+                        # record given answers
+                        responses = data_cell['response']
                         logger.debug('Found responses to questions {}.',
                                      responses)
-                        # extract pressed keys and rt values
-                        responses = ast.literal_eval(re.search('({.+})',
-                                                               responses).group(0))  # noqa: E501
                         # unpack questions and answers
                         questions = []
                         answers = []
                         for key, value in responses.items():
                             questions.append(key)
-                            answers.append(value)
+                            answers.append(int(value))
                         # check if values were recorded previously
                         if stim_name + '-qs' not in dict_row.keys():
                             # first value
@@ -280,49 +277,24 @@ class Heroku:
                         else:
                             # previous values found
                             dict_row[stim_name + '-time'].extend(time)
-                    # questions in the end
-                    if 'responses' in data_cell.keys() and stim_name == '':
+                    # sliders after experiment
+                    if ('response' in data_cell.keys() and stim_name == '' and
+                       data_cell['response'] is not None):
+                        # check if it is not dictionary
+                        if 'slider-0' not in data_cell['response']:
+                            continue
                         # record given keypresses
-                        responses_end = data_cell['responses']
-                        logger.debug('Found responses to final questions {}.',
-                                     responses_end)
-                        # extract pressed keys and rt values
-                        responses_end = ast.literal_eval(re.search('({.+})',
-                                                         responses_end).group(0))  # noqa: E501
-                        
-                        # unpack questions and answers
-                        questions = []
-                        answers = []
+                        responses_end = data_cell['response']
+                        logger.debug('Found responses to the questions in ' +
+                                     'the end {}.', responses_end)
                         for key, value in responses_end.items():
-                            questions.append(key)
-                            answers.append(value)
-                        # Check if inputted values were recorded previously
-                        if 'end-qs' not in dict_row.keys():
-                            dict_row['end-qs'] = questions
-                            dict_row['end-as'] = answers
-                        else:
-                            # previous values found
-                            dict_row['end-qs'].extend(questions)
-                            dict_row['end-as'].extend(answers)
-                    # question order
-                    if 'question_order' in data_cell.keys() \
-                       and stim_name == '':
-                        # unpack question order
-                        qo_str = data_cell['question_order']
-                        # remove brackets []
-                        qo_str = qo_str[1:]
-                        qo_str = qo_str[:-1]
-                        # unpack to int
-                        question_order = [int(x) for x in qo_str.split(',')]
-                        logger.debug('Found question order for final ' +
-                                     'questions {}.',
-                                     question_order)
-                        # Check if inputted values were recorded previously
-                        if 'end-qo' not in dict_row.keys():
-                            dict_row['end-qo'] = question_order
-                        else:
-                            # previous values found
-                            dict_row['end-qo'].extend(question_order)
+                            # check if values not already recorded
+                            if stim_name + 'end-' + key not in dict_row.keys():
+                                # first value
+                                dict_row['end-' + key] = value
+                            else:
+                                # previous values found
+                                dict_row['end-' + key].extend(value)
                     # record last time_elapsed
                     if 'time_elapsed' in data_cell.keys():
                         elapsed_l = float(data_cell['time_elapsed'])
@@ -334,13 +306,14 @@ class Heroku:
                     for key, value in dict_row.items():
                         # worker_code does not need to be added
                         if key in self.meta_keys:
+                            data_dict[dict_row['worker_code']][key] = value
                             continue
                         # new value
                         if key + '-0' not in data_dict[dict_row['worker_code']].keys():  # noqa: E501
                             data_dict[dict_row['worker_code']][key + '-0'] = value  # noqa: E501
                         # update old value
                         else:
-                            # traverse repetition ids untill get new repetition
+                            # traverse repetition ids until get new repetition
                             for rep in range(0, self.num_repeat):
                                 # build new key with id of repetition
                                 new_key = key + '-' + str(rep)
@@ -497,8 +470,9 @@ class Heroku:
             kp_mean = [*map(mean, zip(*video_kp))]
             # append data from one video to the mapping array
             mapping_rt.append(kp_mean)
-        logger.info('Filtered out keypress data from {} videos with '
-                    + 'unexpected length.', counter_filtered)
+        if filter_length:
+            logger.info('Filtered out keypress data from {} videos with '
+                        + 'unexpected length.', counter_filtered)
         # update own mapping to include keypress data
         self.mapping['kp'] = mapping_rt
         # save to csv
@@ -528,7 +502,7 @@ class Heroku:
             length = 0
             for q in questions:
                 # 1 column required for numeric data
-                # numberic answer, create 1 column to store mean value
+                # numeric answer, create 1 column to store mean value
                 if q['type'] == 'num':
                     length = length + 1
                 # strings as answers, create columns to store counts

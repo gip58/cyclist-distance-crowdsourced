@@ -205,7 +205,6 @@ class Analysis:
         # drop columns
         df = df.drop(columns=columns_drop)
         # create correlation matrix
-        print(list(df))
         corr = df.corr()
         # create mask
         mask = np.zeros_like(corr)
@@ -283,82 +282,6 @@ class Analysis:
         # save file
         if save_file:
             self.save_plotly(fig, 'scatter_matrix', self.folder)
-        # open it in localhost instead
-        else:
-            fig.show()
-
-    def communication(self, df, pre_q, post_qs, save_file=False):
-        """
-        Barplot of all communication data in pre and post-questionaire
-
-        Args:
-            df (dataframe): dataframe with data from appen
-            pre_q: column name of pre-questionairre data
-            post_qs: names to show in graph of post-questionaire data
-            save_file (bool, optional): flag for saving an html file with plot.
-        """
-        logger.info('Creating visualisation of communication questions')
-        # likert scale options
-        options = ['completely_disagree',
-                   'disagree',
-                   'neither_disagree_nor_agree',
-                   'agree',
-                   'completely_agree',
-                   'i_prefer_not_to_respond'
-                   ]
-        importance = 0.0
-        counts = 0
-        # get unique values + counts
-        comm_data = df[pre_q].value_counts()
-        # loop over all data in column of choice
-        for i, data in enumerate(comm_data.values):
-            # Match options to array, for order purposes
-            for j, data2 in enumerate(options):
-                if comm_data.index[i] == data2 and j < (len(options) - 1):
-                    # quantify options by string matching
-                    importance = importance + \
-                        (j / (len(options) - 2) * data)
-                    counts = counts + data
-        # average quantification of values
-        importance = [(importance / counts) * 100]
-        # name to plot with. Could be taken as an argument in function
-        importance_name = 'Communication between driver and pedestrian is' + \
-                          ' important for road safety'
-        pe_data = np.array([0.0] * len(df['end-as-0'][0][0:4]))
-        datapoints = df['end-as-0'][df['end-as-0'].notnull()]
-        # counter of processed datapoints
-        counter_processed = 0
-        # go through data
-        for i, data in enumerate(datapoints):
-            # create numpy array for adding vectors. only consider 1st 4
-            # responses
-            try:
-                data = np.asfarray(data[0:4], float)
-            except ValueError:
-                logger.debug('Could not process answers {} for row {}',
-                             data[0:4],
-                             i)
-                continue
-            pe_data = pe_data + data
-            counter_processed = counter_processed + 1
-        # calculate average value of post-experiment questionairre data
-        pe_data = pe_data / counter_processed
-        # create figure
-        fig = go.Figure(data=[go.Bar(name=importance_name,
-                                     x=[importance_name],
-                                     y=importance),
-                              go.Bar(name='Which behaviour increases feeling'
-                                          + ' of safety?',
-                                     x=post_qs,
-                                     y=pe_data)])
-        # update layout
-        fig.update_layout(template=self.template,
-                          yaxis_range=[0, 100])
-        # save file
-        if save_file:
-            self.save_plotly(fig,
-                             'communication',
-                             self.folder)
         # open it in localhost instead
         else:
             fig.show()
