@@ -98,6 +98,8 @@ if __name__ == '__main__':
         # Output
         analysis = tr.analysis.Analysis()
         logger.info('Creating figures.')
+        # eye tracking data
+        analysis.heatmap(heroku_data, 'video_0-x-0', 'video_0-y-0')
         # all keypresses with confidence interval
         analysis.plot_kp(mapping, conf_interval=0.95)
         # keypresses of an individual stimulus

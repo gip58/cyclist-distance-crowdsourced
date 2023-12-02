@@ -629,7 +629,7 @@ class Analysis:
             x (str): dataframe column to plot on x axis.
             y (str): dataframe column to plot on y axis.
             pretty_text (bool, optional): prettify ticks by replacing _ with
-                                          spaces and capitilisng each value.
+                                          spaces and capitalising each value.
             marginal_x (str, optional): type of marginal on x axis. Can be
                                         'histogram', 'rug', 'box', or 'violin'.
             marginal_y (str, optional): type of marginal on y axis. Can be
@@ -645,12 +645,12 @@ class Analysis:
             if isinstance(df.iloc[0][x], str):  # check if string
                 # replace underscores with spaces
                 df[x] = df[x].str.replace('_', ' ')
-                # capitlise
+                # capitalise
                 df[x] = df[x].str.capitalize()
             if isinstance(df.iloc[0][y], str):  # check if string
                 # replace underscores with spaces
                 df[y] = df[y].str.replace('_', ' ')
-                # capitlise
+                # capitalise
                 df[y] = df[y].str.capitalize()
         # density map with histograms
         fig = px.density_heatmap(df,
