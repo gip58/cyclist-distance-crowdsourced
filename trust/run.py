@@ -78,66 +78,6 @@ if __name__ == '__main__':
         mapping = heroku.read_mapping()
         # process keypresses and update mapping
         mapping = heroku.process_kp()
-        # add distance to pedestrian at different time intervals
-        mapping = heroku.check_dist_type(mapping, 'dist_at_9')
-        mapping = heroku.check_dist_type(mapping, 'dist_at_10')
-        mapping = heroku.check_dist_type(mapping, 'dist_at_11')
-        # add count of specific object (district of city, pedestrian, vehicle)
-        mapping = heroku.add_district_data(mapping)
-        mapping = heroku.add_object_count(mapping, 'person')
-        mapping = heroku.add_object_count(mapping, 'car')
-        # check is velocity data is processed correctly to match kp
-        mapping = heroku.evaluate_bins(mapping, 'vehicle_velocity_GPS')
-        mapping = heroku.evaluate_bins(mapping, 'vehicle_velocity_OBD')
-        mapping = heroku.evaluate_bins(mapping, 'dist_to_ped')
-        mapping = heroku.evaluate_bins(mapping, 'object_count')
-        mapping = heroku.evaluate_bins(mapping, 'object_surface')
-        mapping = heroku.evaluate_bins(mapping, 'person_count')
-        mapping = heroku.evaluate_bins(mapping, 'car_count')
-        # add binary data to mapping without specific keys
-        mapping = heroku.add_binary_data(mapping, True, 'traffic_rules',
-                                         'none', 'Traffic_rules')
-        mapping = heroku.add_binary_data(mapping, True, 'cross_look',
-                                         'notCrossing', 'Crossing')
-        mapping = heroku.add_binary_data(mapping, True, 'cross_look',
-                                         'notLooking', 'Looking')
-        mapping = heroku.add_binary_data(mapping, False, 'district',
-                                         'suburbs', 'Suburbs')
-        mapping = heroku.add_binary_data(mapping, False, 'district',
-                                         'urbs', 'Urbs')
-        mapping = heroku.add_binary_data(mapping, False, 'district',
-                                         'outskirt', 'Outskirts')
-        mapping = heroku.add_binary_data(mapping, False, 'traffic_rules',
-                                         'ped_crossing', 'pedestrian crossing')
-        mapping = heroku.add_binary_data(mapping, False, 'traffic_rules',
-                                         'stop_sign', 'stop sign')
-        mapping = heroku.add_binary_data(mapping, False, 'traffic_rules',
-                                         'traffic_lights', 'traffic lights')
-        # add data at specific times
-        mapping = heroku.add_data_at_time(mapping, 'kp',
-                                          [7, 8, 9, 10, 11, 12, 13])
-        mapping = heroku.add_data_at_time(mapping, 'dist_to_ped',
-                                          [7, 8, 9, 10, 11, 12, 13])
-        mapping = heroku.add_data_at_time(mapping, 'object_count',
-                                          [7, 8, 9, 10, 11, 12, 13])
-        mapping = heroku.add_data_at_time(mapping, 'object_surface',
-                                          [7, 8, 9, 10, 11, 12, 13])
-        mapping = heroku.add_data_at_time(mapping, 'car_count',
-                                          [7, 8, 9, 10, 11, 12, 13])
-        mapping = heroku.add_data_at_time(mapping, 'person_count',
-                                          [7, 8, 9, 10, 11, 12, 13])
-        # add quantification of danger of velocity for each video
-        mapping = heroku.add_avg(mapping, 'kp', 'kp')
-        mapping = heroku.add_avg(mapping, 'vehicle_velocity_GPS', 'velocity')
-        mapping = heroku.add_avg(mapping, 'object_count', 'object')
-        mapping = heroku.add_avg(mapping, 'person_count', 'person')
-        mapping = heroku.add_avg(mapping, 'car_count', 'car')
-        mapping = heroku.add_avg(mapping, 'object_surface', 'obj_surface')
-        mapping = heroku.add_cols_avg(mapping,
-                                      ['dist_at_9', 'dist_at_10', 'dist_at_11'],  # noqa: E501
-                                      'dist')
-        # add quantification of danger of velocity for each video
-        mapping = heroku.process_velocity_risk(mapping)
         # post-trial questions to process
         questions = [{'question': 'risky_slider',
                       'type': 'num'},
@@ -149,23 +89,11 @@ if __name__ == '__main__':
                                   'I don\'t know']}]
         # process post-trial questions and update mapping
         mapping = heroku.process_stimulus_questions(questions)
-        mapping.rename(columns={'eye-contact-yes_but_too_late': 'EC-yes_but_too_late',  # noqa: E501
-                                'eye-contact-yes': 'EC-yes',
-                                'eye-contact-i_don\'t_know': 'EC-i_don\'t_know',  # noqa: E501
-                                'eye-contact-no': 'EC-no'},
-                       inplace=True)
-        # add percentage of participants who wrongly indicated looking data
-        mapping = heroku.verify_looking(mapping)
-        # calculate mean of eye contact
-        mapping['EC-no-score'] = mapping['EC-no'] * 0
-        mapping['EC-yes_but_too_late-score'] = mapping['EC-yes_but_too_late'] * 0.25  # noqa: E501
-        mapping['EC-yes-score'] = mapping['EC-yes'] * 1
-        mapping['EC_score'] = mapping[['EC-yes-score',
-                                       'EC-yes_but_too_late-score',
-                                       'EC-no-score']].sum(axis=1)
-        mapping['EC_mean'] = mapping[['EC-yes-score',
-                                      'EC-yes_but_too_late-score',
-                                      'EC-no-score']].mean(axis=1)
+        # mapping.rename(columns={'eye-contact-yes_but_too_late': 'EC-yes_but_too_late',  # noqa: E501
+        #                         'eye-contact-yes': 'EC-yes',
+        #                         'eye-contact-i_don\'t_know': 'EC-i_don\'t_know',  # noqa: E501
+        #                         'eye-contact-no': 'EC-no'},
+        #                inplace=True)
         # export to pickle
         tr.common.save_to_p(file_mapping,
                             mapping,

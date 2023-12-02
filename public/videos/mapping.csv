@@ -1,85 +1,85 @@
-id,video_id,group,ego_car,target_car,num_target_ped,video_length_include_blackframe,criticality,description
-0,video_0,0,0,0,0,36000,0,Baseline traffic situation of driving with ego vehicle as AV
-1,video_1,0,0,0,0,33000,1,The ego car is overtaken by the target car from the inside
-2,video_2,0,0,0,0,34000,1,The target car tailgates the ego car
-3,video_3,0,0,0,0,36000,2,The target car brakes abruptly to avoid collision
-4,video_4,0,0,0,0,38000,2,The target car brakes abruptly
-5,video_5,0,0,0,0,35000,0,The target car starts late when traffic lights turn green
-6,video_6,0,0,0,1,35000,0,The target car starts late when traffic lights turn green with a pedestrian
-7,video_7,0,0,0,0,25000,2,The target car cuts off from the right lane
-8,video_8,0,0,0,0,38000,1,The target car is zigzagging
-9,video_9,0,0,0,0,24000,0,The target car flashes lights to the ego car
-10,video_10,0,0,0,0,35000,1,The ego car’s changing lane is prevented by a platoon of AVs
-11,video_11,0,0,0,0,31000,0,The target car drives slowly in front of the ego car
-12,video_12,0,0,0,0,26000,0,The target car changes lanes to let the ego car behind overtake
-13,video_13,0,0,0,0,31000,0,The target car attempts to move from the centre to the left lane but goes back to the centre lane so as not to block an ego car behind
-14,video_14,0,0,0,0,43000,0,The platoon of AVs lower the speed to let the ego car change lane
-15,video_15,0,0,0,1,23000,1,The target car is waiting for pedestrians to cross the road
-16,video_16,0,0,0,0,24000,0,the target car follows its front car with a too large gap
-17,video_17,0,0,0,0,36000,0,The target car passes the intersection exactly at the time when the light changes without deceleration
-18,video_18,0,0,0,0,29000,0,The target car plans to overtake but canceled the process and move back
-19,video_19,0,0,0,0,16000,1,The target car obeys the speed limit when the traffic flow drive at around 70
-20,video_20,0,0,0,1,29000,2,The target car brakes abruptly to avoid collision with a pedestrian
-21,video_21,1,0,1,0,36000,0,Baseline traffic situation of driving with ego vehicle as AV
-22,video_22,1,0,1,0,33000,1,The ego car is overtaken by the target car from the inside
-23,video_23,1,0,1,0,34000,1,The target car tailgates the ego car
-24,video_24,1,0,1,0,36000,2,The target car brakes abruptly to avoid collision
-25,video_25,1,0,1,0,38000,2,The target car brakes abruptly
-26,video_26,1,0,1,0,35000,0,The target car starts late when traffic lights turn green
-27,video_27,1,0,1,1,35000,0,The target car starts late when traffic lights turn green with a pedestrian
-28,video_28,1,0,1,0,25000,2,The target car cuts off from the right lane
-29,video_29,1,0,1,0,38000,1,The target car is zigzagging
-30,video_30,1,0,1,0,24000,0,The target car flashes lights to the ego car
-31,video_31,1,0,1,0,35000,1,The ego car’s changing lane is prevented by a platoon of AVs
-32,video_32,1,0,1,0,31000,0,The target car drives slowly in front of the ego car
-33,video_33,1,0,1,0,26000,0,The target car changes lanes to let the ego car behind overtake
-34,video_34,1,0,1,0,31000,0,The target car attempts to move from the centre to the left lane but goes back to the centre lane so as not to block an ego car behind
-35,video_35,1,0,1,0,43000,0,The platoon of AVs lower the speed to let the ego car change lane
-36,video_36,1,0,1,1,23000,1,The target car is waiting for pedestrians to cross the road
-37,video_37,1,0,1,0,24000,0,the target car follows its front car with a too large gap
-38,video_38,1,0,1,0,36000,0,The target car passes the intersection exactly at the time when the light changes without deceleration
-39,video_39,1,0,1,0,29000,0,The target car plans to overtake but canceled the process and move back
-40,video_40,1,0,1,0,16000,1,The target car obeys the speed limit when the traffic flow drive at around 70
-41,video_41,1,0,1,1,29000,2,The target car brakes abruptly to avoid collision with a pedestrian
-42,video_42,2,1,0,0,36000,0,Baseline traffic situation of driving with ego vehicle as AV
-43,video_43,2,1,0,0,33000,1,The ego car is overtaken by the target car from the inside
-44,video_44,2,1,0,0,34000,1,The target car tailgates the ego car
-45,video_45,2,1,0,0,36000,2,The target car brakes abruptly to avoid collision
-46,video_46,2,1,0,0,38000,2,The target car brakes abruptly
-47,video_47,2,1,0,0,35000,0,The target car starts late when traffic lights turn green
-48,video_48,2,1,0,1,35000,0,The target car starts late when traffic lights turn green with a pedestrian
-49,video_49,2,1,0,0,25000,2,The target car cuts off from the right lane
-50,video_50,2,1,0,0,38000,1,The target car is zigzagging
-51,video_51,2,1,0,0,24000,0,The target car flashes lights to the ego car
-52,video_52,2,1,0,0,35000,1,The ego car’s changing lane is prevented by a platoon of AVs
-53,video_53,2,1,0,0,31000,0,The target car drives slowly in front of the ego car
-54,video_54,2,1,0,0,26000,0,The target car changes lanes to let the ego car behind overtake
-55,video_55,2,1,0,0,31000,0,The target car attempts to move from the centre to the left lane but goes back to the centre lane so as not to block an ego car behind
-56,video_56,2,1,0,0,43000,0,The platoon of AVs lower the speed to let the ego car change lane
-57,video_57,2,1,0,1,23000,1,The target car is waiting for pedestrians to cross the road
-58,video_58,2,1,0,0,24000,0,the target car follows its front car with a too large gap
-59,video_59,2,1,0,0,36000,0,The target car passes the intersection exactly at the time when the light changes without deceleration
-60,video_60,2,1,0,0,29000,0,The target car plans to overtake but canceled the process and move back
-61,video_61,2,1,0,0,16000,1,The target car obeys the speed limit when the traffic flow drive at around 70
-62,video_62,2,1,0,1,29000,2,The target car brakes abruptly to avoid collision with a pedestrian
-63,video_63,3,1,1,0,36000,0,Baseline traffic situation of driving with ego vehicle as AV
-64,video_64,3,1,1,0,33000,1,The ego car is overtaken by the target car from the inside
-65,video_65,3,1,1,0,34000,1,The target car tailgates the ego car
-66,video_66,3,1,1,0,36000,2,The target car brakes abruptly to avoid collision
-67,video_67,3,1,1,0,38000,2,The target car brakes abruptly
-68,video_68,3,1,1,0,35000,0,The target car starts late when traffic lights turn green
-69,video_69,3,1,1,1,35000,0,The target car starts late when traffic lights turn green with a pedestrian
-70,video_70,3,1,1,0,25000,2,The target car cuts off from the right lane
-71,video_71,3,1,1,0,38000,1,The target car is zigzagging
-72,video_72,3,1,1,0,24000,0,The target car flashes lights to the ego car
-73,video_73,3,1,1,0,35000,1,The ego car’s changing lane is prevented by a platoon of AVs
-74,video_74,3,1,1,0,31000,0,The target car drives slowly in front of the ego car
-75,video_75,3,1,1,0,26000,0,The target car changes lanes to let the ego car behind overtake
-76,video_76,3,1,1,0,31000,0,The target car attempts to move from the centre to the left lane but goes back to the centre lane so as not to block an ego car behind
-77,video_77,3,1,1,0,43000,0,The platoon of AVs lower the speed to let the ego car change lane
-78,video_78,3,1,1,1,23000,1,The target car is waiting for pedestrians to cross the road
-79,video_79,3,1,1,0,24000,0,the target car follows its front car with a too large gap
-80,video_80,3,1,1,0,36000,0,The target car passes the intersection exactly at the time when the light changes without deceleration
-81,video_81,3,1,1,0,29000,0,The target car plans to overtake but canceled the process and move back
-82,video_82,3,1,1,0,16000,1,The target car obeys the speed limit when the traffic flow drive at around 70
-83,video_83,3,1,1,1,29000,2,The target car brakes abruptly to avoid collision with a pedestrian
+id,video_id,group,ego_car,target_car,num_target_ped,video_length,min_dur,max_dur,criticality,description
+0,video_0,0,0,0,0,36000,35000,37000,0,Baseline traffic situation of driving with ego vehicle as AV
+1,video_1,0,0,0,0,33000,32000,34000,1,The ego car is overtaken by the target car from the inside
+2,video_2,0,0,0,0,34000,33000,35000,1,The target car tailgates the ego car
+3,video_3,0,0,0,0,36000,35000,37000,2,The target car brakes abruptly to avoid collision
+4,video_4,0,0,0,0,38000,37000,39000,2,The target car brakes abruptly
+5,video_5,0,0,0,0,35000,34000,36000,0,The target car starts late when traffic lights turn green
+6,video_6,0,0,0,1,35000,34000,36000,0,The target car starts late when traffic lights turn green with a pedestrian
+7,video_7,0,0,0,0,25000,24000,26000,2,The target car cuts off from the right lane
+8,video_8,0,0,0,0,38000,37000,39000,1,The target car is zigzagging
+9,video_9,0,0,0,0,24000,23000,25000,0,The target car flashes lights to the ego car
+10,video_10,0,0,0,0,35000,34000,36000,1,The ego car’s changing lane is prevented by a platoon of AVs
+11,video_11,0,0,0,0,31000,30000,32000,0,The target car drives slowly in front of the ego car
+12,video_12,0,0,0,0,26000,25000,27000,0,The target car changes lanes to let the ego car behind overtake
+13,video_13,0,0,0,0,31000,30000,32000,0,The target car attempts to move from the centre to the left lane but goes back to the centre lane so as not to block an ego car behind
+14,video_14,0,0,0,0,43000,42000,44000,0,The platoon of AVs lower the speed to let the ego car change lane
+15,video_15,0,0,0,1,23000,22000,24000,1,The target car is waiting for pedestrians to cross the road
+16,video_16,0,0,0,0,24000,23000,25000,0,the target car follows its front car with a too large gap
+17,video_17,0,0,0,0,36000,35000,37000,0,The target car passes the intersection exactly at the time when the light changes without deceleration
+18,video_18,0,0,0,0,29000,28000,30000,0,The target car plans to overtake but canceled the process and move back
+19,video_19,0,0,0,0,16000,15000,17000,1,The target car obeys the speed limit when the traffic flow drive at around 70
+20,video_20,0,0,0,1,29000,28000,30000,2,The target car brakes abruptly to avoid collision with a pedestrian
+21,video_21,1,0,1,0,36000,35000,37000,0,Baseline traffic situation of driving with ego vehicle as AV
+22,video_22,1,0,1,0,33000,32000,34000,1,The ego car is overtaken by the target car from the inside
+23,video_23,1,0,1,0,34000,33000,35000,1,The target car tailgates the ego car
+24,video_24,1,0,1,0,36000,35000,37000,2,The target car brakes abruptly to avoid collision
+25,video_25,1,0,1,0,38000,37000,39000,2,The target car brakes abruptly
+26,video_26,1,0,1,0,35000,34000,36000,0,The target car starts late when traffic lights turn green
+27,video_27,1,0,1,1,35000,34000,36000,0,The target car starts late when traffic lights turn green with a pedestrian
+28,video_28,1,0,1,0,25000,24000,26000,2,The target car cuts off from the right lane
+29,video_29,1,0,1,0,38000,37000,39000,1,The target car is zigzagging
+30,video_30,1,0,1,0,24000,23000,25000,0,The target car flashes lights to the ego car
+31,video_31,1,0,1,0,35000,34000,36000,1,The ego car’s changing lane is prevented by a platoon of AVs
+32,video_32,1,0,1,0,31000,30000,32000,0,The target car drives slowly in front of the ego car
+33,video_33,1,0,1,0,26000,25000,27000,0,The target car changes lanes to let the ego car behind overtake
+34,video_34,1,0,1,0,31000,30000,32000,0,The target car attempts to move from the centre to the left lane but goes back to the centre lane so as not to block an ego car behind
+35,video_35,1,0,1,0,43000,42000,44000,0,The platoon of AVs lower the speed to let the ego car change lane
+36,video_36,1,0,1,1,23000,22000,24000,1,The target car is waiting for pedestrians to cross the road
+37,video_37,1,0,1,0,24000,23000,25000,0,the target car follows its front car with a too large gap
+38,video_38,1,0,1,0,36000,35000,37000,0,The target car passes the intersection exactly at the time when the light changes without deceleration
+39,video_39,1,0,1,0,29000,28000,30000,0,The target car plans to overtake but canceled the process and move back
+40,video_40,1,0,1,0,16000,15000,17000,1,The target car obeys the speed limit when the traffic flow drive at around 70
+41,video_41,1,0,1,1,29000,28000,30000,2,The target car brakes abruptly to avoid collision with a pedestrian
+42,video_42,2,1,0,0,36000,35000,37000,0,Baseline traffic situation of driving with ego vehicle as AV
+43,video_43,2,1,0,0,33000,32000,34000,1,The ego car is overtaken by the target car from the inside
+44,video_44,2,1,0,0,34000,33000,35000,1,The target car tailgates the ego car
+45,video_45,2,1,0,0,36000,35000,37000,2,The target car brakes abruptly to avoid collision
+46,video_46,2,1,0,0,38000,37000,39000,2,The target car brakes abruptly
+47,video_47,2,1,0,0,35000,34000,36000,0,The target car starts late when traffic lights turn green
+48,video_48,2,1,0,1,35000,34000,36000,0,The target car starts late when traffic lights turn green with a pedestrian
+49,video_49,2,1,0,0,25000,24000,26000,2,The target car cuts off from the right lane
+50,video_50,2,1,0,0,38000,37000,39000,1,The target car is zigzagging
+51,video_51,2,1,0,0,24000,23000,25000,0,The target car flashes lights to the ego car
+52,video_52,2,1,0,0,35000,34000,36000,1,The ego car’s changing lane is prevented by a platoon of AVs
+53,video_53,2,1,0,0,31000,30000,32000,0,The target car drives slowly in front of the ego car
+54,video_54,2,1,0,0,26000,25000,27000,0,The target car changes lanes to let the ego car behind overtake
+55,video_55,2,1,0,0,31000,30000,32000,0,The target car attempts to move from the centre to the left lane but goes back to the centre lane so as not to block an ego car behind
+56,video_56,2,1,0,0,43000,42000,44000,0,The platoon of AVs lower the speed to let the ego car change lane
+57,video_57,2,1,0,1,23000,22000,24000,1,The target car is waiting for pedestrians to cross the road
+58,video_58,2,1,0,0,24000,23000,25000,0,the target car follows its front car with a too large gap
+59,video_59,2,1,0,0,36000,35000,37000,0,The target car passes the intersection exactly at the time when the light changes without deceleration
+60,video_60,2,1,0,0,29000,28000,30000,0,The target car plans to overtake but canceled the process and move back
+61,video_61,2,1,0,0,16000,15000,17000,1,The target car obeys the speed limit when the traffic flow drive at around 70
+62,video_62,2,1,0,1,29000,28000,30000,2,The target car brakes abruptly to avoid collision with a pedestrian
+63,video_63,3,1,1,0,36000,35000,37000,0,Baseline traffic situation of driving with ego vehicle as AV
+64,video_64,3,1,1,0,33000,32000,34000,1,The ego car is overtaken by the target car from the inside
+65,video_65,3,1,1,0,34000,33000,35000,1,The target car tailgates the ego car
+66,video_66,3,1,1,0,36000,35000,37000,2,The target car brakes abruptly to avoid collision
+67,video_67,3,1,1,0,38000,37000,39000,2,The target car brakes abruptly
+68,video_68,3,1,1,0,35000,34000,36000,0,The target car starts late when traffic lights turn green
+69,video_69,3,1,1,1,35000,34000,36000,0,The target car starts late when traffic lights turn green with a pedestrian
+70,video_70,3,1,1,0,25000,24000,26000,2,The target car cuts off from the right lane
+71,video_71,3,1,1,0,38000,37000,39000,1,The target car is zigzagging
+72,video_72,3,1,1,0,24000,23000,25000,0,The target car flashes lights to the ego car
+73,video_73,3,1,1,0,35000,34000,36000,1,The ego car’s changing lane is prevented by a platoon of AVs
+74,video_74,3,1,1,0,31000,30000,32000,0,The target car drives slowly in front of the ego car
+75,video_75,3,1,1,0,26000,25000,27000,0,The target car changes lanes to let the ego car behind overtake
+76,video_76,3,1,1,0,31000,30000,32000,0,The target car attempts to move from the centre to the left lane but goes back to the centre lane so as not to block an ego car behind
+77,video_77,3,1,1,0,43000,42000,44000,0,The platoon of AVs lower the speed to let the ego car change lane
+78,video_78,3,1,1,1,23000,22000,24000,1,The target car is waiting for pedestrians to cross the road
+79,video_79,3,1,1,0,24000,23000,25000,0,the target car follows its front car with a too large gap
+80,video_80,3,1,1,0,36000,35000,37000,0,The target car passes the intersection exactly at the time when the light changes without deceleration
+81,video_81,3,1,1,0,29000,28000,30000,0,The target car plans to overtake but canceled the process and move back
+82,video_82,3,1,1,0,16000,15000,17000,1,The target car obeys the speed limit when the traffic flow drive at around 70
+83,video_83,3,1,1,1,29000,28000,30000,2,The target car brakes abruptly to avoid collision with a pedestrian
