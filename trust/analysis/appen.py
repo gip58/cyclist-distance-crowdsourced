@@ -26,32 +26,49 @@ class Appen:
     columns_mapping = {'_started_at': 'start',
                        '_created_at': 'end',
                        'about_how_many_kilometers_miles_did_you_drive_in_the_last_12_months': 'milage',  # noqa: E501
-                       'at_which_age_did_you_obtain_your_first_license_for_driving_a_car_or_motorcycle': 'year_license',  # noqa: E501
+                       'at_which_age_did_you_obtain_your_first_license_for_driving_a_car': 'year_license',  # noqa: E501
                        'have_you_read_and_understood_the_above_instructions': 'instructions',  # noqa: E501
+                       'do_you_consent_to_participate_in_this_study_in_the_way_that_is_described_in_the_information_shown_above': 'consent',  # noqa: E501
                        'how_many_accidents_were_you_involved_in_when_driving_a_car_in_the_last_3_years_please_include_all_accidents_regardless_of_how_they_were_caused_how_slight_they_were_or_where_they_happened': 'accidents',  # noqa: E501
-                       'how_often_do_you_do_the_following_becoming_angered_by_a_particular_type_of_driver_and_indicate_your_hostility_by_whatever_means_you_can': 'dbq1_anger',  # noqa: E501
-                       'how_often_do_you_do_the_following_disregarding_the_speed_limit_on_a_motorway': 'dbq2_speed_motorway',  # noqa: E501
-                       'how_often_do_you_do_the_following_disregarding_the_speed_limit_on_a_residential_road': 'dbq3_speed_residential',  # noqa: E501
-                       'how_often_do_you_do_the_following_driving_so_close_to_the_car_in_front_that_it_would_be_difficult_to_stop_in_an_emergency': 'dbq4_headway',  # noqa: E501
-                       'how_often_do_you_do_the_following_racing_away_from_traffic_lights_with_the_intention_of_beating_the_driver_next_to_you': 'dbq5_traffic_lights',  # noqa: E501
-                       'how_often_do_you_do_the_following_sounding_your_horn_to_indicate_your_annoyance_with_another_road_user': 'dbq6_horn',  # noqa: E501
-                       'how_often_do_you_do_the_following_using_a_mobile_phone_without_a_hands_free_kit': 'dbq7_mobile',  # noqa: E501
-                       'if_you_answered_other_in_the_previous_question_please_decribe_the_place_where_you_located_now_below': 'place_other',  # noqa: E501
-                       'if_you_answered_other_in_the_previous_question_please_decribe_your_input_device_below': 'device_other',  # noqa: E501
+                       'becoming_angered_by_a_particular_type_of_driver_and_indicate_your_hostility_by_whatever_means_you_can': 'dbq1_anger',  # noqa: E501
+                       'disregarding_the_speed_limit_on_a_motorway': 'dbq2_speed_motorway',  # noqa: E501
+                       'disregarding_the_speed_limit_on_a_residential_road': 'dbq3_speed_residential',  # noqa: E501
+                       'driving_so_close_to_the_car_in_front_that_it_would_be_difficult_to_stop_in_an_emergency': 'dbq4_headway',  # noqa: E501
+                       'racing_away_from_traffic_lights_with_the_intention_of_beating_the_driver_next_to_you': 'dbq5_traffic_lights',  # noqa: E501
+                       'sounding_your_horn_to_indicate_your_annoyance_with_another_road_user': 'dbq6_horn',  # noqa: E501
+                       'using_a_phone_in_your_hands_while_driving': 'dbq7_mobile',  # noqa: E501
+                       'doing_my_best_not_to_be_obstacle_for_other_drivers': 'dbq8_others',  # noqa: E501
+                       'if_you_answered_other_in_the_previous_question_please_describe_your_experiences_below': 'experiences_other',  # noqa: E501
+                       'if_you_answered_other_in_the_previous_question_please_describe_your_input_device_below': 'device_other',  # noqa: E501
                        'in_which_type_of_place_are_you_located_now': 'place',
                        'if_you_answered_other_in_the_previous_question_please_describe_the_place_where_you_are_located_now_below': 'place_other',  # noqa: E501
                        'in_which_year_do_you_think_that_most_cars_will_be_able_to_drive_fully_automatically_in_your_country_of_residence': 'year_ad',  # noqa: E501
-                       'on_average_how_often_did_you_drive_a_vehicle_in_the_last_12_months': 'driving_freq',  # noqa: E501
+                       'on_average_how_often_did_you_drive_a_car_in_the_last_12_months': 'driving_freq',  # noqa: E501
                        'please_provide_any_suggestions_that_could_help_engineers_to_build_safe_and_enjoyable_automated_cars': 'suggestions_ad',  # noqa: E501
                        'type_the_code_that_you_received_at_the_end_of_the_experiment': 'worker_code',  # noqa: E501
                        'what_is_your_age': 'age',
                        'what_is_your_gender': 'gender',
+                       'what_is_the_highest_level_of_education_you_have_completed': 'education',  # noqa: E501
                        'what_is_your_primary_mode_of_transportation': 'mode_transportation',  # noqa: E501
                        'which_input_device_are_you_using_now': 'device',
                        'if_you_answered_other_in_the_previous_question_please_describe_your_input_device_below': 'device_other',  # noqa: E501
                        'as_a_driver_what_does_it_mean_to_you_when_a_pedestrian_makes_eye_contact_with_you': 'ec_driver',  # noqa: E501
                        'as_a_pedestrian_what_does_it_mean_to_you_when_a_driver_makes_eye_contact_with_you': 'ec_pedestrian',  # noqa: E501
-                       'how_do_you_feel_about_the_following_communication_between_driver_and_pedestrian_is_important_for_road_safety': 'communication_importance'}  # noqa: E501
+                       'how_do_you_feel_about_the_following_communication_between_driver_and_pedestrian_is_important_for_road_safety': 'communication_importance',  # noqa: E501
+                       'i_would_like_to_communicate_with_other_road_users_while_driving_for_instance_using_eye_contact_gestures_verbal_communication_etc': 'communcation_others',  # noqa: E501
+                       'i_am_worried_about_where_all_this_technology_is_leading': 'technology_worried',  # noqa: E501
+                       'i_enjoy_making_use_of_the_latest_technological_products_and_services_when_i_have_the_opportunity': 'technology_enjoyment',  # noqa: E501
+                       'science_and_technology_are_making_our_lives_healthier_easier_and_more_comfortable': 'technology_lives_easier',  # noqa: E501
+                       'science_and_technology_make_our_way_of_life_change_too_fast': 'technology_lives_change',  # noqa: E501
+                       'im_not_interested_in_new_technologies': 'technology_not_interested',  # noqa: E501
+                       'machines_are_taking_over_some_of_the_roles_that_humans_should_have': 'machines_roles',  # noqa: E501
+                       'new_technologies_are_all_about_making_profits_rather_than_making_peoples_lives_better': 'machines_profit',  # noqa: E501
+                       'please_indicate_your_general_attitude_towards_automated_cars': 'av_attitude',  # noqa: E501
+                       'when_the_automated_cars_are_put_into_use_i_will_feel_comfortable_about_driving_on_roads_alongside_automated_cars': 'av_driving_alongside',  # noqa: E501
+                       'when_the_automated_cars_are_put_into_use_i_will_feel_more_comfortable_about_using_an_automated_car_instead_of_driving_a_manually_driven_car': 'av_driving_in',  # noqa: E501
+                       'who_do_you_think_is_more_capable_of_conducting_drivingrelated_tasks': 'av_capability',  # noqa: E501
+                       'which_options_best_describes_your_experience_with_automated_cars': 'av_experience',  # noqa: E501
+                       'if_yes_please_provide_your_email_address': 'email'}  # noqa: E501
 
     def __init__(self,
                  file_data: list,
@@ -95,14 +112,15 @@ class Appen:
             logger.info('Reading appen data from {}.', self.file_data)
             # load from csv
             df = pd.read_csv(self.file_data)
-            # drop legcy worker code column
-            df = df.drop('worker_code', axis=1)
+            # drop legacy worker code column
+            df = df.drop('inoutstartend', axis=1)
             # drop _gold columns
             df = df.drop((x for x in df.columns.tolist() if '_gold' in x),
                          axis=1)
             # replace linebreaks
             df = df.replace('\n', '', regex=True)
             # rename columns to readable names
+            print(df.columns)
             df.rename(columns=self.columns_mapping, inplace=True)
             # convert to time
             df['start'] = pd.to_datetime(df['start'])
@@ -135,7 +153,7 @@ class Appen:
         return df
 
     def filter_data(self, df):
-        """Filter data based on the folllowing criteria:
+        """Filter data based on the following criteria:
             1. People who did not read instructions.
             2. People that are under 18 years of age.
             3. People who completed the study in under 5 min.
@@ -148,35 +166,39 @@ class Appen:
         df_1 = df.loc[df['instructions'] == 'no']
         logger.info('Filter-a1. People who did not read instructions: {}',
                     df_1.shape[0])
-        # people that are underages
-        df_2 = df.loc[df['age'] < 18]
-        logger.info('Filter-a2. People that are under 18 years of age: {}',
+        # people that did not give consent
+        df_2 = df.loc[df['consent'] == 'no']
+        logger.info('Filter-a2. People who did not give consent: {}',
                     df_2.shape[0])
+        # people that are underages
+        df_3 = df.loc[df['age'] < 18]
+        logger.info('Filter-a2. People that are under 18 years of age: {}',
+                    df_3.shape[0])
         # People that took less than tr.common.get_configs('allowed_min_time')
         # minutes to complete the study
-        df_3 = df.loc[df['time'] < tr.common.get_configs('allowed_min_time')]
+        df_4 = df.loc[df['time'] < tr.common.get_configs('allowed_min_time')]
         logger.info('Filter-a3. People who completed the study in under ' +
                     str(tr.common.get_configs('allowed_min_time')) +
                     ' sec: {}',
-                    df_3.shape[0])
+                    df_4.shape[0])
         # people that completed the study from the same IP address
-        df_4 = df[df['ip'].duplicated(keep='first')]
+        df_5 = df[df['ip'].duplicated(keep='first')]
         logger.info('Filter-a4. People who completed the study from the ' +
                     'same IP: {}',
-                    df_4.shape[0])
-        # people that entered the same worker_code more than once
-        df_5 = df[df['worker_code'].duplicated(keep='first')]
-        logger.info('Filter-a5. People who used the same worker_code: {}',
                     df_5.shape[0])
+        # people that entered the same worker_code more than once
+        df_6 = df[df['worker_code'].duplicated(keep='first')]
+        logger.info('Filter-a5. People who used the same worker_code: {}',
+                    df_6.shape[0])
         # save to csv
         if self.save_csv:
-            df_5 = df_5.reset_index()
-            df_5.to_csv(tr.settings.output_dir + '/' + self.file_cheaters_csv)
+            df_6 = df_6.reset_index()
+            df_6.to_csv(tr.settings.output_dir + '/' + self.file_cheaters_csv)
             logger.info('Filter-a5. Saved list of cheaters to csv file {}',
                         self.file_cheaters_csv)
         # concatenate dfs with filtered data
         old_size = df.shape[0]
-        df_filtered = pd.concat([df_1, df_2, df_3, df_4, df_5])
+        df_filtered = pd.concat([df_1, df_2, df_3, df_4, df_5, df_5])
         # check if there are people to filter
         if not df_filtered.empty:
             # drop rows with filtered data
