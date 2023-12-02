@@ -13,7 +13,7 @@ LOAD_P = False  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
 FILTER_DATA = True  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
-REJECT_CHEATERS = False  # reject cheaters on Appen
+REJECT_CHEATERS = True  # reject cheaters on Appen
 UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 
@@ -54,8 +54,8 @@ if __name__ == '__main__':
     if REJECT_CHEATERS:
         qa = tr.analysis.QA(file_cheaters=tr.common.get_configs('file_cheaters'),  # noqa: E501
                             job_id=tr.common.get_configs('appen_job'))
-        qa.flag_users()
         qa.reject_users()
+        qa.ban_users()
     # merge heroku and appen dataframes into one
     all_data = heroku_data.merge(appen_data,
                                  left_on='worker_code',
