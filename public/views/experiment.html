@@ -302,6 +302,74 @@ if (debug) {
 var between_blocks = []; // instructions between blocks
 var video_stimuli = []; // blocks with videos
 
+// choose correct video stimuli
+video_ids_0 = [];  // placeholder for videos of first batch
+video_ids_1 = [];  // placeholder for videos of second batch
+if (participant_group == 0) {  // group 0
+   // ego-mv - target-mv
+    for (var i = videos_mv_mv_first; i <= videos_mv_mv_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_0.push(i);
+        }
+    }
+    video_ids_0 = shuffle(video_ids_0);  // shuffle video IDs
+    // ego-mv - target-av
+    for (var i = videos_mv_av_first; i <= videos_mv_av_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_1.push(i);
+        }
+    }
+    video_ids_1 = shuffle(video_ids_1);  // shuffle video IDs
+} else if (participant_group == 1) { // group 1
+    // ego-mv - target-av
+    for (var i = videos_mv_av_first; i <= videos_mv_av_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_0.push(i);
+        }
+    }
+    video_ids_0 = shuffle(video_ids_0);  // shuffle video IDs
+    // ego-mv - target-mv
+    for (var i = videos_mv_mv_first; i <= videos_mv_mv_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_1.push(i);
+        }
+    }
+    video_ids_1 = shuffle(video_ids_1);  // shuffle video IDs
+} else if (participant_group == 2) {  // group 2
+    // ego-av - target-mv
+    for (var i = videos_av_mv_first; i <= videos_av_mv_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_0.push(i);
+        }
+    }
+    video_ids_0 = shuffle(video_ids_0);  // shuffle video IDs
+    // ego-av - target-av
+    for (var i = videos_av_av_first; i <= videos_av_av_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_1.push(i);
+        }
+    }
+    video_ids_1 = shuffle(video_ids_1);  // shuffle video IDs
+} else if (participant_group == 3) {  // group 3
+    // ego-av - target-av
+    for (var i = videos_av_av_first; i <= videos_av_av_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_0.push(i);
+        }
+    }
+    video_ids_0 = shuffle(video_ids_0);  // shuffle video IDs
+    // target-av
+    for (var i = videos_av_mv_first; i <= videos_av_mv_last; i++) {
+        for (var j = 0; j < n_videos_repeat; j++) {
+            video_ids_1.push(i);
+        }
+    }
+    video_ids_1 = shuffle(video_ids_1);  // shuffle video IDs
+} else { // negative = ego_av
+    console.log('wrong participant_group id of ', participant_group);
+}
+video_ids = video_ids_0.concat(video_ids_1);  // shuffle ids
+
 // define instructions block
 var instructions_block_av = {
     type: jsPsychInstructions,
@@ -474,73 +542,6 @@ var continue_session2_g3 = {
     choices: ['C']
 };
 
-// choose correct video stimuli
-video_ids_0 = [];  // placeholder for videos of first batch
-video_ids_1 = [];  // placeholder for videos of second batch
-if (participant_group == 0) {  // group 0
-   // ego-mv - target-mv
-    for (var i = videos_mv_mv_first; i <= videos_mv_mv_last; i++) {
-        for (var j = 0; j < n_videos_repeat; j++) {
-            video_ids_0.push(i);
-        }
-    }
-    video_ids_0 = shuffle(video_ids_0);  // shuffle video IDs
-    // ego-mv - target-av
-    for (var i = videos_mv_av_first; i <= videos_mv_av_last; i++) {
-        for (var j = 0; j < n_videos_repeat; j++) {
-            video_ids_1.push(i);
-        }
-    }
-    video_ids_1 = shuffle(video_ids_1);  // shuffle video IDs
-} else if (participant_group == 1) { // group 1
-    // ego-mv - target-av
-    for (var i = videos_mv_av_first; i <= videos_mv_av_last; i++) {
-        for (var j = 0; j < n_videos_repeat; j++) {
-            video_ids_0.push(i);
-        }
-    }
-    video_ids_0 = shuffle(video_ids_0);  // shuffle video IDs
-    // ego-mv - target-mv
-    for (var i = videos_mv_mv_first; i <= videos_mv_mv_last; i++) {
-        for (var j = 0; j < n_videos_repeat; j++) {
-            video_ids_1.push(i);
-        }
-    }
-    video_ids_1 = shuffle(video_ids_1);  // shuffle video IDs
-} else if (participant_group == 2) {  // group 2
-    // ego-av - target-mv
-    for (var i = videos_av_mv_first; i <= videos_av_mv_last; i++) {
-        for (var j = 0; j < n_videos_repeat; j++) {
-            video_ids_0.push(i);
-        }
-    }
-    video_ids_0 = shuffle(video_ids_0);  // shuffle video IDs
-    // ego-av - target-av
-    for (var i = videos_av_av_first; i <= videos_av_av_last; i++) {
-        for (var j = 0; j < n_videos_repeat; j++) {
-            video_ids_1.push(i);
-        }
-    }
-    video_ids_1 = shuffle(video_ids_1);  // shuffle video IDs
-} else if (participant_group == 3) {  // group 3
-    // ego-av - target-av
-    for (var i = videos_av_av_first; i <= videos_av_av_last; i++) {
-        for (var j = 0; j < n_videos_repeat; j++) {
-            video_ids_0.push(i);
-        }
-    }
-    video_ids_0 = shuffle(video_ids_0);  // shuffle video IDs
-    // target-av
-    for (var i = videos_av_mv_first; i <= videos_av_mv_last; i++) {
-        for (var j = 0; j < n_videos_repeat; j++) {
-            video_ids_1.push(i);
-        }
-    }
-    video_ids_1 = shuffle(video_ids_1);  // shuffle video IDs
-} else { // negative = ego_av
-    console.log('wrong participant_group id of ', participant_group);
-}
-video_ids = video_ids_0.concat(video_ids_1);  // shuffle ids
 // build array with videos with stimuli
 video_preload = []; // array for preloading of videos
 // add videos from test trials to preload

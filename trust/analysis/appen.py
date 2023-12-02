@@ -120,7 +120,6 @@ class Appen:
             # replace linebreaks
             df = df.replace('\n', '', regex=True)
             # rename columns to readable names
-            print(df.columns)
             df.rename(columns=self.columns_mapping, inplace=True)
             # convert to time
             df['start'] = pd.to_datetime(df['start'])

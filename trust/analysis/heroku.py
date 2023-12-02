@@ -48,7 +48,8 @@ class Heroku:
                  'browser_name',
                  'window_height',
                  'window_width',
-                 'video_ids']
+                 'video_ids',
+                 'participant_group']
     # prefixes used for files in node.js implementation
     prefixes = {'stimulus': 'video_'}
     # stimulus duration
@@ -127,6 +128,7 @@ class Heroku:
                         if key in data_cell.keys():
                             # piece of meta data found, update dictionary
                             dict_row[key] = data_cell[key]
+                            print(key, data_cell[key])
                             if key == 'worker_code':
                                 logger.debug('{}: working with row with data.',
                                              data_cell['worker_code'])
@@ -215,7 +217,7 @@ class Heroku:
                         else:
                             # previous values found
                             dict_row[stim_name + '-y'].extend(y)
-                        # check if values not already recorded    
+                        # check if values not already recorded
                         if stim_name + '-t' not in dict_row.keys():
                             # first value
                             dict_row[stim_name + '-t'] = t

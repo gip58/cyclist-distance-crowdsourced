@@ -31,7 +31,6 @@ class Analysis:
     num_stimuli = tr.common.get_configs('num_stimuli')
     # folder for output
     folder = '/figures/'
-   
 
     def __init__(self):
         # set font to Times
@@ -53,8 +52,8 @@ class Analysis:
         # read original image
         im = plt.imread(image)
         # get dimensions
-        width = gz.common.get_configs('stimulus_width')
-        height = gz.common.get_configs('stimulus_height')
+        width = tr.common.get_configs('stimulus_width')
+        height = tr.common.get_configs('stimulus_height')
         # show heatmap by plt
         dpi = 150
         fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
@@ -99,8 +98,8 @@ class Analysis:
                          image)
             return
         # get dimensions of base image
-        width = gz.common.get_configs('stimulus_width')
-        height = gz.common.get_configs('stimulus_height')
+        width = tr.common.get_configs('stimulus_width')
+        height = tr.common.get_configs('stimulus_height')
         # add datapoints to corners for maximised heatmaps
         if add_corners:
             if [0, 0] not in df:
@@ -191,9 +190,6 @@ class Analysis:
             self.save_fig(image, fig, '/figures/', suffix_file)
         # return graph objects
         return fig, g
-        
-
-
 
     # TODO: fix error with value of string not used as float
     def corr_matrix(self, df, columns_drop, save_file=False):
@@ -1182,7 +1178,7 @@ class Analysis:
             fig.add_trace(go.Scatter(y=data['data'],  # noqa: E501
                                      mode='lines',
                                      x=times,
-                                     name=data['value']),
+                                     name=str(data['value'])),
                           row=1,
                           col=1)
         # create tabs
@@ -1196,10 +1192,10 @@ class Analysis:
         for value in values:
             visibility = [[counter_rows == j] for j in range(len(values))]
             visibility = [item for sublist in visibility for item in sublist]  # noqa: E501
-            button = dict(label=value,
+            button = dict(label=str(value),
                           method='update',
                           args=[{'visible': visibility},
-                                {'title': value}])
+                                {'title': str(value)}])
             buttons.append(button)
             counter_rows = counter_rows + 1
         # add menu

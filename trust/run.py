@@ -88,7 +88,7 @@ if __name__ == '__main__':
                                   'No',
                                   'I don\'t know']}]
         # process post-trial questions and update mapping
-        mapping = heroku.process_stimulus_questions(questions)
+        # mapping = heroku.process_stimulus_questions(questions)
         # mapping.rename(columns={'eye-contact-yes_but_too_late': 'EC-yes_but_too_late',  # noqa: E501
         #                         'eye-contact-yes': 'EC-yes',
         #                         'eye-contact-i_don\'t_know': 'EC-i_don\'t_know',  # noqa: E501
@@ -112,64 +112,54 @@ if __name__ == '__main__':
         # keypresses of all videos individually
         analysis.plot_kp_videos(mapping)
         # 1 var, all values
-        analysis.plot_kp_variable(mapping, 'traffic_rules')
+        analysis.plot_kp_variable(mapping, 'ego_car')
         # 1 var, certain values
         analysis.plot_kp_variable(mapping,
-                                  'traffic_rules',
-                                  ['ped_crossing', 'stop_sign'])
+                                  'target_car',
+                                  [0, 1])
+        # TODO: make plot_video_data work
         # plot of multiple combined AND variables
-        analysis.plot_video_data(mapping, 'video_5',
-                                 ['vehicle_velocity_GPS', 'dist_to_ped'],
-                                 yaxis_title='Distance & velocity data',
-                                 conf_interval=0.95)
-        analysis.plot_video_data(mapping, 'video_50', ['vehicle_velocity_GPS', 'dist_to_ped'],  # noqa: E501
-                                 yaxis_title='Distance & velocity data', conf_interval=0.95)  # noqa: E501
-        analysis.plot_kp_variables_and(mapping,
-                                       plot_names=['traffic rules',
-                                                   'no traffic rules'],
-                                       variables_list=[[{'variable': 'traffic_rules',  # noqa: E501
-                                                         'value': 'stop_sign'},        # noqa: E501
-                                                        {'variable': 'traffic_rules',  # noqa: E501
-                                                         'value': 'traffic_lights'},   # noqa: E501
-                                                        {'variable': 'traffic_rules',  # noqa: E501
-                                                         'value': 'ped_crossing'}],    # noqa: E501
-                                                       [{'variable': 'traffic_rules',  # noqa: E501
-                                                         'value': 'none'}]])
-        # plot of separate variables
-        analysis.plot_kp_variables_or(mapping,
-                                      variables=[{'variable': 'cross_look',
-                                                  'value': 'Crossing_Looking'},     # noqa: E501
-                                                 {'variable': 'cross_look',
-                                                  'value': 'notCrossing_Looking'},  # noqa: E501
-                                                 {'variable': 'cross_look',
-                                                  'value': 'Crossing_notLooking'},  # noqa: E501
-                                                 {'variable': 'cross_look',
-                                                  'value': 'nonspecific'}])
+        # analysis.plot_video_data(mapping, 'video_5',
+        #                          ['group', 'criticality'],
+        #                          yaxis_title='Type of ego car and number of pedestrians',  # noqa: E501
+        #                          conf_interval=0.95)
+        # analysis.plot_kp_variables_and(mapping,
+        #                                plot_names=['traffic rules',
+        #                                            'no traffic rules'],
+        #                                variables_list=[[{'variable': 'traffic_rules',  # noqa: E501
+        #                                                  'value': 'stop_sign'},        # noqa: E501
+        #                                                 {'variable': 'traffic_rules',  # noqa: E501
+        #                                                  'value': 'traffic_lights'},   # noqa: E501
+        #                                                 {'variable': 'traffic_rules',  # noqa: E501
+        #                                                  'value': 'ped_crossing'}],    # noqa: E501
+        #                                                [{'variable': 'traffic_rules',  # noqa: E501
+        #                                                  'value': 'none'}]])
+        # # plot of separate variables
+        # analysis.plot_kp_variables_or(mapping,
+        #                               variables=[{'variable': 'cross_look',
+        #                                           'value': 'Crossing_Looking'},     # noqa: E501
+        #                                          {'variable': 'cross_look',
+        #                                           'value': 'notCrossing_Looking'},  # noqa: E501
+        #                                          {'variable': 'cross_look',
+        #                                           'value': 'Crossing_notLooking'},  # noqa: E501
+        #                                          {'variable': 'cross_look',
+        #                                           'value': 'nonspecific'}])
 
         # columns to drop in correlation matrix and scatter matrix
-        columns_drop = ['id_segment', 'set', 'video', 'extra',
-                        'alternative_frame', 'alternative_frame.1',
-                        'video_length', 'min_dur', 'max_dur', 'start',
-                        'danger_b', 'danger-p', 'look_moment', 'cross_moment',
-                        'time_before_interaction', 'gesture', 'kp',
-                        'look_frame_ms', 'cross_frame_ms', 'interaction',
-                        'vehicle_velocity_OBD', 'vehicle_velocity_GPS',
-                        'EC-yes-score', 'EC-no-score', 'dist_to_ped',
-                        'EC-yes_but_too_late-score', 'object_count',
-                        'object_surface', 'object_entities', 'person_count',
-                        'car_count']
+        columns_drop = ['description', 'video_length', 'min_dur', 'max_dur',
+                        'kp']
         # set nan to -1
-        df = mapping[(mapping['dist_to_ped_at_7.0'] != 'no data found')]
-        df = df.fillna(-1)
+        # df = mapping[(mapping['dist_to_ped_at_7.0'] != 'no data found')]
+        df = mapping.fillna(-1)
         # create correlation matrix
-        # analysis.corr_matrix(df,
-        #                      columns_drop=columns_drop,
-        #                      save_file=True)
+        analysis.corr_matrix(df,
+                             columns_drop=columns_drop,
+                             save_file=True)
         # create correlation matrix
         analysis.scatter_matrix(df,
                                 columns_drop=columns_drop,
-                                color='traffic_rules',
-                                symbol='traffic_rules',
+                                color='group',
+                                symbol='group',
                                 diagonal_visible=False,
                                 save_file=True)
         # stimulus duration
@@ -179,6 +169,7 @@ if __name__ == '__main__':
                       pretty_text=True,
                       save_file=True)
         # browser window dimensions
+        print(heroku_data.columns)
         analysis.scatter(heroku_data,
                          x='window_width',
                          y='window_height',
