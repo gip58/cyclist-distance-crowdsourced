@@ -615,20 +615,13 @@ class Heroku:
 
     def filter_data(self, df):
         """
-        Filter data based on the following criteria:
-            1. People who had more than allowed_stimuli share of stimuli of
-               unexpected length.
-            2. People who made more than allowed_mistakes_signs mistakes with
-               questions of traffic sign.
-
+        Filter data.
         Args:
             df (dataframe): dataframe with data.
 
         Returns:
             dataframe: updated dataframe.
         """
-        # more than allowed number of mistake with codes for sentinel images
-        # load mapping of codes and coordinates
         logger.info('No filtering of heroku data implemented.')
         return df
 

@@ -63,11 +63,11 @@ class Appen:
                        'im_not_interested_in_new_technologies': 'technology_not_interested',  # noqa: E501
                        'machines_are_taking_over_some_of_the_roles_that_humans_should_have': 'machines_roles',  # noqa: E501
                        'new_technologies_are_all_about_making_profits_rather_than_making_peoples_lives_better': 'machines_profit',  # noqa: E501
-                       'please_indicate_your_general_attitude_towards_automated_cars': 'av_attitude',  # noqa: E501
-                       'when_the_automated_cars_are_put_into_use_i_will_feel_comfortable_about_driving_on_roads_alongside_automated_cars': 'av_driving_alongside',  # noqa: E501
-                       'when_the_automated_cars_are_put_into_use_i_will_feel_more_comfortable_about_using_an_automated_car_instead_of_driving_a_manually_driven_car': 'av_driving_in',  # noqa: E501
-                       'who_do_you_think_is_more_capable_of_conducting_drivingrelated_tasks': 'av_capability',  # noqa: E501
-                       'which_options_best_describes_your_experience_with_automated_cars': 'av_experience',  # noqa: E501
+                       'please_indicate_your_general_attitude_towards_automated_cars': 'attitude_ad',  # noqa: E501
+                       'when_the_automated_cars_are_put_into_use_i_will_feel_comfortable_about_driving_on_roads_alongside_automated_cars': 'driving_alongside_ad',  # noqa: E501
+                       'when_the_automated_cars_are_put_into_use_i_will_feel_more_comfortable_about_using_an_automated_car_instead_of_driving_a_manually_driven_car': 'driving_in_ad',  # noqa: E501
+                       'who_do_you_think_is_more_capable_of_conducting_drivingrelated_tasks': 'capability_ad',  # noqa: E501
+                       'which_options_best_describes_your_experience_with_automated_cars': 'experience_ad',  # noqa: E501
                        'if_yes_please_provide_your_email_address': 'email'}  # noqa: E501
 
     def __init__(self,
