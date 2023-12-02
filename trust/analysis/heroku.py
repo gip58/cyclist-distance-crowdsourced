@@ -138,6 +138,9 @@ class Heroku:
                             stim_no_path = data_cell['stimulus'].rsplit('/', 1)[-1]  # noqa: E501
                         # remove extension
                         stim_no_path = os.path.splitext(stim_no_path)[0]
+                        # skip is videos from instructions
+                        if 'video_test_' in stim_no_path:
+                            continue
                         # Check if it is a block with stimulus and not an
                         # instructions block
                         if (tr.common.search_dict(self.prefixes, stim_no_path)

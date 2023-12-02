@@ -193,16 +193,16 @@ class Appen:
         df_6 = df[df['worker_code'].duplicated(keep='first')]
         logger.info('Filter-a6. People who used the same worker_code: {}',
                     df_6.shape[0])
-        # people with nan for worker_id
-        df_7 = df[df['worker_id'].isnull()]
-        logger.info('Filter-a7. People who have not valid worker_id: {}',
-                    df_7.shape[0])
         # save to csv
         if self.save_csv:
             df_6 = df_6.reset_index()
             df_6.to_csv(tr.settings.output_dir + '/' + self.file_cheaters_csv)
-            logger.info('Filter-a5. Saved list of cheaters to csv file {}',
+            logger.info('Filter-a6. Saved list of cheaters to csv file {}',
                         self.file_cheaters_csv)
+        # people with nan for worker_id
+        df_7 = df[df['worker_id'].isnull()]
+        logger.info('Filter-a7. People who have not valid worker_id: {}',
+                    df_7.shape[0])
         # concatenate dfs with filtered data
         old_size = df.shape[0]
         df_filtered = pd.concat([df_1, df_2, df_3, df_4, df_5, df_6, df_7])
@@ -238,7 +238,7 @@ class Appen:
             nans_before[0] = df['year_ad'].isnull().sum()
             nans_before[1] = df['year_license'].isnull().sum()
             nans_before[2] = df['age'].isnull().sum()
-            # replace all non-numeric values to nan for questions invlolving
+            # replace all non-numeric values to nan for questions involving
             # years
             df['year_ad'] = df['year_ad'].apply(
                 lambda x: pd.to_numeric(x, errors='coerce'))
