@@ -156,11 +156,13 @@ class Appen:
     def filter_data(self, df):
         """Filter data based on the following criteria:
             1. People who did not read instructions.
-            2. People that are under 18 years of age.
-            3. People who completed the study in under 5 min.
-            4. People who completed the study from the same IP more than once
+            2. People who did not give consent.
+            3. People that are under 18 years of age.
+            4. People who completed the study in under 5 min.
+            5. People who completed the study from the same IP more than once
                (the 1st data entry is retained).
-            5. People who used the same `worker_code` multiple times.
+            6. People who used the same `worker_code` multiple times.
+            7. People with invalid `worker_id`.
         """
         logger.info('Filtering appen data.')
         # people that did not read instructions
@@ -192,6 +194,7 @@ class Appen:
         logger.info('Filter-a6. People who used the same worker_code: {}',
                     df_6.shape[0])
         # people with nan for worker_id
+        df_7 = df[df['worker_id'].isnull()]
         logger.info('Filter-a7. People who have not valid worker_id: {}',
                     df_7.shape[0])
         # save to csv
