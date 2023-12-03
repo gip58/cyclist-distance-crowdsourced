@@ -29,6 +29,8 @@ class Heroku:
     num_stimuli_participant = tr.common.get_configs('num_stimuli_participant')
     # number of repeats for each stimulus
     num_repeat = tr.common.get_configs('num_repeat')
+    # allowed number of stimuli with detected wrong duration
+    allowed_length = tr.common.get_configs('allowed_stimuli_wrong_duration')
     # pickle file for saving data
     file_p = 'heroku_data.p'
     # csv file for saving data
@@ -597,7 +599,65 @@ class Heroku:
         Returns:
             dataframe: updated dataframe.
         """
-        logger.info('No filtering of heroku data implemented.')
+        # logger.info('No filtering of heroku data implemented.')
+        logger.info('Filtering heroku data.')
+        # 1. People who made mistakes in injected questions
+        # TODO: check for large lengths of videos.
+        logger.info('Filter-h1. People who had too many stimuli of unexpected'
+                    + ' length.')
+        # df to store data to filter out
+        df_1 = pd.DataFrame()
+        # array to store in video names
+        video_dur = []
+        for i in range(0, self.num_stimuli):
+            for rep in range(0, self.num_repeat):
+                video_dur.append('video_' + str(i) + '-dur-' + str(rep))
+        # tqdm adds progress bar
+        # loop over participants in data
+        for index, row in tqdm(df.iterrows(), total=df.shape[0]):
+            data_count = 0
+            counter_filtered = 0
+            for i in range(self.num_stimuli):
+                for rep in range(self.num_repeat):
+                    # add suffix with repetition ID
+                    video_dur = 'video_' + str(i) + '-dur-' + str(rep)
+                    # check id value is present
+                    if video_dur not in row.keys():
+                        continue
+                    # check for nan values
+                    if pd.isna(row[video_dur]):
+                        continue
+                    else:
+                        # up data count when data is found
+                        data_count = data_count + 1
+                        if (row[video_dur] < (self.mapping['min_dur'].iloc[i])  # noqa: E501
+                           or row[video_dur] > (self.mapping['max_dur'].iloc[i])):  # noqa: E501
+                            # up counter if data with wrong length is found
+                            counter_filtered = counter_filtered + 1
+            # Only check for participants that watched all videos
+            if data_count >= self.num_stimuli_participant * self.num_repeat:
+                # check threshold ratio
+                if counter_filtered / data_count > self.allowed_length:
+                    # if threshold reached, append data of this participant to
+                    # df_1
+                    df_1 = pd.concat([df_1, pd.DataFrame([row])],
+                                     ignore_index=True)
+        logger.info('Filter-h1. People who had more than {} share of stimuli'
+                    + ' of unexpected length: {}.',
+                    self.allowed_length,
+                    df_1.shape[0])
+        # concatenate dfs with filtered data
+        old_size = df.shape[0]
+        df_filtered = pd.concat([df_1])
+        # check if there are people to filter
+        if not df_filtered.empty:
+            # drop rows with filtered data
+            unique_worker_codes = df_filtered['worker_code'].drop_duplicates()
+            df = df[~df['worker_code'].isin(unique_worker_codes)]
+            # reset index in dataframe
+            df = df.reset_index()
+        logger.info('Filtered in total in heroku data: {}',
+                    old_size - df.shape[0])
         return df
 
     def show_info(self):
