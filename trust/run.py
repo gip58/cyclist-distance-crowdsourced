@@ -166,6 +166,13 @@ if __name__ == '__main__':
                                 symbol='group',
                                 diagonal_visible=False,
                                 save_file=True)
+        # participant group - end question
+        analysis.scatter(heroku_data,
+                         x='participant_group',
+                         y='end-slider-0-0',
+                         color='end-slider-1-0',
+                         pretty_text=True,
+                         save_file=True)
         # stimulus duration
         analysis.hist(heroku_data,
                       x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-dur')],  # noqa: E501
