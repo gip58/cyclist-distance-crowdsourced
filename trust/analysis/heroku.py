@@ -83,7 +83,7 @@ class Heroku:
             filter_data (bool, optional): flag for filtering data.
 
         Returns:
-            dataframe: udpated dataframe.
+            dataframe: updated dataframe.
         """
         # load data
         if self.load_p:
@@ -114,8 +114,9 @@ class Heroku:
                 stim_name = ''
                 # trial last found stimulus
                 stim_trial = -1
-                # last time_elapsed for logging duration of trial
+                # last time_elapsed for logging duration of trial and stimulus
                 elapsed_l = 0
+                elapsed_l_stim = 0
                 # record worker_code in the row. assuming that each row has at
                 # least one worker_code
                 worker_code = [d['worker_code'] for d in list_row['data'] if 'worker_code' in d][0]  # noqa: E501
@@ -131,6 +132,12 @@ class Heroku:
                                              data_cell['worker_code'])
                     # check if stimulus data is present
                     if 'stimulus' in data_cell.keys():
+                        # record last timestamp before video
+                        if 'black_frame.png' in data_cell['stimulus']:
+                            # record timestamp at the black frame to compute
+                            # the length of the stimulus
+                            if 'time_elapsed' in data_cell.keys():
+                                elapsed_l_stim = float(data_cell['time_elapsed'])  # noqa: E501
                         # extract name of stimulus after last slash
                         # list of stimuli. use 1st
                         if isinstance(data_cell['stimulus'], list):
@@ -157,9 +164,9 @@ class Heroku:
                                 stim_trial = data_cell['trial_index']
                                 # add trial duration
                                 if 'time_elapsed' in data_cell.keys():
-                                    # positive time elapsed from las cell
-                                    if elapsed_l:
-                                        time = elapsed_l
+                                    # positive time elapsed from last cell
+                                    if elapsed_l_stim:
+                                        time = elapsed_l_stim
                                     # non-positive time elapsed. use value from
                                     # the known cell for worker
                                     else:
@@ -599,7 +606,6 @@ class Heroku:
         Returns:
             dataframe: updated dataframe.
         """
-        # logger.info('No filtering of heroku data implemented.')
         logger.info('Filtering heroku data.')
         # 1. People who made mistakes in injected questions
         # TODO: check for large lengths of videos.
@@ -656,7 +662,7 @@ class Heroku:
             df = df[~df['worker_code'].isin(unique_worker_codes)]
             # reset index in dataframe
             df = df.reset_index()
-        logger.info('Filtered in total in heroku data: {}',
+        logger.info('Filtered in total in heroku data: {}.',
                     old_size - df.shape[0])
         return df
 
