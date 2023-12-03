@@ -290,8 +290,8 @@ class Heroku:
                     # sliders after experiment
                     if ('response' in data_cell.keys() and stim_name == '' and
                        data_cell['response'] is not None):
-                        # check if it is not dictionary
-                        if 'slider-0' not in data_cell['response']:
+                        # check if it is not post-trial data
+                        if 'slider-5' not in data_cell['response']:
                             continue
                         # record given keypresses
                         responses_end = data_cell['response']
