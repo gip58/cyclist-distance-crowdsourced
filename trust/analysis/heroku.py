@@ -34,9 +34,9 @@ class Heroku:
     # pickle file for saving data
     file_p = 'heroku_data.p'
     # csv file for saving data
-    file_data_csv = 'heroku_data'
+    file_data_csv = 'heroku_data.csv'
     # csv file for mapping of stimuli
-    file_mapping_csv = 'mapping'
+    file_mapping_csv = 'mapping.csv'
     # keys with meta information
     meta_keys = ['worker_code',
                  'browser_user_agent',
@@ -362,9 +362,8 @@ class Heroku:
             tr.common.save_to_p(self.file_p, df, 'heroku data')
         # save to csv
         if self.save_csv:
-            # todo: check whith index=False is needed here
-            df.to_csv(tr.settings.output_dir + '/' + self.file_data_csv +
-                      '.csv', index=False)
+            df.to_csv(os.path.join(tr.settings.output_dir, self.file_data_csv),
+                      index=False)
             logger.info('Saved heroku data to csv file {}',
                         self.file_data_csv + '.csv')
         # update attribute
@@ -488,8 +487,8 @@ class Heroku:
         # save to csv
         if self.save_csv:
             # save to csv
-            self.mapping.to_csv(tr.settings.output_dir + '/' +
-                                self.file_mapping_csv + '.csv')
+            self.mapping.to_csv(os.path.join(tr.settings.output_dir,
+                                             self.file_mapping_csv))
         # return new mapping
         return self.mapping
 
@@ -592,8 +591,8 @@ class Heroku:
         # save to csv
         if self.save_csv:
             # save to csv
-            self.mapping.to_csv(tr.settings.output_dir + '/' +
-                                self.file_mapping_csv + '.csv')
+            self.mapping.to_csv(os.path.join(tr.settings.output_dir,
+                                             self.file_mapping_csv))
         # return new mapping
         return self.mapping
 
