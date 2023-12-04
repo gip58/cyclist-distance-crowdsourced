@@ -54,6 +54,7 @@ var video_pfefix_local = 'videos/video_'; // prefix for videos
 var SHOW_DEBUG = false; // switch for debugging output
 var SAVE_DATA = true; // save data or not
 var EYE_TRACKING = true; // use eye_tracking or not
+var CALIBRATION_NUM = 2; // use eye_tracking or not
 
 // Arrays
 var video_ids = [];
@@ -133,11 +134,6 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// groups of participant. either 0 or 3
-var participant_group = getRandomInt(0, 3);
-if (debug) {
-    console.log('participant_group', participant_group);
-}
 /**
  * Shuffles array in place.
  * @param {Array} a items An array containing the items.
@@ -215,13 +211,27 @@ if (debug) {
     console.log('eye_tracking', eye_tracking);
 }
 
+// fetch from the URL param
+var calibration_num = getUrlParameter('calibration_num');
+// if not provided, use CONST
+if (calibration_num == undefined) {
+    calibration_num = CALIBRATION_NUM;
+} else {
+    // convert from string to int
+    calibration_num = Number(calibration_num);
+}
+
+if (debug) {
+    console.log('calibration_num', calibration_num);
+}
+
 /**
  * Get code for the worker.
  */
 function getWorkerCode() {
     // fetch from the URL param
     var worker_code = getUrlParameter('worker_code');
-    // if not provided, use CONST
+    // if not provided, generate
     if (worker_code == undefined) {
         var timestamp = window.performance.timing.navigationStart + window.performance.now();
         var current_time = Math.round(timestamp);
@@ -235,6 +245,29 @@ function getWorkerCode() {
 }
 
 var worker_code = getWorkerCode();
+if (debug) {
+    console.log('worker_code', worker_code);
+}
+
+/**
+ * Get participant group.
+ */
+function getParticipantGroup() {
+    // fetch from the URL param
+    var participant_group = getUrlParameter('participant_group');
+    // if not provided, generate
+    if (participant_group == undefined) {
+        return getRandomInt(0, 3);
+    } else {
+        return Number(participant_group);
+    }
+    
+}
+
+var participant_group = getParticipantGroup();
+if (debug) {
+    console.log('participant_group', participant_group);
+}
 
 /**
  * Initialise jsPsych.
@@ -652,7 +685,7 @@ var calibration = {
     calibration_points: [
       [25,25],[75,25],[50,50],[25,75],[75,75]
     ],
-    repetitions_per_point: 2,
+    repetitions_per_point: calibration_num,
     randomize_calibration_order: true
 }
 
@@ -858,7 +891,6 @@ if (debug) {
     console.log('video_stimuli', video_stimuli);
     console.log('qs_video', qs_video);
     console.log('between_blocks', between_blocks);
-    console.log('participant_group', participant_group);
 }
 
 /* Start the experiment */
