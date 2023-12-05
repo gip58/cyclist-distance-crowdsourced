@@ -191,6 +191,115 @@ class Analysis:
         # return graph objects
         return fig, g
 
+    def create_animation(self,
+                         image,
+                         stim_id,
+                         df,
+                         save_anim=False,
+                         save_frames=False):
+        """
+        Create animation for image based on the list of lists of points of
+        varying duration.
+        """
+        self.image = image
+        self.stim_id = stim_id
+        self.df = df
+        self.save_frames = save_frames
+        self.fig, self.g = self.create_heatmap(image,
+                                               df[0],
+                                               type_heatmap='kdeplot',  # noqa: E501
+                                               add_corners=True,  # noqa: E501
+                                               save_file=False)
+        anim = animation.FuncAnimation(self.fig,
+                                       self.animate,
+                                       frames=len(df),
+                                       interval=1000,
+                                       repeat=False)
+        # save image
+        if save_anim:
+            self.save_anim(image, anim, self.folder, '_animation.mp4') 
+    def create_animation_all_stimuli(self, num_stimuli):
+        """
+        Create long video with all animations.
+        """
+        logger.info('Creating long video with all animations for {} stimuli.',
+                    num_stimuli)
+        # create path
+        path = gz.settings.output_dir + self.folder
+        if not os.path.exists(path):
+            os.makedirs(path)
+        # file with list of animations
+        list_anim = path + 'animations.txt'
+        file = open(list_anim, 'w+')
+        # loop of stimuli
+        for stim_id in range(1, num_stimuli + 1):
+            # add animation to the list
+            anim_path = path + 'image_' + str(stim_id) + '_animation.mp4'
+            # check if need to add a linebreak
+            if stim_id == num_stimuli:
+                file.write('file ' + anim_path)  # no need for linebreak
+            else:
+                file.write('file ' + anim_path + '\n')
+        # close file with animations
+        file.close()
+        # stitch videos together
+        os.chdir(path)
+        subprocess.call(['ffmpeg',
+                         '-y',
+                         '-loglevel', 'quiet',
+                         '-f', 'concat',
+                         '-safe', '0',
+                         '-i', list_anim,
+                         '-c', 'copy',
+                         'all_animations.mp4'])
+        # delete file with animations
+        os.remove(list_anim)
+
+    def animate(self, i):
+        """
+        Helper function to create animation.
+        """
+        self.g.clear()
+        self.g = sns.kdeplot(x=[item[0] for item in self.df[i]],
+                             y=[item[1] for item in self.df[i]],
+                             alpha=0.5,
+                             shade=True,
+                             cmap='RdBu_r')
+        # read original image
+        im = plt.imread(self.image)
+        plt.imshow(im)
+        # remove axis
+        plt.gca().set_axis_off()
+        # remove white spaces around figure
+        plt.subplots_adjust(top=1,
+                            bottom=0,
+                            right=1,
+                            left=0,
+                            hspace=0,
+                            wspace=0)
+        # textbox with duration
+        durations = gz.common.get_configs('stimulus_durations')
+        props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        plt.text(0.75,
+                 0.98,
+                 'id=' + str(self.stim_id) + ' duration=' + str(durations[i]),
+                 transform=plt.gca().transAxes,
+                 fontsize=12,
+                 verticalalignment='top',
+                 bbox=props)
+        # save each frame as file
+        if self.save_frames:
+            # build suffix for filename
+            suffix = '_kdeplot_' + str(durations[i]) + '.jpg'
+            # copy figure in buffer to prevent distruction of object
+            buf = io.BytesIO()
+            pickle.dump(self.fig, buf)
+            buf.seek(0)
+            temp_fig = pickle.load(buf)
+            # save figure
+            self.save_fig(self.image, temp_fig, self.folder, suffix)
+        return self.g           
+
     # TODO: fix error with value of string not used as float
     def corr_matrix(self, df, columns_drop, save_file=False):
         """
