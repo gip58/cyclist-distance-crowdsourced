@@ -31,6 +31,9 @@ class Analysis:
     num_stimuli = tr.common.get_configs('num_stimuli')
     # folder for output
     folder = '/figures/'
+    stim_id= None
+    save_frames = None
+    image = None
 
     def __init__(self):
         # set font to Times
