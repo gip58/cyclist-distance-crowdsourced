@@ -13,7 +13,6 @@ LOAD_P = False  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
 FILTER_DATA = True  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
-REJECT_CHEATERS = True  # reject cheaters on Appen
 UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 
@@ -112,6 +111,9 @@ if __name__ == '__main__':
         analysis.plot_kp_variable(mapping,
                                   'target_car',
                                   [0, 1])
+        analysis.plot_kp_variable(mapping,
+                                  'group',
+                                  [0, 1, 2, 3])        
         # TODO: make plot_video_data work
         # plot of multiple combined AND variables
         # analysis.plot_video_data(mapping, 'video_5',
