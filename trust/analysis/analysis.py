@@ -1,7 +1,11 @@
 # by Pavlo Bazilinskyy <pavlo.bazilinskyy@gmail.com>
 import os
+import subprocess
+import io
+import pickle
 import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 import numpy as np
 import scipy.stats as st
 import seaborn as sns
@@ -30,25 +34,38 @@ class Analysis:
     # number of stimuli
     num_stimuli = tr.common.get_configs('num_stimuli')
     # folder for output
-    folder = '/figures/'
-    stim_id= None
-    save_frames = None
+    fig = None
+    g = None
     image = None
+    stim_id = None
+    points = None
+    save_frames = False
+    folder = '/figures/'
+    polygons = None
+    
+    
+    
+    
+
+    
 
     def __init__(self):
+        
+        
         # set font to Times
         plt.rc('font', family='serif')
 
+    '''
     def create_gazes(self,
                      image,
-                     df,
+                     points,
                      suffix='_gazes.jpg',
                      save_file=False):
         """
         Output gazes for image based on the list of lists of points.
         """
         # check if data is present
-        if not df:
+        if not points:
             logger.error('Not enough data. Gazes visualisation was not '
                          + 'created for {}.', image)
             return
@@ -61,7 +78,7 @@ class Analysis:
         dpi = 150
         fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
         plt.imshow(im)
-        for point in df:
+        for point in points:
             plt.plot(point[0],
                      point[1],
                      color='red',
@@ -84,7 +101,7 @@ class Analysis:
 
     def create_heatmap(self,
                        image,
-                       df,
+                       points,
                        type_heatmap='contourf',
                        add_corners=True,
                        save_file=False):
@@ -96,7 +113,7 @@ class Analysis:
         """
         # todo: remove datapoints in corners in heatmaps
         # check if data is present
-        if not df:
+        if not points:
             logger.error('Not enough data. Heatmap was not created for {}.',
                          image)
             return
@@ -105,12 +122,12 @@ class Analysis:
         height = tr.common.get_configs('stimulus_height')
         # add datapoints to corners for maximised heatmaps
         if add_corners:
-            if [0, 0] not in df:
-                df.append([0, 0])
-            if [width, height] not in df:
-                df.append([width - 1, height - 1])
+            if [0, 0] not in points:
+                points.append([0, 0])
+            if [width, height] not in points:
+                points.append([width - 1, height - 1])
         # convert points into np array
-        xy = np.array(df)
+        xy = np.array(points)
         # split coordinates list for readability
         x = xy[:, 0]
         y = xy[:, 1]
@@ -194,10 +211,50 @@ class Analysis:
         # return graph objects
         return fig, g
 
+    def create_histogram(self,
+                         image,
+                         points,
+                         density_coef=10,
+                         suffix='_histogram.jpg',
+                         save_file=False):
+        """
+        Create histogram for image based on the list of lists of points.
+        density_coef: coeficient for division of dimensions for density of
+                        points.
+        """
+        # check if data is present
+        if not points:
+            logger.error('Not enough data. Histogram was not created for {}.',
+                         image)
+            return
+        # get dimensions of stimulus
+        width = tr.common.get_configs('stimulus_width')
+        height = tr.common.get_configs('stimulus_height')
+        # convert points into np array
+        xy = np.array(points)
+        # split coordinates list for readability
+        x = xy[:, 0]
+        y = xy[:, 1]
+        # create figure object with given dpi and dimensions
+        dpi = 150
+        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
+        # build histogram
+        plt.hist2d(x=x,
+                   y=-y,  # convert to the reference system in image
+                   bins=[round(width/density_coef),
+                         round(height/density_coef)],
+                   cmap=plt.cm.jet)
+        plt.colorbar()
+        # remove white spaces around figure
+        plt.gca().set_axis_off()
+        # save image
+        if save_file:
+            self.save_fig(image, fig, self.folder, suffix)
+
     def create_animation(self,
                          image,
                          stim_id,
-                         df,
+                         points,
                          save_anim=False,
                          save_frames=False):
         """
@@ -206,103 +263,24 @@ class Analysis:
         """
         self.image = image
         self.stim_id = stim_id
-        self.df = df
+        self.points = points
         self.save_frames = save_frames
         self.fig, self.g = self.create_heatmap(image,
-                                               df[0],
+                                               points[0],
                                                type_heatmap='kdeplot',  # noqa: E501
                                                add_corners=True,  # noqa: E501
                                                save_file=False)
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
-                                       frames=len(df),
+                                       frames=len(points),
                                        interval=1000,
                                        repeat=False)
         # save image
         if save_anim:
             self.save_anim(image, anim, self.folder, '_animation.mp4') 
-    def create_animation_all_stimuli(self, num_stimuli):
-        """
-        Create long video with all animations.
-        """
-        logger.info('Creating long video with all animations for {} stimuli.',
-                    num_stimuli)
-        # create path
-        path = gz.settings.output_dir + self.folder
-        if not os.path.exists(path):
-            os.makedirs(path)
-        # file with list of animations
-        list_anim = path + 'animations.txt'
-        file = open(list_anim, 'w+')
-        # loop of stimuli
-        for stim_id in range(1, num_stimuli + 1):
-            # add animation to the list
-            anim_path = path + 'image_' + str(stim_id) + '_animation.mp4'
-            # check if need to add a linebreak
-            if stim_id == num_stimuli:
-                file.write('file ' + anim_path)  # no need for linebreak
-            else:
-                file.write('file ' + anim_path + '\n')
-        # close file with animations
-        file.close()
-        # stitch videos together
-        os.chdir(path)
-        subprocess.call(['ffmpeg',
-                         '-y',
-                         '-loglevel', 'quiet',
-                         '-f', 'concat',
-                         '-safe', '0',
-                         '-i', list_anim,
-                         '-c', 'copy',
-                         'all_animations.mp4'])
-        # delete file with animations
-        os.remove(list_anim)
 
-    def animate(self, i):
-        """
-        Helper function to create animation.
-        """
-        self.g.clear()
-        self.g = sns.kdeplot(x=[item[0] for item in self.df[i]],
-                             y=[item[1] for item in self.df[i]],
-                             alpha=0.5,
-                             shade=True,
-                             cmap='RdBu_r')
-        # read original image
-        im = plt.imread(self.image)
-        plt.imshow(im)
-        # remove axis
-        plt.gca().set_axis_off()
-        # remove white spaces around figure
-        plt.subplots_adjust(top=1,
-                            bottom=0,
-                            right=1,
-                            left=0,
-                            hspace=0,
-                            wspace=0)
-        # textbox with duration
-        durations = gz.common.get_configs('stimulus_durations')
-        props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-        plt.text(0.75,
-                 0.98,
-                 'id=' + str(self.stim_id) + ' duration=' + str(durations[i]),
-                 transform=plt.gca().transAxes,
-                 fontsize=12,
-                 verticalalignment='top',
-                 bbox=props)
-        # save each frame as file
-        if self.save_frames:
-            # build suffix for filename
-            suffix = '_kdeplot_' + str(durations[i]) + '.jpg'
-            # copy figure in buffer to prevent distruction of object
-            buf = io.BytesIO()
-            pickle.dump(self.fig, buf)
-            buf.seek(0)
-            temp_fig = pickle.load(buf)
-            # save figure
-            self.save_fig(self.image, temp_fig, self.folder, suffix)
-        return self.g           
-
+              
+'''
     # TODO: fix error with value of string not used as float
     def corr_matrix(self, df, columns_drop, save_file=False):
         """
@@ -781,6 +759,117 @@ class Analysis:
         # open it in localhost instead
         else:
             fig.show()
+
+    def create_animation(self,
+                         df,
+                         x,
+                         y,
+                         stim_id,                
+                         save_anim=False,
+                         save_frames=False):
+        """
+        Create animation for image based on the list of lists of points of
+        varying duration.
+        """
+        
+        
+        self.save_frames = save_frames
+        self.fig = self.heatmap(df,
+                                        x=x,
+                                        y=y,
+                                        type_heatmap='kdeplot',  # noqa: E501
+                                        add_corners=True,  # noqa: E501
+                                        save_file=False)
+        anim = animation.FuncAnimation(self.fig,
+                                       self.animate,
+                                       frames=len(x),
+                                       interval=1000,
+                                       repeat=False)
+        # save image
+        if save_anim:
+            self.save_anim(image, anim, self.folder, '_animation.mp4') 
+
+    def create_animation_all_stimuli(self, num_stimuli):
+        """
+        Create long video with all animations.
+        """
+        logger.info('Creating long video with all animations for {} stimuli.',
+                    num_stimuli)
+        # create path
+        path = tr.settings.output_dir + self.folder
+        if not os.path.exists(path):
+            os.makedirs(path)
+        # file with list of animations
+        list_anim = path + 'animations.txt'
+        file = open(list_anim, 'w+')
+        # loop of stimuli
+        for stim_id in range(1, num_stimuli + 1):
+            # add animation to the list
+            anim_path = path + 'image_' + str(stim_id) + '_animation.mp4'
+            # check if need to add a linebreak
+            if stim_id == num_stimuli:
+                file.write('file ' + anim_path)  # no need for linebreak
+            else:
+                file.write('file ' + anim_path + '\n')
+        # close file with animations
+        file.close()
+        # stitch videos together
+        os.chdir(path)
+        subprocess.call(['ffmpeg',
+                         '-y',
+                         '-loglevel', 'quiet',
+                         '-f', 'concat',
+                         '-safe', '0',
+                         '-i', list_anim,
+                         '-c', 'copy',
+                         'all_animations.mp4'])
+        # delete file with animations
+        os.remove(list_anim)
+
+    def animate(self, i):
+        """
+        Helper function to create animation.
+        """
+        self.g.clear()
+        self.g = sns.kdeplot(x=[item[0] for item in self.df[i]],
+                             y=[item[1] for item in self.df[i]],
+                             alpha=0.5,
+                             shade=True,
+                             cmap='RdBu_r')
+        # read original image
+        im = plt.imread(self.image)
+        plt.imshow(im)
+        # remove axis
+        plt.gca().set_axis_off()
+        # remove white spaces around figure
+        plt.subplots_adjust(top=1,
+                            bottom=0,
+                            right=1,
+                            left=0,
+                            hspace=0,
+                            wspace=0)
+        # textbox with duration
+        durations = tr.common.get_configs('stimulus_durations')
+        props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        plt.text(0.75,
+                 0.98,
+                 'id=' + str(self.stim_id) + ' duration=' + str(durations[i]),
+                 transform=plt.gca().transAxes,
+                 fontsize=12,
+                 verticalalignment='top',
+                 bbox=props)
+        # save each frame as file
+        if self.save_frames:
+            # build suffix for filename
+            suffix = '_kdeplot_' + str(durations[i]) + '.jpg'
+            # copy figure in buffer to prevent distruction of object
+            buf = io.BytesIO()
+            pickle.dump(self.fig, buf)
+            buf.seek(0)
+            temp_fig = pickle.load(buf)
+            # save figure
+            self.save_fig(self.image, temp_fig, self.folder, suffix)
+        return self.g 
 
     def hist(self, df, x, nbins=None, color=None, pretty_text=False,
              marginal='rug', xaxis_title=None, yaxis_title=None,

@@ -191,6 +191,7 @@ if __name__ == '__main__':
                          y='window_height',
                          pretty_text=True,
                          save_file=True)
+        
         # time of participation
         df = appen_data
         df['country'] = df['country'].fillna('NaN')
@@ -236,6 +237,26 @@ if __name__ == '__main__':
                       x=['driving_freq'],
                       pretty_text=True,
                       save_file=True)
+          # create animation for stimulus
+          points_process = {}
+          for points_dur in range(len(points_duration)):
+            points_process[points_dur] = points_duration[points_dur][stim_id]
+          analysis.create_animation(stim_path,
+                                  stim_id,
+                                  points_process,
+                                  save_anim=True,
+                                  save_frames=True)
+          # plot gaze detections of vehicles
+          analysis.detection_vehicle_image(stimuli_mapped,
+                                         stim_path,
+                                         stim_id,
+                                         save_file=True)
+          # draw polygon on top on base image
+          analysis.draw_polygon(stim_path,
+                              stim_id,
+                              save_file=True)
+      # stitch animations into 1 long videos
+      analysis.create_animation_all_stimuli(num_stimuli)
         # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],     # noqa: E501
         #                       x=['avg_object', 'avg_person', 'avg_car'],
         #                       y='avg_kp',
@@ -246,15 +267,15 @@ if __name__ == '__main__':
         #                       marginal_x='rug',
         #                       save_file=True)
         # map of participants
-        analysis.map(countries_data, color='counts', save_file=True)
+        #analysis.map(countries_data, color='counts', save_file=True)
         # map of mean age per country
-        analysis.map(countries_data, color='age', save_file=True)
+        #analysis.map(countries_data, color='age', save_file=True)
         # map of gender per country
-        analysis.map(countries_data, color='gender', save_file=True)
+        #analysis.map(countries_data, color='gender', save_file=True)
         # map of year of obtaining license per country
-        analysis.map(countries_data, color='year_license', save_file=True)
+        #analysis.map(countries_data, color='year_license', save_file=True)
         # map of year of automated driving per country
-        analysis.map(countries_data, color='year_ad', save_file=True)
+        #analysis.map(countries_data, color='year_ad', save_file=True)
         # check if any figures are to be rendered
         figures = [manager.canvas.figure
                    for manager in
