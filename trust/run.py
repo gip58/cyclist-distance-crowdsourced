@@ -97,21 +97,22 @@ if __name__ == '__main__':
     if SHOW_OUTPUT:
         # Output
         analysis = tr.analysis.Analysis()
+        num_stimuli = tr.common.get_configs('num_stimuli')
         logger.info('Creating figures.')
         # eye tracking data
-        analysis.heatmap(heroku_data, 'video_0-x-0', 'video_0-y-0')
+       # analysis.heatmap(heroku_data, 'video_0-x-0', 'video_0-y-0')
         # all keypresses with confidence interval
         analysis.plot_kp(mapping, conf_interval=0.95)
         # keypresses of an individual stimulus
-        analysis.plot_kp_video(mapping, 'video_0', conf_interval=0.95)
+        analysis.plot_kp_video(mapping, 'video_1', conf_interval=0.95)
         # keypresses of all videos individually
-        analysis.plot_kp_videos(mapping)
+        #analysis.plot_kp_videos(mapping)
         # 1 var, all values
-        analysis.plot_kp_variable(mapping, 'ego_car')
+        #analysis.plot_kp_variable(mapping, 'ego_car')
         # 1 var, certain values
-        analysis.plot_kp_variable(mapping,
-                                  'target_car',
-                                  [0, 1])
+        #analysis.plot_kp_variable(mapping,
+         #                         'target_car',
+          #                        [0, 1])
         # TODO: make plot_video_data work
         # plot of multiple combined AND variables
         # analysis.plot_video_data(mapping, 'video_5',
@@ -156,10 +157,11 @@ if __name__ == '__main__':
         # df = mapping[(mapping['dist_to_ped_at_7.0'] != 'no data found')]
         df = mapping.fillna(-1)
         # create correlation matrix
-        analysis.corr_matrix(df,
-                             columns_drop=columns_drop,
-                             save_file=True)
+        #analysis.corr_matrix(df,
+         #                    columns_drop=columns_drop,
+        #                     save_file=True)
         # create correlation matrix
+        '''
         analysis.scatter_matrix(df,
                                 columns_drop=columns_drop,
                                 color='group',
@@ -180,83 +182,69 @@ if __name__ == '__main__':
                       pretty_text=True,
                       save_file=True)
         # browser window dimensions
+         '''
+        
+        heroku_data['video_1-x-0'] = heroku_data['video_1-x-0']
+        heroku_data['video_1-y-0'] = heroku_data['video_1-y-0']
         analysis.scatter(heroku_data,
-                         x='window_width',
-                         y='window_height',
+                         x='video_1-x-0',
+                         y='video_1-y-0',
                          color='browser_name',
                          pretty_text=True,
                          save_file=True)
-        analysis.heatmap(heroku_data,
-                         x='window_width',
-                         y='window_height',
+        analysis.heatmap(heroku_data, 
+                         x='video_10-x-0',
+                         y='video_10-y-0',
                          pretty_text=True,
                          save_file=True)
         
         # time of participation
-        df = appen_data
-        df['country'] = df['country'].fillna('NaN')
-        df['time'] = df['time'] / 60.0  # convert to min
-        analysis.hist(df,
-                      x=['time'],
-                      color='country',
-                      pretty_text=True,
-                      save_file=True)
+        #df = appen_data
+        #df['country'] = df['country'].fillna('NaN')
+        #df['time'] = df['time'] / 60.0  # convert to min
+        #analysis.hist(df,
+        #              x=['time'],
+        #              color='country',
+         #             pretty_text=True,
+          #            save_file=True)
         # driving with AVs
-        analysis.scatter(appen_data,
-                         x='driving_in_ad',
-                         y='driving_alongside_ad',
-                         color='year_license',
-                         pretty_text=True,
-                         save_file=True)
+        #analysis.scatter(appen_data,
+        #                 x='driving_in_ad',
+         #                y='driving_alongside_ad',
+          #               color='year_license',
+           #              pretty_text=True,
+            #             save_file=True)
         # mapping to convert likert values to numeric
-        likert_mapping = {'Strongly disagree': 1,
-                          'Disagree': 2,
-                          'Neither disagree nor agree': 3,
-                          'Agree': 4,
-                          'Strongly agree': 5}
+        #likert_mapping = {'Strongly disagree': 1,
+         #                 'Disagree': 2,
+          #                'Neither disagree nor agree': 3,
+           #               'Agree': 4,
+            #              'Strongly agree': 5}
         # questions before and after
-        df = all_data
-        df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)  # noqa: E501
-        df['driving_in_ad'] = df['driving_in_ad'].map(likert_mapping)
-        analysis.scatter(df,
-                         x='driving_alongside_ad',  # noqa: E501
-                         y='end-slider-0-0',  # noqa: E501
-                         xaxis_title='Before',
-                         yaxis_title='After',
-                         pretty_text=True,
-                         save_file=True)
-        analysis.scatter(df,
-                         x='driving_in_ad',  # noqa: E501
-                         y='end-slider-1-0',  # noqa: E501
-                         xaxis_title='Before',
-                         yaxis_title='After',
-                         pretty_text=True,
-                         save_file=True)
+        #df = all_data
+        #df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)  # noqa: E501
+        #df['driving_in_ad'] = df['driving_in_ad'].map(likert_mapping)
+        #analysis.scatter(df,
+              #           x='driving_alongside_ad',  # noqa: E501
+             #            y='end-slider-0-0',  # noqa: E501
+            #             xaxis_title='Before',
+           #              yaxis_title='After',
+          #               pretty_text=True,
+         #                save_file=True)
+        #analysis.scatter(df,
+          #               x='driving_in_ad',  # noqa: E501
+           #              y='end-slider-1-0',  # noqa: E501
+             #            xaxis_title='Before',
+            #             yaxis_title='After',
+              #           pretty_text=True,
+               #          save_file=True)
         # histogram for driving frequency
-        analysis.hist(appen_data,
-                      x=['driving_freq'],
-                      pretty_text=True,
-                      save_file=True)
-          # create animation for stimulus
-          points_process = {}
-          for points_dur in range(len(points_duration)):
-            points_process[points_dur] = points_duration[points_dur][stim_id]
-          analysis.create_animation(stim_path,
-                                  stim_id,
-                                  points_process,
-                                  save_anim=True,
-                                  save_frames=True)
-          # plot gaze detections of vehicles
-          analysis.detection_vehicle_image(stimuli_mapped,
-                                         stim_path,
-                                         stim_id,
-                                         save_file=True)
-          # draw polygon on top on base image
-          analysis.draw_polygon(stim_path,
-                              stim_id,
-                              save_file=True)
-      # stitch animations into 1 long videos
-      analysis.create_animation_all_stimuli(num_stimuli)
+        #analysis.hist(appen_data,
+         #             x=['driving_freq'],
+          #            pretty_text=True,
+           #           save_file=True)
+        # create animation for stimulus
+        
         # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],     # noqa: E501
         #                       x=['avg_object', 'avg_person', 'avg_car'],
         #                       y='avg_kp',

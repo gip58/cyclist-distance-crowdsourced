@@ -727,8 +727,12 @@ class Analysis:
             yaxis_title (str, optional): title for y axis.
             save_file (bool, optional): flag for saving an html file with plot.
         """
-        logger.info('Creating heatmap for x={} and y={}.',
-                    x, y)
+        #logger.info('Creating heatmap for x={} and y={}.',
+       #             x, y)
+        
+        
+     
+
         # prettify ticks
         if pretty_text:
             if isinstance(df.iloc[0][x], str):  # check if string
@@ -741,16 +745,27 @@ class Analysis:
                 df[y] = df[y].str.replace('_', ' ')
                 # capitalise
                 df[y] = df[y].str.capitalize()
+        #    if  isinstance(df.iloc[0][t], str):  # check if string
+          #      # replace underscores with spaces
+           #     df[t] = df[t].str.replace('_', ' ')
+                # capitalise
+            #    df[t] = df[t].str.capitalize()  
         # density map with histograms
-        fig = px.density_heatmap(df,
-                                 x=x,
-                                 y=y,
+         
+
+        fig = px.density_heatmap(
+                                 x=df.loc[stimulus]['x'],
+                                 y= df.loc[stimulus]['y'],
                                  marginal_x='violin',
-                                 marginal_y='violin')
+                                 marginal_y='violin',
+                                 title='heatmaper')
+
         # update layout
         fig.update_layout(template=self.template,
                           xaxis_title=xaxis_title,
                           yaxis_title=yaxis_title)
+
+
         # save file
         if save_file:
             self.save_plotly(fig,
@@ -759,6 +774,9 @@ class Analysis:
         # open it in localhost instead
         else:
             fig.show()
+
+      
+
 
     def create_animation(self,
                          df,
@@ -772,9 +790,8 @@ class Analysis:
         varying duration.
         """
         
-        
         self.save_frames = save_frames
-        self.fig = self.heatmap(df,
+        self.fig, self.fig,g = self.heatmap(df,
                                         x=x,
                                         y=y,
                                         type_heatmap='kdeplot',  # noqa: E501
