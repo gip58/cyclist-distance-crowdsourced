@@ -100,7 +100,7 @@ if __name__ == '__main__':
         num_stimuli = tr.common.get_configs('num_stimuli')
         logger.info('Creating figures.')
         # eye tracking data
-       # analysis.heatmap(heroku_data, 'video_0-x-0', 'video_0-y-0')
+        #analysis.heatmap(heroku_data, 'video_0-x-0', 'video_0-y-0')
         # all keypresses with confidence interval
         analysis.plot_kp(mapping, conf_interval=0.95)
         # keypresses of an individual stimulus
@@ -187,16 +187,25 @@ if __name__ == '__main__':
         heroku_data['video_1-x-0'] = heroku_data['video_1-x-0']
         heroku_data['video_1-y-0'] = heroku_data['video_1-y-0']
         analysis.scatter(heroku_data,
-                         x='video_1-x-0',
-                         y='video_1-y-0',
-                         color='browser_name',
+                         x='window_width',
+                         y='window_height',
+                         color='browser_major_version',
                          pretty_text=True,
                          save_file=True)
         analysis.heatmap(heroku_data, 
-                         x='video_10-x-0',
-                         y='video_10-y-0',
+                         x='video_0-x-0',
+                         y='video_0-y-0',
+                         ID_p=6,
+                         ID_v='video_0',
                          pretty_text=True,
                          save_file=True)
+        analysis.create_heatmap(heroku_data,
+                                x='video_0-x-0',
+                                y='video_0-y-0',
+                                ID=6,
+                                type_heatmap='contourf',
+                                add_corners=True,
+                                save_file=True)
         
         # time of participation
         #df = appen_data

@@ -55,232 +55,9 @@ class Analysis:
         # set font to Times
         plt.rc('font', family='serif')
 
-    '''
-    def create_gazes(self,
-                     image,
-                     points,
-                     suffix='_gazes.jpg',
-                     save_file=False):
-        """
-        Output gazes for image based on the list of lists of points.
-        """
-        # check if data is present
-        if not points:
-            logger.error('Not enough data. Gazes visualisation was not '
-                         + 'created for {}.', image)
-            return
-        # read original image
-        im = plt.imread(image)
-        # get dimensions
-        width = tr.common.get_configs('stimulus_width')
-        height = tr.common.get_configs('stimulus_height')
-        # show heatmap by plt
-        dpi = 150
-        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
-        plt.imshow(im)
-        for point in points:
-            plt.plot(point[0],
-                     point[1],
-                     color='red',
-                     marker='x',
-                     markersize=1)
-        # remove white spaces around figure
-        plt.gca().set_axis_off()
-        plt.subplots_adjust(top=1,
-                            bottom=0,
-                            right=1,
-                            left=0,
-                            hspace=0,
-                            wspace=0)
-        plt.margins(0, 0)
-        plt.gca().xaxis.set_major_locator(plt.NullLocator())
-        plt.gca().yaxis.set_major_locator(plt.NullLocator())
-        # save image
-        if save_file:
-            self.save_fig(image, fig, self.folder, suffix)
-
-    def create_heatmap(self,
-                       image,
-                       points,
-                       type_heatmap='contourf',
-                       add_corners=True,
-                       save_file=False):
-        """
-        Create heatmap for image based on the list of lists of points.
-        add_corners: add points to the corners to have the heatmap ovelay the
-                     whole image
-        type_heatmap: contourf, pcolormesh, kdeplot
-        """
-        # todo: remove datapoints in corners in heatmaps
-        # check if data is present
-        if not points:
-            logger.error('Not enough data. Heatmap was not created for {}.',
-                         image)
-            return
-        # get dimensions of base image
-        width = tr.common.get_configs('stimulus_width')
-        height = tr.common.get_configs('stimulus_height')
-        # add datapoints to corners for maximised heatmaps
-        if add_corners:
-            if [0, 0] not in points:
-                points.append([0, 0])
-            if [width, height] not in points:
-                points.append([width - 1, height - 1])
-        # convert points into np array
-        xy = np.array(points)
-        # split coordinates list for readability
-        x = xy[:, 0]
-        y = xy[:, 1]
-        # compute data for the heatmap
-        try:
-            k = gaussian_kde(np.vstack([x, y]))
-            xi, yi = np.mgrid[x.min():x.max():x.size**0.5*1j,
-                              y.min():y.max():y.size**0.5*1j]
-            zi = k(np.vstack([xi.flatten(), yi.flatten()]))
-        except (np.linalg.LinAlgError, np.linalg.LinAlgError, ValueError):
-            logger.error('Not enough data. Heatmap was not created for {}.',
-                         image)
-            return
-        # create figure object with given dpi and dimensions
-        dpi = 150
-        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
-        # alpha=0.5 makes the plot semitransparent
-        suffix_file = ''  # suffix to add to saved image
-        if type_heatmap == 'contourf':
-            try:
-                g = plt.contourf(xi, yi, zi.reshape(xi.shape),
-                                 alpha=0.5)
-                plt.margins(0, 0)
-                plt.gca().xaxis.set_major_locator(plt.NullLocator())
-                plt.gca().yaxis.set_major_locator(plt.NullLocator())
-            except TypeError:
-                logger.error('Not enough data. Heatmap was not created for '
-                             + '{}.',
-                             image)
-                plt.close(fig)  # clear figure from memory
-                return
-            suffix_file = '_contourf.jpg'
-        elif type_heatmap == 'pcolormesh':
-            try:
-                g = plt.pcolormesh(xi, yi, zi.reshape(xi.shape),
-                                   shading='auto',
-                                   alpha=0.5)
-                plt.margins(0, 0)
-                plt.gca().xaxis.set_major_locator(plt.NullLocator())
-                plt.gca().yaxis.set_major_locator(plt.NullLocator())
-            except TypeError:
-                logger.error('Not enough data. Heatmap was not created for '
-                             + '{}.',
-                             image)
-                plt.close(fig)  # clear figure from memory
-                return
-            suffix_file = '_pcolormesh.jpg'
-        elif type_heatmap == 'kdeplot':
-            try:
-                g = sns.kdeplot(x=x,
-                                y=y,
-                                alpha=0.5,
-                                shade=True,
-                                cmap="RdBu_r")
-            except TypeError:
-                logger.error('Not enough data. Heatmap was not created for '
-                             + '{}.',
-                             image)
-                fig.clf()  # clear figure from memory
-                return
-            suffix_file = '_kdeplot.jpg'
-        else:
-            logger.error('Wrong type_heatmap {} given.', type_heatmap)
-            plt.close(fig)  # clear from memory
-            return
-        # read original image
-        im = plt.imread(image)
-        plt.imshow(im)
-        # remove axis
-        plt.gca().set_axis_off()
-        # remove white spaces around figure
-        plt.subplots_adjust(top=1,
-                            bottom=0,
-                            right=1,
-                            left=0,
-                            hspace=0,
-                            wspace=0)
-        # save image
-        if save_file:
-            self.save_fig(image, fig, '/figures/', suffix_file)
-        # return graph objects
-        return fig, g
-
-    def create_histogram(self,
-                         image,
-                         points,
-                         density_coef=10,
-                         suffix='_histogram.jpg',
-                         save_file=False):
-        """
-        Create histogram for image based on the list of lists of points.
-        density_coef: coeficient for division of dimensions for density of
-                        points.
-        """
-        # check if data is present
-        if not points:
-            logger.error('Not enough data. Histogram was not created for {}.',
-                         image)
-            return
-        # get dimensions of stimulus
-        width = tr.common.get_configs('stimulus_width')
-        height = tr.common.get_configs('stimulus_height')
-        # convert points into np array
-        xy = np.array(points)
-        # split coordinates list for readability
-        x = xy[:, 0]
-        y = xy[:, 1]
-        # create figure object with given dpi and dimensions
-        dpi = 150
-        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
-        # build histogram
-        plt.hist2d(x=x,
-                   y=-y,  # convert to the reference system in image
-                   bins=[round(width/density_coef),
-                         round(height/density_coef)],
-                   cmap=plt.cm.jet)
-        plt.colorbar()
-        # remove white spaces around figure
-        plt.gca().set_axis_off()
-        # save image
-        if save_file:
-            self.save_fig(image, fig, self.folder, suffix)
-
-    def create_animation(self,
-                         image,
-                         stim_id,
-                         points,
-                         save_anim=False,
-                         save_frames=False):
-        """
-        Create animation for image based on the list of lists of points of
-        varying duration.
-        """
-        self.image = image
-        self.stim_id = stim_id
-        self.points = points
-        self.save_frames = save_frames
-        self.fig, self.g = self.create_heatmap(image,
-                                               points[0],
-                                               type_heatmap='kdeplot',  # noqa: E501
-                                               add_corners=True,  # noqa: E501
-                                               save_file=False)
-        anim = animation.FuncAnimation(self.fig,
-                                       self.animate,
-                                       frames=len(points),
-                                       interval=1000,
-                                       repeat=False)
-        # save image
-        if save_anim:
-            self.save_anim(image, anim, self.folder, '_animation.mp4') 
-
+    
               
-'''
+
     # TODO: fix error with value of string not used as float
     def corr_matrix(self, df, columns_drop, save_file=False):
         """
@@ -630,6 +407,8 @@ class Analysis:
             logger.error('Argument marker_size cannot be used together with'
                          + ' histogram marginal(s).')
             return -1
+
+
         # prettify text
         if pretty_text:
             for x_col in x:
@@ -638,11 +417,12 @@ class Analysis:
                     df[x_col] = df[x_col].str.replace('_', ' ')
                     # capitalise
                     df[x_col] = df[x_col].str.capitalize()
+            
             if isinstance(df.iloc[0][y], str):  # check if string
-                # replace underscores with spaces
-                df[y] = df[y].str.replace('_', ' ')
-                # capitalise
-                df[y] = df[y].str.capitalize()
+                    # replace underscores with spaces
+                    df[y] = df[y].str.replace('_', ' ')
+                    # capitalise
+                    df[y] = df[y].str.capitalize()
             try:
                 # check if string
                 if text and isinstance(df.iloc[0][text], str):
@@ -652,6 +432,7 @@ class Analysis:
                     df[text] = df[text].str.capitalize()
             except ValueError as e:
                 logger.debug('Tried to prettify {} with exception {}', text, e)
+        
         # create new dataframe with the necessary data
         color = []
         val_y = []
@@ -707,7 +488,7 @@ class Analysis:
         else:
             fig.show()
 
-    def heatmap(self, df, x, y, pretty_text=False, marginal_x='violin',
+    def heatmap(self, df, x, y, ID_v, ID_p, pretty_text=False, marginal_x='violin',
                 marginal_y='violin', xaxis_title=None, yaxis_title=None,
                 save_file=True):
         """
@@ -727,56 +508,192 @@ class Analysis:
             yaxis_title (str, optional): title for y axis.
             save_file (bool, optional): flag for saving an html file with plot.
         """
-        #logger.info('Creating heatmap for x={} and y={}.',
-       #             x, y)
-        
-        
-     
+        logger.info('Creating heatmap for x={} and t={}.',
+                   x, y)
+        #val_x=[]
+        #val_y=[]
+
+        x=df.iloc[ID_p][x]
+        y=df.iloc[ID_p][y]
+
+       
+        #df[x].dropna(inplace=True)
+        #df[y].dropna(inplace=True)
+
+
+      
 
         # prettify ticks
-        if pretty_text:
-            if isinstance(df.iloc[0][x], str):  # check if string
-                # replace underscores with spaces
-                df[x] = df[x].str.replace('_', ' ')
-                # capitalise
-                df[x] = df[x].str.capitalize()
-            if isinstance(df.iloc[0][y], str):  # check if string
-                # replace underscores with spaces
-                df[y] = df[y].str.replace('_', ' ')
-                # capitalise
-                df[y] = df[y].str.capitalize()
-        #    if  isinstance(df.iloc[0][t], str):  # check if string
-          #      # replace underscores with spaces
-           #     df[t] = df[t].str.replace('_', ' ')
-                # capitalise
-            #    df[t] = df[t].str.capitalize()  
-        # density map with histograms
-         
+       # if pretty_text:
+        #    if isinstance(x, str):  # check if string
+         #       # replace underscores with spaces
+         #       df[x] = df[x].str.replace('_', ' ')
+                
+          #      # capitalise
+           #     df[x] = df[x].str.capitalize()
+           # 
+           # else:
+           #     logger.error('x not a string')    
+                
+               
+            #if isinstance(y, str):  # check if string
+             #   # replace underscores with spaces
+              #  df[y] = df[y].str.replace('_', ' ')
+               
+               # # capitalise
+                #df[y] = df[y].str.capitalize()
+           # else:
+              #  logger.error('y not a string')
+               
 
-        fig = px.density_heatmap(
-                                 x=df.loc[stimulus]['x'],
-                                 y= df.loc[stimulus]['y'],
+          #  if  isinstance(df.iloc[0][t], str):  # check if string
+           #     # replace underscores with spaces
+            #    df[t] = df[t].str.replace('_', ' ')
+             #   # capitalise
+              #  df[t] = df[t].str.capitalize()
+
+        ID_p=str(ID_p)
+             
+        
+        fig = px.density_heatmap(df,
+                                 x=x,
+                                 y= y,
                                  marginal_x='violin',
                                  marginal_y='violin',
-                                 title='heatmaper')
+                                 title='heatmap'+' '+ ID_v +' '+'participant'+' '+ID_p)
 
         # update layout
         fig.update_layout(template=self.template,
                           xaxis_title=xaxis_title,
                           yaxis_title=yaxis_title)
 
+        #df.style
+        
+        
 
         # save file
         if save_file:
             self.save_plotly(fig,
-                             'heatmap_' + x + '-' + y,
+                             'heatmap_' + ID_v+'_participant_'+ ID_p,
                              self.folder)
         # open it in localhost instead
         else:
             fig.show()
 
       
+    def create_heatmap(self,
+                       df,
+                       x,
+                       y,
+                       ID,
+                       type_heatmap='contourf',
+                       add_corners=True,
+                       save_file=False):
+        """
+        Create heatmap for image based on the list of lists of points.
+        add_corners: add points to the corners to have the heatmap ovelay the
+                     whole image
+        type_heatmap: contourf, pcolormesh, kdeplot
+        """
+        # todo: remove datapoints in corners in heatmaps
+        # check if data is present
+        logger.info('Creating heatmap for x={} and t={}.', x,y)
 
+        # get dimensions of base image
+        width = tr.common.get_configs('stimulus_width')
+        height = tr.common.get_configs('stimulus_height')
+        # add datapoints to corners for maximised heatmaps
+
+        x=df.iloc[ID][x]
+        y=df.iloc[ID][y]
+
+        
+
+
+        
+
+        
+        
+        # compute data for the heatmap
+        try:
+            k = gaussian_kde(np.vstack([x, y]))
+            xi, yi = np.mgrid[x.min():x.max():x.size**0.5*1j,
+                              y.min():y.max():y.size**0.5*1j]
+            zi = k(np.vstack([xi.flatten(), yi.flatten()]))
+        except (np.linalg.LinAlgError, np.linalg.LinAlgError, ValueError):
+            logger.error('Not enough data. gaussian was not created for {}.',
+                         x)
+            return
+        # create figure object with given dpi and dimensions
+        dpi = 150
+        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
+        # alpha=0.5 makes the plot semitransparent
+        suffix_file = ''  # suffix to add to saved image
+        if type_heatmap == 'contourf':
+            try:
+                g = plt.contourf(xi, yi, zi.reshape(xi.shape),
+                                 alpha=0.5)
+                plt.margins(0, 0)
+                plt.gca().xaxis.set_major_locator(plt.NullLocator())
+                plt.gca().yaxis.set_major_locator(plt.NullLocator())
+            except TypeError:
+                logger.error('Not enough data. Heatmap was not created for '
+                             + '{}.',
+                             x)
+                plt.close(fig)  # clear figure from memory
+                return
+            suffix_file = '_contourf.jpg'
+        elif type_heatmap == 'pcolormesh':
+            try:
+                g = plt.pcolormesh(xi, yi, zi.reshape(xi.shape),
+                                   shading='auto',
+                                   alpha=0.5)
+                plt.margins(0, 0)
+                plt.gca().xaxis.set_major_locator(plt.NullLocator())
+                plt.gca().yaxis.set_major_locator(plt.NullLocator())
+            except TypeError:
+                logger.error('Not enough data. Heatmap was not created for '
+                             + '{}.',
+                             x)
+                plt.close(fig)  # clear figure from memory
+                return
+            suffix_file = '_pcolormesh.jpg'
+        elif type_heatmap == 'kdeplot':
+            try:
+                g = sns.kdeplot(x=x,
+                                y=y,
+                                alpha=0.5,
+                                shade=True,
+                                cmap="RdBu_r")
+            except TypeError:
+                logger.error('Not enough data. Heatmap was not created for '
+                             + '{}.',
+                             x)
+                fig.clf()  # clear figure from memory
+                return
+            suffix_file = '_kdeplot.jpg'
+        else:
+            logger.error('Wrong type_heatmap {} given.', type_heatmap)
+            plt.close(fig)  # clear from memory
+            return
+        # read original image
+        im = plt.imread(image)
+        plt.imshow(im)
+        # remove axis
+        plt.gca().set_axis_off()
+        # remove white spaces around figure
+        plt.subplots_adjust(top=1,
+                            bottom=0,
+                            right=1,
+                            left=0,
+                            hspace=0,
+                            wspace=0)
+        # save image
+        if save_file:
+            self.save_fig(image, fig, '/figures/', suffix_file)
+        # return graph objects
+        else:
+            fig.show()
 
     def create_animation(self,
                          df,
