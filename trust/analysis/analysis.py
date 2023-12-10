@@ -576,6 +576,7 @@ class Analysis:
             self.save_plotly(fig,
                              'heatmap_' + ID_v+'_participant_'+ ID_p,
                              self.folder)
+        
         # open it in localhost instead
         else:
             fig.show()
@@ -711,6 +712,7 @@ class Analysis:
         self.fig, self.fig,g = self.heatmap(df,
                                         x=x,
                                         y=y,
+
                                         type_heatmap='kdeplot',  # noqa: E501
                                         add_corners=True,  # noqa: E501
                                         save_file=False)

@@ -199,13 +199,13 @@ if __name__ == '__main__':
                          ID_v='video_0',
                          pretty_text=True,
                          save_file=True)
-        analysis.create_heatmap(heroku_data,
-                                x='video_0-x-0',
-                                y='video_0-y-0',
-                                ID=6,
-                                type_heatmap='contourf',
-                                add_corners=True,
-                                save_file=True)
+        #analysis.create_heatmap(heroku_data,
+         #                       x='video_0-x-0',
+          #                     y='video_0-y-0',
+           #                     ID=6,
+            #                    type_heatmap='contourf',
+             #                   add_corners=True,
+              #                  save_file=True)
         
         # time of participation
         #df = appen_data
