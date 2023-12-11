@@ -488,7 +488,7 @@ class Analysis:
         else:
             fig.show()
 
-    def heatmap(self, df, x, y, ID_v, ID_p, pretty_text=False, marginal_x='violin',
+    def heatmap(self, df, x, y, width, height, ID_v, ID_p, pretty_text=False, marginal_x='violin',
                 marginal_y='violin', xaxis_title=None, yaxis_title=None,
                 save_file=True):
         """
@@ -515,6 +515,9 @@ class Analysis:
 
         x=df.iloc[ID_p][x]
         y=df.iloc[ID_p][y]
+        #t=df.iloc[ID_p][t]
+        width=df.iloc[ID_p][width]
+        height=df.iloc[ID_p][height]
 
        
         #df[x].dropna(inplace=True)
@@ -558,6 +561,13 @@ class Analysis:
         fig = px.density_heatmap(df,
                                  x=x,
                                  y= y,
+                                
+
+
+                                 #nbinsx=100, 
+                                 #nbinsy=100,
+                                 range_x=[0,width],
+                                 range_y=[0,height],
                                  marginal_x='violin',
                                  marginal_y='violin',
                                  title='heatmap'+' '+ ID_v +' '+'participant'+' '+ID_p)
@@ -569,7 +579,7 @@ class Analysis:
 
         #df.style
         
-        
+ 
 
         # save file
         if save_file:
@@ -584,6 +594,8 @@ class Analysis:
       
     def create_heatmap(self,
                        df,
+                       width,
+                       height,
                        x,
                        y,
                        ID,
@@ -601,14 +613,15 @@ class Analysis:
         logger.info('Creating heatmap for x={} and t={}.', x,y)
 
         # get dimensions of base image
-        width = tr.common.get_configs('stimulus_width')
-        height = tr.common.get_configs('stimulus_height')
+        width=df.iloc[ID][width]
+        height=df.iloc[ID][height]
         # add datapoints to corners for maximised heatmaps
 
         x=df.iloc[ID][x]
         y=df.iloc[ID][y]
 
-        
+        x=np.array(x)
+        y=np.array(y)
 
 
         
@@ -665,6 +678,7 @@ class Analysis:
                                 y=y,
                                 alpha=0.5,
                                 shade=True,
+                                title='heatmap participant '+ID,
                                 cmap="RdBu_r")
             except TypeError:
                 logger.error('Not enough data. Heatmap was not created for '
@@ -678,52 +692,60 @@ class Analysis:
             plt.close(fig)  # clear from memory
             return
         # read original image
-        im = plt.imread(image)
-        plt.imshow(im)
+       # im = plt.imread(image)
+        #plt.imshow(im)
         # remove axis
-        plt.gca().set_axis_off()
+       # plt.gca().set_axis_off()
         # remove white spaces around figure
-        plt.subplots_adjust(top=1,
-                            bottom=0,
-                            right=1,
-                            left=0,
-                            hspace=0,
-                            wspace=0)
+        #plt.subplots_adjust(top=1,
+         #                   bottom=0,
+          #                  right=1,
+           #                 left=0,
+            #                hspace=0,
+             #               wspace=0)
         # save image
         if save_file:
-            self.save_fig(image, fig, '/figures/', suffix_file)
+           # self.save_fig(image,fig, '/figures/', suffix_file)
         # return graph objects
-        else:
+       #else:
             fig.show()
+            return fig,g
 
     def create_animation(self,
                          df,
                          x,
                          y,
-                         stim_id,                
+                         t,
+                         ID,
+                         width,
+                         height,                
                          save_anim=False,
                          save_frames=False):
         """
         Create animation for image based on the list of lists of points of
         varying duration.
         """
+        t=df.iloc[ID][t]
         
         self.save_frames = save_frames
-        self.fig, self.fig,g = self.heatmap(df,
+        self.fig= self.create_heatmap(df,
                                         x=x,
                                         y=y,
-
+                                        ID=ID,
+                                        width=width,
+                                        height=height,
                                         type_heatmap='kdeplot',  # noqa: E501
                                         add_corners=True,  # noqa: E501
                                         save_file=False)
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
-                                       frames=len(x),
+                                       frames=len(t),
                                        interval=1000,
                                        repeat=False)
         # save image
         if save_anim:
-            self.save_anim(image, anim, self.folder, '_animation.mp4') 
+            #self.save_anim(image, anim, self.folder, '_animation.mp4') 
+            anim.show()
 
     def create_animation_all_stimuli(self, num_stimuli):
         """
@@ -773,19 +795,19 @@ class Analysis:
                              shade=True,
                              cmap='RdBu_r')
         # read original image
-        im = plt.imread(self.image)
-        plt.imshow(im)
+        #im = plt.imread(self.image)
+        #plt.imshow(im)
         # remove axis
-        plt.gca().set_axis_off()
+        #plt.gca().set_axis_off()
         # remove white spaces around figure
-        plt.subplots_adjust(top=1,
-                            bottom=0,
-                            right=1,
-                            left=0,
-                            hspace=0,
-                            wspace=0)
+       # plt.subplots_adjust(top=1,
+        #                    bottom=0,
+         #                   right=1,
+          #                  left=0,
+           #                 hspace=0,
+            #                wspace=0)
         # textbox with duration
-        durations = tr.common.get_configs('stimulus_durations')
+        durations = df.iloc[ID][t]
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         plt.text(0.75,
                  0.98,

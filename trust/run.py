@@ -102,9 +102,9 @@ if __name__ == '__main__':
         # eye tracking data
         #analysis.heatmap(heroku_data, 'video_0-x-0', 'video_0-y-0')
         # all keypresses with confidence interval
-        analysis.plot_kp(mapping, conf_interval=0.95)
+        #analysis.plot_kp(mapping, conf_interval=0.95)
         # keypresses of an individual stimulus
-        analysis.plot_kp_video(mapping, 'video_1', conf_interval=0.95)
+       # analysis.plot_kp_video(mapping, 'video_1', conf_interval=0.95)
         # keypresses of all videos individually
         #analysis.plot_kp_videos(mapping)
         # 1 var, all values
@@ -195,17 +195,32 @@ if __name__ == '__main__':
         analysis.heatmap(heroku_data, 
                          x='video_0-x-0',
                          y='video_0-y-0',
-                         ID_p=6,
+                         #t='video_0-t-0',
+                         width='window_width',
+                         height='window_height',
+                         ID_p=6,    # 0,6,11,18,20,21
                          ID_v='video_0',
                          pretty_text=True,
                          save_file=True)
-        #analysis.create_heatmap(heroku_data,
-         #                       x='video_0-x-0',
-          #                     y='video_0-y-0',
-           #                     ID=6,
-            #                    type_heatmap='contourf',
-             #                   add_corners=True,
-              #                  save_file=True)
+        analysis.create_heatmap(heroku_data,
+                                x='video_0-x-0',
+                                y='video_0-y-0',
+                                ID=20,
+                                width='window_width',
+                                height='window_height',
+                                type_heatmap='contourf',
+                                add_corners=True,
+                                save_file=True)
+       # analysis.create_animation(heroku_data,
+        #                           x='video_0-x-0',
+         #                          y='video_0-y-0',
+          #                         t='video_0-t-0',
+           #                        ID=6,
+            #                       width='window_width',
+             #                      height='window_height'
+              #                     
+               #                    )
+
         
         # time of participation
         #df = appen_data
