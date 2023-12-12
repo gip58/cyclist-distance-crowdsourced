@@ -145,11 +145,11 @@ if __name__ == '__main__':
         #              y=['video_0-slider-0-0', 'video_0-slider-1-0', 'video_0-slider-2-0'],  # noqa: E501
         #              pretty_text=True,
         #              save_file=True)
-        analysis.hist(heroku_data,
-                      x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-slider-')],  # noqa: E501
-                      nbins=100,
-                      pretty_text=True,
-                      save_file=True)
+        #analysis.hist(heroku_data,
+         #             x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-slider-')],  # noqa: E501
+          #            nbins=100,
+           #           pretty_text=True,
+            #          save_file=True)
         # columns to drop in correlation matrix and scatter matrix
         columns_drop = ['description', 'video_length', 'min_dur', 'max_dur',
                         'kp']
@@ -186,26 +186,36 @@ if __name__ == '__main__':
         
         heroku_data['video_1-x-0'] = heroku_data['video_1-x-0']
         heroku_data['video_1-y-0'] = heroku_data['video_1-y-0']
-        analysis.scatter(heroku_data,
-                         x='window_width',
-                         y='window_height',
-                         color='browser_major_version',
-                         pretty_text=True,
-                         save_file=True)
+        #analysis.scatter_mult(heroku_data,
+         #                x=['video_0-x-0','video_1-x-0'],
+          #               y='video_0-y-0',
+           #              color='browser_major_version',
+            #             pretty_text=True,
+             #            save_file=True)
+        #analysis.scat(heroku_data, 
+         #                x='video_0-x-0',
+          #               y='video_0-y-0',
+           #              t='video_0-t-0',
+            #             width='window_width',
+             #            height='window_height',
+              #           ID_p=6,    # 0,2,6,10,12,13,14,16,18,20,22
+               #          ID_v='video_0',
+                #         pretty_text=True,
+                 #       save_file=True)
         analysis.heatmap(heroku_data, 
                          x='video_0-x-0',
                          y='video_0-y-0',
-                         #t='video_0-t-0',
+                         t='video_0-t-0',
                          width='window_width',
                          height='window_height',
-                         ID_p=6,    # 0,6,11,18,20,21
+                         ID_p=6,    # 0,2,6,10,12,13,14,16,18,20,22
                          ID_v='video_0',
                          pretty_text=True,
-                         save_file=True)
+                        save_file=True)
         analysis.create_heatmap(heroku_data,
                                 x='video_0-x-0',
                                 y='video_0-y-0',
-                                ID=20,
+                                ID=6,
                                 width='window_width',
                                 height='window_height',
                                 type_heatmap='contourf',

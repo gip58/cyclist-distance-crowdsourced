@@ -14,11 +14,14 @@ import plotly as py
 import plotly.graph_objs as go
 import plotly.express as px
 from plotly import subplots
+from plotly.subplots import make_subplots
 import warnings
 import unicodedata
 import re
 import ast
 from scipy.stats.kde import gaussian_kde
+
+
 
 import trust as tr
 
@@ -417,12 +420,16 @@ class Analysis:
                     df[x_col] = df[x_col].str.replace('_', ' ')
                     # capitalise
                     df[x_col] = df[x_col].str.capitalize()
+                else:
+                    logger.error('no string')
             
             if isinstance(df.iloc[0][y], str):  # check if string
                     # replace underscores with spaces
                     df[y] = df[y].str.replace('_', ' ')
                     # capitalise
                     df[y] = df[y].str.capitalize()
+            else:
+                    logger.error('no string')
             try:
                 # check if string
                 if text and isinstance(df.iloc[0][text], str):
@@ -445,7 +452,9 @@ class Analysis:
         data = {'val_y': val_y,
                 'color': color,
                 'val_x': val_x}
+
         df = pd.DataFrame(data)
+        
         # scatter plot with histograms
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', category=RuntimeWarning)
@@ -474,22 +483,70 @@ class Analysis:
                                       x=0.78
                                       ))
         results = px.get_trendline_results(fig)
-        for i in range(len(x)):
-            print(results.px_fit_results.iloc[i].summary())
+      #  for i in range(len(x)):
+       #     print(results.px_fit_results.iloc[i].summary())
         # change marker size
-        if marker_size:
-            fig.update_traces(marker=dict(size=marker_size))
+       # if marker_size:
+        #    fig.update_traces(marker=dict(size=marker_size))
         # save file
         if save_file:
             self.save_plotly(fig,
                              'scatter_' + ','.join(x) + '-' + y,
                              self.folder)
+
         # open it in localhost instead
         else:
             fig.show()
+    def scat(self, df, x, y, t, width, height, ID_v, ID_p, pretty_text=False, marginal_x='violin',
+                marginal_y='violin', xaxis_title=None, xaxis_range=True, yaxis_title=None, yaxis_range=True,
+                save_file=True): 
+        logger.info('Creating scatter_map for x={} and t={}.',
+                   x, y)
+       
+        
+        # extrating x and y values for given ID participant
+        x=df.iloc[ID_p][x]
+        y=df.iloc[ID_p][y]
+        t=df.iloc[ID_p][t]
+        width=df.iloc[ID_p][width]
+        height=df.iloc[ID_p][height]  
 
-    def heatmap(self, df, x, y, width, height, ID_v, ID_p, pretty_text=False, marginal_x='violin',
-                marginal_y='violin', xaxis_title=None, yaxis_title=None,
+        ID_p=str(ID_p)
+       
+        # Plot animation scatter
+        fig = px.scatter(df,
+                                 x=x,
+                                 y=y,
+                                 width=width,
+                                 height=height,
+                                 animation_frame=t,
+                                 marginal_x='violin',
+                                 marginal_y='violin',
+                                 title='heatmap'+' '+ ID_v +' '+'participant'+' '+ID_p)
+
+        # update layout
+        fig.update_layout(template=self.template,
+                          xaxis_title=xaxis_title,
+                          yaxis_title=yaxis_title,
+                          xaxis_range=[0,2*width],
+                          yaxis_range=[0,2*height])
+
+        
+        
+ 
+
+        # save file
+        if save_file:
+            self.save_plotly(fig,
+                             'scatter_map_' + ID_v+'_participant_'+ ID_p,
+                             self.folder)
+        
+        # open it in localhost instead
+        else:
+            fig.show()             
+
+    def heatmap(self, df, x, y, t, width, height, ID_v, ID_p, pretty_text=False, marginal_x='violin',
+                marginal_y='violin', xaxis_title=None, xaxis_range=True, yaxis_title=None, yaxis_range=True,
                 save_file=True):
         """
         Output heatmap plot of variables x and y.
@@ -512,12 +569,17 @@ class Analysis:
                    x, y)
         #val_x=[]
         #val_y=[]
+        
 
         x=df.iloc[ID_p][x]
         y=df.iloc[ID_p][y]
-        #t=df.iloc[ID_p][t]
+        t=df.iloc[ID_p][t]
         width=df.iloc[ID_p][width]
         height=df.iloc[ID_p][height]
+        
+
+        
+        
 
        
         #df[x].dropna(inplace=True)
@@ -556,26 +618,129 @@ class Analysis:
               #  df[t] = df[t].str.capitalize()
 
         ID_p=str(ID_p)
+
+        heatmaps=[go.Histogram2d(x=x[i:], y=y[i:]) for i in range(len(x))]
+        
+        # build layers of animation heatmap and scatter
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=x, y=y)) 
+        fig.add_trace(go.Histogram2dContour(x=x,y=y))
+    
+       
+        frames = [go.Frame(data=[    go.Histogram2dContour(x=x[:k+1],y=y[:k+1], nbinsx=20, nbinsy=20, visible=True),
+                                     go.Scatter(x=x[:k+1], y=y[:k+1], visible=True, opacity=1)
+                                    
+                                     
+                                     ], 
+                                     traces=[0,1]) for k in range(len(x))]
+        fig.frames = frames
+        fig.update_layout(template=self.template, 
+                          height=height, 
+                          width=width,
+                          xaxis_range=[0,2*width],
+                          yaxis_range=[0,2*height], 
+                          updatemenus=[dict(type="buttons", 
+                          buttons=[dict(label="Play", method="animate", args=[None, dict(fromcurrent=True, transition= {'duration': 10}, frame=dict(redraw=True, duration=100))]), \
+                                                                         dict(label="Pause", method="animate", args=[[None], \
+                                                                         dict(fromcurrent=True, mode='immediate', transition={'duration': 10}, frame=dict(redraw=True, duration=100))])])])
+        
+        '''
+        data = [go.Scatter(
+            x=[],
+            y=[],
+            mode='markers',
+            #marker=dict(color=scatterDataX)
+        )]
+   
+
+        dataX = x
+        dataY = y
+       
+
+        frames = [dict(data= [dict(type='scatter',
+                           x=dataX[:k+1],
+                           y=dataY[:k+1])],
+               traces= [1],
+               name='frame{}'.format(k)       
+              )for k  in  range(1, len(x))]           
+
+        layout = go.Layout(
+            autosize=True,
+            hovermode='closest'
+        )
+
+        sliders = [dict(steps= [dict(method= 'animate',
+                           args= [[ 'frame{}'.format(k) ],
+                                  dict(mode= 'immediate',
+                                  frame= dict( duration=100, redraw= False ),
+                                           transition=dict( duration= 0)
+                                          )
+                                    ],
+                            label='{:d}'.format(k)
+                             ) for k in range(len(x))], 
+                transition= dict(duration= 0 ),
+                x=0,#slider starting position  
+                y=0, 
+                currentvalue=dict(font=dict(size=12), 
+                                  prefix='Point: ', 
+                                  visible=True, 
+                                  xanchor= 'center'),  
+                len=1.0)
+           ]
+
+        layout.update(updatemenus=[dict(type='buttons', showactive=False,
+                                y=0,
+                                x=1.05,
+                                buttons=[dict(label='Play',
+                                method='animate',
+                                args=[None, 
+                                    dict(frame=dict(duration=100,
+                                                redraw=False),
+                                        transition=dict(duration=0),
+                                        fromcurrent=True,
+                                        mode='immediate'
+                                    ) 
+                                ]
+                            )
+                        ]
+                    )
+                ],
+            sliders=sliders)
+
+        fig = go.Figure(data=data, layout=layout, frames=frames)
+        fig.add_trace(go.Histogram2d(x=x,y=y, zauto=False, visible=True))
+        fig.update_yaxes(range=[0, 2*height])
+        fig.update_xaxes(range=[0, 2*width])
+        '''
+
+
+        
              
         
-        fig = px.density_heatmap(df,
-                                 x=x,
-                                 y= y,
-                                
+       # fig = px.scatter(df,
+        #                         x=x,
+         #                        y=y,
+          #                       #animation_frame=x,
+           #                     width=width,
+            #                     height=height,
+             #                    animation_frame=t,
 
 
                                  #nbinsx=100, 
+                                 
                                  #nbinsy=100,
-                                 range_x=[0,width],
-                                 range_y=[0,height],
-                                 marginal_x='violin',
-                                 marginal_y='violin',
-                                 title='heatmap'+' '+ ID_v +' '+'participant'+' '+ID_p)
+                                 
+                #                 marginal_x='violin',
+                 #                marginal_y='violin',
+
+                     #            title='heatmap'+' '+ ID_v +' '+'participant'+' '+ID_p)
 
         # update layout
         fig.update_layout(template=self.template,
                           xaxis_title=xaxis_title,
-                          yaxis_title=yaxis_title)
+                          yaxis_title=yaxis_title,
+                          xaxis_range=[0,2*width],
+                          yaxis_range=[0,2*height])
 
         #df.style
         
