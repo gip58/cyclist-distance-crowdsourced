@@ -114,7 +114,7 @@ if __name__ == '__main__':
                                   [0, 1])
         analysis.plot_kp_variable(mapping,
                                   'group',
-                                  [0, 1, 2, 3])        
+                                  [0, 1, 2, 3])
         # TODO: make plot_video_data work
         # plot of multiple combined AND variables
         # analysis.plot_video_data(mapping, 'video_5',
