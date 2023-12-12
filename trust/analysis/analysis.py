@@ -531,9 +531,6 @@ class Analysis:
                           xaxis_range=[0,2*width],
                           yaxis_range=[0,2*height])
 
-        
-        
- 
 
         # save file
         if save_file:
@@ -628,7 +625,7 @@ class Analysis:
     
        
         frames = [go.Frame(data=[    go.Histogram2dContour(x=x[:k+1],y=y[:k+1], nbinsx=20, nbinsy=20, visible=True),
-                                     go.Scatter(x=x[:k+1], y=y[:k+1], visible=True, opacity=1)
+                                     go.Scatter(x=x[:k+1], y=y[:k+1], visible=True, opacity=0.9)
                                     
                                      
                                      ], 
@@ -637,8 +634,11 @@ class Analysis:
         fig.update_layout(template=self.template, 
                           height=height, 
                           width=width,
+                          
+                          title='heatmap_scatter_animation'+' '+ ID_v +' '+'participant'+' '+ID_p,
                           xaxis_range=[0,2*width],
-                          yaxis_range=[0,2*height], 
+                          yaxis_range=[0,2*height],
+
                           updatemenus=[dict(type="buttons", 
                           buttons=[dict(label="Play", method="animate", args=[None, dict(fromcurrent=True, transition= {'duration': 10}, frame=dict(redraw=True, duration=100))]), \
                                                                          dict(label="Pause", method="animate", args=[[None], \
@@ -736,11 +736,11 @@ class Analysis:
                      #            title='heatmap'+' '+ ID_v +' '+'participant'+' '+ID_p)
 
         # update layout
-        fig.update_layout(template=self.template,
-                          xaxis_title=xaxis_title,
-                          yaxis_title=yaxis_title,
-                          xaxis_range=[0,2*width],
-                          yaxis_range=[0,2*height])
+        #fig.update_layout(template=self.template,
+         #                 xaxis_title=xaxis_title,
+          #                yaxis_title=yaxis_title,
+           #               xaxis_range=[0,2*width],
+            #              yaxis_range=[0,2*height])
 
         #df.style
         
@@ -749,12 +749,13 @@ class Analysis:
         # save file
         if save_file:
             self.save_plotly(fig,
-                             'heatmap_' + ID_v+'_participant_'+ ID_p,
+                             'heatmap_animation' + ID_v+'_participant_'+ ID_p,
                              self.folder)
         
         # open it in localhost instead
         else:
-            fig.show()
+            #plotly.offline.plot(fig, auto_play = False)
+            show.fig(fig, auto_play=False)
 
       
     def create_heatmap(self,
