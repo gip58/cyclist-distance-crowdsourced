@@ -364,7 +364,7 @@ class Appen:
         df_counts['counts'] = df['country'].value_counts()
         # set i_prefer_not_to_respond as nan
         df[df == 'i_prefer_not_to_respond'] = np.nan
-        df[df == 'other'] = np.nan
+        df[df == 'Other'] = np.nan
         # map gender
         di = {'female': 0, 'male': 1}
         df = df.replace({'gender': di})
