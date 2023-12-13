@@ -104,15 +104,23 @@ if __name__ == '__main__':
         # all keypresses with confidence interval
         #analysis.plot_kp(mapping, conf_interval=0.95)
         # keypresses of an individual stimulus
-       # analysis.plot_kp_video(mapping, 'video_1', conf_interval=0.95)
+        analysis.plot_kp_video(mapping, 'video_0', conf_interval=0.95)
+        # keypresses of an individual stimulus for an individual pp
+        analysis.plot_kp_video(mapping,
+                               pp='R51701270114366JF82237X',
+                               stimulus='video_0',
+                               conf_interval=0.95)
         # keypresses of all videos individually
         #analysis.plot_kp_videos(mapping)
         # 1 var, all values
         #analysis.plot_kp_variable(mapping, 'ego_car')
         # 1 var, certain values
-        #analysis.plot_kp_variable(mapping,
-         #                         'target_car',
-          #                        [0, 1])
+        analysis.plot_kp_variable(mapping,
+                                  'target_car',
+                                  [0, 1])
+        analysis.plot_kp_variable(mapping,
+                                  'group',
+                                  [0, 1, 2, 3])
         # TODO: make plot_video_data work
         # plot of multiple combined AND variables
         # analysis.plot_video_data(mapping, 'video_5',
@@ -255,23 +263,24 @@ if __name__ == '__main__':
            #               'Agree': 4,
             #              'Strongly agree': 5}
         # questions before and after
-        #df = all_data
-        #df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)  # noqa: E501
-        #df['driving_in_ad'] = df['driving_in_ad'].map(likert_mapping)
-        #analysis.scatter(df,
-              #           x='driving_alongside_ad',  # noqa: E501
-             #            y='end-slider-0-0',  # noqa: E501
-            #             xaxis_title='Before',
-           #              yaxis_title='After',
-          #               pretty_text=True,
-         #                save_file=True)
-        #analysis.scatter(df,
-          #               x='driving_in_ad',  # noqa: E501
-           #              y='end-slider-1-0',  # noqa: E501
-             #            xaxis_title='Before',
-            #             yaxis_title='After',
-              #           pretty_text=True,
-               #          save_file=True)
+        df = all_data
+        print(df.head)
+        df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)  # noqa: E501
+        df['driving_in_ad'] = df['driving_in_ad'].map(likert_mapping)
+        analysis.scatter(df,
+                         x='driving_alongside_ad',  # noqa: E501
+                         y='end-slider-0-0',  # noqa: E501
+                         xaxis_title='Before',
+                         yaxis_title='After',
+                         pretty_text=True,
+                         save_file=True)
+        analysis.scatter(df,
+                         x='driving_in_ad',  # noqa: E501
+                         y='end-slider-1-0',  # noqa: E501
+                         xaxis_title='Before',
+                         yaxis_title='After',
+                         pretty_text=True,
+                         save_file=True)
         # histogram for driving frequency
         #analysis.hist(appen_data,
          #             x=['driving_freq'],
