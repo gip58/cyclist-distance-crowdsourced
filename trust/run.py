@@ -8,24 +8,24 @@ tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
 
 # const
-SAVE_P = True  # save pickle files with data
-LOAD_P = False  # load pickle files with data
-SAVE_CSV = True  # load csv files with data
-FILTER_DATA = True  # filter Appen and heroku data
-CLEAN_DATA = True  # clean Appen data
-REJECT_CHEATERS = True  # reject cheaters on Appen
-UPDATE_MAPPING = True  # update mapping with keypress data
-SHOW_OUTPUT = True  # should figures be plotted
+# SAVE_P = True  # save pickle files with data
+# LOAD_P = False  # load pickle files with data
+# SAVE_CSV = True  # load csv files with data
+# FILTER_DATA = True  # filter Appen and heroku data
+# CLEAN_DATA = True  # clean Appen data
+# REJECT_CHEATERS = True  # reject cheaters on Appen
+# UPDATE_MAPPING = True  # update mapping with keypress data
+# SHOW_OUTPUT = True  # should figures be plotted
 
 # for debugging, skip processing
-# SAVE_P = False  # save pickle files with data
-# LOAD_P = True  # load pickle files with data
-# SAVE_CSV = True  # load csv files with data
-# FILTER_DATA = False  # filter Appen and heroku data
-# CLEAN_DATA = False  # clean Appen data
-# REJECT_CHEATERS = False  # reject cheaters on Appen
-# UPDATE_MAPPING = False  # update mapping with keypress data
-# SHOW_OUTPUT = True  # should figures be plotted
+SAVE_P = False  # save pickle files with data
+LOAD_P = True  # load pickle files with data
+SAVE_CSV = True  # load csv files with data
+FILTER_DATA = False  # filter Appen and heroku data
+CLEAN_DATA = False  # clean Appen data
+REJECT_CHEATERS = False  # reject cheaters on Appen
+UPDATE_MAPPING = False  # update mapping with keypress data
+SHOW_OUTPUT = True  # should figures be plotted
 
 file_mapping = 'mapping.p'  # file to save updated mapping
 
@@ -104,6 +104,11 @@ if __name__ == '__main__':
         analysis.plot_kp(mapping, conf_interval=0.95)
         # keypresses of an individual stimulus
         analysis.plot_kp_video(mapping, 'video_0', conf_interval=0.95)
+        # keypresses of an individual stimulus for an individual pp
+        analysis.plot_kp_video(mapping,
+                               pp='R51701270114366JF82237X',
+                               stimulus='video_0',
+                               conf_interval=0.95)
         # keypresses of all videos individually
         analysis.plot_kp_videos(mapping)
         # 1 var, all values
@@ -218,6 +223,7 @@ if __name__ == '__main__':
                           'Strongly agree': 5}
         # questions before and after
         df = all_data
+        print(df.head)
         df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)  # noqa: E501
         df['driving_in_ad'] = df['driving_in_ad'].map(likert_mapping)
         analysis.scatter(df,

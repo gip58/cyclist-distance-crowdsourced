@@ -854,7 +854,8 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_kp_video(self, df, stimulus, extention='mp4', conf_interval=None,
+    def plot_kp_video(self, df, stimulus, pp='all', extention='mp4',
+                      conf_interval=None,
                       xaxis_title='Time (s)',
                       yaxis_title='Percentage of trials with ' +
                                   'response key pressed',
@@ -864,7 +865,8 @@ class Analysis:
         Args:
             df (dataframe): dataframe with keypress data.
             stimulus (str): name of stimulus.
-            extention (str, optional): extension of stimulus.
+            pp (str, optional): individual participant or 'all'.
+            extension (str, optional): extension of stimulus.
             conf_interval (float, optional): show confidence interval defined
                                              by argument.
             xaxis_title (str, optional): title for x axis.
@@ -873,6 +875,7 @@ class Analysis:
             yaxis_range (list, optional): range of y axis in format [min, max].
             save_file (bool, optional): flag for saving an html file with plot.
         """
+        # todo: implement for 1 pp
         # extract video length
         video_len = df.loc[stimulus]['video_length']
         # calculate times
