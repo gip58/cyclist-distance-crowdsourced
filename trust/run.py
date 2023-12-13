@@ -97,11 +97,12 @@ if __name__ == '__main__':
     if SHOW_OUTPUT:
         # Output
         analysis = tr.analysis.Analysis()
+        num_stimuli = tr.common.get_configs('num_stimuli')
         logger.info('Creating figures.')
         # eye tracking data
-        analysis.heatmap(heroku_data, 'video_0-x-0', 'video_0-y-0')
+        #analysis.heatmap(heroku_data, 'video_0-x-0', 'video_0-y-0')
         # all keypresses with confidence interval
-        analysis.plot_kp(mapping, conf_interval=0.95)
+        #analysis.plot_kp(mapping, conf_interval=0.95)
         # keypresses of an individual stimulus
         analysis.plot_kp_video(mapping, 'video_0', conf_interval=0.95)
         # keypresses of an individual stimulus for an individual pp
@@ -110,9 +111,9 @@ if __name__ == '__main__':
                                stimulus='video_0',
                                conf_interval=0.95)
         # keypresses of all videos individually
-        analysis.plot_kp_videos(mapping)
+        #analysis.plot_kp_videos(mapping)
         # 1 var, all values
-        analysis.plot_kp_variable(mapping, 'ego_car')
+        #analysis.plot_kp_variable(mapping, 'ego_car')
         # 1 var, certain values
         analysis.plot_kp_variable(mapping,
                                   'target_car',
@@ -152,11 +153,11 @@ if __name__ == '__main__':
         #              y=['video_0-slider-0-0', 'video_0-slider-1-0', 'video_0-slider-2-0'],  # noqa: E501
         #              pretty_text=True,
         #              save_file=True)
-        analysis.hist(heroku_data,
-                      x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-slider-')],  # noqa: E501
-                      nbins=100,
-                      pretty_text=True,
-                      save_file=True)
+        #analysis.hist(heroku_data,
+         #             x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-slider-')],  # noqa: E501
+          #            nbins=100,
+           #           pretty_text=True,
+            #          save_file=True)
         # columns to drop in correlation matrix and scatter matrix
         columns_drop = ['description', 'video_length', 'min_dur', 'max_dur',
                         'kp']
@@ -164,10 +165,11 @@ if __name__ == '__main__':
         # df = mapping[(mapping['dist_to_ped_at_7.0'] != 'no data found')]
         df = mapping.fillna(-1)
         # create correlation matrix
-        analysis.corr_matrix(df,
-                             columns_drop=columns_drop,
-                             save_file=True)
+        #analysis.corr_matrix(df,
+         #                    columns_drop=columns_drop,
+        #                     save_file=True)
         # create correlation matrix
+        '''
         analysis.scatter_matrix(df,
                                 columns_drop=columns_drop,
                                 color='group',
@@ -188,39 +190,78 @@ if __name__ == '__main__':
                       pretty_text=True,
                       save_file=True)
         # browser window dimensions
-        analysis.scatter(heroku_data,
-                         x='window_width',
-                         y='window_height',
-                         color='browser_name',
+         '''
+        
+        heroku_data['video_1-x-0'] = heroku_data['video_1-x-0']
+        heroku_data['video_1-y-0'] = heroku_data['video_1-y-0']
+        #analysis.scatter_mult(heroku_data,
+         #                x=['video_0-x-0','video_1-x-0'],
+          #               y='video_0-y-0',
+           #              color='browser_major_version',
+            #             pretty_text=True,
+             #            save_file=True)
+        #analysis.scat(heroku_data, 
+         #                x='video_0-x-0',
+          #               y='video_0-y-0',
+           #              t='video_0-t-0',
+            #             width='window_width',
+             #            height='window_height',
+              #           ID_p=6,    # 0,2,6,10,12,13,14,16,18,20,22
+               #          ID_v='video_0',
+                #         pretty_text=True,
+                 #       save_file=True)
+        analysis.heatmap(heroku_data, 
+                         x='video_0-x-0',
+                         y='video_0-y-0',
+                         t='video_0-t-0',
+                         width='window_width',
+                         height='window_height',
+                         ID_p=6,    # 0,2,6,10,12,13,14,16,18,20,22
+                         ID_v='video_0',
                          pretty_text=True,
-                         save_file=True)
-        analysis.heatmap(heroku_data,
-                         x='window_width',
-                         y='window_height',
-                         pretty_text=True,
-                         save_file=True)
+                        save_file=True)
+        #analysis.create_heatmap(heroku_data,
+         #                       x='video_0-x-0',
+          #                      y='video_0-y-0',
+           #                     ID=6,
+            #                    width='window_width',
+             #                   height='window_height',
+              #                  type_heatmap='contourf',
+               #                 add_corners=True,
+                #                save_file=True)
+       # analysis.create_animation(heroku_data,
+        #                           x='video_0-x-0',
+         #                          y='video_0-y-0',
+          #                         t='video_0-t-0',
+           #                        ID=6,
+            #                       width='window_width',
+             #                      height='window_height'
+              #                     
+               #                    )
+
+        
         # time of participation
-        df = appen_data
-        df['country'] = df['country'].fillna('NaN')
-        df['time'] = df['time'] / 60.0  # convert to min
-        analysis.hist(df,
-                      x=['time'],
-                      color='country',
-                      pretty_text=True,
-                      save_file=True)
+        #df = appen_data
+        #df['country'] = df['country'].fillna('NaN')
+        #df['time'] = df['time'] / 60.0  # convert to min
+        #analysis.hist(df,
+        #              x=['time'],
+        #              color='country',
+         #             pretty_text=True,
+          #            save_file=True)
         # driving with AVs
-        analysis.scatter(appen_data,
-                         x='driving_in_ad',
-                         y='driving_alongside_ad',
-                         color='year_license',
-                         pretty_text=True,
-                         save_file=True)
+        #analysis.scatter(appen_data,
+        #                 x='driving_in_ad',
+         #                y='driving_alongside_ad',
+          #               color='year_license',
+           #              pretty_text=True,
+            #             save_file=True)
         # mapping to convert likert values to numeric
-        likert_mapping = {'Strongly disagree': 1,
-                          'Disagree': 2,
-                          'Neither disagree nor agree': 3,
-                          'Agree': 4,
-                          'Strongly agree': 5}
+        #likert_mapping = {'Strongly disagree': 1,
+         #                 'Disagree': 2,
+          #                'Neither disagree nor agree': 3,
+           #               'Agree': 4,
+            #              'Strongly agree': 5}
         # questions before and after
         df = all_data
         print(df.head)
@@ -241,10 +282,12 @@ if __name__ == '__main__':
                          pretty_text=True,
                          save_file=True)
         # histogram for driving frequency
-        analysis.hist(appen_data,
-                      x=['driving_freq'],
-                      pretty_text=True,
-                      save_file=True)
+        #analysis.hist(appen_data,
+         #             x=['driving_freq'],
+          #            pretty_text=True,
+           #           save_file=True)
+        # create animation for stimulus
+        
         # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],     # noqa: E501
         #                       x=['avg_object', 'avg_person', 'avg_car'],
         #                       y='avg_kp',
@@ -255,15 +298,15 @@ if __name__ == '__main__':
         #                       marginal_x='rug',
         #                       save_file=True)
         # map of participants
-        analysis.map(countries_data, color='counts', save_file=True)
+        #analysis.map(countries_data, color='counts', save_file=True)
         # map of mean age per country
-        analysis.map(countries_data, color='age', save_file=True)
+        #analysis.map(countries_data, color='age', save_file=True)
         # map of gender per country
-        analysis.map(countries_data, color='gender', save_file=True)
+        #analysis.map(countries_data, color='gender', save_file=True)
         # map of year of obtaining license per country
-        analysis.map(countries_data, color='year_license', save_file=True)
+        #analysis.map(countries_data, color='year_license', save_file=True)
         # map of year of automated driving per country
-        analysis.map(countries_data, color='year_ad', save_file=True)
+        #analysis.map(countries_data, color='year_ad', save_file=True)
         # check if any figures are to be rendered
         figures = [manager.canvas.figure
                    for manager in

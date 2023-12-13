@@ -1,7 +1,11 @@
 # by Pavlo Bazilinskyy <pavlo.bazilinskyy@gmail.com>
 import os
+import subprocess
+import io
+import pickle
 import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 import numpy as np
 import scipy.stats as st
 import seaborn as sns
@@ -10,11 +14,14 @@ import plotly as py
 import plotly.graph_objs as go
 import plotly.express as px
 from plotly import subplots
+from plotly.subplots import make_subplots
 import warnings
 import unicodedata
 import re
 import ast
 from scipy.stats.kde import gaussian_kde
+
+
 
 import trust as tr
 
@@ -30,166 +37,29 @@ class Analysis:
     # number of stimuli
     num_stimuli = tr.common.get_configs('num_stimuli')
     # folder for output
+    fig = None
+    g = None
+    image = None
+    stim_id = None
+    points = None
+    save_frames = False
     folder = '/figures/'
+    polygons = None
+    
+    
+    
+    
+
+    
 
     def __init__(self):
+        
+        
         # set font to Times
         plt.rc('font', family='serif')
 
-    def create_gazes(self,
-                     image,
-                     df,
-                     suffix='_gazes.jpg',
-                     save_file=False):
-        """
-        Output gazes for image based on the list of lists of points.
-        """
-        # check if data is present
-        if not df:
-            logger.error('Not enough data. Gazes visualisation was not '
-                         + 'created for {}.', image)
-            return
-        # read original image
-        im = plt.imread(image)
-        # get dimensions
-        width = tr.common.get_configs('stimulus_width')
-        height = tr.common.get_configs('stimulus_height')
-        # show heatmap by plt
-        dpi = 150
-        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
-        plt.imshow(im)
-        for point in df:
-            plt.plot(point[0],
-                     point[1],
-                     color='red',
-                     marker='x',
-                     markersize=1)
-        # remove white spaces around figure
-        plt.gca().set_axis_off()
-        plt.subplots_adjust(top=1,
-                            bottom=0,
-                            right=1,
-                            left=0,
-                            hspace=0,
-                            wspace=0)
-        plt.margins(0, 0)
-        plt.gca().xaxis.set_major_locator(plt.NullLocator())
-        plt.gca().yaxis.set_major_locator(plt.NullLocator())
-        # save image
-        if save_file:
-            self.save_fig(image, fig, self.folder, suffix)
-
-    def create_heatmap(self,
-                       image,
-                       df,
-                       type_heatmap='contourf',
-                       add_corners=True,
-                       save_file=False):
-        """
-        Create heatmap for image based on the list of lists of points.
-        add_corners: add points to the corners to have the heatmap ovelay the
-                     whole image
-        type_heatmap: contourf, pcolormesh, kdeplot
-        """
-        # todo: remove datapoints in corners in heatmaps
-        # check if data is present
-        if not df:
-            logger.error('Not enough data. Heatmap was not created for {}.',
-                         image)
-            return
-        # get dimensions of base image
-        width = tr.common.get_configs('stimulus_width')
-        height = tr.common.get_configs('stimulus_height')
-        # add datapoints to corners for maximised heatmaps
-        if add_corners:
-            if [0, 0] not in df:
-                df.append([0, 0])
-            if [width, height] not in df:
-                df.append([width - 1, height - 1])
-        # convert points into np array
-        xy = np.array(df)
-        # split coordinates list for readability
-        x = xy[:, 0]
-        y = xy[:, 1]
-        # compute data for the heatmap
-        try:
-            k = gaussian_kde(np.vstack([x, y]))
-            xi, yi = np.mgrid[x.min():x.max():x.size**0.5*1j,
-                              y.min():y.max():y.size**0.5*1j]
-            zi = k(np.vstack([xi.flatten(), yi.flatten()]))
-        except (np.linalg.LinAlgError, np.linalg.LinAlgError, ValueError):
-            logger.error('Not enough data. Heatmap was not created for {}.',
-                         image)
-            return
-        # create figure object with given dpi and dimensions
-        dpi = 150
-        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
-        # alpha=0.5 makes the plot semitransparent
-        suffix_file = ''  # suffix to add to saved image
-        if type_heatmap == 'contourf':
-            try:
-                g = plt.contourf(xi, yi, zi.reshape(xi.shape),
-                                 alpha=0.5)
-                plt.margins(0, 0)
-                plt.gca().xaxis.set_major_locator(plt.NullLocator())
-                plt.gca().yaxis.set_major_locator(plt.NullLocator())
-            except TypeError:
-                logger.error('Not enough data. Heatmap was not created for '
-                             + '{}.',
-                             image)
-                plt.close(fig)  # clear figure from memory
-                return
-            suffix_file = '_contourf.jpg'
-        elif type_heatmap == 'pcolormesh':
-            try:
-                g = plt.pcolormesh(xi, yi, zi.reshape(xi.shape),
-                                   shading='auto',
-                                   alpha=0.5)
-                plt.margins(0, 0)
-                plt.gca().xaxis.set_major_locator(plt.NullLocator())
-                plt.gca().yaxis.set_major_locator(plt.NullLocator())
-            except TypeError:
-                logger.error('Not enough data. Heatmap was not created for '
-                             + '{}.',
-                             image)
-                plt.close(fig)  # clear figure from memory
-                return
-            suffix_file = '_pcolormesh.jpg'
-        elif type_heatmap == 'kdeplot':
-            try:
-                g = sns.kdeplot(x=x,
-                                y=y,
-                                alpha=0.5,
-                                shade=True,
-                                cmap="RdBu_r")
-            except TypeError:
-                logger.error('Not enough data. Heatmap was not created for '
-                             + '{}.',
-                             image)
-                fig.clf()  # clear figure from memory
-                return
-            suffix_file = '_kdeplot.jpg'
-        else:
-            logger.error('Wrong type_heatmap {} given.', type_heatmap)
-            plt.close(fig)  # clear from memory
-            return
-        # read original image
-        im = plt.imread(image)
-        plt.imshow(im)
-        # remove axis
-        plt.gca().set_axis_off()
-        # remove white spaces around figure
-        plt.subplots_adjust(top=1,
-                            bottom=0,
-                            right=1,
-                            left=0,
-                            hspace=0,
-                            wspace=0)
-        # save image
-        if save_file:
-            self.save_fig(image, fig, '/figures/', suffix_file)
-        # return graph objects
-        return fig, g
+    
+              
 
     # TODO: fix error with value of string not used as float
     def corr_matrix(self, df, columns_drop, save_file=False):
@@ -540,6 +410,8 @@ class Analysis:
             logger.error('Argument marker_size cannot be used together with'
                          + ' histogram marginal(s).')
             return -1
+
+
         # prettify text
         if pretty_text:
             for x_col in x:
@@ -548,11 +420,16 @@ class Analysis:
                     df[x_col] = df[x_col].str.replace('_', ' ')
                     # capitalise
                     df[x_col] = df[x_col].str.capitalize()
+                else:
+                    logger.error('no string')
+            
             if isinstance(df.iloc[0][y], str):  # check if string
-                # replace underscores with spaces
-                df[y] = df[y].str.replace('_', ' ')
-                # capitalise
-                df[y] = df[y].str.capitalize()
+                    # replace underscores with spaces
+                    df[y] = df[y].str.replace('_', ' ')
+                    # capitalise
+                    df[y] = df[y].str.capitalize()
+            else:
+                    logger.error('no string')
             try:
                 # check if string
                 if text and isinstance(df.iloc[0][text], str):
@@ -562,6 +439,7 @@ class Analysis:
                     df[text] = df[text].str.capitalize()
             except ValueError as e:
                 logger.debug('Tried to prettify {} with exception {}', text, e)
+        
         # create new dataframe with the necessary data
         color = []
         val_y = []
@@ -574,7 +452,9 @@ class Analysis:
         data = {'val_y': val_y,
                 'color': color,
                 'val_x': val_x}
+
         df = pd.DataFrame(data)
+        
         # scatter plot with histograms
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', category=RuntimeWarning)
@@ -603,22 +483,67 @@ class Analysis:
                                       x=0.78
                                       ))
         results = px.get_trendline_results(fig)
-        for i in range(len(x)):
-            print(results.px_fit_results.iloc[i].summary())
+      #  for i in range(len(x)):
+       #     print(results.px_fit_results.iloc[i].summary())
         # change marker size
-        if marker_size:
-            fig.update_traces(marker=dict(size=marker_size))
+       # if marker_size:
+        #    fig.update_traces(marker=dict(size=marker_size))
         # save file
         if save_file:
             self.save_plotly(fig,
                              'scatter_' + ','.join(x) + '-' + y,
                              self.folder)
+
         # open it in localhost instead
         else:
             fig.show()
+    def scat(self, df, x, y, t, width, height, ID_v, ID_p, pretty_text=False, marginal_x='violin',
+                marginal_y='violin', xaxis_title=None, xaxis_range=True, yaxis_title=None, yaxis_range=True,
+                save_file=True): 
+        logger.info('Creating scatter_map for x={} and t={}.',
+                   x, y)
+       
+        
+        # extrating x and y values for given ID participant
+        x=df.iloc[ID_p][x]
+        y=df.iloc[ID_p][y]
+        t=df.iloc[ID_p][t]
+        width=df.iloc[ID_p][width]
+        height=df.iloc[ID_p][height]  
 
-    def heatmap(self, df, x, y, pretty_text=False, marginal_x='violin',
-                marginal_y='violin', xaxis_title=None, yaxis_title=None,
+        ID_p=str(ID_p)
+       
+        # Plot animation scatter
+        fig = px.scatter(df,
+                                 x=x,
+                                 y=y,
+                                 width=width,
+                                 height=height,
+                                 animation_frame=t,
+                                 marginal_x='violin',
+                                 marginal_y='violin',
+                                 title='heatmap'+' '+ ID_v +' '+'participant'+' '+ID_p)
+
+        # update layout
+        fig.update_layout(template=self.template,
+                          xaxis_title=xaxis_title,
+                          yaxis_title=yaxis_title,
+                          xaxis_range=[0,2*width],
+                          yaxis_range=[0,2*height])
+
+
+        # save file
+        if save_file:
+            self.save_plotly(fig,
+                             'scatter_map_' + ID_v+'_participant_'+ ID_p,
+                             self.folder)
+        
+        # open it in localhost instead
+        else:
+            fig.show()             
+
+    def heatmap(self, df, x, y, t, width, height, ID_v, ID_p, pretty_text=False, marginal_x='violin',
+                marginal_y='violin', xaxis_title=None, xaxis_range=True, yaxis_title=None, yaxis_range=True,
                 save_file=True):
         """
         Output heatmap plot of variables x and y.
@@ -637,38 +562,438 @@ class Analysis:
             yaxis_title (str, optional): title for y axis.
             save_file (bool, optional): flag for saving an html file with plot.
         """
-        logger.info('Creating heatmap for x={} and y={}.',
-                    x, y)
+        logger.info('Creating heatmap for x={} and t={}.',
+                   x, y)
+        #val_x=[]
+        #val_y=[]
+        
+
+        x=df.iloc[ID_p][x]
+        y=df.iloc[ID_p][y]
+        t=df.iloc[ID_p][t]
+        width=df.iloc[ID_p][width]
+        height=df.iloc[ID_p][height]
+        
+
+        
+        
+
+       
+        #df[x].dropna(inplace=True)
+        #df[y].dropna(inplace=True)
+
+
+      
+
         # prettify ticks
-        if pretty_text:
-            if isinstance(df.iloc[0][x], str):  # check if string
-                # replace underscores with spaces
-                df[x] = df[x].str.replace('_', ' ')
-                # capitalise
-                df[x] = df[x].str.capitalize()
-            if isinstance(df.iloc[0][y], str):  # check if string
-                # replace underscores with spaces
-                df[y] = df[y].str.replace('_', ' ')
-                # capitalise
-                df[y] = df[y].str.capitalize()
-        # density map with histograms
-        fig = px.density_heatmap(df,
-                                 x=x,
-                                 y=y,
-                                 marginal_x='violin',
-                                 marginal_y='violin')
+       # if pretty_text:
+        #    if isinstance(x, str):  # check if string
+         #       # replace underscores with spaces
+         #       df[x] = df[x].str.replace('_', ' ')
+                
+          #      # capitalise
+           #     df[x] = df[x].str.capitalize()
+           # 
+           # else:
+           #     logger.error('x not a string')    
+                
+               
+            #if isinstance(y, str):  # check if string
+             #   # replace underscores with spaces
+              #  df[y] = df[y].str.replace('_', ' ')
+               
+               # # capitalise
+                #df[y] = df[y].str.capitalize()
+           # else:
+              #  logger.error('y not a string')
+               
+
+          #  if  isinstance(df.iloc[0][t], str):  # check if string
+           #     # replace underscores with spaces
+            #    df[t] = df[t].str.replace('_', ' ')
+             #   # capitalise
+              #  df[t] = df[t].str.capitalize()
+
+        ID_p=str(ID_p)
+
+        heatmaps=[go.Histogram2d(x=x[i:], y=y[i:]) for i in range(len(x))]
+        
+        # build layers of animation heatmap and scatter
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=x, y=y)) 
+        fig.add_trace(go.Histogram2dContour(x=x,y=y))
+    
+       
+        frames = [go.Frame(data=[    go.Histogram2dContour(x=x[:k+1],y=y[:k+1], nbinsx=20, nbinsy=20, visible=True),
+                                     go.Scatter(x=x[:k+1], y=y[:k+1], visible=True, opacity=0.9)
+                                    
+                                     
+                                     ], 
+                                     traces=[0,1]) for k in range(len(x))]
+        fig.frames = frames
+        fig.update_layout(template=self.template, 
+                          height=height, 
+                          width=width,
+                          
+                          title='heatmap_scatter_animation'+' '+ ID_v +' '+'participant'+' '+ID_p,
+                          xaxis_range=[0,2*width],
+                          yaxis_range=[0,2*height],
+
+                          updatemenus=[dict(type="buttons", 
+                          buttons=[dict(label="Play", method="animate", args=[None, dict(fromcurrent=True, transition= {'duration': 10}, frame=dict(redraw=True, duration=100))]), \
+                                                                         dict(label="Pause", method="animate", args=[[None], \
+                                                                         dict(fromcurrent=True, mode='immediate', transition={'duration': 10}, frame=dict(redraw=True, duration=100))])])])
+        
+        '''
+        data = [go.Scatter(
+            x=[],
+            y=[],
+            mode='markers',
+            #marker=dict(color=scatterDataX)
+        )]
+   
+
+        dataX = x
+        dataY = y
+       
+
+        frames = [dict(data= [dict(type='scatter',
+                           x=dataX[:k+1],
+                           y=dataY[:k+1])],
+               traces= [1],
+               name='frame{}'.format(k)       
+              )for k  in  range(1, len(x))]           
+
+        layout = go.Layout(
+            autosize=True,
+            hovermode='closest'
+        )
+
+        sliders = [dict(steps= [dict(method= 'animate',
+                           args= [[ 'frame{}'.format(k) ],
+                                  dict(mode= 'immediate',
+                                  frame= dict( duration=100, redraw= False ),
+                                           transition=dict( duration= 0)
+                                          )
+                                    ],
+                            label='{:d}'.format(k)
+                             ) for k in range(len(x))], 
+                transition= dict(duration= 0 ),
+                x=0,#slider starting position  
+                y=0, 
+                currentvalue=dict(font=dict(size=12), 
+                                  prefix='Point: ', 
+                                  visible=True, 
+                                  xanchor= 'center'),  
+                len=1.0)
+           ]
+
+        layout.update(updatemenus=[dict(type='buttons', showactive=False,
+                                y=0,
+                                x=1.05,
+                                buttons=[dict(label='Play',
+                                method='animate',
+                                args=[None, 
+                                    dict(frame=dict(duration=100,
+                                                redraw=False),
+                                        transition=dict(duration=0),
+                                        fromcurrent=True,
+                                        mode='immediate'
+                                    ) 
+                                ]
+                            )
+                        ]
+                    )
+                ],
+            sliders=sliders)
+
+        fig = go.Figure(data=data, layout=layout, frames=frames)
+        fig.add_trace(go.Histogram2d(x=x,y=y, zauto=False, visible=True))
+        fig.update_yaxes(range=[0, 2*height])
+        fig.update_xaxes(range=[0, 2*width])
+        '''
+
+
+        
+             
+        
+       # fig = px.scatter(df,
+        #                         x=x,
+         #                        y=y,
+          #                       #animation_frame=x,
+           #                     width=width,
+            #                     height=height,
+             #                    animation_frame=t,
+
+
+                                 #nbinsx=100, 
+                                 
+                                 #nbinsy=100,
+                                 
+                #                 marginal_x='violin',
+                 #                marginal_y='violin',
+
+                     #            title='heatmap'+' '+ ID_v +' '+'participant'+' '+ID_p)
+
         # update layout
-        fig.update_layout(template=self.template,
-                          xaxis_title=xaxis_title,
-                          yaxis_title=yaxis_title)
+        #fig.update_layout(template=self.template,
+         #                 xaxis_title=xaxis_title,
+          #                yaxis_title=yaxis_title,
+           #               xaxis_range=[0,2*width],
+            #              yaxis_range=[0,2*height])
+
+        #df.style
+        
+ 
+
         # save file
         if save_file:
             self.save_plotly(fig,
-                             'heatmap_' + x + '-' + y,
+                             'heatmap_animation' + ID_v+'_participant_'+ ID_p,
                              self.folder)
+        
         # open it in localhost instead
         else:
+            #plotly.offline.plot(fig, auto_play = False)
+            show.fig(fig, auto_play=False)
+
+      
+    def create_heatmap(self,
+                       df,
+                       width,
+                       height,
+                       x,
+                       y,
+                       ID,
+                       type_heatmap='contourf',
+                       add_corners=True,
+                       save_file=False):
+        """
+        Create heatmap for image based on the list of lists of points.
+        add_corners: add points to the corners to have the heatmap ovelay the
+                     whole image
+        type_heatmap: contourf, pcolormesh, kdeplot
+        """
+        # todo: remove datapoints in corners in heatmaps
+        # check if data is present
+        logger.info('Creating heatmap for x={} and t={}.', x,y)
+
+        # get dimensions of base image
+        width=df.iloc[ID][width]
+        height=df.iloc[ID][height]
+        # add datapoints to corners for maximised heatmaps
+
+        x=df.iloc[ID][x]
+        y=df.iloc[ID][y]
+
+        x=np.array(x)
+        y=np.array(y)
+
+
+        
+
+        
+        
+        # compute data for the heatmap
+        try:
+            k = gaussian_kde(np.vstack([x, y]))
+            xi, yi = np.mgrid[x.min():x.max():x.size**0.5*1j,
+                              y.min():y.max():y.size**0.5*1j]
+            zi = k(np.vstack([xi.flatten(), yi.flatten()]))
+        except (np.linalg.LinAlgError, np.linalg.LinAlgError, ValueError):
+            logger.error('Not enough data. gaussian was not created for {}.',
+                         x)
+            return
+        # create figure object with given dpi and dimensions
+        dpi = 150
+        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
+        # alpha=0.5 makes the plot semitransparent
+        suffix_file = ''  # suffix to add to saved image
+        if type_heatmap == 'contourf':
+            try:
+                g = plt.contourf(xi, yi, zi.reshape(xi.shape),
+                                 alpha=0.5)
+                plt.margins(0, 0)
+                plt.gca().xaxis.set_major_locator(plt.NullLocator())
+                plt.gca().yaxis.set_major_locator(plt.NullLocator())
+            except TypeError:
+                logger.error('Not enough data. Heatmap was not created for '
+                             + '{}.',
+                             x)
+                plt.close(fig)  # clear figure from memory
+                return
+            suffix_file = '_contourf.jpg'
+        elif type_heatmap == 'pcolormesh':
+            try:
+                g = plt.pcolormesh(xi, yi, zi.reshape(xi.shape),
+                                   shading='auto',
+                                   alpha=0.5)
+                plt.margins(0, 0)
+                plt.gca().xaxis.set_major_locator(plt.NullLocator())
+                plt.gca().yaxis.set_major_locator(plt.NullLocator())
+            except TypeError:
+                logger.error('Not enough data. Heatmap was not created for '
+                             + '{}.',
+                             x)
+                plt.close(fig)  # clear figure from memory
+                return
+            suffix_file = '_pcolormesh.jpg'
+        elif type_heatmap == 'kdeplot':
+            try:
+                g = sns.kdeplot(x=x,
+                                y=y,
+                                alpha=0.5,
+                                shade=True,
+                                title='heatmap participant '+ID,
+                                cmap="RdBu_r")
+            except TypeError:
+                logger.error('Not enough data. Heatmap was not created for '
+                             + '{}.',
+                             x)
+                fig.clf()  # clear figure from memory
+                return
+            suffix_file = '_kdeplot.jpg'
+        else:
+            logger.error('Wrong type_heatmap {} given.', type_heatmap)
+            plt.close(fig)  # clear from memory
+            return
+        # read original image
+       # im = plt.imread(image)
+        #plt.imshow(im)
+        # remove axis
+       # plt.gca().set_axis_off()
+        # remove white spaces around figure
+        #plt.subplots_adjust(top=1,
+         #                   bottom=0,
+          #                  right=1,
+           #                 left=0,
+            #                hspace=0,
+             #               wspace=0)
+        # save image
+        if save_file:
+           # self.save_fig(image,fig, '/figures/', suffix_file)
+        # return graph objects
+       #else:
             fig.show()
+            return fig,g
+
+    def create_animation(self,
+                         df,
+                         x,
+                         y,
+                         t,
+                         ID,
+                         width,
+                         height,                
+                         save_anim=False,
+                         save_frames=False):
+        """
+        Create animation for image based on the list of lists of points of
+        varying duration.
+        """
+        t=df.iloc[ID][t]
+        
+        self.save_frames = save_frames
+        self.fig= self.create_heatmap(df,
+                                        x=x,
+                                        y=y,
+                                        ID=ID,
+                                        width=width,
+                                        height=height,
+                                        type_heatmap='kdeplot',  # noqa: E501
+                                        add_corners=True,  # noqa: E501
+                                        save_file=False)
+        anim = animation.FuncAnimation(self.fig,
+                                       self.animate,
+                                       frames=len(t),
+                                       interval=1000,
+                                       repeat=False)
+        # save image
+        if save_anim:
+            #self.save_anim(image, anim, self.folder, '_animation.mp4') 
+            anim.show()
+
+    def create_animation_all_stimuli(self, num_stimuli):
+        """
+        Create long video with all animations.
+        """
+        logger.info('Creating long video with all animations for {} stimuli.',
+                    num_stimuli)
+        # create path
+        path = tr.settings.output_dir + self.folder
+        if not os.path.exists(path):
+            os.makedirs(path)
+        # file with list of animations
+        list_anim = path + 'animations.txt'
+        file = open(list_anim, 'w+')
+        # loop of stimuli
+        for stim_id in range(1, num_stimuli + 1):
+            # add animation to the list
+            anim_path = path + 'image_' + str(stim_id) + '_animation.mp4'
+            # check if need to add a linebreak
+            if stim_id == num_stimuli:
+                file.write('file ' + anim_path)  # no need for linebreak
+            else:
+                file.write('file ' + anim_path + '\n')
+        # close file with animations
+        file.close()
+        # stitch videos together
+        os.chdir(path)
+        subprocess.call(['ffmpeg',
+                         '-y',
+                         '-loglevel', 'quiet',
+                         '-f', 'concat',
+                         '-safe', '0',
+                         '-i', list_anim,
+                         '-c', 'copy',
+                         'all_animations.mp4'])
+        # delete file with animations
+        os.remove(list_anim)
+
+    def animate(self, i):
+        """
+        Helper function to create animation.
+        """
+        self.g.clear()
+        self.g = sns.kdeplot(x=[item[0] for item in self.df[i]],
+                             y=[item[1] for item in self.df[i]],
+                             alpha=0.5,
+                             shade=True,
+                             cmap='RdBu_r')
+        # read original image
+        #im = plt.imread(self.image)
+        #plt.imshow(im)
+        # remove axis
+        #plt.gca().set_axis_off()
+        # remove white spaces around figure
+       # plt.subplots_adjust(top=1,
+        #                    bottom=0,
+         #                   right=1,
+          #                  left=0,
+           #                 hspace=0,
+            #                wspace=0)
+        # textbox with duration
+        durations = df.iloc[ID][t]
+        props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        plt.text(0.75,
+                 0.98,
+                 'id=' + str(self.stim_id) + ' duration=' + str(durations[i]),
+                 transform=plt.gca().transAxes,
+                 fontsize=12,
+                 verticalalignment='top',
+                 bbox=props)
+        # save each frame as file
+        if self.save_frames:
+            # build suffix for filename
+            suffix = '_kdeplot_' + str(durations[i]) + '.jpg'
+            # copy figure in buffer to prevent distruction of object
+            buf = io.BytesIO()
+            pickle.dump(self.fig, buf)
+            buf.seek(0)
+            temp_fig = pickle.load(buf)
+            # save figure
+            self.save_fig(self.image, temp_fig, self.folder, suffix)
+        return self.g 
 
     def hist(self, df, x, nbins=None, color=None, pretty_text=False,
              marginal='rug', xaxis_title=None, yaxis_title=None,
