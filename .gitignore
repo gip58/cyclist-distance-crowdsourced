@@ -207,3 +207,8 @@ secret
 # Pickle files
 trust/analysis/*.p
 trust/*.p
+
+# lightning
+**/LightingData.asset
+**/Lightmap-*_comp_light.exr
+**/ReflectionProbe-*.exr
