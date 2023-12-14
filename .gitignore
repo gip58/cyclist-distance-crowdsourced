@@ -201,7 +201,7 @@ secret
 
 # Ignore all files starting with an underscore.
 **/_*
-!trust-unity/Assets/_Scenes
+!trust-unity/**/_*
 !__init__.py
 
 # Pickle files
