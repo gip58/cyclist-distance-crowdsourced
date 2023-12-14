@@ -616,7 +616,7 @@ class Analysis:
 
         ID_p=str(ID_p)
 
-        heatmaps=[go.Histogram2d(x=x[i:], y=y[i:]) for i in range(len(x))]
+        heatmaps=[go.Histogram2d(x=x[i:], y=y[i:]) for i in range(len(int(x)))]
         
         # build layers of animation heatmap and scatter
         fig = go.Figure()
