@@ -1,6 +1,7 @@
 # by Pavlo Bazilinskyy <pavlo.bazilinskyy@gmail.com>
 import matplotlib.pyplot as plt
 import matplotlib._pylab_helpers
+from tqdm import tqdm
 
 import trust as tr
 
@@ -8,24 +9,26 @@ tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
 
 # const
-SAVE_P = True  # save pickle files with data
-LOAD_P = False  # load pickle files with data
-SAVE_CSV = True  # load csv files with data
-FILTER_DATA = True  # filter Appen and heroku data
-CLEAN_DATA = True  # clean Appen data
-REJECT_CHEATERS = True  # reject cheaters on Appen
-UPDATE_MAPPING = True  # update mapping with keypress data
-SHOW_OUTPUT = True  # should figures be plotted
+# SAVE_P = True  # save pickle files with data
+# LOAD_P = False  # load pickle files with data
+# SAVE_CSV = True  # load csv files with data
+# FILTER_DATA = True  # filter Appen and heroku data
+# CLEAN_DATA = True  # clean Appen data
+# REJECT_CHEATERS = True  # reject cheaters on Appen
+# UPDATE_MAPPING = True  # update mapping with keypress data
+# SHOW_OUTPUT = True  # should figures be plotted
+
 
 # for debugging, skip processing
-# SAVE_P = False  # save pickle files with data
-# LOAD_P = True  # load pickle files with data
-# SAVE_CSV = True  # load csv files with data
-# FILTER_DATA = False  # filter Appen and heroku data
-# CLEAN_DATA = False  # clean Appen data
-# REJECT_CHEATERS = False  # reject cheaters on Appen
-# UPDATE_MAPPING = False  # update mapping with keypress data
-# SHOW_OUTPUT = True  # should figures be plotted
+SAVE_P = False  # save pickle files with data
+LOAD_P = True  # load pickle files with data
+SAVE_CSV = True  # load csv files with data
+FILTER_DATA = False  # filter Appen and heroku data
+CLEAN_DATA = False  # clean Appen data
+REJECT_CHEATERS = False  # reject cheaters on Appen
+UPDATE_MAPPING = False  # update mapping with keypress data
+SHOW_OUTPUT = True  # should figures be plotted
+
 
 file_mapping = 'mapping.p'  # file to save updated mapping
 
@@ -73,6 +76,7 @@ if __name__ == '__main__':
     # generate country-specific data
     countries_data = appen.process_countries()
     # update mapping with keypress data
+    
     if UPDATE_MAPPING:
         # read in mapping of stimuli
         mapping = heroku.read_mapping()
@@ -104,23 +108,23 @@ if __name__ == '__main__':
         # all keypresses with confidence interval
         #analysis.plot_kp(mapping, conf_interval=0.95)
         # keypresses of an individual stimulus
-        analysis.plot_kp_video(mapping, 'video_0', conf_interval=0.95)
+        # analysis.plot_kp_video(mapping, 'video_0', conf_interval=0.95)
         # keypresses of an individual stimulus for an individual pp
-        analysis.plot_kp_video(mapping,
-                               pp='R51701270114366JF82237X',
-                               stimulus='video_0',
-                               conf_interval=0.95)
+        # analysis.plot_kp_video(mapping,
+        #                        pp='R51701270114366JF82237X',
+        #                        stimulus='video_0',
+        #                        conf_interval=0.95)
         # keypresses of all videos individually
         #analysis.plot_kp_videos(mapping)
         # 1 var, all values
         #analysis.plot_kp_variable(mapping, 'ego_car')
         # 1 var, certain values
-        analysis.plot_kp_variable(mapping,
-                                  'target_car',
-                                  [0, 1])
-        analysis.plot_kp_variable(mapping,
-                                  'group',
-                                  [0, 1, 2, 3])
+        # analysis.plot_kp_variable(mapping,
+        #                           'target_car',
+        #                           [0, 1])
+        # analysis.plot_kp_variable(mapping,
+        #                           'group',
+        #                           [0, 1, 2, 3])
         # TODO: make plot_video_data work
         # plot of multiple combined AND variables
         # analysis.plot_video_data(mapping, 'video_5',
@@ -191,9 +195,13 @@ if __name__ == '__main__':
                       save_file=True)
         # browser window dimensions
          '''
-        
-        heroku_data['video_1-x-0'] = heroku_data['video_1-x-0']
-        heroku_data['video_1-y-0'] = heroku_data['video_1-y-0']
+        for stim_id in tqdm(range(1, num_stimuli + 1)): 
+            stim_path = tr.common.get_configs('path_stimuli') + \
+                    '/image_' + \
+                    str(stim_id) + \
+                    '.jpg'
+        # heroku_data['video_1-x-0'] = heroku_data['video_1-x-0']
+        # heroku_data['video_1-y-0'] = heroku_data['video_1-y-0']
         #analysis.scatter_mult(heroku_data,
          #                x=['video_0-x-0','video_1-x-0'],
           #               y='video_0-y-0',
@@ -210,34 +218,48 @@ if __name__ == '__main__':
                #          ID_v='video_0',
                 #         pretty_text=True,
                  #       save_file=True)
-        analysis.heatmap(heroku_data, 
-                         x='video_0-x-0',
-                         y='video_0-y-0',
-                         t='video_0-t-0',
-                         width='window_width',
-                         height='window_height',
-                         ID_p=6,    # 0,2,6,10,12,13,14,16,18,20,22
-                         ID_v='video_0',
-                         pretty_text=True,
-                        save_file=True)
-        #analysis.create_heatmap(heroku_data,
-         #                       x='video_0-x-0',
-          #                      y='video_0-y-0',
-           #                     ID=6,
-            #                    width='window_width',
-             #                   height='window_height',
-              #                  type_heatmap='contourf',
-               #                 add_corners=True,
-                #                save_file=True)
-       # analysis.create_animation(heroku_data,
-        #                           x='video_0-x-0',
-         #                          y='video_0-y-0',
-          #                         t='video_0-t-0',
-           #                        ID=6,
-            #                       width='window_width',
-             #                      height='window_height'
-              #                     
-               #                    )
+        # analysis.heatmap(heroku_data, 
+        #                  x='video_0-x-0',
+        #                  y='video_0-y-0',
+        #                  t='video_0-t-0',
+        #                  width='window_width',
+        #                  height='window_height',
+        #                  ID_p=6,    # 0,2,6,10,12,13,14,16,18,20,22
+        #                  ID_v='video_0',
+        #                  pretty_text=True,
+        #                 save_file=True)
+        analysis.create_gazes(heroku_data,
+                              stim_path,
+                              x='video_0-x-0',
+                              y='video_0-y-0',
+                              ID=6,
+                              width='window_width',
+                              height='window_height',
+                              save_file=True)
+        # create histogram for stimulus and durations
+
+        
+        analysis.create_heatmap(heroku_data,
+                               stim_path,
+                               x='video_0-x-0',
+                               y='video_0-y-0',
+                               ID=6,
+                               width='window_width',
+                               height='window_height',
+                               type_heatmap='contourf',
+                               add_corners=True,
+                               save_file=True)
+        analysis.create_animation(heroku_data,
+                                   stim_path,
+                                   stim_id,
+                                   x='video_0-x-0',
+                                   y='video_0-y-0',
+                                   t='video_0-t-0',
+                                   ID=6,
+                                   width='window_width',
+                                   height='window_height',
+                                   save_anim=True,
+                                   save_frames=True)
 
         
         # time of participation
@@ -263,24 +285,24 @@ if __name__ == '__main__':
            #               'Agree': 4,
             #              'Strongly agree': 5}
         # questions before and after
-        df = all_data
-        print(df.head)
-        df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)  # noqa: E501
-        df['driving_in_ad'] = df['driving_in_ad'].map(likert_mapping)
-        analysis.scatter(df,
-                         x='driving_alongside_ad',  # noqa: E501
-                         y='end-slider-0-0',  # noqa: E501
-                         xaxis_title='Before',
-                         yaxis_title='After',
-                         pretty_text=True,
-                         save_file=True)
-        analysis.scatter(df,
-                         x='driving_in_ad',  # noqa: E501
-                         y='end-slider-1-0',  # noqa: E501
-                         xaxis_title='Before',
-                         yaxis_title='After',
-                         pretty_text=True,
-                         save_file=True)
+        # df = all_data
+        # print(df.head)
+        # df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)  # noqa: E501
+        # df['driving_in_ad'] = df['driving_in_ad'].map(likert_mapping)
+        # analysis.scatter(df,
+        #                  x='driving_alongside_ad',  # noqa: E501
+        #                  y='end-slider-0-0',  # noqa: E501
+        #                  xaxis_title='Before',
+        #                  yaxis_title='After',
+        #                  pretty_text=True,
+        #                  save_file=True)
+        # analysis.scatter(df,
+        #                  x='driving_in_ad',  # noqa: E501
+        #                  y='end-slider-1-0',  # noqa: E501
+        #                  xaxis_title='Before',
+        #                  yaxis_title='After',
+        #                  pretty_text=True,
+        #                  save_file=True)
         # histogram for driving frequency
         #analysis.hist(appen_data,
          #             x=['driving_freq'],

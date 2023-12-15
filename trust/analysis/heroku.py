@@ -665,6 +665,9 @@ class Heroku:
                     old_size - df.shape[0])
         return df
 
+    
+           
+
     def show_info(self):
         """
         Output info for data in object.
