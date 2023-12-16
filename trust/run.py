@@ -233,8 +233,6 @@ if __name__ == '__main__':
                               x='video_0-x-0',
                               y='video_0-y-0',
                               ID=6,
-                              width='window_width',
-                              height='window_height',
                               save_file=True)
         # create histogram for stimulus and durations
         analysis.plot_kp_animate(mapping, 'video_0', conf_interval=0.95)
@@ -244,8 +242,6 @@ if __name__ == '__main__':
                                x='video_0-x-0',
                                y='video_0-y-0',
                                ID=6,
-                               width='window_width',
-                               height='window_height',
                                type_heatmap='contourf',
                                add_corners=True,
                                save_file=True)
@@ -256,8 +252,6 @@ if __name__ == '__main__':
                                    y='video_0-y-0',
                                    t='video_0-t-0',
                                    ID=6,
-                                   width='window_width',
-                                   height='window_height',
                                    save_anim=True,
                                    save_frames=True)
 

@@ -66,8 +66,6 @@ class Analysis:
                      x,
                      y,
                      ID,
-                     width,
-                     height,
                      suffix='_gazes.jpg',
                      save_file=False):
         """
@@ -80,15 +78,21 @@ class Analysis:
             #return
         # read original image
         im = Image.open(image)
-
+        # get dimensions of base image
+        width = tr.common.get_configs('stimulus_width')
+        height = tr.common.get_configs('stimulus_height')
         
-        # get dimensions
-        width=df.iloc[ID][width]
-        height=df.iloc[ID][height]
-
         x=df.iloc[ID][x]
-        y=df.iloc[ID][y]
+        # Normalize screen size
+        xmin, xmax = min(x), max(x)
+        for i, val in enumerate(x):
+            x[i] = ((val-xmin) / (xmax-xmin))*width
 
+        y=df.iloc[ID][y]
+        ymin, ymax = min(y), max(y)
+        for i, val in enumerate(y):
+            y[i] = ((val-ymin) / (ymax-ymin))*height
+        
         x=np.array(x)
         y=np.array(y)
 
@@ -125,8 +129,6 @@ class Analysis:
     def create_heatmap(self,
                        df,
                        image,
-                       width,
-                       height,
                        x,
                        y,
                        ID,
@@ -145,16 +147,27 @@ class Analysis:
          
         
         # get dimensions of base image
-        width=df.iloc[ID][width]
-        height=df.iloc[ID][height]
+        width = tr.common.get_configs('stimulus_width')
+        height = tr.common.get_configs('stimulus_height')
+        
+
+       
+        # Normalize screen size
+        
+
+        
         # add datapoints to corners for maximised heatmaps
         if x != list: 
             x=df.iloc[ID][x]
-        
+        xmin, xmax = min(x), max(x)
+        for i, val in enumerate(x):
+            x[i] = ((val-xmin) / (xmax-xmin))*width
 
         if y != list:     
             y=df.iloc[ID][y]
-        
+        ymin, ymax = min(y), max(y)
+        for i, val in enumerate(y):
+            y[i] = ((val-ymin) / (ymax-ymin))*height
 
         x=np.array(x)
         y=np.array(y)
@@ -175,9 +188,9 @@ class Analysis:
             return
         # create figure object with given dpi and dimensions
         dpi = 150
-        fig = plt.figure()#figsize=(width/dpi, height/dpi), dpi=dpi)
-        fig.set_figwidth(width/150) 
-        fig.set_figheight(height/150) 
+        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
+        # fig.set_figwidth(width/150) 
+        # fig.set_figheight(height/150) 
         # alpha=0.5 makes the plot semitransparent
         suffix_file = ''  # suffix to add to saved image
         if type_heatmap == 'contourf':
@@ -254,28 +267,37 @@ class Analysis:
                          x,
                          y,
                          ID,
-                         t,
-                         width,
-                         height,                
+                         t,                
                          save_anim=False,
                          save_frames=False):
         """
         Create animation for image based on the list of lists of points of
         varying duration.
         """
-        self.df=df
-        self.x=df.iloc[ID][x]
-        self.y=df.iloc[ID][y]
-        self.t=df.iloc[ID][t]
-        self.width=df.iloc[ID][width]
-        self.height=df.iloc[ID][height]
+        
+        self.width = tr.common.get_configs('stimulus_width')
+        self.height = tr.common.get_configs('stimulus_height')
         self.ID=ID
+
+        self.x=df.iloc[self.ID][x]
+        # Normalize screen size
+        xmin, xmax = min(self.x), max(self.x)
+        for i, val in enumerate(self.x):
+            self.x[i] = ((val-xmin) / (xmax-xmin))*self.width
+        self.y=df.iloc[self.ID][y]
+        ymin, ymax = min(self.y), max(self.y)
+        for i, val in enumerate(self.y):
+            self.y[i] = ((val-ymin) / (ymax-ymin))*self.height
+
+        self.t=df.iloc[ID][t]
+      
+        
         self.image = image
         self.stim_id = stim_id
         self.save_frames = save_frames  
         dpi=150      
             
-        self.fig, self.g = plt.subplots(nrows=1, ncols=2, figsize=(self.width/dpi,self.height/dpi), dpi=dpi)
+        self.fig, self.g = plt.subplots(figsize=(self.width/dpi,self.height/dpi), dpi=dpi)
 
         # self.g = self.create_heatmap(df,
         #                                           image,
@@ -289,7 +311,7 @@ class Analysis:
         #                                           save_file=False)         
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
-                                       frames=10,
+                                       frames=900,
                                        interval=500,
                                        repeat=False)
         # save image
@@ -301,14 +323,8 @@ class Analysis:
         """
         Helper function to create animation.
         """
-        self.g[0].clear()
-        self.g[0] = sns.kdeplot(x=self.x[:i],
-                             y=self.y[:i],
-                             alpha=0.5,
-                             fill=True,
-                             cmap='RdBu_r')
-        self.g[1].clear()
-        self.g[1] = sns.kdeplot(x=self.x[:i],
+        self.g.clear()
+        self.g = sns.kdeplot(x=self.x[:i],
                              y=self.y[:i],
                              alpha=0.5,
                              fill=True,
@@ -316,34 +332,29 @@ class Analysis:
         
         
 
-        # # read original image
-        # im = plt.imread(self.image)
-        # plt.imshow(im)
-        # # remove axis
-        # plt.gca().set_axis_off()
-        # # remove white spaces around figure
-        # plt.subplots_adjust(top=1,
-        #                    bottom=0,
-        #                    right=1,
-        #                    left=0,
-        #                    hspace=0,
-        #                    wspace=0)
+        # read original image
+        im = plt.imread(self.image)
+        plt.imshow(im)
+        # remove axis
+        plt.gca().set_axis_off()
+        # remove white spaces around figure
+        plt.subplots_adjust(top=1,
+                           bottom=0,
+                           right=1,
+                           left=0,
+                           hspace=0,
+                           wspace=0)
         # textbox with duration
         durations = self.t
-        # props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-        # plt.text(0.75,
-        #          0.98,
-        #          'id=' + str(self.stim_id) + ' duration=' + str(durations[i]),
-        #          transform=plt.gca().transAxes,
-        #          fontsize=12,
-        #          verticalalignment='top',
-        #          bbox=props)
-        # self.e.clear()
-        # self.e = sns.kdeplot(x=self.y[:i],
-        #                      y=self.x[:i],
-        #                      alpha=0.5,
-        #                      fill=True,
-        #                      cmap='RdBu_r')
+        props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        plt.text(0.75,
+                 0.98,
+                 'id=' + str(self.stim_id) + ' duration=' + str(durations[i]),
+                 transform=plt.gca().transAxes,
+                 fontsize=12,
+                 verticalalignment='top',
+                 bbox=props)
+       
         # save each frame as file
         if self.save_frames:
             # build suffix for filename
@@ -813,7 +824,7 @@ class Analysis:
         # open it in localhost instead
         else:
             fig.show()
-    def scat(self, df, x, y, t, width, height, ID_v, ID_p, pretty_text=False, marginal_x='violin',
+    def scat(self, df, x, y, t, ID_v, ID_p, pretty_text=False, marginal_x='violin',
                 marginal_y='violin', xaxis_title=None, xaxis_range=True, yaxis_title=None, yaxis_range=True,
                 save_file=True): 
         logger.info('Creating scatter_map for x={} and t={}.',
@@ -821,11 +832,23 @@ class Analysis:
        
         
         # extrating x and y values for given ID participant
+        width = tr.common.get_configs('stimulus_width')
+        height = tr.common.get_configs('stimulus_height')
+        
+
         x=df.iloc[ID_p][x]
         y=df.iloc[ID_p][y]
+        # Normalize screen size
+        xmin, xmax = min(x), max(x)
+        for i, val in enumerate(y):
+            x[i] = ((val-xmin) / (xmax-xmin))*width
+
+        ymin, ymax = min(y), max(y)
+        for i, val in enumerate(y):
+            y[i] = ((val-ymin) / (ymax-ymin))*height
+
         t=df.iloc[ID_p][t]
-        width=df.iloc[ID_p][width]
-        height=df.iloc[ID_p][height]  
+         
 
         ID_p=str(ID_p)
        
@@ -858,7 +881,7 @@ class Analysis:
         else:
             fig.show()             
 
-    def heatmap(self, df, x, y, t, width, height, ID_v, ID_p, pretty_text=False, marginal_x='violin',
+    def heatmap(self, df, x, y, t, ID_v, ID_p, pretty_text=False, marginal_x='violin',
                 marginal_y='violin', xaxis_title=None, xaxis_range=True, yaxis_title=None, yaxis_range=True,
                 save_file=True):
         """
@@ -882,13 +905,27 @@ class Analysis:
                    x, y)
         #val_x=[]
         #val_y=[]
+        width = tr.common.get_configs('stimulus_width')
+        height = tr.common.get_configs('stimulus_height')
         
 
         x=df.iloc[ID_p][x]
         y=df.iloc[ID_p][y]
+        # Normalize screen size
+        xmin, xmax = min(x), max(x)
+        for i, val in enumerate(y):
+            x[i] = ((val-xmin) / (xmax-xmin))*width
+
+        ymin, ymax = min(y), max(y)
+        for i, val in enumerate(y):
+            y[i] = ((val-ymin) / (ymax-ymin))*height
+        
+
+
+
+
+
         t=df.iloc[ID_p][t]
-        width=df.iloc[ID_p][width]
-        height=df.iloc[ID_p][height]
         
 
         
