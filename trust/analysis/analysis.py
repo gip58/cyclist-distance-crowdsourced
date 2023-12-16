@@ -23,6 +23,7 @@ from scipy.stats.kde import gaussian_kde
 
 
 
+
 import trust as tr
 
 matplotlib.use('TkAgg')
@@ -155,8 +156,7 @@ class Analysis:
 
         
 
-        
-        
+                
         # compute data for the heatmap
         try:
             k = gaussian_kde(np.vstack([x, y]))
@@ -236,7 +236,7 @@ class Analysis:
         if save_file:
             self.save_fig(image, fig, self.folder, suffix_file)
         # return graph objects
-        return self.fig==fig, self.g==g
+        return fig, g
 
 
     def create_animation(self,
@@ -259,29 +259,30 @@ class Analysis:
         self.x=df.iloc[ID][x]
         self.y=df.iloc[ID][y]
         self.t=df.iloc[ID][t]
-        self.width=width
-        self.height=height
+        self.width=df.iloc[ID][width]
+        self.height=df.iloc[ID][height]
         self.ID=ID
         self.image = image
         self.stim_id = stim_id
-        self.save_frames = save_frames            
-        self.fig, self.g = plt.subplots()
-        self.g = self.create_heatmap(df,
-                                                  image,
-                                                  width,
-                                                  height,
-                                                  x,
-                                                  y,
-                                                  ID,           
-                                                  type_heatmap='kdeplot',
-                                                  add_corners=True,
-                                                  save_file=False)         
+        self.save_frames = save_frames  
+        dpi=150          
+        self.fig, self.g = plt.subplots(figsize=(self.width/dpi,self.height/dpi), dpi=dpi)
+        # self.g = self.create_heatmap(df,
+        #                                           image,
+        #                                           width,
+        #                                           height,
+        #                                           x,
+        #                                           y,
+        #                                           ID,           
+        #                                           type_heatmap='kdeplot',
+        #                                           add_corners=True,
+        #                                           save_file=False)         
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
-                                       frames=len(t),
+                                       frames=len(self.t),
                                        interval=1000,
                                        repeat=False)
-        # save imagek
+        # save image
         if save_anim:
             #plt.show()
             self.save_anim(image, anim, self.folder, '_animation.mp4') 
@@ -291,6 +292,7 @@ class Analysis:
         Helper function to create animation.
         """
         self.g.clear()
+        
         self.g = sns.kdeplot(x=self.x[:i],
                              y=self.y[:i],
                              alpha=0.5,
