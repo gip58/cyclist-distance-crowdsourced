@@ -258,20 +258,15 @@ class Analysis:
         self.df=df
         self.x=df.iloc[ID][x]
         self.y=df.iloc[ID][y]
-
         self.t=df.iloc[ID][t]
         self.width=width
         self.height=height
         self.ID=ID
         self.image = image
         self.stim_id = stim_id
-        self.save_frames = save_frames
-        
-            
-
+        self.save_frames = save_frames            
         self.fig, self.g = plt.subplots()
-
-        self.g.imshow(self.create_heatmap(df,
+        self.g = self.create_heatmap(df,
                                                   image,
                                                   width,
                                                   height,
@@ -280,16 +275,13 @@ class Analysis:
                                                   ID,           
                                                   type_heatmap='kdeplot',
                                                   add_corners=True,
-                                                  save_file=False))
-
-        
-            
+                                                  save_file=False)         
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
                                        frames=len(t),
                                        interval=1000,
                                        repeat=False)
-        # save image
+        # save imagek
         if save_anim:
             #plt.show()
             self.save_anim(image, anim, self.folder, '_animation.mp4') 
