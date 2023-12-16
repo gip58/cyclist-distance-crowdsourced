@@ -20,7 +20,7 @@ import unicodedata
 import re
 import ast
 from scipy.stats.kde import gaussian_kde
-
+from PIL import Image
 
 
 
@@ -79,7 +79,9 @@ class Analysis:
         #                  + 'created for {}.', image)
             #return
         # read original image
-        im = plt.imread(image)
+        im = Image.open(image)
+
+        
         # get dimensions
         width=df.iloc[ID][width]
         height=df.iloc[ID][height]
@@ -93,7 +95,10 @@ class Analysis:
 
         # show heatmap by plt
         dpi = 150
-        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
+        fig = plt.figure()#figsize=(width/dpi, height/dpi), dpi=dpi)
+        fig.set_figwidth(width/150) 
+        fig.set_figheight(height/150) 
+        # im=im.resize(width,height)
         plt.imshow(im)
         #for point in points:
         plt.plot(x,
@@ -102,6 +107,7 @@ class Analysis:
                      marker='x',
                      markersize=1)
         # remove white spaces around figure
+        
         plt.gca().set_axis_off()
         plt.subplots_adjust(top=1,
                             bottom=0,
@@ -169,7 +175,9 @@ class Analysis:
             return
         # create figure object with given dpi and dimensions
         dpi = 150
-        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
+        fig = plt.figure()#figsize=(width/dpi, height/dpi), dpi=dpi)
+        fig.set_figwidth(width/150) 
+        fig.set_figheight(height/150) 
         # alpha=0.5 makes the plot semitransparent
         suffix_file = ''  # suffix to add to saved image
         if type_heatmap == 'contourf':
@@ -265,8 +273,10 @@ class Analysis:
         self.image = image
         self.stim_id = stim_id
         self.save_frames = save_frames  
-        dpi=150          
-        self.fig, self.g = plt.subplots(figsize=(self.width/dpi,self.height/dpi), dpi=dpi)
+        dpi=150      
+            
+        self.fig, self.g = plt.subplots(nrows=1, ncols=2, figsize=(self.width/dpi,self.height/dpi), dpi=dpi)
+
         # self.g = self.create_heatmap(df,
         #                                           image,
         #                                           width,
@@ -279,8 +289,8 @@ class Analysis:
         #                                           save_file=False)         
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
-                                       frames=len(self.t),
-                                       interval=1000,
+                                       frames=10,
+                                       interval=500,
                                        repeat=False)
         # save image
         if save_anim:
@@ -291,35 +301,49 @@ class Analysis:
         """
         Helper function to create animation.
         """
-        self.g.clear()
-        
-        self.g = sns.kdeplot(x=self.x[:i],
+        self.g[0].clear()
+        self.g[0] = sns.kdeplot(x=self.x[:i],
                              y=self.y[:i],
                              alpha=0.5,
                              fill=True,
                              cmap='RdBu_r')
-        # read original image
-        im = plt.imread(self.image)
-        plt.imshow(im)
-        # remove axis
-        plt.gca().set_axis_off()
-        # remove white spaces around figure
-        plt.subplots_adjust(top=1,
-                           bottom=0,
-                           right=1,
-                           left=0,
-                           hspace=0,
-                           wspace=0)
+        self.g[1].clear()
+        self.g[1] = sns.kdeplot(x=self.x[:i],
+                             y=self.y[:i],
+                             alpha=0.5,
+                             fill=True,
+                             cmap='RdBu_r')
+        
+        
+
+        # # read original image
+        # im = plt.imread(self.image)
+        # plt.imshow(im)
+        # # remove axis
+        # plt.gca().set_axis_off()
+        # # remove white spaces around figure
+        # plt.subplots_adjust(top=1,
+        #                    bottom=0,
+        #                    right=1,
+        #                    left=0,
+        #                    hspace=0,
+        #                    wspace=0)
         # textbox with duration
         durations = self.t
-        props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-        plt.text(0.75,
-                 0.98,
-                 'id=' + str(self.stim_id) + ' duration=' + str(durations[i]),
-                 transform=plt.gca().transAxes,
-                 fontsize=12,
-                 verticalalignment='top',
-                 bbox=props)
+        # props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        # plt.text(0.75,
+        #          0.98,
+        #          'id=' + str(self.stim_id) + ' duration=' + str(durations[i]),
+        #          transform=plt.gca().transAxes,
+        #          fontsize=12,
+        #          verticalalignment='top',
+        #          bbox=props)
+        # self.e.clear()
+        # self.e = sns.kdeplot(x=self.y[:i],
+        #                      y=self.x[:i],
+        #                      alpha=0.5,
+        #                      fill=True,
+        #                      cmap='RdBu_r')
         # save each frame as file
         if self.save_frames:
             # build suffix for filename
@@ -1343,6 +1367,73 @@ class Analysis:
         # open it in localhost instead
         else:
             fig.show()
+
+    def plot_kp_animate(self, df, stimulus, pp='all', extention='mp4',
+                      conf_interval=None,
+                      xaxis_title='Time (s)',
+                      yaxis_title='Percentage of trials with ' +
+                                  'response key pressed',
+                      xaxis_range=None, yaxis_range=None, save_file=True):
+        
+        
+        # extract video length
+        video_len = df.loc[stimulus]['video_length']
+        # calculate times
+        times = np.array(range(self.res, video_len + self.res, self.res)) / 1000  # noqa: E501
+        # keypress data
+        kp_data = df.loc[stimulus]['kp']
+        # plot keypresses
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=times, y=kp_data)) 
+        
+    
+       
+        frames = [go.Frame(data=[    
+                                     go.Scatter(x=times[:k+1], y=kp_data[:k+1], visible=True, opacity=0.9)
+                                    
+                                     
+                                     ], 
+                                     traces=[0]) for k in range(len(times))]
+        fig.frames = frames
+        fig.update_layout(template=self.template,
+                          title='Keypresses for stimulus ' + stimulus,
+                          updatemenus=[dict(type="buttons", 
+                          buttons=[dict(label="Play", method="animate", args=[None, dict(fromcurrent=True, transition= {'duration': 10}, frame=dict(redraw=True, duration=100))]), \
+                                                                         dict(label="Pause", method="animate", args=[[None], \
+                                                                         dict(fromcurrent=True, mode='immediate', transition={'duration': 10}, frame=dict(redraw=True, duration=100))])])])
+        if conf_interval:
+            # calculate condidence interval
+            (y_lower, y_upper) = self.get_conf_interval_bounds(kp_data,
+                                                               conf_interval)
+            # plot interval
+            fig.add_trace(go.Scatter(name='Upper Bound',
+                                     x=times,
+                                     y=y_upper,
+                                     mode='lines',
+                                     fillcolor='rgba(0,100,80,0.2)',
+                                     line=dict(color='rgba(255,255,255,0)'),
+                                     hoverinfo="skip",
+                                     showlegend=False))
+            fig.add_trace(go.Scatter(name='Lower Bound',
+                                     x=times,
+                                     y=y_lower,
+                                     fill='tonexty',
+                                     fillcolor='rgba(0,100,80,0.2)',
+                                     line=dict(color='rgba(255,255,255,0)'),
+                                     hoverinfo="skip",
+                                     showlegend=False))
+        fig.update_layout(template=self.template,
+                          xaxis_title=xaxis_title,
+                          yaxis_title=yaxis_title,
+                          xaxis_range=xaxis_range,
+                          yaxis_range=yaxis_range)
+        # save file
+        if save_file:
+            self.save_plotly(fig, 'kp_animation' + stimulus, self.folder)
+        # open it in localhost instead
+        else:
+            fig.show()
+                                
 
     def plot_video_data(self, df, stimulus, cols, extention='mp4',
                         conf_interval=None,

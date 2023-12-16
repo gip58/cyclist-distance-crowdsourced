@@ -237,7 +237,7 @@ if __name__ == '__main__':
                               height='window_height',
                               save_file=True)
         # create histogram for stimulus and durations
-
+        analysis.plot_kp_animate(mapping, 'video_0', conf_interval=0.95)
         
         analysis.create_heatmap(heroku_data,
                                stim_path,
