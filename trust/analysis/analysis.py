@@ -21,7 +21,8 @@ import re
 import ast
 from scipy.stats.kde import gaussian_kde
 from PIL import Image
-
+from matplotvideo import attach_video_player_to_figure
+import cv2
 
 
 import trust as tr
@@ -60,6 +61,34 @@ class Analysis:
         plt.rc('font', family='serif')
 
 
+
+
+    def save_all_frames(self, video_path, df, result_path, ID_p, ID_v, t):
+        logger.info('Creating frames')
+        cap = cv2.VideoCapture(video_path + '/video_' + str(ID_v) +'.mp4')
+        t=df.iloc[ID_p][t]
+        suffix='.jpg'
+        sec=t
+        if not cap.isOpened():
+            logger.error('no cap')
+            return
+            
+        for k in range(len(sec)):
+
+            os.makedirs(os.path.dirname(result_path), exist_ok=True)
+
+            fps = cap.get(cv2.CAP_PROP_FPS)
+
+            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * sec[k]/1000))
+
+            ret, frame = cap.read()
+
+            if ret:
+                cv2.imwrite(result_path + '/frame_' + str([k])+'.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 20])
+
+            
+
+
     def create_gazes(self,
                      df,
                      image,
@@ -72,6 +101,7 @@ class Analysis:
         Output gazes for image based on the list of lists of points.
         """
         # check if data is present
+        logger.info('Creating gazes for x={} and t={}.', x,y)
         # if not points:
         #     logger.error('Not enough data. Gazes visualisation was not '
         #                  + 'created for {}.', image)
@@ -263,10 +293,10 @@ class Analysis:
     def create_animation(self,
                          df,
                          image,
-                         stim_id,
                          x,
                          y,
-                         ID,
+                         ID_p,
+                         ID_v,
                          t,                
                          save_anim=False,
                          save_frames=False):
@@ -277,25 +307,26 @@ class Analysis:
         
         self.width = tr.common.get_configs('stimulus_width')
         self.height = tr.common.get_configs('stimulus_height')
-        self.ID=ID
+        self.ID_v=ID_v
+        self.ID_p=ID_p
 
-        self.x=df.iloc[self.ID][x]
+        self.x=df.iloc[self.ID_p][x]
         # Normalize screen size
         xmin, xmax = min(self.x), max(self.x)
         for i, val in enumerate(self.x):
             self.x[i] = ((val-xmin) / (xmax-xmin))*self.width
-        self.y=df.iloc[self.ID][y]
+        self.y=df.iloc[self.ID_p][y]
         ymin, ymax = min(self.y), max(self.y)
         for i, val in enumerate(self.y):
             self.y[i] = ((val-ymin) / (ymax-ymin))*self.height
 
-        self.t=df.iloc[ID][t]
+        self.t=df.iloc[self.ID_p][t]
       
         
         self.image = image
-        self.stim_id = stim_id
+        
         self.save_frames = save_frames  
-        dpi=150      
+        dpi=100      
             
         self.fig, self.g = plt.subplots(figsize=(self.width/dpi,self.height/dpi), dpi=dpi)
 
@@ -311,13 +342,17 @@ class Analysis:
         #                                           save_file=False)         
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
-                                       frames=900,
-                                       interval=500,
+                                       frames=1062,
+                                       interval=40,
                                        repeat=False)
+        
+        
         # save image
         if save_anim:
             #plt.show()
             self.save_anim(image, anim, self.folder, '_animation.mp4') 
+        # attach_video_player_to_figure(self.fig, "BigBuckBunny.mp4", on_frame, anim=anim)
+
 
     def animate(self, i):
         """
@@ -333,7 +368,7 @@ class Analysis:
         
 
         # read original image
-        im = plt.imread(self.image)
+        im = plt.imread(self.image + '/frame_'+ str([i])+'.jpg')
         plt.imshow(im)
         # remove axis
         plt.gca().set_axis_off()
@@ -349,7 +384,7 @@ class Analysis:
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         plt.text(0.75,
                  0.98,
-                 'id=' + str(self.stim_id) + ' duration=' + str(durations[i]),
+                 'id=' + str(self.ID_v) + ' duration=' + str(durations[i]),
                  transform=plt.gca().transAxes,
                  fontsize=12,
                  verticalalignment='top',

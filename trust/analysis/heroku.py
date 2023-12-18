@@ -6,6 +6,7 @@ import numpy as np
 from tqdm import tqdm
 from statistics import mean
 import warnings
+import cv2
 
 import trust as tr
 
@@ -75,6 +76,7 @@ class Heroku:
         logger.info('Updated heroku_data. Old shape: {}. New shape: {}.',
                     old_shape,
                     self.heroku_data.shape)
+    
 
     def read_data(self, filter_data=True):
         """Read data into an attribute.

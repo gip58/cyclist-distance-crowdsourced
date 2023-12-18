@@ -50,6 +50,8 @@ if __name__ == '__main__':
     # read appen data
     appen_data = appen.read_data(filter_data=FILTER_DATA,
                                  clean_data=CLEAN_DATA)
+    # read frames
+
     # get keys in data files
     heroku_data_keys = heroku_data.keys()
     appen_data_keys = appen_data.keys()
@@ -195,11 +197,11 @@ if __name__ == '__main__':
                       save_file=True)
         # browser window dimensions
          '''
-        for stim_id in tqdm(range(1, num_stimuli + 1)): 
-            stim_path = tr.common.get_configs('path_stimuli') + \
-                    '/image_' + \
-                    str(stim_id) + \
-                    '.jpg'
+        
+        image = tr.common.get_configs('path_stimuli') + '/frame_'+ str([0])+'.jpg' 
+        image_frame = tr.common.get_configs('path_stimuli')
+        video_path = tr.common.get_configs('path_source') 
+
         # heroku_data['video_1-x-0'] = heroku_data['video_1-x-0']
         # heroku_data['video_1-y-0'] = heroku_data['video_1-y-0']
         #analysis.scatter_mult(heroku_data,
@@ -228,8 +230,16 @@ if __name__ == '__main__':
         #                  ID_v='video_0',
         #                  pretty_text=True,
         #                 save_file=True)
+        # frames = tr.common.get_configs('path_stimuli')
+        # analysis.save_all_frames(video_path, 
+        #                         heroku_data,
+        #                         frames,
+        #                         ID_p=6,
+        #                         ID_v=0, 
+        #                         t='video_0-t-0'
+        #                         )
         analysis.create_gazes(heroku_data,
-                              stim_path,
+                              image,
                               x='video_0-x-0',
                               y='video_0-y-0',
                               ID=6,
@@ -238,7 +248,7 @@ if __name__ == '__main__':
         analysis.plot_kp_animate(mapping, 'video_0', conf_interval=0.95)
         
         analysis.create_heatmap(heroku_data,
-                               stim_path,
+                               image,
                                x='video_0-x-0',
                                y='video_0-y-0',
                                ID=6,
@@ -246,12 +256,12 @@ if __name__ == '__main__':
                                add_corners=True,
                                save_file=True)
         analysis.create_animation(heroku_data,
-                                   stim_path,
-                                   stim_id,
+                                   image_frame,
                                    x='video_0-x-0',
                                    y='video_0-y-0',
                                    t='video_0-t-0',
-                                   ID=6,
+                                   ID_p=6,
+                                   ID_v=0,
                                    save_anim=True,
                                    save_frames=True)
 
