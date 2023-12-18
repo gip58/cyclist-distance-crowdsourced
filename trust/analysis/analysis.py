@@ -93,7 +93,8 @@ class Analysis:
                      image,
                      x,
                      y,
-                     ID,
+                     ID_p,
+                     ID_v,
                      suffix='_gazes.jpg',
                      save_file=False):
         """
@@ -105,19 +106,20 @@ class Analysis:
         #     logger.error('Not enough data. Gazes visualisation was not '
         #                  + 'created for {}.', image)
             #return
+        image = tr.common.get_configs('frames') + '/frame_'+ str([0])+'_video_'+str(ID_v)+'.jpg' 
         # read original image
         im = Image.open(image)
         # get dimensions of base image
         width = tr.common.get_configs('stimulus_width')
         height = tr.common.get_configs('stimulus_height')
         
-        x=df.iloc[ID][x]
+        x=df.iloc[ID_p][x]
         # Normalize screen size
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(x):
             x[i] = ((val-xmin) / (xmax-xmin))*width
 
-        y=df.iloc[ID][y]
+        y=df.iloc[ID_p][y]
         ymin, ymax = min(y), max(y)
         for i, val in enumerate(y):
             y[i] = ((val-ymin) / (ymax-ymin))*height
@@ -367,7 +369,7 @@ class Analysis:
         
 
         # read original image
-        im = plt.imread(self.image + '/frame_'+ str([i])+'.jpg')
+        im = plt.imread(self.image + '/frame_'+ str([i])+'_video_'+str(self.ID_v)+'.jpg')
         plt.imshow(im)
         # remove axis
         plt.gca().set_axis_off()
