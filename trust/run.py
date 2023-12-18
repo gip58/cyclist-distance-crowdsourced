@@ -230,38 +230,41 @@ if __name__ == '__main__':
         #                  ID_v='video_0',
         #                  pretty_text=True,
         #                 save_file=True)
-        # frames = tr.common.get_configs('path_stimuli')
-        # analysis.save_all_frames(video_path, 
-        #                         heroku_data,
-        #                         frames,
-        #                         ID_p=6,
-        #                         ID_v=0, 
-        #                         t='video_0-t-0'
-        #                         )
-        analysis.create_gazes(heroku_data,
+
+        ID_video=range(0,84)                                                           # numbering all stimulus 
+        for ID_v in ID_video:
+            frames = tr.common.get_configs('path_stimuli')
+            analysis.save_all_frames(video_path, 
+                                heroku_data,
+                                frames,
+                                ID_p=6,                                               # participant ID
+                                ID_v=ID_v,                                             # Stimuly ID
+                                t='video_'+str(ID_v)+'-t-0', 
+                                )
+            analysis.create_gazes(heroku_data,
                               image,
-                              x='video_0-x-0',
-                              y='video_0-y-0',
-                              ID=6,
+                              x='video_'+str(ID_v)+'-x-0',
+                              y='video_'+str(ID_v)+'-y-0',
+                              ID=6,                                                   # participant ID
                               save_file=True)
-        # create histogram for stimulus and durations
-        analysis.plot_kp_animate(mapping, 'video_0', conf_interval=0.95)
+            # create histogram for stimulus and durations
+            analysis.plot_kp_animate(mapping, 'video_'+str(ID_v), conf_interval=0.95)
         
-        analysis.create_heatmap(heroku_data,
+            analysis.create_heatmap(heroku_data,
                                image,
-                               x='video_0-x-0',
-                               y='video_0-y-0',
-                               ID=6,
+                               x='video_'+str(ID_v)+'-x-0',
+                               y='video_'+str(ID_v)+'-y-0',
+                               ID=6,                                                  # participant ID
                                type_heatmap='contourf',
                                add_corners=True,
                                save_file=True)
-        analysis.create_animation(heroku_data,
+            analysis.create_animation(heroku_data,
                                    image_frame,
-                                   x='video_0-x-0',
-                                   y='video_0-y-0',
-                                   t='video_0-t-0',
-                                   ID_p=6,
-                                   ID_v=0,
+                                   x='video_'+str(ID_v)+'-x-0',
+                                   y='video_'+str(ID_v)+'-y-0',
+                                   t='video_'+str(ID_v)+'-t-0', 
+                                   ID_p=6,                                            # participant ID
+                                   ID_v=ID_v,                                         # Stimuly ID
                                    save_anim=True,
                                    save_frames=True)
 

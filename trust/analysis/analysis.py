@@ -67,7 +67,6 @@ class Analysis:
         logger.info('Creating frames')
         cap = cv2.VideoCapture(video_path + '/video_' + str(ID_v) +'.mp4')
         t=df.iloc[ID_p][t]
-        suffix='.jpg'
         sec=t
         if not cap.isOpened():
             logger.error('no cap')
@@ -84,7 +83,7 @@ class Analysis:
             ret, frame = cap.read()
 
             if ret:
-                cv2.imwrite(result_path + '/frame_' + str([k])+'.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 20])
+                cv2.imwrite(result_path + '/frame_' + str([k])+'_video_'+str(ID_v)+'.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 20])
 
             
 
@@ -350,7 +349,7 @@ class Analysis:
         # save image
         if save_anim:
             #plt.show()
-            self.save_anim(image, anim, self.folder, '_animation.mp4') 
+            self.save_anim(image, anim, self.folder, '_video_'+str(ID_v)+'_participant_'+str(ID_p)+'_animation.mp4') 
         # attach_video_player_to_figure(self.fig, "BigBuckBunny.mp4", on_frame, anim=anim)
 
 
