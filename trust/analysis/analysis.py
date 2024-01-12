@@ -884,8 +884,6 @@ class Analysis:
             y[i] = ((val-ymin) / (ymax-ymin))*height
 
         t=df.iloc[ID_p][t]
-         
-
         ID_p=str(ID_p)
        
         # Plot animation scatter
@@ -906,13 +904,11 @@ class Analysis:
                           xaxis_range=[0,2*width],
                           yaxis_range=[0,2*height])
 
-
         # save file
         if save_file:
             self.save_plotly(fig,
                              'scatter_map_' + ID_v+'_participant_'+ ID_p,
                              self.folder)
-        
         # open it in localhost instead
         else:
             fig.show()             
@@ -956,18 +952,7 @@ class Analysis:
         for i, val in enumerate(y):
             y[i] = ((val-ymin) / (ymax-ymin))*height
         
-
-
-
-
-
         t=df.iloc[ID_p][t]
-        
-
-        
-        
-
-       
         #df[x].dropna(inplace=True)
         #df[y].dropna(inplace=True)
 
@@ -1140,7 +1125,6 @@ class Analysis:
             self.save_plotly(fig,
                              'heatmap_animation' + ID_v+'_participant_'+ ID_p,
                              self.folder)
-        
         # open it in localhost instead
         else:
             #plotly.offline.plot(fig, auto_play = False)
@@ -1371,7 +1355,7 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_kp_video(self, df, stimulus, pp='all', extention='mp4',
+    def plot_kp_video(self, df, stimulus, pp, extention='mp4',
                       conf_interval=None,
                       xaxis_title='Time (s)',
                       yaxis_title='Percentage of trials with ' +
@@ -1440,6 +1424,98 @@ class Analysis:
         # open it in localhost instead
         else:
             fig.show()
+    
+    def plot_kp_video_ind(self, df, dt, stimulus, pp, extention='mp4',
+                      conf_interval=None, trendline=None,
+                      xaxis_title='Time (s)',
+                      yaxis_title='Percentage of trials with ' +
+                                  'response key pressed',
+                      xaxis_range=None, yaxis_range=None, save_file=True):
+        """Plot keypresses with multiple variables as a filter.
+
+        Args:
+            df (dataframe): dataframe with keypress data.
+            stimulus (str): name of stimulus.
+            pp (str, optional): individual participant or 'all'.
+            extension (str, optional): extension of stimulus.
+            conf_interval (float, optional): show confidence interval defined
+                                             by argument.
+            xaxis_title (str, optional): title for x axis.
+            yaxis_title (str, optional): title for y axis.
+            xaxis_range (list, optional): range of x axis in format [min, max].
+            yaxis_range (list, optional): range of y axis in format [min, max].
+            save_file (bool, optional): flag for saving an html file with plot.
+        """
+        # todo: implement for 1 pp
+        # extract video length
+        video_len = df.loc[stimulus]['video_length']
+        # calculate times
+        times = np.array(range(self.res, video_len + self.res, self.res)) / 1000  # noqa: E501
+        # keypress data
+        kp_data_time = dt.loc[pp]['video_10-rt-0']
+        kp_ar=np.array(kp_data_time)
+        kp_data = np.where(kp_ar > 0, 1, 0)
+        kp_data_time=kp_ar/100
+
+        
+        # plot keypresses
+        fig=px.line(x=kp_data_time,
+                      y=kp_data,
+                      # animation_frame=kp_data_time,
+                      
+                      title='Keypresses for stimulus ' + stimulus)
+
+        # fig = go.Figure()
+        # fig.add_trace(go.Scatter(x=kp_data_time, y=kp_data)) 
+        
+    
+       
+        # frames = [go.Frame(data=[    
+        #                              go.Scatter(x=times[:k+1], y=kp_data[:k+1], visible=True, opacity=0.9)
+                                    
+                                     
+        #                              ], 
+        #                              traces=[0]) for k in range(len(times))]
+        # fig.frames = frames
+        # # show confidence interval
+        # if conf_interval:
+        #     # calculate condidence interval
+        #     (y_lower, y_upper) = self.get_conf_interval_bounds(kp_data,
+        #                                                        conf_interval)
+        #     # plot interval
+        #     fig.add_trace(go.Scatter(name='Upper Bound',
+        #                              x=times,
+        #                              y=y_upper,
+        #                              mode='lines',
+        #                              fillcolor='rgba(0,100,80,0.2)',
+        #                              line=dict(color='rgba(255,255,255,0)'),
+        #                              hoverinfo="skip",
+        #                              showlegend=False))
+        #     fig.add_trace(go.Scatter(name='Lower Bound',
+        #                              x=times,
+        #                              y=y_lower,
+        #                              fill='tonexty',
+        #                              fillcolor='rgba(0,100,80,0.2)',
+        #                              line=dict(color='rgba(255,255,255,0)'),
+        #                              hoverinfo="skip",
+        #                              showlegend=False))
+        # define range of y axis
+        # if not yaxis_range:
+        #     yaxis_range = [0, max(y_upper) if conf_interval else max(kp_data)]
+        # # update layout
+        fig.update_layout(template=self.template,
+                          xaxis_title=xaxis_title,
+                          yaxis_title=yaxis_title,
+                          xaxis_range=[0,len(times)],
+                          yaxis_range=yaxis_range)
+        # save file
+        if save_file:
+            self.save_plotly(fig, 'kp_' + stimulus, self.folder)
+        # open it in localhost instead
+        else:
+            fig.show()
+        
+                       
 
     def plot_kp_animate(self, df, stimulus, pp='all', extention='mp4',
                       conf_interval=None,
