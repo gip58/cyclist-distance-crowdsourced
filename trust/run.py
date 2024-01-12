@@ -233,44 +233,44 @@ if __name__ == '__main__':
         #                 save_file=True)
 
 
-        # for ID_v in ID_video:
-        #     image = tr.common.get_configs('frames') + '/frame_'+ str([0])+'_video_'+str(ID_v)+'.jpg' 
-        #     frames = tr.common.get_configs('frames')
-        #     analysis.save_all_frames(video_path, 
-        #                         heroku_data,
-        #                         frames,
-        #                         ID_p=6,                                               # participant ID
-        #                         ID_v=ID_v,                                             # Stimuly ID
-        #                         t='video_'+str(ID_v)+'-t-0', 
-        #                         )
-        #     analysis.create_gazes(heroku_data,
-        #                         image,
-        #                         x='video_'+str(ID_v)+'-x-0',
-        #                         y='video_'+str(ID_v)+'-y-0',
-        #                         ID_p=6,
-        #                         ID_v=ID_v,                                                   # participant ID
-        #                         save_file=True)
+        for ID_v in ID_video:
+            image = tr.common.get_configs('frames') + '/frame_'+ str([0])+'_video_'+str(ID_v)+'.jpg' 
+            frames = tr.common.get_configs('frames')
+            analysis.save_all_frames(video_path, 
+                                heroku_data,
+                                frames,
+                                ID_p=6,                                               # participant ID
+                                ID_v=ID_v,                                             # Stimuly ID
+                                t='video_'+str(ID_v)+'-t-0', 
+                                )
+            analysis.create_gazes(heroku_data,
+                                image,
+                                x='video_'+str(ID_v)+'-x-0',
+                                y='video_'+str(ID_v)+'-y-0',
+                                ID_p=6,
+                                ID_v=ID_v,                                              # participant ID
+                                save_file=True)
 
-        #     analysis.create_heatmap(heroku_data,
-        #                         image,
-        #                         x='video_'+str(ID_v)+'-x-0',
-        #                         y='video_'+str(ID_v)+'-y-0',
-        #                         ID=6,                                                  # participant ID
-        #                         type_heatmap='contourf',
-        #                         add_corners=True,
-        #                         save_file=True)
+            analysis.create_heatmap(heroku_data,
+                                image,
+                                x='video_'+str(ID_v)+'-x-0',
+                                y='video_'+str(ID_v)+'-y-0',
+                                ID=6,                                                  # participant ID
+                                type_heatmap='contourf',
+                                add_corners=True,
+                                save_file=True)
 
-        #     analysis.plot_kp_animate(mapping, 'video_'+str(ID_v), conf_interval=0.95)
+            analysis.plot_kp_animate(mapping, 'video_'+str(ID_v), conf_interval=0.95)
             
-        #     analysis.create_animation(heroku_data,
-        #                         image_frame,
-        #                         x='video_'+str(ID_v)+'-x-0',
-        #                         y='video_'+str(ID_v)+'-y-0',
-        #                         t='video_'+str(ID_v)+'-t-0', 
-        #                         ID_p=6,                                            # participant ID
-        #                         ID_v=ID_v,                                         # Stimuly ID
-        #                         save_anim=True,
-        #                         save_frames=True)
+            analysis.create_animation(heroku_data,
+                                image_frame,
+                                x='video_'+str(ID_v)+'-x-0',
+                                y='video_'+str(ID_v)+'-y-0',
+                                t='video_'+str(ID_v)+'-t-0', 
+                                ID_p=6,                                            # participant ID
+                                ID_v=ID_v,                                         # Stimuly ID
+                                save_anim=True,
+                                save_frames=True)
 
         
 

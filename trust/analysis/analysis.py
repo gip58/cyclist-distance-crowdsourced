@@ -474,6 +474,7 @@ class Analysis:
                           pad_inches=0.05)
         # revert font
         self.reset_font()
+        
 
     def scatter_matrix(self, df, columns_drop, color=None, symbol=None,
                        diagonal_visible=False, xaxis_title=None,
@@ -953,43 +954,37 @@ class Analysis:
             y[i] = ((val-ymin) / (ymax-ymin))*height
         
         t=df.iloc[ID_p][t]
-        #df[x].dropna(inplace=True)
-        #df[y].dropna(inplace=True)
-
-
-      
-
-        # prettify ticks
+         
+       #  prettify ticks
        # if pretty_text:
-        #    if isinstance(x, str):  # check if string
-         #       # replace underscores with spaces
-         #       df[x] = df[x].str.replace('_', ' ')
+       #     if isinstance(x, str):  # check if string
+       #         # replace underscores with spaces
+       #         df[x] = df[x].str.replace('_', ' ')
                 
-          #      # capitalise
-           #     df[x] = df[x].str.capitalize()
-           # 
-           # else:
-           #     logger.error('x not a string')    
+       #         # capitalise
+       #         df[x] = df[x].str.capitalize()
+           
+       #     else:
+       #         logger.error('x not a string')    
                 
                
-            #if isinstance(y, str):  # check if string
-             #   # replace underscores with spaces
-              #  df[y] = df[y].str.replace('_', ' ')
+       #      if isinstance(y, str):  # check if string
+       #         # replace underscores with spaces
+       #         df[y] = df[y].str.replace('_', ' ')
                
-               # # capitalise
-                #df[y] = df[y].str.capitalize()
-           # else:
-              #  logger.error('y not a string')
+       #         # capitalise
+       #          df[y] = df[y].str.capitalize()
+       #     else:
+       #         logger.error('y not a string')
                
 
-          #  if  isinstance(df.iloc[0][t], str):  # check if string
-           #     # replace underscores with spaces
-            #    df[t] = df[t].str.replace('_', ' ')
-             #   # capitalise
-              #  df[t] = df[t].str.capitalize()
+       #     if  isinstance(df.iloc[0][t], str):  # check if string
+       #         # replace underscores with spaces
+       #         df[t] = df[t].str.replace('_', ' ')
+       #         # capitalise
+       #         df[t] = df[t].str.capitalize()
 
         ID_p=str(ID_p)
-
         heatmaps=[go.Histogram2d(x=x[i:], y=y[i:]) for i in range(len(x))]
         
         # build layers of animation heatmap and scatter
@@ -1018,105 +1013,8 @@ class Analysis:
                                                                          dict(label="Pause", method="animate", args=[[None], \
                                                                          dict(fromcurrent=True, mode='immediate', transition={'duration': 10}, frame=dict(redraw=True, duration=100))])])])
         
-        '''
-        data = [go.Scatter(
-            x=[],
-            y=[],
-            mode='markers',
-            #marker=dict(color=scatterDataX)
-        )]
-   
-
-        dataX = x
-        dataY = y
-       
-
-        frames = [dict(data= [dict(type='scatter',
-                           x=dataX[:k+1],
-                           y=dataY[:k+1])],
-               traces= [1],
-               name='frame{}'.format(k)       
-              )for k  in  range(1, len(x))]           
-
-        layout = go.Layout(
-            autosize=True,
-            hovermode='closest'
-        )
-
-        sliders = [dict(steps= [dict(method= 'animate',
-                           args= [[ 'frame{}'.format(k) ],
-                                  dict(mode= 'immediate',
-                                  frame= dict( duration=100, redraw= False ),
-                                           transition=dict( duration= 0)
-                                          )
-                                    ],
-                            label='{:d}'.format(k)
-                             ) for k in range(len(x))], 
-                transition= dict(duration= 0 ),
-                x=0,#slider starting position  
-                y=0, 
-                currentvalue=dict(font=dict(size=12), 
-                                  prefix='Point: ', 
-                                  visible=True, 
-                                  xanchor= 'center'),  
-                len=1.0)
-           ]
-
-        layout.update(updatemenus=[dict(type='buttons', showactive=False,
-                                y=0,
-                                x=1.05,
-                                buttons=[dict(label='Play',
-                                method='animate',
-                                args=[None, 
-                                    dict(frame=dict(duration=100,
-                                                redraw=False),
-                                        transition=dict(duration=0),
-                                        fromcurrent=True,
-                                        mode='immediate'
-                                    ) 
-                                ]
-                            )
-                        ]
-                    )
-                ],
-            sliders=sliders)
-
-        fig = go.Figure(data=data, layout=layout, frames=frames)
-        fig.add_trace(go.Histogram2d(x=x,y=y, zauto=False, visible=True))
-        fig.update_yaxes(range=[0, 2*height])
-        fig.update_xaxes(range=[0, 2*width])
-        '''
-
-
         
-             
-        
-       # fig = px.scatter(df,
-        #                         x=x,
-         #                        y=y,
-          #                       #animation_frame=x,
-           #                     width=width,
-            #                     height=height,
-             #                    animation_frame=t,
 
-
-                                 #nbinsx=100, 
-                                 
-                                 #nbinsy=100,
-                                 
-                #                 marginal_x='violin',
-                 #                marginal_y='violin',
-
-                     #            title='heatmap'+' '+ ID_v +' '+'participant'+' '+ID_p)
-
-        # update layout
-        #fig.update_layout(template=self.template,
-         #                 xaxis_title=xaxis_title,
-          #                yaxis_title=yaxis_title,
-           #               xaxis_range=[0,2*width],
-            #              yaxis_range=[0,2*height])
-
-        #df.style
         
  
 
@@ -1428,8 +1326,7 @@ class Analysis:
     def plot_kp_video_ind(self, df, dt, stimulus, pp, extention='mp4',
                       conf_interval=None, trendline=None,
                       xaxis_title='Time (s)',
-                      yaxis_title='Percentage of trials with ' +
-                                  'response key pressed',
+                      yaxis_title='response key pressed',
                       xaxis_range=None, yaxis_range=None, save_file=True):
         """Plot keypresses with multiple variables as a filter.
 
@@ -1462,46 +1359,8 @@ class Analysis:
         fig=px.line(x=kp_data_time,
                       y=kp_data,
                       # animation_frame=kp_data_time,
-                      
-                      title='Keypresses for stimulus ' + stimulus)
+                      title='Keypresses for stimulus ' + stimulus + pp)
 
-        # fig = go.Figure()
-        # fig.add_trace(go.Scatter(x=kp_data_time, y=kp_data)) 
-        
-    
-       
-        # frames = [go.Frame(data=[    
-        #                              go.Scatter(x=times[:k+1], y=kp_data[:k+1], visible=True, opacity=0.9)
-                                    
-                                     
-        #                              ], 
-        #                              traces=[0]) for k in range(len(times))]
-        # fig.frames = frames
-        # # show confidence interval
-        # if conf_interval:
-        #     # calculate condidence interval
-        #     (y_lower, y_upper) = self.get_conf_interval_bounds(kp_data,
-        #                                                        conf_interval)
-        #     # plot interval
-        #     fig.add_trace(go.Scatter(name='Upper Bound',
-        #                              x=times,
-        #                              y=y_upper,
-        #                              mode='lines',
-        #                              fillcolor='rgba(0,100,80,0.2)',
-        #                              line=dict(color='rgba(255,255,255,0)'),
-        #                              hoverinfo="skip",
-        #                              showlegend=False))
-        #     fig.add_trace(go.Scatter(name='Lower Bound',
-        #                              x=times,
-        #                              y=y_lower,
-        #                              fill='tonexty',
-        #                              fillcolor='rgba(0,100,80,0.2)',
-        #                              line=dict(color='rgba(255,255,255,0)'),
-        #                              hoverinfo="skip",
-        #                              showlegend=False))
-        # define range of y axis
-        # if not yaxis_range:
-        #     yaxis_range = [0, max(y_upper) if conf_interval else max(kp_data)]
         # # update layout
         fig.update_layout(template=self.template,
                           xaxis_title=xaxis_title,
@@ -1535,8 +1394,6 @@ class Analysis:
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=times, y=kp_data)) 
         
-    
-       
         frames = [go.Frame(data=[    
                                      go.Scatter(x=times[:k+1], y=kp_data[:k+1], visible=True, opacity=0.9)
                                     
