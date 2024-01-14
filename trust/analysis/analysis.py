@@ -49,10 +49,10 @@ class Analysis:
         # set font to Times
         plt.rc('font', family='serif')
 
-    def save_all_frames(self, video_path, df, result_path, ID_p, ID_v, t):
+    def save_all_frames(self, video_path, df, result_path, id_pp, id_video, t):
         logger.info('Creating frames')
-        cap = cv2.VideoCapture(video_path + '/video_' + str(ID_v) + '.mp4')
-        t = df.iloc[ID_p][t]
+        cap = cv2.VideoCapture(video_path + '/video_' + str(id_video) + '.mp4')
+        t = df.iloc[id_pp][t]
         sec = t
         if not cap.isOpened():
             logger.error('no cap')
@@ -70,7 +70,7 @@ class Analysis:
 
             if ret:
                 cv2.imwrite(result_path + '/frame_' + str([k])+'_video_' +
-                            str(ID_v)+'.jpg',
+                            str(id_video)+'.jpg',
                             frame,
                             [cv2.IMWRITE_JPEG_QUALITY, 20])
 
@@ -79,8 +79,8 @@ class Analysis:
                      image,
                      x,
                      y,
-                     ID_p,
-                     ID_v,
+                     id_pp,
+                     id_video,
                      suffix='_gazes.jpg',
                      save_file=False):
         """
@@ -94,20 +94,20 @@ class Analysis:
         # return
         image = (tr.common.get_configs('frames') +
                  '/frame_' + str([0]) + '_video_' +
-                 str(ID_v)+'.jpg')
+                 str(id_video)+'.jpg')
         # read original image
         im = Image.open(image)
         # get dimensions of base image
         width = tr.common.get_configs('stimulus_width')
         height = tr.common.get_configs('stimulus_height')
         
-        x = df.iloc[ID_p][x]
+        x = df.iloc[id_pp][x]
         # Normalize screen size
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(x):
             x[i] = ((val-xmin) / (xmax-xmin))*width
 
-        y = df.iloc[ID_p][y]
+        y = df.iloc[id_pp][y]
         ymin, ymax = min(y), max(y)
         for i, val in enumerate(y):
             y[i] = ((val-ymin) / (ymax-ymin))*height
@@ -263,8 +263,8 @@ class Analysis:
                          image,
                          x,
                          y,
-                         ID_p,
-                         ID_v,
+                         id_pp,
+                         id_video,
                          t,                
                          save_anim=False,
                          save_frames=False):
@@ -275,20 +275,20 @@ class Analysis:
         
         self.width = tr.common.get_configs('stimulus_width')
         self.height = tr.common.get_configs('stimulus_height')
-        self.ID_v = ID_v
-        self.ID_p = ID_p
+        self.id_video = id_video
+        self.id_pp = id_pp
 
-        self.x = df.iloc[self.ID_p][x]
+        self.x = df.iloc[self.id_pp][x]
         # Normalize screen size
         xmin, xmax = min(self.x), max(self.x)
         for i, val in enumerate(self.x):
             self.x[i] = ((val-xmin) / (xmax-xmin))*self.width
-        self.y = df.iloc[self.ID_p][y]
+        self.y = df.iloc[self.id_pp][y]
         ymin, ymax = min(self.y), max(self.y)
         for i, val in enumerate(self.y):
             self.y[i] = ((val-ymin) / (ymax-ymin))*self.height
 
-        self.t = df.iloc[self.ID_p][t]
+        self.t = df.iloc[self.id_pp][t]
         self.image = image
         self.save_frames = save_frames  
         dpi = 100         
@@ -316,7 +316,7 @@ class Analysis:
             self.save_anim(image,
                            anim,
                            self.folder,
-                           '_video_' + str(ID_v) + '_participant_' + str(ID_p) + '_animation.mp4')  # noqa: E501
+                           '_video_' + str(id_video) + '_participant_' + str(id_pp) + '_animation.mp4')  # noqa: E501
         # attach_video_player_to_figure(self.fig, "BigBuckBunny.mp4", on_frame, anim=anim)  # noqa: E501
     
     def animate(self, i):
@@ -331,7 +331,7 @@ class Analysis:
                              cmap='RdBu_r')
         # read original image
         im = plt.imread(self.image + '/frame_' + str([i]) + '_video_' +
-                        str(self.ID_v) + '.jpg')
+                        str(self.id_video) + '.jpg')
         plt.imshow(im)
         # remove axis
         plt.gca().set_axis_off()
@@ -347,7 +347,7 @@ class Analysis:
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         plt.text(0.75,
                  0.98,
-                 'id=' + str(self.ID_v) + ' duration=' + str(durations[i]),
+                 'id=' + str(self.id_video) + ' duration=' + str(durations[i]),
                  transform=plt.gca().transAxes,
                  fontsize=12,
                  verticalalignment='top',
@@ -818,7 +818,7 @@ class Analysis:
         else:
             fig.show()
 
-    def scat(self, df, x, y, t, ID_v, ID_p, pretty_text=False,
+    def scat(self, df, x, y, t, id_video, id_pp, pretty_text=False,
              marginal_x='violin', marginal_y='violin', xaxis_title=None,
              xaxis_range=True, yaxis_title=None, yaxis_range=True,
              save_file=True): 
@@ -826,8 +826,8 @@ class Analysis:
         # extracting x and y values for given ID participant
         width = tr.common.get_configs('stimulus_width')
         height = tr.common.get_configs('stimulus_height')
-        x = df.iloc[ID_p][x]
-        y = df.iloc[ID_p][y]
+        x = df.iloc[id_pp][x]
+        y = df.iloc[id_pp][y]
         # Normalize screen size
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(y):
@@ -837,8 +837,8 @@ class Analysis:
         for i, val in enumerate(y):
             y[i] = ((val-ymin) / (ymax-ymin))*height
 
-        t = df.iloc[ID_p][t]
-        ID_p = str(ID_p)
+        t = df.iloc[id_pp][t]
+        id_pp = str(id_pp)
        
         # Plot animation scatter
         fig = px.scatter(df,
@@ -849,7 +849,7 @@ class Analysis:
                          animation_frame=t,
                          marginal_x='violin',
                          marginal_y='violin',
-                         title='heatmap' + ' ' + ID_v + ' ' + 'participant' + ' ' + ID_p)  # noqa: E501
+                         title='heatmap' + ' ' + id_video + ' ' + 'participant' + ' ' + id_pp)  # noqa: E501
 
         # update layout
         fig.update_layout(template=self.template,
@@ -861,13 +861,13 @@ class Analysis:
         # save file
         if save_file:
             self.save_plotly(fig,
-                             'scatter_map_' + ID_v+'_participant_' + ID_p,
+                             'scatter_map_' + id_video+'_participant_' + id_pp,
                              self.folder)
         # open it in localhost instead
         else:
             fig.show()             
 
-    def heatmap(self, df, x, y, t, ID_v, ID_p, pretty_text=False,
+    def heatmap(self, df, x, y, t, id_video, id_pp, pretty_text=False,
                 marginal_x='violin', marginal_y='violin', xaxis_title=None,
                 xaxis_range=True, yaxis_title=None, yaxis_range=True,
                 save_file=True):
@@ -891,8 +891,8 @@ class Analysis:
         logger.info('Creating heatmap for x={} and t={}.', x, y)
         width = tr.common.get_configs('stimulus_width')
         height = tr.common.get_configs('stimulus_height')
-        x = df.iloc[ID_p][x]
-        y = df.iloc[ID_p][y]
+        x = df.iloc[id_pp][x]
+        y = df.iloc[id_pp][y]
         # Normalize screen size
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(y):
@@ -902,7 +902,7 @@ class Analysis:
         for i, val in enumerate(y):
             y[i] = ((val-ymin) / (ymax-ymin))*height
         
-        t = df.iloc[ID_p][t]
+        t = df.iloc[id_pp][t]
          
         #  prettify ticks
         if pretty_text:
@@ -929,7 +929,7 @@ class Analysis:
                 # capitalise
                 df[t] = df[t].str.capitalize()
 
-        ID_p = str(ID_p)
+        id_pp = str(id_pp)
         [go.Histogram2d(x=x[i:], y=y[i:]) for i in range(len(int(x)))]
         # build layers of animation heatmap and scatter
         fig = go.Figure()
@@ -949,7 +949,7 @@ class Analysis:
         fig.update_layout(template=self.template, 
                           height=height, 
                           width=width,
-                          title='heatmap_scatter_animation'+' ' + ID_v + ' ' + 'participant'+' '+ID_p,  # noqa: E501
+                          title='heatmap_scatter_animation'+' ' + id_video + ' ' + 'participant'+' '+id_pp,  # noqa: E501
                           xaxis_range=[0, 2*width],
                           yaxis_range=[0, 2*height],
                           updatemenus=[dict(type='buttons', 
@@ -971,7 +971,7 @@ class Analysis:
         # save file
         if save_file:
             self.save_plotly(fig,
-                             'heatmap_animation' + ID_v+'_participant_' + ID_p,
+                             'heatmap_animation' + id_video+'_participant_' + id_pp,  # noqa: E501
                              self.folder)
         # open it in localhost instead
         else:
@@ -1271,18 +1271,17 @@ class Analysis:
         else:
             fig.show()
     
-    def plot_kp_video_ind(self, df, dt, stimulus, pp, extention='mp4',
-                          conf_interval=None, trendline=None,
-                          xaxis_title='Time (s)',
-                          yaxis_title='response key pressed',
-                          xaxis_range=None, yaxis_range=None, save_file=True):
-        """Plot keypresses with multiple variables as a filter.
+    def plot_kp_video_pp(self, df, dt, stimulus, pp,
+                         conf_interval=None, trendline=None,
+                         xaxis_title='Time (s)',
+                         yaxis_title='response key pressed',
+                         xaxis_range=None, yaxis_range=None, save_file=True):
+        """Plot keypresses data of one stimulus for 1 participant.
 
         Args:
             df (dataframe): dataframe with keypress data.
             stimulus (str): name of stimulus.
-            pp (str, optional): individual participant or 'all'.
-            extension (str, optional): extension of stimulus.
+            pp (str): ID of participant.
             conf_interval (float, optional): show confidence interval defined
                                              by argument.
             xaxis_title (str, optional): title for x axis.
