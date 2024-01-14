@@ -201,8 +201,14 @@ secret
 
 # Ignore all files starting with an underscore.
 **/_*
+!trust-unity/**/_*
 !__init__.py
 
 # Pickle files
 trust/analysis/*.p
 trust/*.p
+
+# lightning
+**/LightingData.asset
+**/Lightmap-*_comp_light.exr
+**/ReflectionProbe-*.exr
