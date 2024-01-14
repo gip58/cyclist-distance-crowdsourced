@@ -354,8 +354,6 @@ if __name__ == '__main__':
                                     x='video_0-x-0',
                                     y='video_0-y-0',
                                     ID=6,
-                                    width='window_width',
-                                    height='window_height',
                                     type_heatmap='contourf',
                                     add_corners=True,
                                     save_file=True)
@@ -364,9 +362,7 @@ if __name__ == '__main__':
                                       x='video_0-x-0',
                                       y='video_0-y-0',
                                       t='video_0-t-0',
-                                      ID=6,
-                                      width='window_width',
-                                      height='window_height')
+                                      ID=6)
         # check if any figures are to be rendered
         figures = [manager.canvas.figure
                    for manager in
