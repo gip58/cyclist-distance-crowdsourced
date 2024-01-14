@@ -49,25 +49,22 @@ class Analysis:
         # set font to Times
         plt.rc('font', family='serif')
 
+    # todo: @Job, add docstring
     def save_all_frames(self, video_path, df, result_path, id_pp, id_video, t):
         logger.info('Creating frames')
         cap = cv2.VideoCapture(video_path + '/video_' + str(id_video) + '.mp4')
         t = df.iloc[id_pp][t]
+        # todo: we should be operating not at the second level, but at the
+        # level of frames, so make a smooth animation. @job, address
         sec = t
         if not cap.isOpened():
             logger.error('no cap')
             return
-            
         for k in range(len(sec)):
-
             os.makedirs(os.path.dirname(result_path), exist_ok=True)
-
             fps = cap.get(cv2.CAP_PROP_FPS)
-
             cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * sec[k]/1000))
-
             ret, frame = cap.read()
-
             if ret:
                 cv2.imwrite(result_path + '/frame_' + str([k])+'_video_' +
                             str(id_video)+'.jpg',
@@ -818,17 +815,18 @@ class Analysis:
         else:
             fig.show()
 
-    def scat(self, df, x, y, t, id_video, id_pp, pretty_text=False,
-             marginal_x='violin', marginal_y='violin', xaxis_title=None,
-             xaxis_range=True, yaxis_title=None, yaxis_range=True,
-             save_file=True): 
+    # todo: @Job, add docstring
+    def scatter_et(self, df, x, y, t, id_video, id_pp, pretty_text=False,
+                   marginal_x='violin', marginal_y='violin', xaxis_title=None,
+                   xaxis_range=True, yaxis_title=None, yaxis_range=True,
+                   save_file=True): 
         logger.info('Creating scatter_map for x={} and t={}.', x, y)
         # extracting x and y values for given ID participant
         width = tr.common.get_configs('stimulus_width')
         height = tr.common.get_configs('stimulus_height')
         x = df.iloc[id_pp][x]
         y = df.iloc[id_pp][y]
-        # Normalize screen size
+        # normalise screen size
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(y):
             x[i] = ((val-xmin) / (xmax-xmin))*width
@@ -1305,7 +1303,7 @@ class Analysis:
         fig = px.line(x=kp_data_time,
                       y=kp_data,
                       # animation_frame=kp_data_time,
-                      title='Keypresses for stimulus ' + stimulus + pp)
+                      title='Keypresses for stimulus ' + stimulus + ' for participant ' + pp)  # noqa: E501
 
         # # update layout
         fig.update_layout(template=self.template,

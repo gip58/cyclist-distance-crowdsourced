@@ -9,25 +9,24 @@ tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
 
 # const
-SAVE_P = True  # save pickle files with data
-LOAD_P = False  # load pickle files with data
-SAVE_CSV = True  # load csv files with data
-FILTER_DATA = True  # filter Appen and heroku data
-CLEAN_DATA = True  # clean Appen data
-REJECT_CHEATERS = True  # reject cheaters on Appen
-UPDATE_MAPPING = True  # update mapping with keypress data
-SHOW_OUTPUT = True  # should figures be plotted
-
-# for debugging, skip processing
-# SAVE_P = False  # save pickle files with data
-# LOAD_P = True  # load pickle files with data
+# SAVE_P = True  # save pickle files with data
+# LOAD_P = False  # load pickle files with data
 # SAVE_CSV = True  # load csv files with data
-# FILTER_DATA = False  # filter Appen and heroku data
-# CLEAN_DATA = False  # clean Appen data
-# REJECT_CHEATERS = False  # reject cheaters on Appen
-# UPDATE_MAPPING = False  # update mapping with keypress data
+# FILTER_DATA = True  # filter Appen and heroku data
+# CLEAN_DATA = True  # clean Appen data
+# REJECT_CHEATERS = True  # reject cheaters on Appen
+# UPDATE_MAPPING = True  # update mapping with keypress data
 # SHOW_OUTPUT = True  # should figures be plotted
 
+# for debugging, skip processing
+SAVE_P = False  # save pickle files with data
+LOAD_P = True  # load pickle files with data
+SAVE_CSV = True  # load csv files with data
+FILTER_DATA = False  # filter Appen and heroku data
+CLEAN_DATA = False  # clean Appen data
+REJECT_CHEATERS = False  # reject cheaters on Appen
+UPDATE_MAPPING = False  # update mapping with keypress data
+SHOW_OUTPUT = True  # should figures be plotted
 
 file_mapping = 'mapping.p'  # file to save updated mapping
 
@@ -153,10 +152,12 @@ if __name__ == '__main__':
         #                                          {'variable': 'cross_look',
         #                                           'value': 'nonspecific'}])
         # post-trial questions
-        analysis.bar(heroku_data,
-                     y=['video_0-slider-0-0', 'video_0-slider-1-0', 'video_0-slider-2-0'],  # noqa: E501
-                     pretty_text=True,
-                     save_file=True)
+        # note: post-stimulus slider questions are stored as video_0-as-0 in
+        #       the form of eg [100, 0, 0].
+        # analysis.bar(heroku_data,
+        #              y=['video_0-slider-0-0', 'video_0-slider-1-0', 'video_0-slider-2-0'],  # noqa: E501
+        #              pretty_text=True,
+        #              save_file=True)
         analysis.hist(heroku_data,
                       x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-slider-')],  # noqa: E501
                       nbins=100,
@@ -197,46 +198,48 @@ if __name__ == '__main__':
 
         heroku_data['video_1-x-0'] = heroku_data['video_1-x-0']
         heroku_data['video_1-y-0'] = heroku_data['video_1-y-0']
+        # todo: @Job, add comment and what method below does
         analysis.scatter_mult(heroku_data,
                               x=['video_0-x-0', 'video_1-x-0'],
                               y='video_0-y-0',
                               color='browser_major_version',
                               pretty_text=True,
                               save_file=True)
-        analysis.scat(heroku_data, 
-                      x='video_0-x-0',
-                      y='video_0-y-0',
-                      t='video_0-t-0',
-                      width='window_width',
-                      height='window_height',
-                      id_pp=6,    # 0,2,6,10,12,13,14,16,18,20,22
-                      id_video='video_0',
-                      pretty_text=True,
-                      save_file=True)
-        analysis.heatmap(heroku_data, 
-                         x='video_0-x-0',
-                         y='video_0-y-0',
-                         t='video_0-t-0',
-                         width='window_width',
-                         height='window_height',
-                         id_pp=6,    # 0,2,6,10,12,13,14,16,18,20,22
-                         id_video='video_0',
-                         pretty_text=True,
-                         save_file=True)
+        # # todo: @Job, add comment and what method below does
+        # analysis.scatter_et(heroku_data, 
+        #                     x='video_0-x-0',
+        #                     y='video_0-y-0',
+        #                     t='video_0-t-0',
+        #                     id_pp=6,  # 0,2,6,10,12,13,14,16,18,20,22
+        #                     id_video='video_0',
+        #                     pretty_text=True,
+        #                     save_file=True)
+        # # todo: @Job, add comment and what method below does
+        # analysis.heatmap(heroku_data, 
+        #                  x='video_0-x-0',
+        #                  y='video_0-y-0',
+        #                  t='video_0-t-0',
+        #                  id_pp=6,  # 0,2,6,10,12,13,14,16,18,20,22
+        #                  id_video='video_0',
+        #                  pretty_text=True,
+        #                  save_file=True)
         # create eye gaze visualisations for all videos
         logger.info('Producing visualisations of eye gaze data for {} stimuli.',  # noqa: E501
                     tr.common.get_configs('num_stimuli'))
+        # todo: @Job, add comment and what code below does
         for id_video in tqdm(range(tr.common.get_configs('num_stimuli'))):
             logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                         id_video)
             image = tr.common.get_configs('frames') + '/frame_' + str([0]) + '_video_' + str(id_video) + '.jpg'  # noqa: E501
             frames = tr.common.get_configs('frames')
+            # todo: @Job, add comment and what method below does
             analysis.save_all_frames(video_path, 
                                      heroku_data,
                                      frames,
                                      id_pp=6,  # participant ID
                                      id_video=id_video,  # stimulus ID
                                      t='video_'+str(id_video)+'-t-0')
+            # todo: @Job, add comment and what method below does
             analysis.create_gazes(heroku_data,
                                   image,
                                   x='video_'+str(id_video)+'-x-0',
@@ -244,6 +247,7 @@ if __name__ == '__main__':
                                   id_pp=6,
                                   id_video=id_video,  # participant ID
                                   save_file=True)
+            # todo: @Job, add comment and what method below does
             analysis.create_heatmap(heroku_data,
                                     image,
                                     x='video_'+str(id_video)+'-x-0',
@@ -252,9 +256,11 @@ if __name__ == '__main__':
                                     type_heatmap='contourf',
                                     add_corners=True,
                                     save_file=True)
+            # todo: @Job, add comment and what method below does
             analysis.plot_kp_animate(mapping,
                                      'video_'+str(id_video),
                                      conf_interval=0.95)
+            # todo: @Job, add comment and what method below does
             analysis.create_animation(heroku_data,
                                       image_frame,
                                       x='video_'+str(id_video)+'-x-0',
