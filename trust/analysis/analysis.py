@@ -69,13 +69,13 @@ class Analysis:
         if not cap.isOpened():
             logger.error('no cap')
             return
-        for k in range(len(sec),10):
+        for k in range(0,len(sec)+1,10):
             os.makedirs(os.path.dirname(result_path), exist_ok=True)
             fps = cap.get(cv2.CAP_PROP_FPS)
             cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * sec[k]/1000))
             ret, frame = cap.read()
             if ret:
-                cv2.imwrite(result_path + '/frame_' + str([k])+'_video_' +
+                cv2.imwrite(result_path + '/frame_' + str([k//10])+'_video_' +
                             str(id_video)+'.jpg',
                             frame,
                             [cv2.IMWRITE_JPEG_QUALITY, 20])

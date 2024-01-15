@@ -279,7 +279,7 @@ if __name__ == '__main__':
             logger.info('Producing visualisations of eye gaze data for {} stimuli.',  # noqa: E501
                         tr.common.get_configs('num_stimuli'))
             # Creating a for loop that makes an eye gazes/heatmap for every source video/stimuli for a given individual. 
-            for id_video in tqdm(range(tr.common.get_configs('num_stimuli'))):
+            for id_video in range(tr.common.get_configs('num_stimuli')):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
                 image = tr.common.get_configs('frames') + '/frame_' + str([0]) + '_video_' + str(id_video) + '.jpg'  # noqa: E501
