@@ -50,6 +50,16 @@ class Analysis:
 
     # todo: @Job, add docstring
     def save_all_frames(self, video_path, df, result_path, id_pp, id_video, t):
+        """
+        Outputs individual frames as png from inputted video mp4.
+
+        Args:
+            video_path: location of mp4 videos.
+            df (dataframe): dataframe of heroku.
+            id_pp (int): participant ID.
+            id_video (int): stimulus video ID.
+            t (list): column in dataframe containing time data.
+        """
         logger.info('Creating frames')
         cap = cv2.VideoCapture(video_path + '/video_' + str(id_video) + '.mp4')
         t = df.iloc[id_pp][t]
@@ -59,7 +69,7 @@ class Analysis:
         if not cap.isOpened():
             logger.error('no cap')
             return
-        for k in range(len(sec)):
+        for k in range(len(sec),10):
             os.makedirs(os.path.dirname(result_path), exist_ok=True)
             fps = cap.get(cv2.CAP_PROP_FPS)
             cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * sec[k]/1000))
@@ -81,6 +91,15 @@ class Analysis:
                      save_file=False):
         """
         Output gazes for image based on the list of lists of points.
+
+        Args:
+            df (dataframe): dataframe with data from Heroku.
+            image (str): name of figure.
+            x (list): dataframe column to plot on x axis.
+            y (list): dataframe column to plot on y axis.
+            i_pp (int): participant ID.
+            id_video (int): stimulus video ID.
+
         """
         # check if data is present
         logger.info('Creating gazes for x={} and t={}.', x, y)
@@ -148,9 +167,13 @@ class Analysis:
                        save_file=False):
         """
         Create heatmap for image based on the list of lists of points.
-        add_corners: add points to the corners to have the heatmap ovelay the
-                     whole image
-        type_heatmap: contourf, pcolormesh, kdeplot
+
+        Args:
+            df (dataframe):
+            image (str): name of figure.
+            add_corners: add points to the corners to have the heatmap ovelay the
+                     whole image.
+            type_heatmap: contourf, pcolormesh, kdeplot.
         """
         # todo: remove datapoints in corners in heatmaps
         # check if data is present
@@ -284,7 +307,10 @@ class Analysis:
         for i, val in enumerate(self.y):
             self.y[i] = ((val-ymin) / (ymax-ymin))*self.height
 
-        self.t = df.iloc[self.id_pp][t]
+        self.t = df.iloc[id_pp][t]
+        self.number_frames=int(len(self.t)//10)
+        self.max_t=int(max(self.t))
+        interv=self.max_t/self.number_frames
         self.image = image
         self.save_frames = save_frames  
         dpi = 100         
@@ -303,8 +329,8 @@ class Analysis:
         #                                           save_file=False)         
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
-                                       frames=1062,
-                                       interval=40,
+                                       frames=self.number_frames,
+                                       interval=interv,
                                        repeat=False)
         # save image
         if save_anim:
@@ -819,7 +845,30 @@ class Analysis:
                    marginal_x='violin', marginal_y='violin', xaxis_title=None,
                    xaxis_range=True, yaxis_title=None, yaxis_range=True,
                    save_file=True): 
-        logger.info('Creating scatter_map for x={} and t={}.', x, y)
+        """
+        output satter plot of x & y.
+
+        Args:
+            df (dataframe): dataframe with data from Heroku.
+            x (list): dataframe column to plot on x axis.
+            y (list): dataframe column to plot on y axis.
+            t (list): dataframe column to determin timespan 
+            id_video (int): stimulus video ID.
+            i_pp (int): participant ID.
+            pretty_text (bool, optional): prettify ticks by replacing _ with
+                                          spaces and capitalising each value.
+            marginal_x (str, optional): type of marginal on x axis. Can be
+                                        'histogram', 'rug', 'box', or 'violin'.
+            marginal_y (str, optional): type of marginal on y axis. Can be
+                                        'histogram', 'rug', 'box', or 'violin'.
+            xaxis_range (list, optional): range of the x-axis plot.
+            yaxis_range (list, optional): range of the y-axis plot.
+            xaxis_title (str, optional): title for x axis.
+            yaxis_title (str, optional): title for y axis.
+            save_file (bool, optional): flag for saving an html file with plot.
+        """
+        logger.info('Creating scatter_map for x={} and y={}.', x, y)
+
         # extracting x and y values for given ID participant
         width = tr.common.get_configs('stimulus_width')
         height = tr.common.get_configs('stimulus_height')
@@ -827,7 +876,7 @@ class Analysis:
         y = df.iloc[id_pp][y]
         # normalise screen size
         xmin, xmax = min(x), max(x)
-        for i, val in enumerate(y):
+        for i, val in enumerate(x):
             x[i] = ((val-xmin) / (xmax-xmin))*width
 
         ymin, ymax = min(y), max(y)
@@ -846,14 +895,14 @@ class Analysis:
                          animation_frame=t,
                          marginal_x='violin',
                          marginal_y='violin',
-                         title='heatmap' + ' ' + id_video + ' ' + 'participant' + ' ' + id_pp)  # noqa: E501
+                         title='scatter_' + ' ' + id_video + ' ' + 'participant' + ' ' + id_pp)  # noqa: E501
 
         # update layout
         fig.update_layout(template=self.template,
                           xaxis_title=xaxis_title,
                           yaxis_title=yaxis_title,
-                          xaxis_range=[0, 2*width],
-                          yaxis_range=[0, 2*height])
+                          xaxis_range=[0, width],
+                          yaxis_range=[0, height])
 
         # save file
         if save_file:
@@ -873,8 +922,8 @@ class Analysis:
 
         Args:
             df (dataframe): dataframe with data from heroku.
-            x (str): dataframe column to plot on x axis.
-            y (str): dataframe column to plot on y axis.
+            x (list): dataframe column to plot on x axis.
+            y (list): dataframe column to plot on y axis.
             pretty_text (bool, optional): prettify ticks by replacing _ with
                                           spaces and capitalising each value.
             marginal_x (str, optional): type of marginal on x axis. Can be
@@ -998,7 +1047,7 @@ class Analysis:
             if stim_id == num_stimuli:
                 file.write('file ' + anim_path)  # no need for linebreak
             else:
-                file.write('file ' + anim_path + '\n')
+                file.write('file ' + anim_path + '/n')
         # close file with animations
         file.close()
         # stitch videos together
@@ -1631,8 +1680,8 @@ class Analysis:
         # build string with variables
         variables_str = ''
         for variable in variables:
-            variables_str = variables_str + '_' + str(variable['variable']) + \
-                '-' + str(variable['value'])
+            variables_str = variables_str + '_' + str(variable['variable']) + '-' + str(variable['value'])
+                
         # calculate times
         times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000  # noqa: E501
         # extract data for values

@@ -342,14 +342,14 @@ if __name__ == '__main__':
                                 pretty_text=True,
                                 save_file=True)                                          # save file command
             # Create individual heatmap for given video and participant. 
-            analysis.heatmap(heroku_data,                                                # dataframe
-                                x='video_0-x-0',                                         # x coordinates eye tracking
-                                y='video_0-y-0',                                         # y coordinates eye tracking
-                                t='video_0-t-0',                                         # t coordinates time
-                                id_pp=6,                                                 # participant ID (0,2,6,10,12,13,14,16,18,20,22)
-                                id_video='video_0',                                      # stimulus ID
-                                pretty_text=True,                                        
-                                save_file=True)                                          # save file command
+            # analysis.heatmap(heroku_data,                                                # dataframe
+            #                     x='video_0-x-0',                                         # x coordinates eye tracking
+            #                     y='video_0-y-0',                                         # y coordinates eye tracking
+            #                     t='video_0-t-0',                                         # t coordinates time
+            #                     id_pp=6,                                                 # participant ID (0,2,6,10,12,13,14,16,18,20,22)
+            #                     id_video='video_0',                                      # stimulus ID
+            #                     pretty_text=True,                                        
+            #                     save_file=True)                                          # save file command
            
         # check if any figures are to be rendered
         figures = [manager.canvas.figure
