@@ -287,13 +287,13 @@ if __name__ == '__main__':
                 # Deconstruct the source video into its individual frames. To allow for overlaying the heatmap for each frame later on.
                 analysis.save_all_frames(video_path,                                     # location path source video/stimuli
                                         heroku_data,                                     # dataframe
-                                        frames,
+                                        frames,                                          # location for storage individual frames from source vidoe/stimuli
                                         id_pp=6,                                         # participant ID
                                         id_video=id_video,                               # stimulus ID
                                         t='video_'+str(id_video)+'-t-0')                 # video length time
                 # construct the gazes lines just as an example for how that looks compared to the heatmap. 
                 analysis.create_gazes(heroku_data,                                       # dataframe
-                                      image,
+                                        image,
                                         x='video_'+str(id_video)+'-x-0',                 # x coordinates eye tracking
                                         y='video_'+str(id_video)+'-y-0',                 # y coordinates eye tracking
                                         id_pp=6,                                         # participant ID
@@ -332,7 +332,7 @@ if __name__ == '__main__':
             #                       marginal_y=None,
             #                       marginal_x='rug',
             #                       save_file=True)
-            # todo: @Job, add comment and what method below does
+            # Create individual scatter plot for given video and participant.
             analysis.scatter_et(heroku_data,                                             # dataframe
                                 x='video_0-x-0',                                         # x coordinates eye tracking
                                 y='video_0-y-0',                                         # y coordinates eye tracking
@@ -348,22 +348,9 @@ if __name__ == '__main__':
                                 t='video_0-t-0',                                         # t coordinates time
                                 id_pp=6,                                                 # participant ID (0,2,6,10,12,13,14,16,18,20,22)
                                 id_video='video_0',                                      # stimulus ID
-                                pretty_text=True,
+                                pretty_text=True,                                        
                                 save_file=True)                                          # save file command
-            # todo: @Job, add comment and what method below does
-            analysis.create_heatmap(heroku_data,                                         # dataframe
-                                x='video_0-x-0',                                         # x coordinates eye tracking
-                                y='video_0-y-0',                                         # y coordinates eye tracking
-                                ID_pp=6,                                                    # participant ID (0,2,6,10,12,13,14,16,18,20,22)
-                                type_heatmap='contourf',                                 # type heatmap
-                                add_corners=True, 
-                                save_file=True)                                          # save file command
-            # todo: @Job, add comment and what method below does 
-            analysis.create_animation(heroku_data,                                       # dataframe
-                                x='video_0-x-0',                                         # x coordinates eye tracking
-                                y='video_0-y-0',                                         # y coordinates eye tracking
-                                t='video_0-t-0',                                         # t coordinates time
-                                ID_pp=6)                                                 # participant ID (0,2,6,10,12,13,14,16,18,20,22)
+           
         # check if any figures are to be rendered
         figures = [manager.canvas.figure
                    for manager in

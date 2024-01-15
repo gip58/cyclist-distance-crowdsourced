@@ -413,20 +413,20 @@ class Analysis:
         # create figure
         fig = plt.figure(figsize=(34, 20))
         g = sns.heatmap(corr,
-                        annot=True,
-                        mask=mask,
-                        cmap='coolwarm',
-                        fmt=".2f")
+                            annot=True,
+                            mask=mask,
+                            cmap='coolwarm',
+                            fmt=".2f")
         # rotate ticks
         for item in g.get_xticklabels():
             item.set_rotation(55)
         # save image
         if save_file:
             self.save_fig('all',
-                          fig,
-                          self.folder,
-                          '_corr_matrix.jpg',
-                          pad_inches=0.05)
+                            fig,
+                            self.folder,
+                            '_corr_matrix.jpg',
+                            pad_inches=0.05)
         # revert font
         self.reset_font()
 
@@ -455,15 +455,15 @@ class Analysis:
         dimensions = df.keys()
         # plot matrix
         fig = px.scatter_matrix(df,
-                                dimensions=dimensions,
-                                color=color,
-                                symbol=symbol)
+                            dimensions=dimensions,
+                            color=color,
+                            symbol=symbol)
         # update layout
         fig.update_layout(template=self.template,
-                          width=5000,
-                          height=5000,
-                          xaxis_title=xaxis_title,
-                          yaxis_title=yaxis_title)
+                            width=5000,
+                            height=5000,
+                            xaxis_title=xaxis_title,
+                            yaxis_title=yaxis_title)
         # hide diagonal
         if not diagonal_visible:
             fig.update_traces(diagonal_visible=False)
@@ -660,22 +660,22 @@ class Analysis:
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', category=RuntimeWarning)
             fig = px.scatter(df,
-                             x=x,
-                             y=y,
-                             color=color,
-                             symbol=symbol,
-                             size=size,
-                             text=text,
-                             trendline=trendline,
-                             hover_data=hover_data,
-                             marginal_x=marginal_x,
-                             marginal_y=marginal_y)
+                            x=x,
+                            y=y,
+                            color=color,
+                            symbol=symbol,
+                            size=size,
+                            text=text,
+                            trendline=trendline,
+                            hover_data=hover_data,
+                            marginal_x=marginal_x,
+                            marginal_y=marginal_y)
         # update layout
         fig.update_layout(template=self.template,
-                          xaxis_title=xaxis_title,
-                          yaxis_title=yaxis_title,
-                          xaxis_range=xaxis_range,
-                          yaxis_range=yaxis_range)
+                            xaxis_title=xaxis_title,
+                            yaxis_title=yaxis_title,
+                            xaxis_range=xaxis_range,
+                            yaxis_range=yaxis_range)
         # change marker size
         if marker_size:
             fig.update_traces(marker=dict(size=marker_size))
@@ -775,24 +775,24 @@ class Analysis:
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', category=RuntimeWarning)
             fig = px.scatter(df,
-                             x='val_x',
-                             y='val_y',
-                             color='color',
-                             symbol=symbol,
-                             text=text,
-                             trendline=trendline,
-                             # hover_data=hover_data,
-                             marginal_x=marginal_x,
-                             marginal_y=marginal_y)
+                            x='val_x',
+                            y='val_y',
+                            color='color',
+                            symbol=symbol,
+                            text=text,
+                            trendline=trendline,
+                            # hover_data=hover_data,
+                            marginal_x=marginal_x,
+                            marginal_y=marginal_y)
         # update layout
         fig.update_layout(template=self.template,
-                          xaxis_title=xaxis_title,
-                          yaxis_title=yaxis_title,
-                          xaxis_range=xaxis_range,
-                          yaxis_range=yaxis_range,
-                          legend_title_text=' ',
-                          font=dict(size=20),
-                          legend=dict(orientation='h',
+                            xaxis_title=xaxis_title,
+                            yaxis_title=yaxis_title,
+                            xaxis_range=xaxis_range,
+                            yaxis_range=yaxis_range,
+                            legend_title_text=' ',
+                            font=dict(size=20),
+                            legend=dict(orientation='h',
                                       yanchor='bottom',
                                       y=1.02,
                                       xanchor='right',
