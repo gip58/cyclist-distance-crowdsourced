@@ -135,41 +135,41 @@ if __name__ == '__main__':
                                       'group',
                                       [0, 1, 2, 3])
             # TODO: make plot_video_data work
-            # # plot of multiple combined AND variables
-            # analysis.plot_video_data(mapping, 'video_5',
-            #                          ['group', 'criticality'],
-            #                          yaxis_title='Type of ego car and number of pedestrians',  # noqa: E501
-            #                          conf_interval=0.95)
-            # analysis.plot_kp_variables_and(mapping,
-            #                                plot_names=['traffic rules',
-            #                                            'no traffic rules'],
-            #                                variables_list=[[{'variable': 'traffic_rules',  # noqa: E501
-            #                                                  'value': 'stop_sign'},        # noqa: E501
-            #                                                 {'variable': 'traffic_rules',  # noqa: E501
-            #                                                  'value': 'traffic_lights'},   # noqa: E501
-            #                                                 {'variable': 'traffic_rules',  # noqa: E501
-            #                                                  'value': 'ped_crossing'}],    # noqa: E501
-            #                                                [{'variable': 'traffic_rules',  # noqa: E501
-            #                                                  'value': 'none'}]])  # noqa: E501
-            # # plot of separate variables
-            # analysis.plot_kp_variables_or(mapping,
-            #                               variables=[{'variable': 'cross_look',  # noqa: E501
-            #                                           'value': 'Crossing_Looking'},     # noqa: E501
-            #                                          {'variable': 'cross_look',  # noqa: E501
-            #                                           'value': 'notCrossing_Looking'},  # noqa: E501
-            #                                          {'variable': 'cross_look',  # noqa: E501
-            #                                           'value': 'Crossing_notLooking'},  # noqa: E501
-            #                                          {'variable': 'cross_look',  # noqa: E501
-            #                                           'value': 'nonspecific'}])  # noqa: E501          
+            # plot of multiple combined AND variables
+            analysis.plot_video_data(mapping, 'video_5',
+                                     ['group', 'criticality'],
+                                     yaxis_title='Type of ego car and number of pedestrians',  # noqa: E501
+                                     conf_interval=0.95)
+            analysis.plot_kp_variables_and(mapping,
+                                           plot_names=['traffic rules',
+                                                       'no traffic rules'],
+                                           variables_list=[[{'variable': 'traffic_rules',  # noqa: E501
+                                                             'value': 'stop_sign'},        # noqa: E501
+                                                            {'variable': 'traffic_rules',  # noqa: E501
+                                                             'value': 'traffic_lights'},   # noqa: E501
+                                                            {'variable': 'traffic_rules',  # noqa: E501
+                                                             'value': 'ped_crossing'}],    # noqa: E501
+                                                           [{'variable': 'traffic_rules',  # noqa: E501
+                                                             'value': 'none'}]])  # noqa: E501
+            # plot of separate variables
+            analysis.plot_kp_variables_or(mapping,
+                                          variables=[{'variable': 'cross_look',  # noqa: E501
+                                                      'value': 'Crossing_Looking'},     # noqa: E501
+                                                     {'variable': 'cross_look',  # noqa: E501
+                                                      'value': 'notCrossing_Looking'},  # noqa: E501
+                                                     {'variable': 'cross_look',  # noqa: E501
+                                                      'value': 'Crossing_notLooking'},  # noqa: E501
+                                                     {'variable': 'cross_look',  # noqa: E501
+                                                      'value': 'nonspecific'}])  # noqa: E501          
         # Visualisation of stimulus data
         if SHOW_OUTPUT_ST:
             # post-trial questions
             # note: post-stimulus slider questions are stored as video_0-as-0 in  # noqa: E501
             #       the form of eg [100, 0, 0].
-            # analysis.bar(heroku_data,
-            #              y=['video_0-slider-0-0', 'video_0-slider-1-0', 'video_0-slider-2-0'],  # noqa: E501
-            #              pretty_text=True,
-            #              save_file=True)
+            analysis.bar(heroku_data,
+                         y=['video_0-slider-0-0', 'video_0-slider-1-0', 'video_0-slider-2-0'],  # noqa: E501
+                         pretty_text=True,
+                         save_file=True)
             analysis.hist(heroku_data,
                           x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-slider-')],  # noqa: E501
                           nbins=100,
@@ -262,6 +262,7 @@ if __name__ == '__main__':
             analysis.map(countries_data, color='year_license', save_file=True)
             # map of year of automated driving per country
             analysis.map(countries_data, color='year_ad', save_file=True)
+
         # Visualisation of eye tracking data
         if SHOW_OUTPUT_ET:
             # browser window dimensions
@@ -277,50 +278,50 @@ if __name__ == '__main__':
             # create eye gaze visualisations for all videos
             logger.info('Producing visualisations of eye gaze data for {} stimuli.',  # noqa: E501
                         tr.common.get_configs('num_stimuli'))
-            # todo: @Job, add comment and what code below does
+            # Creating a for loop that makes an eye gazes/heatmap for every source video/stimuli for a given individual. 
             for id_video in tqdm(range(tr.common.get_configs('num_stimuli'))):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
                 image = tr.common.get_configs('frames') + '/frame_' + str([0]) + '_video_' + str(id_video) + '.jpg'  # noqa: E501
                 frames = tr.common.get_configs('frames')
-                # todo: @Job, add comment and what method below does
-                analysis.save_all_frames(video_path, 
-                                         heroku_data,
-                                         frames,
-                                         id_pp=6,  # participant ID
-                                         id_video=id_video,  # stimulus ID
-                                         t='video_'+str(id_video)+'-t-0')
-                # todo: @Job, add comment and what method below does
-                analysis.create_gazes(heroku_data,
+                # Deconstruct the source video into its individual frames. To allow for overlaying the heatmap for each frame later on.
+                analysis.save_all_frames(video_path,                                     # location path source video/stimuli
+                                        heroku_data,                                     # dataframe
+                                        frames,
+                                        id_pp=6,                                         # participant ID
+                                        id_video=id_video,                               # stimulus ID
+                                        t='video_'+str(id_video)+'-t-0')                 # video length time
+                # construct the gazes lines just as an example for how that looks compared to the heatmap. 
+                analysis.create_gazes(heroku_data,                                       # dataframe
                                       image,
-                                      x='video_'+str(id_video)+'-x-0',
-                                      y='video_'+str(id_video)+'-y-0',
-                                      id_pp=6,
-                                      id_video=id_video,  # participant ID
-                                      save_file=True)
-                # todo: @Job, add comment and what method below does
-                analysis.create_heatmap(heroku_data,
+                                        x='video_'+str(id_video)+'-x-0',                 # x coordinates eye tracking
+                                        y='video_'+str(id_video)+'-y-0',                 # y coordinates eye tracking
+                                        id_pp=6,                                         # participant ID
+                                        id_video=id_video,                               # stimulus ID
+                                        save_file=True)                                  # save file command
+                # Construct heatmap over each video frame previously created from the source video. 
+                analysis.create_heatmap(heroku_data,                                     # dataframe
                                         image,
-                                        x='video_'+str(id_video)+'-x-0',
-                                        y='video_'+str(id_video)+'-y-0',
-                                        ID=6,  # participant ID
-                                        type_heatmap='contourf',
+                                        x='video_'+str(id_video)+'-x-0',                 # x coordinates eye tracking
+                                        y='video_'+str(id_video)+'-y-0',                 # y coordinates eye tracking
+                                        ID_pp=6,                                         # participant ID
+                                        type_heatmap='contourf',                         # type heatmap
                                         add_corners=True,
-                                        save_file=True)
-                # todo: @Job, add comment and what method below does
+                                        save_file=True)                                  # save file command
+                # Animate the kp for given source video. 
                 analysis.plot_kp_animate(mapping,
                                          'video_'+str(id_video),
                                          conf_interval=0.95)
                 # todo: @Job, add comment and what method below does
-                analysis.create_animation(heroku_data,
-                                          image_frame,
-                                          x='video_'+str(id_video)+'-x-0',
-                                          y='video_'+str(id_video)+'-y-0',
-                                          t='video_'+str(id_video)+'-t-0', 
-                                          id_pp=6,  # participant ID
-                                          id_video=id_video,  # stimulus ID
-                                          save_anim=True,
-                                          save_frames=True)
+                analysis.create_animation(heroku_data,                                   # dataframe
+                                        image_frame,
+                                        x='video_'+str(id_video)+'-x-0',                 # x coordinates eye tracking
+                                        y='video_'+str(id_video)+'-y-0',                 # y coordinates eye tracking
+                                        t='video_'+str(id_video)+'-t-0',                 # t coordinates time
+                                        id_pp=6,                                         # participant ID
+                                        id_video=id_video,                               # stimulus ID
+                                        save_anim=True,                                  # save animation command
+                                        save_frames=True)                                # save frames of animation command
             # create animation for stimulus
             # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],     # noqa: E501
             #                       x=['avg_object', 'avg_person', 'avg_car'],
@@ -332,37 +333,37 @@ if __name__ == '__main__':
             #                       marginal_x='rug',
             #                       save_file=True)
             # todo: @Job, add comment and what method below does
-            analysis.scatter_et(heroku_data, 
-                                x='video_0-x-0',
-                                y='video_0-y-0',
-                                t='video_0-t-0',
-                                id_pp=6,    # 0,2,6,10,12,13,14,16,18,20,22
-                                id_video='video_0',
+            analysis.scatter_et(heroku_data,                                             # dataframe
+                                x='video_0-x-0',                                         # x coordinates eye tracking
+                                y='video_0-y-0',                                         # y coordinates eye tracking
+                                t='video_0-t-0',                                         # t coordinates time
+                                id_pp=6,                                                 # participant ID (0,2,6,10,12,13,14,16,18,20,22)
+                                id_video='video_0',                                      # stimulus ID
                                 pretty_text=True,
-                                save_file=True)
+                                save_file=True)                                          # save file command
+            # Create individual heatmap for given video and participant. 
+            analysis.heatmap(heroku_data,                                                # dataframe
+                                x='video_0-x-0',                                         # x coordinates eye tracking
+                                y='video_0-y-0',                                         # y coordinates eye tracking
+                                t='video_0-t-0',                                         # t coordinates time
+                                id_pp=6,                                                 # participant ID (0,2,6,10,12,13,14,16,18,20,22)
+                                id_video='video_0',                                      # stimulus ID
+                                pretty_text=True,
+                                save_file=True)                                          # save file command
             # todo: @Job, add comment and what method below does
-            analysis.heatmap(heroku_data, 
-                             x='video_0-x-0',
-                             y='video_0-y-0',
-                             t='video_0-t-0',
-                             id_pp=6,    # 0,2,6,10,12,13,14,16,18,20,22
-                             id_video='video_0',
-                             pretty_text=True,
-                             save_file=True)
-            # todo: @Job, add comment and what method below does
-            analysis.create_heatmap(heroku_data,
-                                    x='video_0-x-0',
-                                    y='video_0-y-0',
-                                    ID=6,
-                                    type_heatmap='contourf',
-                                    add_corners=True,
-                                    save_file=True)
-            # todo: @Job, add comment and what method below does
-            analysis.create_animation(heroku_data,
-                                      x='video_0-x-0',
-                                      y='video_0-y-0',
-                                      t='video_0-t-0',
-                                      ID=6)
+            analysis.create_heatmap(heroku_data,                                         # dataframe
+                                x='video_0-x-0',                                         # x coordinates eye tracking
+                                y='video_0-y-0',                                         # y coordinates eye tracking
+                                ID_pp=6,                                                    # participant ID (0,2,6,10,12,13,14,16,18,20,22)
+                                type_heatmap='contourf',                                 # type heatmap
+                                add_corners=True, 
+                                save_file=True)                                          # save file command
+            # todo: @Job, add comment and what method below does 
+            analysis.create_animation(heroku_data,                                       # dataframe
+                                x='video_0-x-0',                                         # x coordinates eye tracking
+                                y='video_0-y-0',                                         # y coordinates eye tracking
+                                t='video_0-t-0',                                         # t coordinates time
+                                ID_pp=6)                                                 # participant ID (0,2,6,10,12,13,14,16,18,20,22)
         # check if any figures are to be rendered
         figures = [manager.canvas.figure
                    for manager in

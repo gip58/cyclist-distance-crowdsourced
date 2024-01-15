@@ -27,7 +27,6 @@ import trust as tr
 matplotlib.use('TkAgg')
 logger = tr.CustomLogger(__name__)  # use custom logger
 
-
 class Analysis:
     # set template for plotly output
     template = tr.common.get_configs('plotly_template')
@@ -143,7 +142,7 @@ class Analysis:
                        image,
                        x,
                        y,
-                       ID,
+                       ID_pp,
                        type_heatmap='contourf',
                        add_corners=True,
                        save_file=False):
@@ -161,12 +160,12 @@ class Analysis:
         height = tr.common.get_configs('stimulus_height')
         # add datapoints to corners for maximised heatmaps
         if x != list: 
-            x = df.iloc[ID][x]
+            x = df.iloc[ID_pp][x]
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(x):
             x[i] = ((val-xmin) / (xmax-xmin))*width
         if y != list:     
-            y = df.iloc[ID][y]
+            y = df.iloc[ID_pp][y]
         ymin, ymax = min(y), max(y)
         for i, val in enumerate(y):
             y[i] = ((val-ymin) / (ymax-ymin))*height
