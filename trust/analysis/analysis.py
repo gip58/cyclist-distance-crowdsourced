@@ -21,11 +21,11 @@ import ast
 from scipy.stats.kde import gaussian_kde
 from PIL import Image
 import cv2
-
 import trust as tr
 
 matplotlib.use('TkAgg')
 logger = tr.CustomLogger(__name__)  # use custom logger
+
 
 class Analysis:
     # set template for plotly output
@@ -68,7 +68,7 @@ class Analysis:
         if not cap.isOpened():
             logger.error('no cap')
             return
-        for k in range(0,len(sec)+1,10):
+        for k in range(0, len(sec)+1, 10):
             os.makedirs(os.path.dirname(result_path), exist_ok=True)
             fps = cap.get(cv2.CAP_PROP_FPS)
             cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * sec[k]/1000))
@@ -114,7 +114,7 @@ class Analysis:
         # get dimensions of base image
         width = tr.common.get_configs('stimulus_width')
         height = tr.common.get_configs('stimulus_height')
-        
+
         x = df.iloc[id_pp][x]
         # Normalize screen size
         xmin, xmax = min(x), max(x)
@@ -125,15 +125,15 @@ class Analysis:
         ymin, ymax = min(y), max(y)
         for i, val in enumerate(y):
             y[i] = ((val-ymin) / (ymax-ymin))*height
-        
+
         x = np.array(x)
         y = np.array(y)
 
         # show heatmap by plt
         dpi = 150
         fig = plt.figure()
-        fig.set_figwidth(width / dpi) 
-        fig.set_figheight(height / dpi) 
+        fig.set_figwidth(width / dpi)
+        fig.set_figheight(height / dpi)
         plt.imshow(im)
         plt.plot(x,
                  y,
@@ -170,8 +170,8 @@ class Analysis:
         Args:
             df (dataframe):
             image (str): name of figure.
-            add_corners: add points to the corners to have the heatmap ovelay the
-                     whole image.
+            add_corners: add points to the corners to have the heatmap ovelay
+                the whole image.
             type_heatmap: contourf, pcolormesh, kdeplot.
         """
         # todo: remove datapoints in corners in heatmaps
@@ -181,12 +181,12 @@ class Analysis:
         width = tr.common.get_configs('stimulus_width')
         height = tr.common.get_configs('stimulus_height')
         # add datapoints to corners for maximised heatmaps
-        if x != list: 
+        if x != list:
             x = df.iloc[ID_pp][x]
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(x):
             x[i] = ((val-xmin) / (xmax-xmin))*width
-        if y != list:     
+        if y != list:
             y = df.iloc[ID_pp][y]
         ymin, ymax = min(y), max(y)
         for i, val in enumerate(y):
@@ -206,8 +206,8 @@ class Analysis:
         # create figure object with given dpi and dimensions
         dpi = 150
         fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
-        # fig.set_figwidth(width/150) 
-        # fig.set_figheight(height/150) 
+        # fig.set_figwidth(width/150)
+        # fig.set_figheight(height/150)
         # alpha=0.5 makes the plot semitransparent
         suffix_file = ''  # suffix to add to saved image
         if type_heatmap == 'contourf':
@@ -245,7 +245,7 @@ class Analysis:
                                 y=y,
                                 alpha=0.5,
                                 shade=True,
-                                title='heatmap participant '+ID,
+                                title='heatmap participant '+ID_pp,
                                 cmap="RdBu_r")
             except TypeError:
                 logger.error('Not enough data. Heatmap was not created for '
@@ -283,14 +283,14 @@ class Analysis:
                          y,
                          id_pp,
                          id_video,
-                         t,                
+                         t,
                          save_anim=False,
                          save_frames=False):
         """
         Create animation for image based on the list of lists of points of
         varying duration.
         """
-        
+
         self.width = tr.common.get_configs('stimulus_width')
         self.height = tr.common.get_configs('stimulus_height')
         self.id_video = id_video
@@ -307,12 +307,16 @@ class Analysis:
             self.y[i] = ((val-ymin) / (ymax-ymin))*self.height
 
         self.t = df.iloc[id_pp][t]
-        self.number_frames=int(len(self.t)//10)
-        self.max_t=int(max(self.t))
-        interv=self.max_t/self.number_frames
+
+        self.number_frames = int(len(self.t) // 10)
+
+        self.max_t = int(max(self.t))
+
+        interv = self.max_t / self.number_frames
+
         self.image = image
-        self.save_frames = save_frames  
-        dpi = 100         
+        self.save_frames = save_frames
+        dpi = 100
         self.fig, self.g = plt.subplots(figsize=(self.width / dpi,
                                         self.height / dpi),
                                         dpi=dpi)
@@ -322,10 +326,10 @@ class Analysis:
         #                                           height,
         #                                           x,
         #                                           y,
-        #                                           ID,           
+        #                                           ID,
         #                                           type_heatmap='kdeplot',
         #                                           add_corners=True,
-        #                                           save_file=False)         
+        #                                           save_file=False)
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
                                        frames=self.number_frames,
@@ -339,7 +343,7 @@ class Analysis:
                            self.folder,
                            '_video_' + str(id_video) + '_participant_' + str(id_pp) + '_animation.mp4')  # noqa: E501
         # attach_video_player_to_figure(self.fig, "BigBuckBunny.mp4", on_frame, anim=anim)  # noqa: E501
-    
+
     def animate(self, i):
         """
         Helper function to create animation.
@@ -373,7 +377,7 @@ class Analysis:
                  fontsize=12,
                  verticalalignment='top',
                  bbox=props)
-       
+
         # save each frame as file
         if self.save_frames:
             # build suffix for filename
@@ -385,7 +389,7 @@ class Analysis:
             temp_fig = pickle.load(buf)
             # save figure
             self.save_fig(self.image, temp_fig, self.folder, suffix)
-        return self.g 
+        return self.g
 
     def save_anim(self, image, anim, output_subdir, suffix):
         """
@@ -402,7 +406,7 @@ class Analysis:
         # save file
         anim.save(path + file_no_path + suffix, writer='ffmpeg')
         # clear animation from memory
-        plt.close(self.fig)            
+        plt.close(self.fig)
 
     # TODO: fix error with value of string not used as float
     def corr_matrix(self, df, columns_drop, save_file=False):
@@ -438,20 +442,20 @@ class Analysis:
         # create figure
         fig = plt.figure(figsize=(34, 20))
         g = sns.heatmap(corr,
-                            annot=True,
-                            mask=mask,
-                            cmap='coolwarm',
-                            fmt=".2f")
+                        annot=True,
+                        mask=mask,
+                        cmap='coolwarm',
+                        fmt=".2f")
         # rotate ticks
         for item in g.get_xticklabels():
             item.set_rotation(55)
         # save image
         if save_file:
             self.save_fig('all',
-                            fig,
-                            self.folder,
-                            '_corr_matrix.jpg',
-                            pad_inches=0.05)
+                          fig,
+                          self.folder,
+                          '_corr_matrix.jpg',
+                          pad_inches=0.05)
         # revert font
         self.reset_font()
 
@@ -480,15 +484,15 @@ class Analysis:
         dimensions = df.keys()
         # plot matrix
         fig = px.scatter_matrix(df,
-                            dimensions=dimensions,
-                            color=color,
-                            symbol=symbol)
+                                dimensions=dimensions,
+                                color=color,
+                                symbol=symbol)
         # update layout
         fig.update_layout(template=self.template,
-                            width=5000,
-                            height=5000,
-                            xaxis_title=xaxis_title,
-                            yaxis_title=yaxis_title)
+                          width=5000,
+                          height=5000,
+                          xaxis_title=xaxis_title,
+                          yaxis_title=yaxis_title)
         # hide diagonal
         if not diagonal_visible:
             fig.update_traces(diagonal_visible=False)
@@ -685,22 +689,22 @@ class Analysis:
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', category=RuntimeWarning)
             fig = px.scatter(df,
-                            x=x,
-                            y=y,
-                            color=color,
-                            symbol=symbol,
-                            size=size,
-                            text=text,
-                            trendline=trendline,
-                            hover_data=hover_data,
-                            marginal_x=marginal_x,
-                            marginal_y=marginal_y)
+                             x=x,
+                             y=y,
+                             color=color,
+                             symbol=symbol,
+                             size=size,
+                             text=text,
+                             trendline=trendline,
+                             hover_data=hover_data,
+                             marginal_x=marginal_x,
+                             marginal_y=marginal_y)
         # update layout
         fig.update_layout(template=self.template,
-                            xaxis_title=xaxis_title,
-                            yaxis_title=yaxis_title,
-                            xaxis_range=xaxis_range,
-                            yaxis_range=yaxis_range)
+                          xaxis_title=xaxis_title,
+                          yaxis_title=yaxis_title,
+                          xaxis_range=xaxis_range,
+                          yaxis_range=yaxis_range)
         # change marker size
         if marker_size:
             fig.update_traces(marker=dict(size=marker_size))
@@ -763,7 +767,7 @@ class Analysis:
                     df[x_col] = df[x_col].str.capitalize()
                 else:
                     logger.error('no string')
-            
+
             if isinstance(df.iloc[0][y], str):  # check if string
                 # replace underscores with spaces
                 df[y] = df[y].str.replace('_', ' ')
@@ -780,7 +784,7 @@ class Analysis:
                     df[text] = df[text].str.capitalize()
             except ValueError as e:
                 logger.debug('Tried to prettify {} with exception {}', text, e)
-        
+
         # create new dataframe with the necessary data
         color = []
         val_y = []
@@ -795,29 +799,29 @@ class Analysis:
                 'val_x': val_x}
 
         df = pd.DataFrame(data)
-        
+
         # scatter plot with histograms
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', category=RuntimeWarning)
             fig = px.scatter(df,
-                            x='val_x',
-                            y='val_y',
-                            color='color',
-                            symbol=symbol,
-                            text=text,
-                            trendline=trendline,
-                            # hover_data=hover_data,
-                            marginal_x=marginal_x,
-                            marginal_y=marginal_y)
+                             x='val_x',
+                             y='val_y',
+                             color='color',
+                             symbol=symbol,
+                             text=text,
+                             trendline=trendline,
+                             # hover_data=hover_data,
+                             marginal_x=marginal_x,
+                             marginal_y=marginal_y)
         # update layout
         fig.update_layout(template=self.template,
-                            xaxis_title=xaxis_title,
-                            yaxis_title=yaxis_title,
-                            xaxis_range=xaxis_range,
-                            yaxis_range=yaxis_range,
-                            legend_title_text=' ',
-                            font=dict(size=20),
-                            legend=dict(orientation='h',
+                          xaxis_title=xaxis_title,
+                          yaxis_title=yaxis_title,
+                          xaxis_range=xaxis_range,
+                          yaxis_range=yaxis_range,
+                          legend_title_text=' ',
+                          font=dict(size=20),
+                          legend=dict(orientation='h',
                                       yanchor='bottom',
                                       y=1.02,
                                       xanchor='right',
@@ -843,7 +847,7 @@ class Analysis:
     def scatter_et(self, df, x, y, t, id_video, id_pp, pretty_text=False,
                    marginal_x='violin', marginal_y='violin', xaxis_title=None,
                    xaxis_range=True, yaxis_title=None, yaxis_range=True,
-                   save_file=True): 
+                   save_file=True):
         """
         output satter plot of x & y.
 
@@ -851,7 +855,7 @@ class Analysis:
             df (dataframe): dataframe with data from Heroku.
             x (list): dataframe column to plot on x axis.
             y (list): dataframe column to plot on y axis.
-            t (list): dataframe column to determin timespan 
+            t (list): dataframe column to determin timespan
             id_video (int): stimulus video ID.
             i_pp (int): participant ID.
             pretty_text (bool, optional): prettify ticks by replacing _ with
@@ -884,7 +888,7 @@ class Analysis:
 
         t = df.iloc[id_pp][t]
         id_pp = str(id_pp)
-       
+
         # Plot animation scatter
         fig = px.scatter(df,
                          x=x,
@@ -910,7 +914,7 @@ class Analysis:
                              self.folder)
         # open it in localhost instead
         else:
-            fig.show()             
+            fig.show()
 
     def heatmap(self, df, x, y, t, id_video, id_pp, pretty_text=False,
                 marginal_x='violin', marginal_y='violin', xaxis_title=None,
@@ -946,24 +950,23 @@ class Analysis:
         ymin, ymax = min(y), max(y)
         for i, val in enumerate(y):
             y[i] = ((val-ymin) / (ymax-ymin))*height
-        
+
         t = df.iloc[id_pp][t]
-         
+
         #  prettify ticks
         if pretty_text:
             if isinstance(x, str):  # check if string
                 # replace underscores with spaces
                 df[x] = df[x].str.replace('_', ' ')
-                
+
                 # capitalise
                 df[x] = df[x].str.capitalize()
-           
             else:
-                logger.error('x not a string')    
+                logger.error('x not a string')
             if isinstance(y, str):  # check if string
                 # replace underscores with spaces
                 df[y] = df[y].str.replace('_', ' ')
-               
+
                 # capitalise
                 df[y] = df[y].str.capitalize()
             else:
@@ -978,7 +981,7 @@ class Analysis:
         [go.Histogram2d(x=x[i:], y=y[i:]) for i in range(len(int(x)))]
         # build layers of animation heatmap and scatter
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=x, y=y)) 
+        fig.add_trace(go.Scatter(x=x, y=y))
         fig.add_trace(go.Histogram2dContour(x=x, y=y))
         frames = [go.Frame(data=[go.Histogram2dContour(x=x[:k+1],
                                                        y=y[:k+1],
@@ -988,16 +991,16 @@ class Analysis:
                                  go.Scatter(x=x[:k+1],
                                             y=y[:k+1],
                                             visible=True,
-                                            opacity=0.9)], 
+                                            opacity=0.9)],
                            traces=[0, 1]) for k in range(len(x))]
         fig.frames = frames
-        fig.update_layout(template=self.template, 
-                          height=height, 
+        fig.update_layout(template=self.template,
+                          height=height,
                           width=width,
                           title='heatmap_scatter_animation'+' ' + id_video + ' ' + 'participant'+' '+id_pp,  # noqa: E501
                           xaxis_range=[0, 2*width],
                           yaxis_range=[0, 2*height],
-                          updatemenus=[dict(type='buttons', 
+                          updatemenus=[dict(type='buttons',
                                             buttons=[dict(label='Play',
                                                           method='animate',
                                                           args=[None,
@@ -1315,7 +1318,7 @@ class Analysis:
         # open it in localhost instead
         else:
             fig.show()
-    
+
     def plot_kp_video_pp(self, df, dt, stimulus, pp,
                          conf_interval=None, trendline=None,
                          xaxis_title='Time (s)',
@@ -1379,17 +1382,17 @@ class Analysis:
         kp_data = df.loc[stimulus]['kp']
         # plot keypresses
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=times, y=kp_data)) 
-        
+        fig.add_trace(go.Scatter(x=times, y=kp_data))
+
         frames = [go.Frame(data=[go.Scatter(x=times[:k+1],
                                             y=kp_data[:k+1],
                                             visible=True,
-                                            opacity=0.9)], 
+                                            opacity=0.9)],
                            traces=[0]) for k in range(len(times))]
         fig.frames = frames
         fig.update_layout(template=self.template,
                           title='Keypresses for stimulus ' + stimulus,
-                          updatemenus=[dict(type='buttons', 
+                          updatemenus=[dict(type='buttons',
                                             buttons=[dict(label='Play',
                                                           method='animate',
                                                           args=[None,
@@ -1679,8 +1682,8 @@ class Analysis:
         # build string with variables
         variables_str = ''
         for variable in variables:
-            variables_str = variables_str + '_' + str(variable['variable']) + '-' + str(variable['value'])
-                
+            variables_str = variables_str + '_' + str(variable['variable']) +\
+                '-' + str(variable['value'])
         # calculate times
         times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000  # noqa: E501
         # extract data for values
