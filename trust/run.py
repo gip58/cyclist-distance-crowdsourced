@@ -2,7 +2,8 @@
 import matplotlib.pyplot as plt
 import matplotlib._pylab_helpers
 from tqdm import tqdm
-
+import os
+import shutil
 import trust as tr
 
 tr.logs(show_level='info', show_color=True)
@@ -283,7 +284,10 @@ if __name__ == '__main__':
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
                 image = tr.common.get_configs('frames') + '/frame_' + str([0]) + '_video_' + str(id_video) + '.jpg'  # noqa: E501
-                frames = tr.common.get_configs('frames')
+                frames = tr.common.get_configs('frames') 
+                if not os.path.exists(frames):
+                     os.makedirs(frames)
+                
                 # Deconstruct the source video into its individual frames. To allow for overlaying the heatmap for each frame later on.
                 analysis.save_all_frames(video_path,                                     # location path source video/stimuli
                                         heroku_data,                                     # dataframe
@@ -322,6 +326,7 @@ if __name__ == '__main__':
                                         id_video=id_video,                               # stimulus ID
                                         save_anim=True,                                  # save animation command
                                         save_frames=True)                                # save frames of animation command
+                shutil.rmtree(frames)
             # create animation for stimulus
             # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],     # noqa: E501
             #                       x=['avg_object', 'avg_person', 'avg_car'],

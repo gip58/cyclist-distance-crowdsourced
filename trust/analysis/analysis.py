@@ -48,7 +48,6 @@ class Analysis:
         # set font to Times
         plt.rc('font', family='serif')
 
-    # todo: @Job, add docstring
     def save_all_frames(self, video_path, df, result_path, id_pp, id_video, t):
         """
         Outputs individual frames as png from inputted video mp4.
