@@ -275,7 +275,6 @@ if __name__ == '__main__':
                 # Deconstruct the source video into its individual frames.
                 # To allow for overlaying the heatmap for each frame later on.
                 analysis.save_all_frames(heroku_data,
-                                         id_pp=6,
                                          id_video=id_video,
                                          t='video_'+str(id_video)+'-t-0')
                 # construct the gazes lines just as an example for how

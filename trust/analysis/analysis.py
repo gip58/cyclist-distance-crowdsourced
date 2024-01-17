@@ -48,19 +48,18 @@ class Analysis:
         # set font to Times
         plt.rc('font', family='serif')
 
-    def save_all_frames(self, df, id_pp, id_video, t):
+    def save_all_frames(self, df, id_video, t):
         """
         Outputs individual frames as png from inputted video mp4.
 
         Args:
             df (dataframe): dataframe of heroku.
-            id_pp (int): participant ID.
             id_video (int): stimulus video ID.
             t (list): column in dataframe containing time data.
         """
         logger.info('Creating frames')
         # path for temp folder to store images with frames
-        path = os.path.join(tr.settings.root_dir, 'frames')
+        path = os.path.join(tr.settings.output_dir, 'frames')
         # create temp folder
         if not os.path.exists(path):
             os.makedirs(path)
@@ -68,7 +67,7 @@ class Analysis:
         cap = cv2.VideoCapture(os.path.join(tr.common.get_configs('path_stimuli'),  # noqa: E501
                                             'video_' + str(id_video) + '.mp4'))  # noqa: E501
         # timestamp
-        t = df.iloc[id_pp][t]
+        t = df.iloc[0][t]
         # check if file is already open
         if not cap.isOpened():
             logger.error('File with frame already open.')
@@ -81,7 +80,7 @@ class Analysis:
             ret, frame = cap.read()
             if ret:
                 filename = os.path.join(path,
-                                        str([k//10]) + '_video_' + str(id_video)+'.jpg')  # noqa: E501
+                                        'frame_' + str([k//10]) + '_video_' + str(id_video)+'.jpg')  # noqa: E501
                 cv2.imwrite(filename,
                             frame,
                             [cv2.IMWRITE_JPEG_QUALITY, 20])
@@ -108,7 +107,7 @@ class Analysis:
         # return
 
         # frame
-        image = os.path.join(os.path.join(tr.settings.root_dir, 'frames'),
+        image = os.path.join(os.path.join(tr.settings.output_dir, 'frames'),
                              'frame_' + str([0]) + '_video_' + str(id_video) + '.jpg')  # noqa: E501
 
         # read original image
@@ -119,6 +118,7 @@ class Analysis:
 
         x = df.iloc[id_pp][x]
         # Normalize screen size
+        print(x)
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(x):
             x[i] = ((val-xmin) / (xmax-xmin))*width
@@ -173,7 +173,7 @@ class Analysis:
         # check if data is present
         logger.info('Creating heatmap for x={} and t={}.', x, y)
         # frame
-        image = os.path.join(os.path.join(tr.settings.root_dir, 'frames'),
+        image = os.path.join(os.path.join(tr.settings.output_dir, 'frames'),
                              'frame_' + str([0]) + '_video_' + str(id_video) + '.jpg')  # noqa: E501
         # get dimensions of base image
         width = tr.common.get_configs('stimulus_width')
@@ -304,7 +304,7 @@ class Analysis:
 
         interv = self.max_t / self.number_frames
 
-        image = os.path.join(tr.settings.root_dir, 'frames')
+        image = os.path.join(tr.settings.output_dir, 'frames')
         self.image = image
         self.save_frames = save_frames
         dpi = 100
