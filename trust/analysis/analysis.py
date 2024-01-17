@@ -59,22 +59,21 @@ class Analysis:
             t (list): column in dataframe containing time data.
         """
         logger.info('Creating frames')
-
-        # create temp folder
+        # path for temp folder to store images with frames
         path = os.path.join(tr.settings.root_dir, 'frames')
-        print(path)
+        # create temp folder
         if not os.path.exists(path):
             os.makedirs(path)
         # video file in the folder with stimuli
         cap = cv2.VideoCapture(os.path.join(tr.common.get_configs('path_stimuli'),  # noqa: E501
                                             'video_' + str(id_video) + '.mp4'))  # noqa: E501
+        # timestamp
         t = df.iloc[id_pp][t]
-        # todo: we should be operating not at the second level, but at the
-        # level of frames, so make a smooth animation. @job, address
+        # check if file is already open
         if not cap.isOpened():
-            # todo: what? make this error message specific
-            logger.error('no cap')
+            logger.error('File with frame already open.')
             return
+        # go over frames
         for k in range(0, len(t)+1, 10):
             os.makedirs(os.path.dirname(path), exist_ok=True)
             fps = cap.get(cv2.CAP_PROP_FPS)
