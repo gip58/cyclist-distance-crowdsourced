@@ -1,8 +1,9 @@
 # by Pavlo Bazilinskyy <pavlo.bazilinskyy@gmail.com>
 import matplotlib.pyplot as plt
 import matplotlib._pylab_helpers
-# from tqdm import tqdm
+from tqdm import tqdm
 import os
+import pathlib
 import shutil
 import trust as tr
 
@@ -263,73 +264,61 @@ if __name__ == '__main__':
             analysis.map(countries_data, color='year_license', save_file=True)
             # map of year of automated driving per country
             analysis.map(countries_data, color='year_ad', save_file=True)
-
         # Visualisation of eye tracking data
         if SHOW_OUTPUT_ET:
-            # browser window dimensions
-            image_frame = tr.common.get_configs('frames')
-            video_path = tr.common.get_configs('path_source')
-            # todo: @Job, add comment and what method below does
+            # create eye gaze visualisations for all videos
+            logger.info('Producing visualisations of eye gaze data for {} stimuli.',  # noqa: E501
+                        tr.common.get_configs('num_stimuli'))
+            # source video/stimulus for a given individual.
+            for id_video in tqdm(range(tr.common.get_configs('num_stimuli'))):
+                logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
+                            id_video)
+                # Deconstruct the source video into its individual frames.
+                # To allow for overlaying the heatmap for each frame later on.
+                analysis.save_all_frames(heroku_data,
+                                         id_pp=6,
+                                         id_video=id_video,
+                                         t='video_'+str(id_video)+'-t-0')
+                # construct the gazes lines just as an example for how
+                # that looks compared to the heatmap.
+                analysis.create_gazes(heroku_data,
+                                      x='video_'+str(id_video)+'-x-0',
+                                      y='video_'+str(id_video)+'-y-0',
+                                      id_pp=6,
+                                      id_video=id_video,
+                                      save_file=True)
+                # Construct heatmap over each video frame previously created
+                # from the source video.
+                analysis.create_heatmap(heroku_data,
+                                        x='video_'+str(id_video)+'-x-0',
+                                        y='video_'+str(id_video)+'-y-0',
+                                        ID_pp=6,
+                                        type_heatmap='contourf',
+                                        add_corners=True,
+                                        save_file=True)
+                # Animate the kp for given source video.
+                analysis.plot_kp_animate(mapping,
+                                         'video_'+str(id_video),
+                                         conf_interval=0.95)
+                # todo: @Job, add comment and what method below does
+                analysis.create_animation(heroku_data,
+                                          x='video_'+str(id_video)+'-x-0',
+                                          y='video_'+str(id_video)+'-y-0',
+                                          t='video_'+str(id_video)+'-t-0',
+                                          id_pp=6,
+                                          id_video=id_video,
+                                          save_anim=True,
+                                          save_frames=True)
+                # remove temp folder with frames
+                shutil.rmtree(os.path.join(tr.settings.root_dir, 'frames'))
+            # todo: add comment with description
             analysis.scatter_mult(heroku_data,
                                   x=['video_0-x-0', 'video_1-x-0'],
                                   y='video_0-y-0',
                                   color='browser_major_version',
                                   pretty_text=True,
                                   save_file=True)
-            # create eye gaze visualisations for all videos
-            logger.info('Producing visualisations of eye gaze data for {} stimuli.',  # noqa: E501
-                        tr.common.get_configs('num_stimuli'))
-            # Creating a for loop that makes an eye gazes/heatmap for every source
-            #     video/stimuli for a given individual.
-            for id_video in range(tr.common.get_configs('num_stimuli')):
-                logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
-                            id_video)
-                image = tr.common.get_configs('frames') + '/frame_' + str([0]) + '_video_' + str(id_video) + '.jpg'  # noqa: E501
-                frames = tr.common.get_configs('frames')
-                if not os.path.exists(frames):
-                    os.makedirs(frames)
-
-                # Deconstruct the source video into its individual frames.
-                # To allow for overlaying the heatmap for each frame later on.
-                analysis.save_all_frames(video_path,                                     # location path source video/stimuli
-                                         heroku_data,                                     # dataframe
-                                         frames,                                          # location for storage individual frames from source vidoe/stimuli
-                                         id_pp=6,                                         # participant ID
-                                         id_video=id_video,                               # stimulus ID
-                                         t='video_'+str(id_video)+'-t-0')                 # video length time
-                # construct the gazes lines just as an example for how
-                # that looks compared to the heatmap.
-                analysis.create_gazes(heroku_data,                                       # dataframe
-                                      image,
-                                      x='video_'+str(id_video)+'-x-0',                 # x coordinates eye tracking
-                                      y='video_'+str(id_video)+'-y-0',                 # y coordinates eye tracking
-                                      id_pp=6,                                         # participant ID
-                                      id_video=id_video,                               # stimulus ID
-                                      save_file=True)                                  # save file command
-                # Construct heatmap over each video frame previously created from the source video.
-                analysis.create_heatmap(heroku_data,                                     # dataframe
-                                        image,
-                                        x='video_'+str(id_video)+'-x-0',                 # x coordinates eye tracking
-                                        y='video_'+str(id_video)+'-y-0',                 # y coordinates eye tracking
-                                        ID_pp=6,                                         # participant ID
-                                        type_heatmap='contourf',                         # type heatmap
-                                        add_corners=True,
-                                        save_file=True)                                  # save file command
-                # Animate the kp for given source video.
-                analysis.plot_kp_animate(mapping,
-                                         'video_'+str(id_video),
-                                         conf_interval=0.95)
-                # todo: @Job, add comment and what method below does
-                analysis.create_animation(heroku_data,                                   # dataframe
-                                          image_frame,
-                                          x='video_'+str(id_video)+'-x-0',                 # x coordinates eye tracking
-                                          y='video_'+str(id_video)+'-y-0',                 # y coordinates eye tracking
-                                          t='video_'+str(id_video)+'-t-0',                 # t coordinates time
-                                          id_pp=6,                                         # participant ID
-                                          id_video=id_video,                               # stimulus ID
-                                          save_anim=True,                                  # save animation command
-                                          save_frames=True)                                # save frames of animation command
-                shutil.rmtree(frames)
+            # Creating a for loop that makes an eye gazes/heatmap for every 
             # create animation for stimulus
             # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],     # noqa: E501
             #                       x=['avg_object', 'avg_person', 'avg_car'],
@@ -341,23 +330,23 @@ if __name__ == '__main__':
             #                       marginal_x='rug',
             #                       save_file=True)
             # Create individual scatter plot for given video and participant.
-            analysis.scatter_et(heroku_data,                                             # dataframe
-                                x='video_0-x-0',                                         # x coordinates eye tracking
-                                y='video_0-y-0',                                         # y coordinates eye tracking
-                                t='video_0-t-0',                                         # t coordinates time
-                                id_pp=6,                                                 # participant ID (0,2,6,10,12,13,14,16,18,20,22)
-                                id_video='video_0',                                      # stimulus ID
+            analysis.scatter_et(heroku_data,
+                                x='video_0-x-0',
+                                y='video_0-y-0',
+                                t='video_0-t-0',
+                                id_pp=6,
+                                id_video='video_0',
                                 pretty_text=True,
-                                save_file=True)                                          # save file command
+                                save_file=True)
             # Create individual heatmap for given video and participant.
-            # analysis.heatmap(heroku_data,                                                # dataframe
-            #                     x='video_0-x-0',                                         # x coordinates eye tracking
-            #                     y='video_0-y-0',                                         # y coordinates eye tracking
-            #                     t='video_0-t-0',                                         # t coordinates time
-            #                     id_pp=6,                                                 # participant ID (0,2,6,10,12,13,14,16,18,20,22)
-            #                     id_video='video_0',                                      # stimulus ID
+            # analysis.heatmap(heroku_data,
+            #                     x='video_0-x-0',
+            #                     y='video_0-y-0',
+            #                     t='video_0-t-0',
+            #                     id_pp=6,
+            #                     id_video='video_0',
             #                     pretty_text=True,
-            #                     save_file=True)                                          # save file command
+            #                     save_file=True)
 
         # check if any figures are to be rendered
         figures = [manager.canvas.figure

@@ -48,45 +48,46 @@ class Analysis:
         # set font to Times
         plt.rc('font', family='serif')
 
-    def save_all_frames(self, video_path, df, result_path, id_pp, id_video, t):
+    def save_all_frames(self, df, id_pp, id_video, t):
         """
         Outputs individual frames as png from inputted video mp4.
 
         Args:
-            video_path: location of mp4 videos.
             df (dataframe): dataframe of heroku.
             id_pp (int): participant ID.
             id_video (int): stimulus video ID.
             t (list): column in dataframe containing time data.
         """
         logger.info('Creating frames')
-        cap = cv2.VideoCapture(video_path + '/video_' + str(id_video) + '.mp4')
+
+        # create temp folder
+        path = os.path.join(tr.settings.root_dir, 'frames')
+        print(path)
+        if not os.path.exists(path):
+            os.makedirs(path)
+        # video file in the folder with stimuli
+        cap = cv2.VideoCapture(os.path.join(tr.common.get_configs('path_stimuli'),  # noqa: E501
+                                            'video_' + str(id_video) + '.mp4'))  # noqa: E501
         t = df.iloc[id_pp][t]
         # todo: we should be operating not at the second level, but at the
         # level of frames, so make a smooth animation. @job, address
-        sec = t
         if not cap.isOpened():
+            # todo: what? make this error message specific
             logger.error('no cap')
             return
-        for k in range(0, len(sec)+1, 10):
-            os.makedirs(os.path.dirname(result_path), exist_ok=True)
+        for k in range(0, len(t)+1, 10):
+            os.makedirs(os.path.dirname(path), exist_ok=True)
             fps = cap.get(cv2.CAP_PROP_FPS)
-            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * sec[k]/1000))
+            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * t[k]/1000))
             ret, frame = cap.read()
             if ret:
-                cv2.imwrite(result_path + '/frame_' + str([k//10])+'_video_' +
-                            str(id_video)+'.jpg',
+                filename = os.path.join(path,
+                                        str([k//10]) + '_video_' + str(id_video)+'.jpg')  # noqa: E501
+                cv2.imwrite(filename,
                             frame,
                             [cv2.IMWRITE_JPEG_QUALITY, 20])
 
-    def create_gazes(self,
-                     df,
-                     image,
-                     x,
-                     y,
-                     id_pp,
-                     id_video,
-                     suffix='_gazes.jpg',
+    def create_gazes(self, df, x, y, id_pp, id_video, suffix='_gazes.jpg',
                      save_file=False):
         """
         Output gazes for image based on the list of lists of points.
@@ -106,9 +107,11 @@ class Analysis:
         #     logger.error('Not enough data. Gazes visualisation was not '
         #                  + 'created for {}.', image)
         # return
-        image = (tr.common.get_configs('frames') +
-                 '/frame_' + str([0]) + '_video_' +
-                 str(id_video)+'.jpg')
+
+        # frame
+        image = os.path.join(os.path.join(tr.settings.root_dir, 'frames'),
+                             'frame_' + str([0]) + '_video_' + str(id_video) + '.jpg')  # noqa: E501
+
         # read original image
         im = Image.open(image)
         # get dimensions of base image
@@ -155,15 +158,8 @@ class Analysis:
         if save_file:
             self.save_fig(image, fig, self.folder, suffix)
 
-    def create_heatmap(self,
-                       df,
-                       image,
-                       x,
-                       y,
-                       ID_pp,
-                       type_heatmap='contourf',
-                       add_corners=True,
-                       save_file=False):
+    def create_heatmap(self, df, image, x, y, ID_pp, type_heatmap='contourf',
+                       add_corners=True, save_file=False):
         """
         Create heatmap for image based on the list of lists of points.
 
@@ -276,15 +272,7 @@ class Analysis:
         # return graph objects
         return fig, g
 
-    def create_animation(self,
-                         df,
-                         image,
-                         x,
-                         y,
-                         id_pp,
-                         id_video,
-                         t,
-                         save_anim=False,
+    def create_animation(self, df, x, y, id_pp, id_video, t, save_anim=False,
                          save_frames=False):
         """
         Create animation for image based on the list of lists of points of
@@ -314,6 +302,7 @@ class Analysis:
 
         interv = self.max_t / self.number_frames
 
+        image = os.path.join(tr.settings.root_dir, 'frames')
         self.image = image
         self.save_frames = save_frames
         dpi = 100
