@@ -318,7 +318,7 @@ if __name__ == '__main__':
                                   color='browser_major_version',
                                   pretty_text=True,
                                   save_file=True)
-            # Creating a for loop that makes an eye gazes/heatmap for every 
+            # Creating a for loop that makes an eye gazes/heatmap for every
             # create animation for stimulus
             # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],     # noqa: E501
             #                       x=['avg_object', 'avg_person', 'avg_car'],
