@@ -97,7 +97,7 @@ class Analysis:
             image (str): name of figure.
             x (list): dataframe column to plot on x axis.
             y (list): dataframe column to plot on y axis.
-            i_pp (int): participant ID.
+            id_pp (int): participant ID.
             id_video (int): stimulus video ID.
 
         """
@@ -158,14 +158,14 @@ class Analysis:
         if save_file:
             self.save_fig(image, fig, self.folder, suffix)
 
-    def create_heatmap(self, df, image, x, y, ID_pp, type_heatmap='contourf',
-                       add_corners=True, save_file=False):
+    def create_heatmap(self, df, x, y, id_pp, id_video,
+                       type_heatmap='contourf', add_corners=True,
+                       save_file=False):
         """
         Create heatmap for image based on the list of lists of points.
 
         Args:
             df (dataframe):
-            image (str): name of figure.
             add_corners: add points to the corners to have the heatmap ovelay
                 the whole image.
             type_heatmap: contourf, pcolormesh, kdeplot.
@@ -173,17 +173,20 @@ class Analysis:
         # todo: remove datapoints in corners in heatmaps
         # check if data is present
         logger.info('Creating heatmap for x={} and t={}.', x, y)
+        # frame
+        image = os.path.join(os.path.join(tr.settings.root_dir, 'frames'),
+                             'frame_' + str([0]) + '_video_' + str(id_video) + '.jpg')  # noqa: E501
         # get dimensions of base image
         width = tr.common.get_configs('stimulus_width')
         height = tr.common.get_configs('stimulus_height')
         # add datapoints to corners for maximised heatmaps
         if x != list:
-            x = df.iloc[ID_pp][x]
+            x = df.iloc[id_pp][x]
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(x):
             x[i] = ((val-xmin) / (xmax-xmin))*width
         if y != list:
-            y = df.iloc[ID_pp][y]
+            y = df.iloc[id_pp][y]
         ymin, ymax = min(y), max(y)
         for i, val in enumerate(y):
             y[i] = ((val-ymin) / (ymax-ymin))*height
@@ -241,7 +244,7 @@ class Analysis:
                                 y=y,
                                 alpha=0.5,
                                 shade=True,
-                                title='heatmap participant '+ID_pp,
+                                title='heatmap participant ' + id_pp,
                                 cmap="RdBu_r")
             except TypeError:
                 logger.error('Not enough data. Heatmap was not created for '
@@ -833,7 +836,7 @@ class Analysis:
             fig.show()
 
     # todo: @Job, add docstring
-    def scatter_et(self, df, x, y, t, id_video, id_pp, pretty_text=False,
+    def scatter_et(self, df, x, y, t, id_pp, id_video, pretty_text=False,
                    marginal_x='violin', marginal_y='violin', xaxis_title=None,
                    xaxis_range=True, yaxis_title=None, yaxis_range=True,
                    save_file=True):
@@ -845,8 +848,8 @@ class Analysis:
             x (list): dataframe column to plot on x axis.
             y (list): dataframe column to plot on y axis.
             t (list): dataframe column to determin timespan
+            id_pp (int): participant ID.
             id_video (int): stimulus video ID.
-            i_pp (int): participant ID.
             pretty_text (bool, optional): prettify ticks by replacing _ with
                                           spaces and capitalising each value.
             marginal_x (str, optional): type of marginal on x axis. Can be

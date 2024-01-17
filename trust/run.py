@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import matplotlib._pylab_helpers
 from tqdm import tqdm
 import os
-import pathlib
 import shutil
 import trust as tr
 
@@ -292,7 +291,8 @@ if __name__ == '__main__':
                 analysis.create_heatmap(heroku_data,
                                         x='video_'+str(id_video)+'-x-0',
                                         y='video_'+str(id_video)+'-y-0',
-                                        ID_pp=6,
+                                        id_pp=6,
+                                        id_video=id_video,
                                         type_heatmap='contourf',
                                         add_corners=True,
                                         save_file=True)
