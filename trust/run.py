@@ -279,6 +279,8 @@ if __name__ == '__main__':
                                          t='video_'+str(id_video)+'-t-0')
                 # construct the gazes lines just as an example for how
                 # that looks compared to the heatmap.
+                # todo: rename id_pp to pp everywhere
+                # todo: use worker_code instead of numeric ID pp='R51701197342646JF16777X'  # noqa: E501
                 analysis.create_gazes(heroku_data,
                                       x='video_'+str(id_video)+'-x-0',
                                       y='video_'+str(id_video)+'-y-0',
