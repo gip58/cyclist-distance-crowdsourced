@@ -48,7 +48,7 @@ class Analysis:
         # set font to Times
         plt.rc('font', family='serif')
 
-    def save_all_frames(self, df, id_video, t):
+    def save_all_frames(self, df, id_video, t,id_pp):
         """
         Outputs individual frames as png from inputted video mp4.
 
@@ -67,7 +67,7 @@ class Analysis:
         cap = cv2.VideoCapture(os.path.join(tr.common.get_configs('path_stimuli'),  # noqa: E501
                                             'video_' + str(id_video) + '.mp4'))  # noqa: E501
         # timestamp
-        t = df.iloc[0][t]
+        t = df.iloc[id_pp][t]
         # check if file is already open
         if not cap.isOpened():
             logger.error('File with frame already open.')
@@ -118,7 +118,7 @@ class Analysis:
 
         x = df.iloc[id_pp][x]
         # Normalize screen size
-        print(x)
+        
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(x):
             x[i] = ((val-xmin) / (xmax-xmin))*width
@@ -299,6 +299,7 @@ class Analysis:
         self.t = df.iloc[id_pp][t]
 
         self.number_frames = int(len(self.t) // 10)
+        print(self.number_frames)
 
         self.max_t = int(max(self.t))
 
@@ -346,7 +347,7 @@ class Analysis:
                              fill=True,
                              cmap='RdBu_r')
         # read original image
-        im = plt.imread(self.image + '/frame_' + str([i]) + '_video_' +
+        im = plt.imread(self.image + '\\frame_' + str([i]) + '_video_' +
                         str(self.id_video) + '.jpg')
         plt.imshow(im)
         # remove axis
@@ -395,7 +396,7 @@ class Analysis:
         if not os.path.exists(path):
             os.makedirs(path)
         # save file
-        anim.save(path + file_no_path + suffix, writer='ffmpeg')
+        anim.save(path + suffix, writer='ffmpeg')
         # clear animation from memory
         plt.close(self.fig)
 

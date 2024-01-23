@@ -276,7 +276,8 @@ if __name__ == '__main__':
                 # To allow for overlaying the heatmap for each frame later on.
                 analysis.save_all_frames(heroku_data,
                                          id_video=id_video,
-                                         t='video_'+str(id_video)+'-t-0')
+                                         t='video_'+str(id_video)+'-t-0',
+                                         id_pp=6)
                 # construct the gazes lines just as an example for how
                 # that looks compared to the heatmap.
                 # todo: rename id_pp to pp everywhere
@@ -311,7 +312,7 @@ if __name__ == '__main__':
                                           save_anim=True,
                                           save_frames=True)
                 # remove temp folder with frames
-                shutil.rmtree(os.path.join(tr.settings.root_dir, 'frames'))
+                shutil.rmtree(os.path.join(tr.settings.output_dir, 'frames'))
             # todo: add comment with description
             analysis.scatter_mult(heroku_data,
                                   x=['video_0-x-0', 'video_1-x-0'],
