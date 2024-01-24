@@ -111,7 +111,8 @@ if __name__ == '__main__':
         # keypresses of all videos individually
         analysis.plot_kp_videos(mapping)
         # 1 var, all values
-        analysis.plot_kp_variable(mapping, 'ego_car')
+        analysis.plot_kp_variable(mapping, 'ego_car',
+                                  [0, 1])
         # 1 var, certain values
         analysis.plot_kp_variable(mapping,
                                   'target_car',
