@@ -187,8 +187,6 @@ if __name__ == '__main__':
                       pretty_text=True,
                       save_file=True)
         # browser window dimensions    
-        heroku_data['video_1-x-0'] = heroku_data['video_1-x-0']
-        heroku_data['video_1-y-0'] = heroku_data['video_1-y-0']
         analysis.scatter_mult(heroku_data,
                               x=['video_0-x-0', 'video_1-x-0'],
                               y='video_0-y-0',
@@ -251,52 +249,6 @@ if __name__ == '__main__':
         analysis.map(countries_data, color='year_license', save_file=True)
         # map of year of automated driving per country
         analysis.map(countries_data, color='year_ad', save_file=True)
-        # create animation for stimulus
-        # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],     # noqa: E501
-        #                       x=['avg_object', 'avg_person', 'avg_car'],
-        #                       y='avg_kp',
-        #                       trendline='ols',
-        #                       xaxis_title='Object count',
-        #                       yaxis_title='Mean keypresses (%)',
-        #                       marginal_y=None,
-        #                       marginal_x='rug',
-        #                       save_file=True)
-        analysis.scat(heroku_data, 
-                      x='video_0-x-0',
-                      y='video_0-y-0',
-                      t='video_0-t-0',
-                      width='window_width',
-                      height='window_height',
-                      ID_p=6,    # 0,2,6,10,12,13,14,16,18,20,22
-                      ID_v='video_0',
-                      pretty_text=True,
-                      save_file=True)
-        analysis.heatmap(heroku_data, 
-                         x='video_0-x-0',
-                         y='video_0-y-0',
-                         t='video_0-t-0',
-                         width='window_width',
-                         height='window_height',
-                         ID_p=6,    # 0,2,6,10,12,13,14,16,18,20,22
-                         ID_v='video_0',
-                         pretty_text=True,
-                         save_file=True)
-        analysis.create_heatmap(heroku_data,
-                                x='video_0-x-0',
-                                y='video_0-y-0',
-                                ID=6,
-                                width='window_width',
-                                height='window_height',
-                                type_heatmap='contourf',
-                                add_corners=True,
-                                save_file=True)
-        analysis.create_animation(heroku_data,
-                                  x='video_0-x-0',
-                                  y='video_0-y-0',
-                                  t='video_0-t-0',
-                                  ID=6,
-                                  width='window_width',
-                                  height='window_height')
         # check if any figures are to be rendered
         figures = [manager.canvas.figure
                    for manager in
