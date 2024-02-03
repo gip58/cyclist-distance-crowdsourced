@@ -186,7 +186,7 @@ if __name__ == '__main__':
                       nbins=100,
                       pretty_text=True,
                       save_file=True)
-        # browser window dimensions    
+        # browser window dimensions
         analysis.scatter_mult(heroku_data,
                               x=['video_0-x-0', 'video_1-x-0'],
                               y='video_0-y-0',
