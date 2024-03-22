@@ -48,7 +48,7 @@ class Analysis:
         # set font to Times
         plt.rc('font', family='serif')
 
-    def save_all_frames(self, df, id_video, t,id_pp):
+    def save_all_frames(self, df, id_video, t,pp):
         """
         Outputs individual frames as png from inputted video mp4.
 
@@ -67,97 +67,117 @@ class Analysis:
         cap = cv2.VideoCapture(os.path.join(tr.common.get_configs('path_stimuli'),  # noqa: E501
                                             'video_' + str(id_video) + '.mp4'))  # noqa: E501
         # timestamp
-        t = df.iloc[id_pp][t]
+        t = df.loc[pp][t]
         # check if file is already open
         if not cap.isOpened():
             logger.error('File with frame already open.')
             return
         # go over frames
-        for k in range(0, len(t)+1, 10):
+        for k in range(0, 14, 1):
             os.makedirs(os.path.dirname(path), exist_ok=True)
             fps = cap.get(cv2.CAP_PROP_FPS)
-            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * t[k]/1000))
+            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k * max(t)/15000))
             ret, frame = cap.read()
             if ret:
                 filename = os.path.join(path,
-                                        'frame_' + str([k//10]) + '_video_' + str(id_video)+'.jpg')  # noqa: E501
+                                        'frame_' + str([k]) + '_video_' + str(id_video)+'.jpg')  # noqa: E501
                 cv2.imwrite(filename,
                             frame,
                             [cv2.IMWRITE_JPEG_QUALITY, 20])
 
-    def create_gazes(self, df, x, y, id_pp, id_video, suffix='_gazes.jpg',
-                     save_file=False):
-        """
-        Output gazes for image based on the list of lists of points.
+    # def create_gazes(self, df, x, y, id_video,  suffix='_gazes.jpg',
+    #                  save_file=False):
+    #     """
+    #     Output gazes for image based on the list of lists of points.
 
-        Args:
-            df (dataframe): dataframe with data from Heroku.
-            image (str): name of figure.
-            x (list): dataframe column to plot on x axis.
-            y (list): dataframe column to plot on y axis.
-            id_pp (int): participant ID.
-            id_video (int): stimulus video ID.
+    #     Args:
+    #         df (dataframe): dataframe with data from Heroku.
+    #         image (str): name of figure.
+    #         x (list): dataframe column to plot on x axis.
+    #         y (list): dataframe column to plot on y axis.
+    #         pp (int): participant ID.
+    #         id_video (int): stimulus video ID.
 
-        """
-        # check if data is present
-        logger.info('Creating gazes for x={} and t={}.', x, y)
-        # if not points:
-        #     logger.error('Not enough data. Gazes visualisation was not '
-        #                  + 'created for {}.', image)
-        # return
+    #     """
+    #     # check if data is present
+    #     logger.info('Creating gazes for x={} and t={}.', x, y)
+    #     # if not points:
+    #     #     logger.error('Not enough data. Gazes visualisation was not '
+    #     #                  + 'created for {}.', image)
+    #     # return
 
-        # frame
-        image = os.path.join(os.path.join(tr.settings.output_dir, 'frames'),
-                             'frame_' + str([0]) + '_video_' + str(id_video) + '.jpg')  # noqa: E501
+    #     # frame
+    #     image = os.path.join(os.path.join(tr.settings.output_dir, 'frames'),
+    #                          'frame_' + str([0]) + '_video_' + str(id_video) + '.jpg')  # noqa: E501
 
-        # read original image
-        im = Image.open(image)
-        # get dimensions of base image
-        width = tr.common.get_configs('stimulus_width')
-        height = tr.common.get_configs('stimulus_height')
-
-        x = df.iloc[id_pp][x]
-        # Normalize screen size
+    #     # read original image
+    #     im = Image.open(image)
+    #     # get dimensions of base image
+    #     width = tr.common.get_configs('stimulus_width')
+    #     height = tr.common.get_configs('stimulus_height')
         
-        xmin, xmax = min(x), max(x)
-        for i, val in enumerate(x):
-            x[i] = ((val-xmin) / (xmax-xmin))*width
 
-        y = df.iloc[id_pp][y]
-        ymin, ymax = min(y), max(y)
-        for i, val in enumerate(y):
-            y[i] = ((val-ymin) / (ymax-ymin))*height
+    #     print(df)
 
-        x = np.array(x)
-        y = np.array(y)
 
-        # show heatmap by plt
-        dpi = 150
-        fig = plt.figure()
-        fig.set_figwidth(width / dpi)
-        fig.set_figheight(height / dpi)
-        plt.imshow(im)
-        plt.plot(x,
-                 y,
-                 color='red',
-                 marker='x',
-                 markersize=1)
-        # remove white spaces around figure
-        plt.gca().set_axis_off()
-        plt.subplots_adjust(top=1,
-                            bottom=0,
-                            right=1,
-                            left=0,
-                            hspace=0,
-                            wspace=0)
-        plt.margins(0, 0)
-        plt.gca().xaxis.set_major_locator(plt.NullLocator())
-        plt.gca().yaxis.set_major_locator(plt.NullLocator())
-        # save image
-        if save_file:
-            self.save_fig(image, fig, self.folder, suffix)
+    #     fig = px.scatter(df, y=y, x=x, color='worker_code')
+    #     fig.update_traces(marker_size=10)
+    #     fig.show()
 
-    def create_heatmap(self, df, x, y, id_pp, id_video,
+    #     # x = df[x]
+    #     # y = df[y]
+    #     # dpi = 150
+    #     # fig = plt.figure()
+    #     # fig.set_figwidth(width / dpi)
+    #     # fig.set_figheight(height / dpi)
+    #     # plt.imshow(im)
+    #     # for j in range(len(x)-1):
+    #     #     print(range(len(x)))
+    #     #     if type(x.iloc[j]) == list:
+    #     #         if x.iloc[j] != []:
+    #     #             X=x.iloc[j]
+    #     #             Y=y.iloc[j]
+                    
+
+
+    #     #             print(X)
+    #     #             # Normalize screen size
+    #     #             xmin, xmax = min(X), max(X)
+    #     #             for i, val in enumerate(X):
+    #     #                 X[i] = ((val-xmin) / (xmax-xmin))*width
+
+                    
+    #     #             ymin, ymax = min(Y), max(Y)
+    #     #             for i, val in enumerate(Y):
+    #     #                 Y[i] = ((val-ymin) / (ymax-ymin))*height
+
+    #     #             X = np.array(X)
+    #     #             Y = np.array(Y)
+
+    #     #             # show heatmap by plt
+                    
+    #     #             sns.kdeplot(x=X,
+    #     #                         y=Y,
+    #     #                         alpha=0.5,
+    #     #                         shade=True,
+    #     #                         cmap="RdBu_r")
+    #     #             # remove white spaces around figure
+    #     #             plt.gca().set_axis_off()
+    #     #             plt.subplots_adjust(top=1,
+    #     #                             bottom=0,
+    #     #                             right=1,
+    #     #                             left=0,
+    #     #                             hspace=0,
+    #     #                             wspace=0)
+    #     #             plt.margins(0, 0)
+    #     #             plt.gca().xaxis.set_major_locator(plt.NullLocator())
+    #     #             plt.gca().yaxis.set_major_locator(plt.NullLocator())
+    #     # # save image
+    #     # if save_file:
+    #     #     self.save_fig(image, fig, self.folder, suffix)
+    #     # else:
+    #     #     fig.show()
+    def create_heatmap(self, df, x, y, pp, id_video,
                        type_heatmap='contourf', add_corners=True,
                        save_file=False):
         """
@@ -180,12 +200,13 @@ class Analysis:
         height = tr.common.get_configs('stimulus_height')
         # add datapoints to corners for maximised heatmaps
         if x != list:
-            x = df.iloc[id_pp][x]
+            x = df.loc[pp][x]
+            
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(x):
             x[i] = ((val-xmin) / (xmax-xmin))*width
         if y != list:
-            y = df.iloc[id_pp][y]
+            y = df.loc[pp][y]
         ymin, ymax = min(y), max(y)
         for i, val in enumerate(y):
             y[i] = ((val-ymin) / (ymax-ymin))*height
@@ -243,7 +264,7 @@ class Analysis:
                                 y=y,
                                 alpha=0.5,
                                 shade=True,
-                                title='heatmap participant ' + id_pp,
+                                title='heatmap participant ' + pp,
                                 cmap="RdBu_r")
             except TypeError:
                 logger.error('Not enough data. Heatmap was not created for '
@@ -274,7 +295,48 @@ class Analysis:
         # return graph objects
         return fig, g
 
-    def create_animation(self, df, x, y, id_pp, id_video, t, save_anim=False,
+    def create_histogram(self,
+                         image,
+                         points,
+                         id_video,
+                         density_coef=10,
+                         suffix='_histogram.jpg',
+                         save_file=False):
+        """
+        Create histogram for image based on the list of lists of points.
+        density_coef: coeficient for division of dimensions for density of
+                        points.
+        """
+        # check if data is present
+        if not points:
+            logger.error('Not enough data. Histogram was not created for {}.',
+                         image)
+            return
+        # get dimensions of stimulus
+        width = tr.common.get_configs('stimulus_width')
+        height = tr.common.get_configs('stimulus_height')
+        # convert points into np array
+        xy = np.array(points)
+        # split coordinates list for readability
+        x = xy[:, 0]
+        y = xy[:, 1]
+        # create figure object with given dpi and dimensions
+        dpi = 150
+        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
+        # build histogram
+        plt.hist2d(x=x,
+                   y=-y,  # convert to the reference system in image
+                   bins=[round(width/density_coef),
+                         round(height/density_coef)],
+                   cmap=plt.cm.jet)
+        plt.colorbar()
+        # remove white spaces around figure
+        plt.gca().set_axis_off()
+        # save image
+        if save_file:
+            self.save_fig(image, fig, self.folder, '_video_' + str(id_video)+suffix)
+
+    def create_animation(self, df, x, y, pp, id_video, t, save_anim=False,
                          save_frames=False):
         """
         Create animation for image based on the list of lists of points of
@@ -284,26 +346,28 @@ class Analysis:
         self.width = tr.common.get_configs('stimulus_width')
         self.height = tr.common.get_configs('stimulus_height')
         self.id_video = id_video
-        self.id_pp = id_pp
+        self.pp = pp
 
-        self.x = df.iloc[self.id_pp][x]
+        self.x = df.loc[self.pp][x]
         # Normalize screen size
         xmin, xmax = min(self.x), max(self.x)
         for i, val in enumerate(self.x):
             self.x[i] = ((val-xmin) / (xmax-xmin))*self.width
-        self.y = df.iloc[self.id_pp][y]
+        self.y = df.loc[self.pp][y]
         ymin, ymax = min(self.y), max(self.y)
         for i, val in enumerate(self.y):
             self.y[i] = ((val-ymin) / (ymax-ymin))*self.height
 
-        self.t = df.iloc[id_pp][t]
+        self.t = df.loc[pp][t]
 
         self.number_frames = int(len(self.t) // 10)
         print(self.number_frames)
 
         self.max_t = int(max(self.t))
+        print(self.max_t)
 
         interv = self.max_t / self.number_frames
+        print(interv)
 
         image = os.path.join(tr.settings.output_dir, 'frames')
         self.image = image
@@ -333,7 +397,7 @@ class Analysis:
             self.save_anim(image,
                            anim,
                            self.folder,
-                           '_video_' + str(id_video) + '_participant_' + str(id_pp) + '_animation.mp4')  # noqa: E501
+                           '_video_' + str(id_video) + '_participant_' + str(pp) + '_animation.mp4')  # noqa: E501
         # attach_video_player_to_figure(self.fig, "BigBuckBunny.mp4", on_frame, anim=anim)  # noqa: E501
 
     def animate(self, i):
@@ -341,11 +405,15 @@ class Analysis:
         Helper function to create animation.
         """
         self.g.clear()
-        self.g = sns.kdeplot(x=self.x[:i],
-                             y=self.y[:i],
-                             alpha=0.5,
-                             fill=True,
-                             cmap='RdBu_r')
+        self.g = plt.plot(self.x[:i*10],  
+                self.y[:i*10],
+                 color='red',
+                 alpha=0.5,
+                 # fill=True,
+                 marker='x',
+                 markersize=1)
+
+        
         # read original image
         im = plt.imread(self.image + '\\frame_' + str([i]) + '_video_' +
                         str(self.id_video) + '.jpg')
@@ -364,12 +432,235 @@ class Analysis:
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         plt.text(0.75,
                  0.98,
+                 'id=' + str(self.id_video) + ' duration=' + str(durations[i*10]),
+                 transform=plt.gca().transAxes,
+                 fontsize=12,
+                 verticalalignment='top',
+                 bbox=props)
+        
+    def create_heatmap1(self,
+                       image,
+                       points,
+                       type_heatmap='contourf',
+                       add_corners=True,
+                       save_file=False):
+        """
+        Create heatmap for image based on the list of lists of points.
+        add_corners: add points to the corners to have the heatmap ovelay the
+                     whole image
+        type_heatmap: contourf, pcolormesh, kdeplot
+        """
+        # todo: remove datapoints in corners in heatmaps
+        # check if data is present
+        if not points:
+            logger.error('Not enough data. Heatmap was not created for {}.',
+                         image)
+            return
+        # get dimensions of base image
+        width = tr.common.get_configs('stimulus_width')
+        height = tr.common.get_configs('stimulus_height')
+        # add datapoints to corners for maximised heatmaps
+        if add_corners:
+            if [0, 0] not in points:
+                points.append([0, 0])
+            if [width, height] not in points:
+                points.append([width - 1, height - 1])
+        # convert points into np array
+        xy = np.array(points)
+        # split coordinates list for readability
+        x = xy[:, 0]
+        y = xy[:, 1]
+        # compute data for the heatmap
+        try:
+            k = gaussian_kde(np.vstack([x, y]))
+            xi, yi = np.mgrid[x.min():x.max():x.size**0.5*1j,
+                              y.min():y.max():y.size**0.5*1j]
+            zi = k(np.vstack([xi.flatten(), yi.flatten()]))
+        except (np.linalg.LinAlgError, np.linalg.LinAlgError, ValueError):
+            logger.error('Not enough data. Heatmap was not created for {}.',
+                         image)
+            return
+        # create figure object with given dpi and dimensions
+        dpi = 150
+        fig = plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
+        # alpha=0.5 makes the plot semitransparent
+        suffix_file = ''  # suffix to add to saved image
+        if type_heatmap == 'contourf':
+            try:
+                g = plt.contourf(xi, yi, zi.reshape(xi.shape),
+                                 alpha=0.5)
+                plt.margins(0, 0)
+                plt.gca().xaxis.set_major_locator(plt.NullLocator())
+                plt.gca().yaxis.set_major_locator(plt.NullLocator())
+            except TypeError:
+                logger.error('Not enough data. Heatmap was not created for '
+                             + '{}.',
+                             image)
+                plt.close(fig)  # clear figure from memory
+                return
+            suffix_file = '_contourf.jpg'
+        elif type_heatmap == 'pcolormesh':
+            try:
+                g = plt.pcolormesh(xi, yi, zi.reshape(xi.shape),
+                                   shading='auto',
+                                   alpha=0.5)
+                plt.margins(0, 0)
+                plt.gca().xaxis.set_major_locator(plt.NullLocator())
+                plt.gca().yaxis.set_major_locator(plt.NullLocator())
+            except TypeError:
+                logger.error('Not enough data. Heatmap was not created for '
+                             + '{}.',
+                             image)
+                plt.close(fig)  # clear figure from memory
+                return
+            suffix_file = '_pcolormesh.jpg'
+        elif type_heatmap == 'kdeplot':
+            try:
+                g = sns.kdeplot(x=x,
+                                y=y,
+                                alpha=0.5,
+                                fill=True,
+                                cmap="RdBu_r")
+            except TypeError:
+                logger.error('Not enough data. Heatmap was not created for '
+                             + '{}.',
+                             image)
+                fig.clf()  # clear figure from memory
+                return
+            suffix_file = '_kdeplot.jpg'
+        else:
+            logger.error('Wrong type_heatmap {} given.', type_heatmap)
+            plt.close(fig)  # clear from memory
+            return
+        # read original image
+        im = plt.imread(image + '\\frame_' + str([1]) + '_video_' +
+                        str(self.id_video) + '.jpg')
+        plt.imshow(im)
+        # remove axis
+        plt.gca().set_axis_off()
+        # remove white spaces around figure
+        plt.subplots_adjust(top=1,
+                            bottom=0,
+                            right=1,
+                            left=0,
+                            hspace=0,
+                            wspace=0)
+        # save image
+        if save_file:
+            self.save_fig(image, fig, '/figures/', suffix_file)
+        # return graph objects
+        return fig, g
+ 
+    def create_animation1(self,
+                         image,
+                         id_video,
+                         points,
+                         save_anim=False,
+                         save_frames=False):
+        """
+        Create animation for image based on the list of lists of points of
+        varying duration.
+        """
+        self.image = image
+        self.id_video = id_video
+        self.points = points
+        self.save_frames = save_frames
+        self.fig, self.g = self.create_heatmap1(image,
+                                               points[0],
+                                               type_heatmap='kdeplot',  # noqa: E501
+                                               add_corners=True,  # noqa: E501
+                                               save_file=False)
+        anim = animation.FuncAnimation(self.fig,
+                                       self.animate1,
+                                       frames=len(points),
+                                       interval=1000,
+                                       repeat=False)
+        # save image
+        if save_anim:
+            self.save_anim1(image, anim, self.folder, '_video_' + str(id_video) + '_animation.mp4')
+
+    def create_animation_all_stimuli1(self, num_stimuli):
+        """
+        Create long video with all animations.
+        """
+        logger.info('Creating long video with all animations for {} stimuli.',
+                    num_stimuli)
+        # create path
+        path = tr.settings.output_dir + self.folder
+        if not os.path.exists(path):
+            os.makedirs(path)
+        # file with list of animations
+        list_anim = path + 'animations.txt'
+        file = open(list_anim, 'w+')
+        # loop of stimuli
+        for id_video in range(1, num_stimuli + 1):
+            # add animation to the list
+            anim_path = path + 'image_' + str(id_video) + '_animation.mp4'
+            # check if need to add a linebreak
+            if id_video == num_stimuli:
+                file.write('file ' + anim_path)  # no need for linebreak
+            else:
+                file.write('file ' + anim_path + '\n')
+        # close file with animations
+        file.close()
+        # stitch videos together
+        os.chdir(path)
+        subprocess.call(['ffmpeg',
+                         '-y',
+                         '-loglevel', 'quiet',
+                         '-f', 'concat',
+                         '-safe', '0',
+                         '-i', list_anim,
+                         '-c', 'copy',
+                         'all_animations.mp4'])
+        # delete file with animations
+        os.remove(list_anim)
+
+    def animate1(self, i):
+        """
+        Helper function to create animation.
+        """
+        self.g.clear()
+        self.g = sns.kdeplot(x=[item[0] for item in self.points[i]],
+                             y=[item[1] for item in self.points[i]],
+                             alpha=0.5,
+                             fill=True,
+                             cmap='RdBu_r')
+        # read original image
+        im = plt.imread(self.image + '\\frame_' + str([i]) + '_video_' +
+                        str(self.id_video) + '.jpg')
+        plt.imshow(im)
+        # remove axis
+        plt.gca().set_axis_off()
+        # remove white spaces around figure
+        plt.subplots_adjust(top=1,
+                            bottom=0,
+                            right=1,
+                            left=0,
+                            hspace=0,
+                            wspace=0)
+        # textbox with duration
+        durations = tr.common.get_configs('stimulus_durations')
+        props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        plt.text(0.75,
+                 0.98,
                  'id=' + str(self.id_video) + ' duration=' + str(durations[i]),
                  transform=plt.gca().transAxes,
                  fontsize=12,
                  verticalalignment='top',
                  bbox=props)
-
+        # save each frame as file
+        if self.save_frames:
+            # build suffix for filename
+            suffix = '_kdeplot_' + str(durations[i]) + '.jpg'
+            # copy figure in buffer to prevent distruction of object
+            buf = io.BytesIO()
+            pickle.dump(self.fig, buf)
+            buf.seek(0)
+            temp_fig = pickle.load(buf)
+            # save figure
+            self.save_fig(self.image, temp_fig, self.folder, suffix)
+        return self.g 
         # save each frame as file
         if self.save_frames:
             # build suffix for filename
@@ -383,7 +674,7 @@ class Analysis:
             self.save_fig(self.image, temp_fig, self.folder, suffix)
         return self.g
 
-    def save_anim(self, image, anim, output_subdir, suffix):
+    def save_anim1(self, image, anim, output_subdir, suffix):
         """
         Helper function to save figure as file.
         """
@@ -836,7 +1127,7 @@ class Analysis:
             fig.show()
 
     # todo: @Job, add docstring
-    def scatter_et(self, df, x, y, t, id_pp, id_video, pretty_text=False,
+    def scatter_et(self, df, x, y, t, pp, id_video, pretty_text=False,
                    marginal_x='violin', marginal_y='violin', xaxis_title=None,
                    xaxis_range=True, yaxis_title=None, yaxis_range=True,
                    save_file=True):
@@ -848,7 +1139,7 @@ class Analysis:
             x (list): dataframe column to plot on x axis.
             y (list): dataframe column to plot on y axis.
             t (list): dataframe column to determin timespan
-            id_pp (int): participant ID.
+            pp (int): participant ID.
             id_video (int): stimulus video ID.
             pretty_text (bool, optional): prettify ticks by replacing _ with
                                           spaces and capitalising each value.
@@ -867,8 +1158,8 @@ class Analysis:
         # extracting x and y values for given ID participant
         width = tr.common.get_configs('stimulus_width')
         height = tr.common.get_configs('stimulus_height')
-        x = df.iloc[id_pp][x]
-        y = df.iloc[id_pp][y]
+        x = df.loc[pp][x]
+        y = df.loc[pp][y]
         # normalise screen size
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(x):
@@ -878,8 +1169,8 @@ class Analysis:
         for i, val in enumerate(y):
             y[i] = ((val-ymin) / (ymax-ymin))*height
 
-        t = df.iloc[id_pp][t]
-        id_pp = str(id_pp)
+        t = df.loc[pp][t]
+        pp = str(pp)
 
         # Plot animation scatter
         fig = px.scatter(df,
@@ -890,7 +1181,7 @@ class Analysis:
                          animation_frame=t,
                          marginal_x='violin',
                          marginal_y='violin',
-                         title='scatter_' + ' ' + id_video + ' ' + 'participant' + ' ' + id_pp)  # noqa: E501
+                         title='scatter_' + ' ' + id_video + ' ' + 'participant' + ' ' + pp)  # noqa: E501
 
         # update layout
         fig.update_layout(template=self.template,
@@ -902,13 +1193,13 @@ class Analysis:
         # save file
         if save_file:
             self.save_plotly(fig,
-                             'scatter_map_' + id_video+'_participant_' + id_pp,
+                             'scatter_map_' + id_video+'_participant_' + pp,
                              self.folder)
         # open it in localhost instead
         else:
             fig.show()
 
-    def heatmap(self, df, x, y, t, id_video, id_pp, pretty_text=False,
+    def heatmap(self, df, x, y, t, id_video, pp, pretty_text=False,
                 marginal_x='violin', marginal_y='violin', xaxis_title=None,
                 xaxis_range=True, yaxis_title=None, yaxis_range=True,
                 save_file=True):
@@ -932,8 +1223,8 @@ class Analysis:
         logger.info('Creating heatmap for x={} and t={}.', x, y)
         width = tr.common.get_configs('stimulus_width')
         height = tr.common.get_configs('stimulus_height')
-        x = df.iloc[id_pp][x]
-        y = df.iloc[id_pp][y]
+        x = df.loc[pp][x]
+        y = df.loc[pp][y]
         # Normalize screen size
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(y):
@@ -943,7 +1234,7 @@ class Analysis:
         for i, val in enumerate(y):
             y[i] = ((val-ymin) / (ymax-ymin))*height
 
-        t = df.iloc[id_pp][t]
+        t = df.loc[pp][t]
 
         #  prettify ticks
         if pretty_text:
@@ -969,7 +1260,7 @@ class Analysis:
                 # capitalise
                 df[t] = df[t].str.capitalize()
 
-        id_pp = str(id_pp)
+        pp = str(pp)
         [go.Histogram2d(x=x[i:], y=y[i:]) for i in range(len(int(x)))]
         # build layers of animation heatmap and scatter
         fig = go.Figure()
@@ -989,7 +1280,7 @@ class Analysis:
         fig.update_layout(template=self.template,
                           height=height,
                           width=width,
-                          title='heatmap_scatter_animation'+' ' + id_video + ' ' + 'participant'+' '+id_pp,  # noqa: E501
+                          title='heatmap_scatter_animation'+' ' + id_video + ' ' + 'participant'+' '+pp,  # noqa: E501
                           xaxis_range=[0, 2*width],
                           yaxis_range=[0, 2*height],
                           updatemenus=[dict(type='buttons',
@@ -1011,7 +1302,7 @@ class Analysis:
         # save file
         if save_file:
             self.save_plotly(fig,
-                             'heatmap_animation' + id_video+'_participant_' + id_pp,  # noqa: E501
+                             'heatmap_animation' + id_video+'_participant_' + pp,  # noqa: E501
                              self.folder)
         # open it in localhost instead
         else:
@@ -1034,11 +1325,11 @@ class Analysis:
         list_anim = path + 'animations.txt'
         file = open(list_anim, 'w+')
         # loop of stimuli
-        for stim_id in range(1, num_stimuli + 1):
+        for id_video in range(1, num_stimuli + 1):
             # add animation to the list
-            anim_path = path + 'image_' + str(stim_id) + '_animation.mp4'
+            anim_path = path + 'image_' + str(id_video) + '_animation.mp4'
             # check if need to add a linebreak
-            if stim_id == num_stimuli:
+            if id_video == num_stimuli:
                 file.write('file ' + anim_path)  # no need for linebreak
             else:
                 file.write('file ' + anim_path + '/n')
