@@ -492,8 +492,8 @@ class Heroku:
                                     points_worker[stim_from_df.index[pp]].append([(coords[0]),  # noqa: E501
                                                                                   (coords[1])])  # noqa: E501
                                 if id_video not in points_duration[duration]:
-                                    points_duration[duration][id_video] = [[(given_x[(duration*len(given_x))/len(self.durations)]),  # noqa: E501
-                                                                           (given_y[(duration*len(given_y))/len(self.durations)])]]  # noqa: E501
+                                    points_duration[duration][id_video] = [[(given_x[int((duration*len(given_x))/len(self.durations))]),  # noqa: E501
+                                                                           (given_y[int((duration*len(given_y))/len(self.durations))])]]  # noqa: E501
                                 else:
                                     points_duration[duration][id_video].append([(given_x[int((duration*len(given_x))/len(self.durations))]),  # noqa: E501
                                                                                (given_y[int((duration*len(given_y))/len(self.durations))])])  # noqa: E501

@@ -552,9 +552,11 @@ class Analysis:
         return fig, g
  
     def create_animation1(self,
+                         df,
                          image,
                          id_video,
                          points,
+                         t,
                          save_anim=False,
                          save_frames=False):
         """
@@ -563,6 +565,7 @@ class Analysis:
         """
         self.image = image
         self.id_video = id_video
+        self.t = df.iloc[0][t]
         self.points = points
         self.save_frames = save_frames
         self.fig, self.g = self.create_heatmap1(image,
@@ -644,7 +647,7 @@ class Analysis:
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         plt.text(0.75,
                  0.98,
-                 'id=' + str(self.id_video) + ' duration=' + str(durations[i]),
+                 'id=' + str(self.id_video) + ' duration=' + str(durations[i]*int(max(self.t))/15),
                  transform=plt.gca().transAxes,
                  fontsize=12,
                  verticalalignment='top',

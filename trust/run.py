@@ -281,6 +281,15 @@ if __name__ == '__main__':
             # create eye gaze visualisations for all videos
             logger.info('Producing visualisations of eye gaze data for {} stimuli.',  # noqa: E501
                         tr.common.get_configs('num_stimuli'))
+            # stimulus videos with manual ego and target car
+            video_0_0 = range(0,20,1)
+            # stimulus vidoe with manual ego car but av target car
+            video_0_1 = range(21,41,1)
+            # stimulus video with av ego car but manual target car
+            video_1_0 = range(42,62,1) 
+            # stimulus video with av ego and target car
+            video_1_1 = range(63,83,1)
+
             # source video/stimulus for a given individual.
             for id_video in tqdm(range(1,tr.common.get_configs('num_stimuli')+1)):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
@@ -313,9 +322,11 @@ if __name__ == '__main__':
                 points_process = {}
                 for points_dur in range(len(points_duration)):
                     points_process[points_dur] = points_duration[points_dur][id_video]
-                analysis.create_animation1(stim_path,
+                analysis.create_animation1(heroku_data,
+                                          stim_path,
                                           id_video,
                                           points_process,
+                                          t='video_'+str(id_video)+'-t-0',
                                           save_anim=True,
                                           save_frames=True)
                 # analysis.create_heatmap(heroku_data,
