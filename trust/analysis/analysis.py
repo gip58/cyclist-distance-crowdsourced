@@ -48,7 +48,7 @@ class Analysis:
         # set font to Times
         plt.rc('font', family='serif')
 
-    def save_all_frames(self, df, id_video, t,pp):
+    def save_all_frames(self, df,dt, id_video, t):
         """
         Outputs individual frames as png from inputted video mp4.
 
@@ -67,7 +67,7 @@ class Analysis:
         cap = cv2.VideoCapture(os.path.join(tr.common.get_configs('path_stimuli'),  # noqa: E501
                                             'video_' + str(id_video) + '.mp4'))  # noqa: E501
         # timestamp
-        t = df.loc[pp][t]
+        t = dt.loc['video_' + str(id_video)][t]
         # check if file is already open
         if not cap.isOpened():
             logger.error('File with frame already open.')
@@ -76,7 +76,7 @@ class Analysis:
         for k in range(0, 14, 1):
             os.makedirs(os.path.dirname(path), exist_ok=True)
             fps = cap.get(cv2.CAP_PROP_FPS)
-            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k * max(t)/15000))
+            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k * t/15000))
             ret, frame = cap.read()
             if ret:
                 filename = os.path.join(path,
@@ -372,10 +372,17 @@ class Analysis:
         image = os.path.join(tr.settings.output_dir, 'frames')
         self.image = image
         self.save_frames = save_frames
+
+
+
+
+
         dpi = 100
-        self.fig, self.g = plt.subplots(figsize=(self.width / dpi,
+        self.fig, (self.g, kp)= plt.subplots(figsize=(self.width / dpi,
                                         self.height / dpi),
                                         dpi=dpi)
+        kp = self.kp
+
         # self.g = self.create_heatmap(df,
         #                                           image,
         #                                           width,
@@ -412,6 +419,8 @@ class Analysis:
                  # fill=True,
                  marker='x',
                  markersize=1)
+
+
 
         
         # read original image
@@ -553,6 +562,7 @@ class Analysis:
  
     def create_animation1(self,
                          df,
+                         dt,
                          image,
                          id_video,
                          points,
@@ -565,7 +575,7 @@ class Analysis:
         """
         self.image = image
         self.id_video = id_video
-        self.t = df.iloc[0][t]
+        self.t = dt.loc['video_'+str(id_video)][t]
         self.points = points
         self.save_frames = save_frames
         self.fig, self.g = self.create_heatmap1(image,
@@ -596,9 +606,9 @@ class Analysis:
         list_anim = path + 'animations.txt'
         file = open(list_anim, 'w+')
         # loop of stimuli
-        for id_video in range(1, num_stimuli + 1):
+        for id_video in range(1, num_stimuli - 1):
             # add animation to the list
-            anim_path = path + 'image_' + str(id_video) + '_animation.mp4'
+            anim_path = path + '_video_' + str(id_video) + '_animation.mp4'
             # check if need to add a linebreak
             if id_video == num_stimuli:
                 file.write('file ' + anim_path)  # no need for linebreak
@@ -647,7 +657,7 @@ class Analysis:
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         plt.text(0.75,
                  0.98,
-                 'id=' + str(self.id_video) + ' duration=' + str(durations[i]*int(max(self.t))/15),
+                 'id=' + str(self.id_video) + ' duration=' + str(round(durations[i]*int(self.t)/15)),
                  transform=plt.gca().transAxes,
                  fontsize=12,
                  verticalalignment='top',
@@ -1328,9 +1338,9 @@ class Analysis:
         list_anim = path + 'animations.txt'
         file = open(list_anim, 'w+')
         # loop of stimuli
-        for id_video in range(1, num_stimuli + 1):
+        for id_video in range(0, num_stimuli-1):
             # add animation to the list
-            anim_path = path + 'image_' + str(id_video) + '_animation.mp4'
+            anim_path = path + '_video_' + str(id_video) + '_animation.mp4'
             # check if need to add a linebreak
             if id_video == num_stimuli:
                 file.write('file ' + anim_path)  # no need for linebreak
@@ -1598,6 +1608,7 @@ class Analysis:
                           yaxis_title=yaxis_title,
                           xaxis_range=xaxis_range,
                           yaxis_range=yaxis_range)
+        self.kp = fig
         # save file
         if save_file:
             self.save_plotly(fig, 'kp_' + stimulus, self.folder)

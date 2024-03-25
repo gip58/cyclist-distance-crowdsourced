@@ -456,7 +456,13 @@ class Heroku:
                         if given_x != []:
 
 
-                        
+                            if id_video not in points_duration[duration]:
+                                points_duration[duration][id_video] = [[(given_x[int((duration*len(given_x))/len(self.durations))]),  # noqa: E501
+                                                                           (given_y[int((duration*len(given_y))/len(self.durations))])]]  # noqa: E501
+                            else:
+                                points_duration[duration][id_video].append([(given_x[int((duration*len(given_x))/len(self.durations))]),  # noqa: E501
+                                                                               (given_y[int((duration*len(given_y))/len(self.durations))])])  # noqa: E501
+    
 
                         
                             # logger.debug('{}: from group {} found values {} input '
@@ -491,13 +497,7 @@ class Heroku:
                                 else:
                                     points_worker[stim_from_df.index[pp]].append([(coords[0]),  # noqa: E501
                                                                                   (coords[1])])  # noqa: E501
-                                if id_video not in points_duration[duration]:
-                                    points_duration[duration][id_video] = [[(given_x[int((duration*len(given_x))/len(self.durations))]),  # noqa: E501
-                                                                           (given_y[int((duration*len(given_y))/len(self.durations))])]]  # noqa: E501
-                                else:
-                                    points_duration[duration][id_video].append([(given_x[int((duration*len(given_x))/len(self.durations))]),  # noqa: E501
-                                                                               (given_y[int((duration*len(given_y))/len(self.durations))])])  # noqa: E501
-    
+                               
         # save to csv
         if save_csv:
             # all points for each image
