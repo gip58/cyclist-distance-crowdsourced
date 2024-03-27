@@ -290,90 +290,99 @@ if __name__ == '__main__':
             # stimulus video with av ego and target car
             video_1_1 = range(63,83,1)
 
-            # # source video/stimulus for a given individual.
-            # for id_video in tqdm(range(0,tr.common.get_configs('num_stimuli')-1)):
-            #     logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
-            #                 id_video)
-            #     # Deconstruct the source video into its individual frames.
-            #     stim_path = os.path.join(tr.settings.output_dir, 'frames')
-            #     # To allow for overlaying the heatmap for each frame later on.
-            #     analysis.save_all_frames(heroku_data,
-            #                              mapping,
-            #                              id_video=id_video,
-            #                              t='video_length'
-            #                              )
-            #     # construct the gazes lines just as an example for how
-            #     # that looks compared to the heatmap.
+            # source video/stimulus for a given individual.
+            for id_video in tqdm(range(0,tr.common.get_configs('num_stimuli')-1)):
+                logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
+                            id_video)
+                # Deconstruct the source video into its individual frames.
+                stim_path = os.path.join(tr.settings.output_dir, 'frames')
+                # To allow for overlaying the heatmap for each frame later on.
+                analysis.save_all_frames(heroku_data,
+                                         mapping,
+                                         id_video=id_video,
+                                         t='video_length'
+                                         )
+                # construct the gazes lines just as an example for how
+                # that looks compared to the heatmap.
                 
-            #     # analysis.create_gazes(heroku_data,
-            #     #                       x='video_'+str(id_video)+'-x-0',
-            #     #                       y='video_'+str(id_video)+'-y-0',
-            #     #                       # pp='R51701252541887JF46247X',
-            #     #                       id_video=id_video,
-            #     #                       save_file=True)
-            #     # Construct heatmap over each video frame previously created
-            #     # from the source video.
-            #     # create histogram for stimulus
-            #     # analysis.create_histogram(stim_path,
-            #     #                   points[id_video],
-            #     #                   id_video=id_video,
-            #     #                   density_coef=20,
-            #     #                   save_file=True)
-            #     # # create animation for stimulus
-            #     points_process = {}
-            #     for points_dur in range(len(points_duration)):
-            #         points_process[points_dur] = points_duration[points_dur][id_video]
-            #     analysis.create_animation1(heroku_data,
-            #                               mapping,
-            #                               stim_path,
-            #                               id_video,
-            #                               points_process,
-            #                               t ='video_length',
-            #                               save_anim=True,
-            #                               save_frames=True)
-            #     # analysis.create_heatmap(heroku_data,
-            #     #                         x='video_'+str(id_video)+'-x-0',
-            #     #                         y='video_'+str(id_video)+'-y-0',
-            #     #                         pp='R51701252541887JF46247X',
-            #     #                         id_video=id_video,
-            #     #                         type_heatmap='contourf',
-            #     #                         add_corners=True,
-            #     #                         save_file=True)
-            #     # # Animate the kp for given source video.
-            #     # analysis.plot_kp_animate(mapping,
-            #     #                          'video_'+str(id_video),
-            #     #                          conf_interval=0.95)
-            #     # # todo: @Job, add comment and what method below does
-            #     # analysis.create_animation(heroku_data,
-            #     #                           x='video_'+str(id_video)+'-x-0',
-            #     #                           y='video_'+str(id_video)+'-y-0',
-            #     #                           t='video_'+str(id_video)+'-t-0',
-            #     #                           pp='R51701252541887JF46247X',
-            #     #                           id_video=id_video,
-            #     #                           save_anim=True,
-            #     #                           save_frames=True)
-            #     # # remove temp folder with frames
-            #     # shutil.rmtree(os.path.join(tr.settings.output_dir, 'frames'))
-            # # todo: add comment with description
-            # analysis.scatter_mult(heroku_data,
-            #                       x=['video_0-x-0', 'video_1-x-0'],
-            #                       y='video_0-y-0',
-            #                       color='browser_major_version',
-            #                       pretty_text=True,
+                # analysis.create_gazes(heroku_data,
+                #                       x='video_'+str(id_video)+'-x-0',
+                #                       y='video_'+str(id_video)+'-y-0',
+                #                       # pp='R51701252541887JF46247X',
+                #                       id_video=id_video,
+                #                       save_file=True)
+                # Construct heatmap over each video frame previously created
+                # from the source video.
+                # create histogram for stimulus
+                # analysis.create_histogram(stim_path,
+                #                   points[id_video],
+                #                   id_video=id_video,
+                #                   density_coef=20,
+                #                   save_file=True)
+                # # create animation for stimulus
+                points_process = {}
+                for points_dur in range(len(points_duration)):
+                    points_process[points_dur] = points_duration[points_dur][id_video]
+                analysis.create_animation1(heroku_data,
+                                          mapping,
+                                          stim_path,
+                                          id_video,
+                                          points_process,
+                                          t ='video_length',
+                                          save_anim=True,
+                                          save_frames=True)
+                # analysis.create_heatmap(heroku_data,
+                #                         x='video_'+str(id_video)+'-x-0',
+                #                         y='video_'+str(id_video)+'-y-0',
+                #                         pp='R51701252541887JF46247X',
+                #                         id_video=id_video,
+                #                         type_heatmap='contourf',
+                #                         add_corners=True,
+                #                         save_file=True)
+                # # Animate the kp for given source video.
+                # analysis.plot_kp_animate(mapping,
+                #                          'video_'+str(id_video),
+                #                          conf_interval=0.95)
+                # # todo: @Job, add comment and what method below does
+                # analysis.create_animation(heroku_data,
+                #                           x='video_'+str(id_video)+'-x-0',
+                #                           y='video_'+str(id_video)+'-y-0',
+                #                           t='video_'+str(id_video)+'-t-0',
+                #                           pp='R51701252541887JF46247X',
+                #                           id_video=id_video,
+                #                           save_anim=True,
+                #                           save_frames=True)
+                # # remove temp folder with frames
+                # shutil.rmtree(os.path.join(tr.settings.output_dir, 'frames'))
+            # todo: add comment with description
+            analysis.scatter_mult(heroku_data,
+                                  x=['video_0-x-0', 'video_1-x-0'],
+                                  y='video_0-y-0',
+                                  color='browser_major_version',
+                                  pretty_text=True,
+                                  save_file=True)
+            # Creating a for loop that makes an eye gazes/heatmap for every
+            # create animation for stimulus
+            # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],     # noqa: E501
+            #                       x=['avg_object', 'avg_person', 'avg_car'],
+            #                       y='avg_kp',
+            #                       trendline='ols',
+            #                       xaxis_title='Object count',
+            #                       yaxis_title='Mean keypresses (%)',
+            #                       marginal_y=None,
+            #                       marginal_x='rug',
             #                       save_file=True)
-            # # Creating a for loop that makes an eye gazes/heatmap for every
-            # # create animation for stimulus
-            # # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],     # noqa: E501
-            # #                       x=['avg_object', 'avg_person', 'avg_car'],
-            # #                       y='avg_kp',
-            # #                       trendline='ols',
-            # #                       xaxis_title='Object count',
-            # #                       yaxis_title='Mean keypresses (%)',
-            # #                       marginal_y=None,
-            # #                       marginal_x='rug',
-            # #                       save_file=True)
-            # # Create individual scatter plot for given video and participant.
-            # analysis.scatter_et(heroku_data,
+            # Create individual scatter plot for given video and participant.
+            analysis.scatter_et(heroku_data,
+                                x='video_0-x-0',
+                                y='video_0-y-0',
+                                t='video_0-t-0',
+                                pp='R51701252541887JF46247X',
+                                id_video='video_0',
+                                pretty_text=True,
+                                save_file=True)
+            # Create individual heatmap for given video and participant.
+            # analysis.heatmap(heroku_data,
             #                     x='video_0-x-0',
             #                     y='video_0-y-0',
             #                     t='video_0-t-0',
@@ -381,15 +390,6 @@ if __name__ == '__main__':
             #                     id_video='video_0',
             #                     pretty_text=True,
             #                     save_file=True)
-            # # Create individual heatmap for given video and participant.
-            # # analysis.heatmap(heroku_data,
-            # #                     x='video_0-x-0',
-            # #                     y='video_0-y-0',
-            # #                     t='video_0-t-0',
-            # #                     pp='R51701252541887JF46247X',
-            # #                     id_video='video_0',
-            # #                     pretty_text=True,
-            # #                     save_file=True)
         # stitch animations into 1 long videos
         analysis.create_animation_all_stimuli1(num_stimuli)
         # check if any figures are to be rendered

@@ -77,7 +77,7 @@ class Heroku:
         # save data as csv file
         self.save_csv = save_csv
         # read in durarions of stimuli from a config file
-        self.durations = tr.common.get_configs('stimulus_durations')
+        self.durations = range(tr.common.get_configs('stimulus_durations'))
         self.num_stimuli = tr.common.get_configs('num_stimuli')
 
     def set_data(self, heroku_data):
@@ -472,53 +472,53 @@ class Heroku:
                             #              given_in,
                             #              video_id)
                             # iterate over all values given by the participand
-                            for val in range(len(given_y)-1):
-                                # check if data from participant is present for the
-                                # given stimulus
-                                # if (not stim_from_df.iloc[pp][x][val] or
-                                #    pd.isna(stim_from_df.iloc[pp][x][val])):
-                                #     # if no data present, move to the next participant
-                                #     continue
-                                # check if input is in mapping
+                            # for val in range(len(given_y)-1):
+                            #     # check if data from participant is present for the
+                            #     # given stimulus
+                            #     # if (not stim_from_df.iloc[pp][x][val] or
+                            #     #    pd.isna(stim_from_df.iloc[pp][x][val])):
+                            #     #     # if no data present, move to the next participant
+                            #     #     continue
+                            #     # check if input is in mapping
                                 
                            
-                                coords = [given_x[val],given_y[val]]
+                            #     coords = [given_x[val],given_y[val]]
                                 
-                                # add coordinates
-                                if id_video not in points:
-                                    points[id_video] = [[(coords[0]),
-                                                       (coords[1])]]
-                                else:
-                                    points[id_video].append([(coords[0]),
-                                                            (coords[1])])
-                                if stim_from_df.index[pp] not in points_worker:
-                                    points_worker[stim_from_df.index[pp]] = [[(coords[0]),  # noqa: E501
-                                                                             (coords[1])]]  # noqa: E501
-                                else:
-                                    points_worker[stim_from_df.index[pp]].append([(coords[0]),  # noqa: E501
-                                                                                  (coords[1])])  # noqa: E501
+                            #     # add coordinates
+                            #     if id_video not in points:
+                            #         points[id_video] = [[(coords[0]),
+                            #                            (coords[1])]]
+                            #     else:
+                            #         points[id_video].append([(coords[0]),
+                            #                                 (coords[1])])
+                            #     if stim_from_df.index[pp] not in points_worker:
+                            #         points_worker[stim_from_df.index[pp]] = [[(coords[0]),  # noqa: E501
+                            #                                                  (coords[1])]]  # noqa: E501
+                            #     else:
+                            #         points_worker[stim_from_df.index[pp]].append([(coords[0]),  # noqa: E501
+                            #                                                       (coords[1])])  # noqa: E501
                                
         # save to csv
         if save_csv:
             # all points for each image
-            # create a dataframe to save to csv
-            df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points.items()]))  # noqa: E501
-            df_csv = df_csv.transpose()
-            # save to csv
-            df_csv.to_csv(tr.settings.output_dir + '/' +
-                          self.file_points_csv + '.csv')
-            logger.info('Saved dictionary of points to csv file {}.csv',
-                        self.file_points_csv)
+            # # create a dataframe to save to csv
+            # df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points.items()]))  # noqa: E501
+            # df_csv = df_csv.transpose()
+            # # save to csv
+            # df_csv.to_csv(tr.settings.output_dir + '/' +
+            #               self.file_points_csv + '.csv')
+            # logger.info('Saved dictionary of points to csv file {}.csv',
+            #             self.file_points_csv)
             # all points for each worker
-            # create a dataframe to save to csv
-            df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_worker.items()]))  # noqa: E501
-            df_csv = df_csv.transpose()
-            # save to csv
-            df_csv.to_csv(tr.settings.output_dir + '/' +
-                          self.file_points_worker_csv + '.csv')
-            logger.info('Saved dictionary of points for each worker to csv ' +
-                        'file {}.csv',
-                        self.file_points_worker_csv)
+            # # create a dataframe to save to csv
+            # df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_worker.items()]))  # noqa: E501
+            # df_csv = df_csv.transpose()
+            # # save to csv
+            # df_csv.to_csv(tr.settings.output_dir + '/' +
+            #               self.file_points_worker_csv + '.csv')
+            # logger.info('Saved dictionary of points for each worker to csv ' +
+            #             'file {}.csv',
+            #             self.file_points_worker_csv)
             # points for each image for each stimulus duration
             # create a dataframe to save to csv
             for duration in range(len(self.durations)):

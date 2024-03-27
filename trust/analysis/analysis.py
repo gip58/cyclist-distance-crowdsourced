@@ -17,6 +17,7 @@ from plotly import subplots
 import warnings
 import unicodedata
 import re
+from tqdm import tqdm
 import ast
 from scipy.stats.kde import gaussian_kde
 from PIL import Image
@@ -73,14 +74,14 @@ class Analysis:
             logger.error('File with frame already open.')
             return
         # go over frames
-        for k in range(0, 14, 1):
+        for k in tqdm(range(0, 1200, 1)):
             os.makedirs(os.path.dirname(path), exist_ok=True)
             fps = cap.get(cv2.CAP_PROP_FPS)
-            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k * t/15000))
+            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k * t/(1200*1000)))
             ret, frame = cap.read()
             if ret:
                 filename = os.path.join(path,
-                                        'frame_' + str([k]) + '_video_' + str(id_video)+'.jpg')  # noqa: E501
+                                        'frame_' + str([k]) +'.jpg')  # noqa: E501
                 cv2.imwrite(filename,
                             frame,
                             [cv2.IMWRITE_JPEG_QUALITY, 20])
@@ -542,8 +543,7 @@ class Analysis:
             plt.close(fig)  # clear from memory
             return
         # read original image
-        im = plt.imread(image + '\\frame_' + str([1]) + '_video_' +
-                        str(self.id_video) + '.jpg')
+        im = plt.imread(image + '\\frame_' + str([1]) + '.jpg')
         plt.imshow(im)
         # remove axis
         plt.gca().set_axis_off()
@@ -586,7 +586,7 @@ class Analysis:
         anim = animation.FuncAnimation(self.fig,
                                        self.animate1,
                                        frames=len(points),
-                                       interval=1000,
+                                       interval=33.3333,
                                        repeat=False)
         # save image
         if save_anim:
@@ -640,8 +640,7 @@ class Analysis:
                              fill=True,
                              cmap='RdBu_r')
         # read original image
-        im = plt.imread(self.image + '\\frame_' + str([i]) + '_video_' +
-                        str(self.id_video) + '.jpg')
+        im = plt.imread(self.image + '\\frame_' + str([i]) + '.jpg')
         plt.imshow(im)
         # remove axis
         plt.gca().set_axis_off()
@@ -653,11 +652,11 @@ class Analysis:
                             hspace=0,
                             wspace=0)
         # textbox with duration
-        durations = tr.common.get_configs('stimulus_durations')
+        durations = range(tr.common.get_configs('stimulus_durations'))
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         plt.text(0.75,
                  0.98,
-                 'id=' + str(self.id_video) + ' duration=' + str(round(durations[i]*int(self.t)/15)),
+                 'id=' + str(self.id_video) + ' duration=' + str(round(durations[i]*int(self.t)/1200)),
                  transform=plt.gca().transAxes,
                  fontsize=12,
                  verticalalignment='top',
