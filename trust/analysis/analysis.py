@@ -586,7 +586,7 @@ class Analysis:
         anim = animation.FuncAnimation(self.fig,
                                        self.animate1,
                                        frames=len(points),
-                                       interval=33.3333,
+                                       interval=self.t/len(points),
                                        repeat=False)
         # save image
         if save_anim:
