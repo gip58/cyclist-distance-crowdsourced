@@ -328,7 +328,7 @@ if __name__ == '__main__':
                                           stim_path,
                                           id_video,
                                           points_process,
-                                          t ='video_length',
+                                          t='video_length',
                                           save_anim=True,
                                           save_frames=True)
                 # analysis.create_heatmap(heroku_data,

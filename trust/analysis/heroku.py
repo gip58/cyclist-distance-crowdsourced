@@ -77,7 +77,7 @@ class Heroku:
         # save data as csv file
         self.save_csv = save_csv
         # read in durarions of stimuli from a config file
-        self.durations = range(tr.common.get_configs('stimulus_durations'))
+        self.hm_resolution = range(tr.common.get_configs('hm_resolution'))
         self.num_stimuli = tr.common.get_configs('num_stimuli')
 
     def set_data(self, heroku_data):
@@ -417,8 +417,7 @@ class Heroku:
             dur = df['video_'+str(id_video)+'-dur-0'].tolist()
             dur = [x for x in dur if str(x) != 'nan']
             dur = int(mean(dur))
-            print(dur)
-            for duration in range(len(self.durations)):
+            for duration in range(len(self.hm_resolution)):
                 # create empty list to store points for the stimulus of given
                 # duration
                 points_duration[duration][id_video] = []    

@@ -576,6 +576,8 @@ class Analysis:
         self.image = image
         self.id_video = id_video
         self.t = dt.loc['video_'+str(id_video)][t]
+        # how many ms between update of heatmap on the video
+        precision = tr.common.get_configs('heatmap_precision')
         self.points = points
         self.save_frames = save_frames
         self.fig, self.g = self.create_heatmap1(image,
