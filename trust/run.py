@@ -31,7 +31,7 @@ SAVE_CSV = True  # load csv files with data
 FILTER_DATA = False  # filter Appen and heroku data
 CLEAN_DATA = False  # clean Appen data
 REJECT_CHEATERS = False  # reject cheaters on Appen
-CALC_COORDS = False
+CALC_COORDS = True  # extract points from heroku data
 UPDATE_MAPPING = False  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
@@ -343,7 +343,9 @@ if __name__ == '__main__':
                 # analysis.plot_kp_animate(mapping,
                 #                          'video_'+str(id_video),
                 #                          conf_interval=0.95)
-                # # todo: @Job, add comment and what method below does
+                # 
+                # # Create an animation from individual frames
+                # # 
                 # analysis.create_animation(heroku_data,
                 #                           x='video_'+str(id_video)+'-x-0',
                 #                           y='video_'+str(id_video)+'-y-0',

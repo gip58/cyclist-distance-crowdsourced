@@ -403,21 +403,17 @@ class Heroku:
         save_points: save dictionary with points.
         if save_points:: save dictionary with points for each worker.
         """
-        # load mapping of codes and coordinates
-        # with open(tr.common.get_configs('mapping_cb')) as f:
-        #     mapping = json.load(f)
         logger.info('Extracting coordinates for {} stimuli.', self.num_stimuli)
         # dictionaries to store points
         points = {}
         points_worker = {}
-        points_duration = [{} for x in range(len(self.durations))]
+        points_duration = [{} for x in self.durations]
         # loop over stimuli from 1 to self.num_stimuli
         # tqdm adds progress bar
         for id_video in tqdm(range(0, self.num_stimuli)):
             # create empty list to store points for the stimulus
             points[id_video] = []
             # loop over durations of stimulus
-            
             dur = df['video_'+str(id_video)+'-dur-0'].tolist()
             dur = [x for x in dur if str(x) != 'nan']
             dur = int(mean(dur))
@@ -430,9 +426,7 @@ class Heroku:
                 # stimulus
                 # build names of columns in df
                 x = 'video_'+str(id_video)+'-x-0'
-
                 y = 'video_'+str(id_video)+'-y-0'
-
                 if x not in df.keys() or y not in df.keys():
                     logger.debug('Indices not found: {} or {}.',
                                  x,
@@ -443,82 +437,60 @@ class Heroku:
                 # replace nans with empty lists
                 empty = pd.Series([[] for _ in range(len(stim_from_df.index))],
                                   index=stim_from_df.index)
-                # stim_from_df[image_cb] = stim_from_df[image_cb].fillna(empty)
-                # stim_from_df[image_in] = stim_from_df[image_in].fillna(empty)
                 # iterate of data from participants for the given stimulus
                 for pp in range(len(stim_from_df)):
                     # input given by participant
                     given_y = stim_from_df.iloc[pp][y]
                     given_x = stim_from_df.iloc[pp][x]
-                    # print('given_in', len(given_y))
-                   
                     if type(given_y) == list:
+                        # Check if imput from stimulus isn't blank
                         if given_x != []:
-
-
                             if id_video not in points_duration[duration]:
                                 points_duration[duration][id_video] = [[(given_x[int((duration*len(given_x))/len(self.durations))]),  # noqa: E501
                                                                            (given_y[int((duration*len(given_y))/len(self.durations))])]]  # noqa: E501
                             else:
                                 points_duration[duration][id_video].append([(given_x[int((duration*len(given_x))/len(self.durations))]),  # noqa: E501
                                                                                (given_y[int((duration*len(given_y))/len(self.durations))])])  # noqa: E501
-    
-
-                        
-                            # logger.debug('{}: from group {} found values {} input '
-                            #              + 'for stimulus {}.',
-                            #              stim_from_df.index[pp],
-                            #              stim_from_df.iloc[pp]['group_choice'],
-                            #              given_in,
-                            #              video_id)
                             # iterate over all values given by the participand
-                            # for val in range(len(given_y)-1):
-                            #     # check if data from participant is present for the
-                            #     # given stimulus
-                            #     # if (not stim_from_df.iloc[pp][x][val] or
-                            #     #    pd.isna(stim_from_df.iloc[pp][x][val])):
-                            #     #     # if no data present, move to the next participant
-                            #     #     continue
-                            #     # check if input is in mapping
+                            for val in range(len(given_y)-1):
                                 
-                           
-                            #     coords = [given_x[val],given_y[val]]
-                                
-                            #     # add coordinates
-                            #     if id_video not in points:
-                            #         points[id_video] = [[(coords[0]),
-                            #                            (coords[1])]]
-                            #     else:
-                            #         points[id_video].append([(coords[0]),
-                            #                                 (coords[1])])
-                            #     if stim_from_df.index[pp] not in points_worker:
-                            #         points_worker[stim_from_df.index[pp]] = [[(coords[0]),  # noqa: E501
-                            #                                                  (coords[1])]]  # noqa: E501
-                            #     else:
-                            #         points_worker[stim_from_df.index[pp]].append([(coords[0]),  # noqa: E501
-                            #                                                       (coords[1])])  # noqa: E501
+
+                                coords = [given_x[val],given_y[val]]
+                                # add coordinates
+                                if id_video not in points:
+                                    points[id_video] = [[(coords[0]),
+                                                       (coords[1])]]
+                                else:
+                                    points[id_video].append([(coords[0]),
+                                                            (coords[1])])
+                                if stim_from_df.index[pp] not in points_worker:
+                                    points_worker[stim_from_df.index[pp]] = [[(coords[0]),  # noqa: E501
+                                                                             (coords[1])]]  # noqa: E501
+                                else:
+                                    points_worker[stim_from_df.index[pp]].append([(coords[0]),  # noqa: E501
+                                                                                  (coords[1])])  # noqa: E501
                                
         # save to csv
         if save_csv:
             # all points for each image
-            # # create a dataframe to save to csv
-            # df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points.items()]))  # noqa: E501
-            # df_csv = df_csv.transpose()
-            # # save to csv
-            # df_csv.to_csv(tr.settings.output_dir + '/' +
-            #               self.file_points_csv + '.csv')
-            # logger.info('Saved dictionary of points to csv file {}.csv',
-            #             self.file_points_csv)
+            # create a dataframe to save to csv
+            df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points.items()]))  # noqa: E501
+            df_csv = df_csv.transpose()
+            # save to csv
+            df_csv.to_csv(tr.settings.output_dir + '/' +
+                          self.file_points_csv + '.csv')
+            logger.info('Saved dictionary of points to csv file {}.csv',
+                        self.file_points_csv)
             # all points for each worker
-            # # create a dataframe to save to csv
-            # df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_worker.items()]))  # noqa: E501
-            # df_csv = df_csv.transpose()
-            # # save to csv
-            # df_csv.to_csv(tr.settings.output_dir + '/' +
-            #               self.file_points_worker_csv + '.csv')
-            # logger.info('Saved dictionary of points for each worker to csv ' +
-            #             'file {}.csv',
-            #             self.file_points_worker_csv)
+            # create a dataframe to save to csv
+            df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_worker.items()]))  # noqa: E501
+            df_csv = df_csv.transpose()
+            # save to csv
+            df_csv.to_csv(tr.settings.output_dir + '/' +
+                          self.file_points_worker_csv + '.csv')
+            logger.info('Saved dictionary of points for each worker to csv ' +
+                        'file {}.csv',
+                        self.file_points_worker_csv)
             # points for each image for each stimulus duration
             # create a dataframe to save to csv
             for duration in range(len(self.durations)):

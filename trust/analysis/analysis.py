@@ -634,11 +634,19 @@ class Analysis:
         Helper function to create animation.
         """
         self.g.clear()
-        self.g = sns.kdeplot(x=[item[0] for item in self.points[i]],
+        # KDE plot data
+        # self.g = sns.kdeplot(x=[item[0] for item in self.points[i]],
+        #                      y=[item[1] for item in self.points[i]],
+        #                      alpha=0.5,
+        #                      fill=True,
+        #                      cmap='RdBu_r')
+
+        # Scatter plot data
+        self.g = sns.scatterplot(x=[item[0] for item in self.points[i]],
                              y=[item[1] for item in self.points[i]],
                              alpha=0.5,
-                             fill=True,
-                             cmap='RdBu_r')
+                             legend='auto')
+                             
         # read original image
         im = plt.imread(self.image + '\\frame_' + str([i]) + '.jpg')
         plt.imshow(im)
