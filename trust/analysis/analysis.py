@@ -342,7 +342,7 @@ class Analysis:
                             hspace=0,
                             wspace=0)
         # textbox with duration
-        durations = range(tr.common.get_configs('stimulus_durations'))
+        durations = range(tr.common.get_configs('hm_resolution'))
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         plt.text(0.75,
                  0.98,
