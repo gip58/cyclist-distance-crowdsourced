@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib._pylab_helpers
 from tqdm import tqdm
 import os
-import shutil
+# import shutil
 import trust as tr
 
 tr.logs(show_level='info', show_color=True)
@@ -24,7 +24,7 @@ logger = tr.CustomLogger(__name__)  # use custom logger
 # SHOW_OUTPUT_PP = True  # should figures with info about participants
 # SHOW_OUTPUT_ET = True  # should figures for eye tracking
 
-# # for debugging, skip processing
+# for debugging, skip processing
 SAVE_P = False  # save pickle files with data
 LOAD_P = True  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
@@ -282,16 +282,18 @@ if __name__ == '__main__':
             logger.info('Producing visualisations of eye gaze data for {} stimuli.',  # noqa: E501
                         tr.common.get_configs('num_stimuli'))
             # stimulus videos with manual ego and target car
-            video_0_0 = range(0,20,1)
+            video_0_0 = range(0, 20, 1)
             # stimulus vidoe with manual ego car but av target car
-            video_0_1 = range(21,41,1)
+            video_0_1 = range(21, 41, 1)
             # stimulus video with av ego car but manual target car
-            video_1_0 = range(42,62,1)
+            video_1_0 = range(42, 62, 1)
             # stimulus video with av ego and target car
-            video_1_1 = range(63,83,1)
+            video_1_1 = range(63, 83, 1)
 
             # source video/stimulus for a given individual.
-            for id_video in tqdm(range(0,tr.common.get_configs('num_stimuli')-1)):
+            for id_video in tqdm(range(0,
+                                       tr.common.get_configs('num_stimuli')
+                                       - 1)):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
                 # Deconstruct the source video into its individual frames.
@@ -304,7 +306,6 @@ if __name__ == '__main__':
                                          )
                 # construct the gazes lines just as an example for how
                 # that looks compared to the heatmap.
-                
                 # analysis.create_gazes(heroku_data,
                 #                       x='video_'+str(id_video)+'-x-0',
                 #                       y='video_'+str(id_video)+'-y-0',
@@ -319,11 +320,12 @@ if __name__ == '__main__':
                 #                   id_video=id_video,
                 #                   density_coef=20,
                 #                   save_file=True)
-                # # create animation for stimulus
+                # create animation for stimulus
                 points_process = {}
                 for points_dur in range(len(points_duration)):
-                    points_process[points_dur] = points_duration[points_dur][id_video]
-                analysis.create_animation1(heroku_data,
+                    points_process[points_dur] = points_duration[points_dur][
+                                                                 id_video]
+                analysis.create_animation(heroku_data,
                                           mapping,
                                           stim_path,
                                           id_video,
@@ -339,13 +341,13 @@ if __name__ == '__main__':
                 #                         type_heatmap='contourf',
                 #                         add_corners=True,
                 #                         save_file=True)
-                # # Animate the kp for given source video.
+                # Animate the kp for given source video.
                 # analysis.plot_kp_animate(mapping,
                 #                          'video_'+str(id_video),
                 #                          conf_interval=0.95)
-                # 
-                # # Create an animation from individual frames
-                # # 
+                #
+                # Create an animation from individual frames
+                #
                 # analysis.create_animation(heroku_data,
                 #                           x='video_'+str(id_video)+'-x-0',
                 #                           y='video_'+str(id_video)+'-y-0',
@@ -354,7 +356,7 @@ if __name__ == '__main__':
                 #                           id_video=id_video,
                 #                           save_anim=True,
                 #                           save_frames=True)
-                # # remove temp folder with frames
+                # remove temp folder with frames
                 # shutil.rmtree(os.path.join(tr.settings.output_dir, 'frames'))
             # todo: add comment with description
             analysis.scatter_mult(heroku_data,

@@ -420,7 +420,7 @@ class Heroku:
             for duration in range(len(self.hm_resolution)):
                 # create empty list to store points for the stimulus of given
                 # duration
-                points_duration[duration][id_video] = []    
+                points_duration[duration][id_video] = []
                 # create empty list to store points of given duration for the
                 # stimulus
                 # build names of columns in df
@@ -432,10 +432,7 @@ class Heroku:
                                  y)
                     continue
                 # trim df
-                stim_from_df = df[[x,y]]
-                # replace nans with empty lists
-                empty = pd.Series([[] for _ in range(len(stim_from_df.index))],
-                                  index=stim_from_df.index)
+                stim_from_df = df[[x, y]]
                 # iterate of data from participants for the given stimulus
                 for pp in range(len(stim_from_df)):
                     # input given by participant
@@ -446,19 +443,17 @@ class Heroku:
                         if given_x != []:
                             if id_video not in points_duration[duration]:
                                 points_duration[duration][id_video] = [[(given_x[int((duration*len(given_x))/len(self.durations))]),  # noqa: E501
-                                                                           (given_y[int((duration*len(given_y))/len(self.durations))])]]  # noqa: E501
+                                                                        (given_y[int((duration*len(given_y))/len(self.durations))])]]  # noqa: E501
                             else:
                                 points_duration[duration][id_video].append([(given_x[int((duration*len(given_x))/len(self.durations))]),  # noqa: E501
-                                                                               (given_y[int((duration*len(given_y))/len(self.durations))])])  # noqa: E501
+                                                                            (given_y[int((duration*len(given_y))/len(self.durations))])])  # noqa: E501
                             # iterate over all values given by the participand
                             for val in range(len(given_y)-1):
-                                
-
-                                coords = [given_x[val],given_y[val]]
+                                coords = [given_x[val], given_y[val]]
                                 # add coordinates
                                 if id_video not in points:
                                     points[id_video] = [[(coords[0]),
-                                                       (coords[1])]]
+                                                        (coords[1])]]
                                 else:
                                     points[id_video].append([(coords[0]),
                                                             (coords[1])])
@@ -468,7 +463,6 @@ class Heroku:
                                 else:
                                     points_worker[stim_from_df.index[pp]].append([(coords[0]),  # noqa: E501
                                                                                   (coords[1])])  # noqa: E501
-                               
         # save to csv
         if save_csv:
             # all points for each image
@@ -509,14 +503,11 @@ class Heroku:
                             str(self.durations[duration]))
         # return points
         return points, points_worker, points_duration
-    
 
     def process_kp(self, filter_length=True):
         """Process keypresses for resolution self.res.
-
         Returns:
             mapping: updated mapping df.
-
         Args:
             filter_length (bool, optional): filter out stimuli with unexpected
                                             length.
