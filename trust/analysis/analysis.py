@@ -49,11 +49,7 @@ class Analysis:
         # set font to Times
         plt.rc('font', family='serif')
 
-<<<<<<< Updated upstream
-    def save_all_frames(self, df ,dt , id_video, t):
-=======
     def save_all_frames(self, df, dt, id_video, t):
->>>>>>> Stashed changes
         """
         Outputs individual frames as png from inputted video mp4.
 
@@ -259,13 +255,9 @@ class Analysis:
         """
         self.image = image
         self.id_video = id_video
-<<<<<<< Updated upstream
-        self.t = dt.loc['video_'+str(id_video)][t]
         # how many ms between update of heatmap on the video
-        precision = tr.common.get_configs('heatmap_precision')
-=======
+        # self.precision = tr.common.get_configs('heatmap_precision')
         self.t = mapping.loc['video_'+str(id_video)][t]
->>>>>>> Stashed changes
         self.points = points
         self.save_frames = save_frames
         self.fig, self.g = self.create_heatmap(image,
