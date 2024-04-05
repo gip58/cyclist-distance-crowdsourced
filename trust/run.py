@@ -282,16 +282,17 @@ if __name__ == '__main__':
             logger.info('Producing visualisations of eye gaze data for {} stimuli.',  # noqa: E501
                         tr.common.get_configs('num_stimuli'))
             # stimulus videos with manual ego and target car
-            video_0_0 = range(0,20,1)
+            video_0_0 = range(0, 20, 1)
             # stimulus vidoe with manual ego car but av target car
-            video_0_1 = range(21,41,1)
+            video_0_1 = range(21, 41, 1)
             # stimulus video with av ego car but manual target car
-            video_1_0 = range(42,62,1)
+            video_1_0 = range(42, 62, 1)
             # stimulus video with av ego and target car
-            video_1_1 = range(63,83,1)
+            video_1_1 = range(63, 83, 1)
 
             # source video/stimulus for a given individual.
-            for id_video in tqdm(range(0,tr.common.get_configs('num_stimuli')-1)):
+            for id_video in tqdm(range(0, tr.common.get_configs(
+                                       'num_stimuli')-1)):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
                 # Deconstruct the source video into its individual frames.
@@ -304,7 +305,7 @@ if __name__ == '__main__':
                                          )
                 # construct the gazes lines just as an example for how
                 # that looks compared to the heatmap.
-                
+
                 # analysis.create_gazes(heroku_data,
                 #                       x='video_'+str(id_video)+'-x-0',
                 #                       y='video_'+str(id_video)+'-y-0',
@@ -322,15 +323,16 @@ if __name__ == '__main__':
                 # # create animation for stimulus
                 points_process = {}
                 for points_dur in range(len(points_duration)):
-                    points_process[points_dur] = points_duration[points_dur][id_video]
+                    points_process[points_dur] = points_duration[points_dur][
+                                                                 id_video]
                 analysis.create_animation1(heroku_data,
-                                          mapping,
-                                          stim_path,
-                                          id_video,
-                                          points_process,
-                                          t='video_length',
-                                          save_anim=True,
-                                          save_frames=True)
+                                           mapping,
+                                           stim_path,
+                                           id_video,
+                                           points_process,
+                                           t='video_length',
+                                           save_anim=True,
+                                           save_frames=True)
                 # analysis.create_heatmap(heroku_data,
                 #                         x='video_'+str(id_video)+'-x-0',
                 #                         y='video_'+str(id_video)+'-y-0',
@@ -343,9 +345,9 @@ if __name__ == '__main__':
                 # analysis.plot_kp_animate(mapping,
                 #                          'video_'+str(id_video),
                 #                          conf_interval=0.95)
-                # 
+                #
                 # # Create an animation from individual frames
-                # # 
+                # #
                 # analysis.create_animation(heroku_data,
                 #                           x='video_'+str(id_video)+'-x-0',
                 #                           y='video_'+str(id_video)+'-y-0',
