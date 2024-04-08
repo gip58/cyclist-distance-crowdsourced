@@ -323,15 +323,16 @@ if __name__ == '__main__':
                 # # create animation for stimulus
                 points_process = {}
                 for points_dur in range(len(points_duration)):
-                    points_process[points_dur] = points_duration[points_dur][id_video]
+                    points_process[points_dur] = points_duration[points_dur][
+                                                                 id_video]
                 analysis.create_animation(heroku_data,
-                                           mapping,
-                                           stim_path,
-                                           id_video,
-                                           points_process,
-                                           t='video_length',
-                                           save_anim=True,
-                                           save_frames=True)
+                                          mapping,
+                                          stim_path,
+                                          id_video,
+                                          points_process,
+                                          t='video_length',
+                                          save_anim=True,
+                                          save_frames=True)
                 # analysis.create_heatmap(heroku_data,
                 #                         x='video_'+str(id_video)+'-x-0',
                 #                         y='video_'+str(id_video)+'-y-0',

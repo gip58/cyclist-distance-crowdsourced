@@ -418,12 +418,13 @@ class Heroku:
             dur = df['video_'+str(id_video)+'-dur-0'].tolist()
             dur = [x for x in dur if str(x) != 'nan']
             dur = int(round(mean(dur)/1000)*1000)
-            
-            for duration in tqdm(range(0,len(range(0, dur,
-                                  tr.common.get_configs('hm_resolution'))))):
+
+            for duration in range(0, len(range(0, dur,
+                                               tr.common.get_configs(
+                                                   'hm_resolution')))):
                 # create empty list to store points for the stimulus of given
                 # duration
-                points_duration[duration][id_video] = [] 
+                points_duration[duration][id_video] = []
                 # create empty list to store points of given duration for the
                 # stimulus
                 # build names of columns in df
