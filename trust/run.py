@@ -323,8 +323,7 @@ if __name__ == '__main__':
                 # # create animation for stimulus
                 points_process = {}
                 for points_dur in range(len(points_duration)):
-                    points_process[points_dur] = points_duration[points_dur][
-                                                                 id_video]
+                    points_process[points_dur] = points_duration[points_dur][id_video]
                 analysis.create_animation(heroku_data,
                                            mapping,
                                            stim_path,
@@ -395,7 +394,7 @@ if __name__ == '__main__':
             #                     pretty_text=True,
             #                     save_file=True)
         # stitch animations into 1 long videos
-        analysis.create_animation_all_stimuli1(num_stimuli)
+        analysis.create_animation_all_stimuli(num_stimuli)
         # check if any figures are to be rendered
         figures = [manager.canvas.figure
                    for manager in

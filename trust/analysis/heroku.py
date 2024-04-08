@@ -417,12 +417,13 @@ class Heroku:
             # loop over durations of stimulus
             dur = df['video_'+str(id_video)+'-dur-0'].tolist()
             dur = [x for x in dur if str(x) != 'nan']
-            dur = int(mean(dur))
-            for duration in range(0, dur,
-                                  tr.common.get_configs('hm_resolution')):
+            dur = int(round(mean(dur)/1000)*1000)
+            
+            for duration in tqdm(range(0,len(range(0, dur,
+                                  tr.common.get_configs('hm_resolution'))))):
                 # create empty list to store points for the stimulus of given
                 # duration
-                points_duration[duration][id_video] = []
+                points_duration[duration][id_video] = [] 
                 # create empty list to store points of given duration for the
                 # stimulus
                 # build names of columns in df
@@ -488,21 +489,23 @@ class Heroku:
                         self.file_points_worker_csv)
             # points for each image for each stimulus duration
             # create a dataframe to save to csv
-            for duration in range(len(self.durations)):
-                df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_duration[duration].items()]))  # noqa: E501
-                df_csv = df_csv.transpose()
-                # save to csv
-                df_csv.to_csv(tr.settings.output_dir +
-                              '/' +
-                              self.file_points_duration_csv +
-                              '_' +
-                              str(self.durations[duration]) +
-                              '.csv')
-                logger.info('Saved dictionary of points for duration {} ' +
-                            'to csv file {}_{}.csv',
-                            str(self.durations[duration]),
-                            self.file_points_duration_csv,
-                            str(self.durations[duration]))
+            for duration in range(0, 50000,
+                                  tr.common.get_configs('hm_resolution')):
+                if duration == int:
+                    df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_duration[duration].items()]))  # noqa: E501
+                    df_csv = df_csv.transpose()
+                    # save to csv
+                    df_csv.to_csv(tr.settings.output_dir +
+                                  '/' +
+                                  self.file_points_duration_csv +
+                                  '_' +
+                                  str(self.hm_resolution[duration]) +
+                                  '.csv')
+                    logger.info('Saved dictionary of points for duration {} ' +
+                                'to csv file {}_{}.csv',
+                                str(self.hm_resolution[duration]),
+                                self.file_points_duration_csv,
+                                str(self.hm_resolution[duration]))
         # return points
         return points, points_worker, points_duration
 

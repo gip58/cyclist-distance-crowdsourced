@@ -49,7 +49,7 @@ class Analysis:
         # set font to Times
         plt.rc('font', family='serif')
 
-    def save_all_frames(self, df, dt, id_video, t):
+    def save_all_frames(self, df, mapping, id_video, t):
         """
         Outputs individual frames as png from inputted video mp4.
 
@@ -68,16 +68,16 @@ class Analysis:
         cap = cv2.VideoCapture(os.path.join(tr.common.get_configs('path_stimuli'),  # noqa: E501
                                             'video_' + str(id_video) + '.mp4'))  # noqa: E501
         # timestamp
-        t = dt.loc['video_' + str(id_video)][t]
+        t = mapping.loc['video_' + str(id_video)][t]
         # check if file is already open
         if not cap.isOpened():
             logger.error('File with frame already open.')
             return
         # go over frames
-        for k in tqdm(range(0, 1200, 1)):
+        for k in tqdm(range(0, t, tr.common.get_configs('hm_resolution'))):
             os.makedirs(os.path.dirname(path), exist_ok=True)
             fps = cap.get(cv2.CAP_PROP_FPS)
-            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k * t/(1200*1000)))
+            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k/(1000)))
             ret, frame = cap.read()
             if ret:
                 filename = os.path.join(path,
