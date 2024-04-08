@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib._pylab_helpers
 from tqdm import tqdm
 import os
-import shutil
+# import shutil
 import trust as tr
 
 tr.logs(show_level='info', show_color=True)
