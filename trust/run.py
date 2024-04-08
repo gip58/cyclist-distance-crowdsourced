@@ -325,7 +325,7 @@ if __name__ == '__main__':
                 for points_dur in range(len(points_duration)):
                     points_process[points_dur] = points_duration[points_dur][
                                                                  id_video]
-                analysis.create_animation1(heroku_data,
+                analysis.create_animation(heroku_data,
                                            mapping,
                                            stim_path,
                                            id_video,
