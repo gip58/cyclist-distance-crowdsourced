@@ -8,6 +8,10 @@ import seaborn as sns
 import pandas as pd
 import plotly as py
 import plotly.graph_objs as go
+import matplotlib.animation as animation
+import subprocess
+import io
+import pickle
 import plotly.express as px
 from plotly import subplots
 import warnings
