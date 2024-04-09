@@ -1,11 +1,7 @@
 # by Pavlo Bazilinskyy <pavlo.bazilinskyy@gmail.com>
 import os
-import subprocess
-import io
-import pickle
 import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import numpy as np
 import scipy.stats as st
 import seaborn as sns
@@ -393,6 +389,7 @@ class Analysis:
         anim.save(path + suffix, writer='ffmpeg')
         # clear animation from memory
         plt.close(self.fig)
+
 
     # TODO: fix error with value of string not used as float
     def corr_matrix(self, df, columns_drop, save_file=False):
@@ -813,18 +810,23 @@ class Analysis:
                                       xanchor='right',
                                       x=0.78
                                       ))
+
         # results = px.get_trendline_results(fig)
         # for i in range(len(x)):
         #     print(results.px_fit_results.iloc[i].summary())
         # change marker size
         # if marker_size:
         #    fig.update_traces(marker=dict(size=marker_size))
+
+        # change marker size
+        if marker_size:
+            fig.update_traces(marker=dict(size=marker_size))
+
         # save file
         if save_file:
             self.save_plotly(fig,
                              'scatter_' + ','.join(x) + '-' + y,
                              self.folder)
-
         # open it in localhost instead
         else:
             fig.show()

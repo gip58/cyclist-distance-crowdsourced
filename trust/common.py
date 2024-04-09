@@ -39,7 +39,7 @@ def get_configs(entry_name: str, config_file_name: str = 'config',
 def check_config(config_file_name: str = 'config',
                  config_default_file_name: str = 'default.config'):
     """
-    Check if config file has at least as many rows as deault.config.
+    Check if config file has at least as many rows as default.config.
     """
     # load config file
     try:
