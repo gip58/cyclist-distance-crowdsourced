@@ -390,7 +390,6 @@ class Analysis:
         # clear animation from memory
         plt.close(self.fig)
 
-
     # TODO: fix error with value of string not used as float
     def corr_matrix(self, df, columns_drop, save_file=False):
         """
