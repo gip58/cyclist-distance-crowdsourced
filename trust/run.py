@@ -449,64 +449,14 @@ if __name__ == '__main__':
         #              y=['video_0-slider-0-0', 'video_0-slider-1-0', 'video_0-slider-2-0'],  # noqa: E501
         #              pretty_text=True,
         #              save_file=True)
-        analysis.hist(heroku_data,
-                      x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-slider-')],  # noqa: E501
-                      nbins=100,
-                      pretty_text=True,
-                      save_file=True)
-        # columns to drop in correlation matrix and scatter matrix
-        columns_drop = ['description', 'video_length', 'min_dur', 'max_dur',
-                        'kp']
-        # set nan to -1
-        df = mapping.fillna(-1)
-        # create correlation matrix
-        analysis.corr_matrix(df,
-                             columns_drop=columns_drop,
-                             save_file=True)
-        # create correlation matrix
-        analysis.scatter_matrix(df,
-                                columns_drop=columns_drop,
-                                color='group',
-                                symbol='group',
-                                diagonal_visible=False,
-                                save_file=True)
-        # participant group - end question
-        analysis.scatter(heroku_data,
-                         x='participant_group',
-                         y='end-slider-0-0',
-                         color='end-slider-1-0',
-                         pretty_text=True,
-                         save_file=True)
-        # stimulus duration
-        analysis.hist(heroku_data,
-                      x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-dur')],  # noqa: E501
-                      nbins=100,
-                      pretty_text=True,
-                      save_file=True)
-        # browser window dimensions
+
         analysis.scatter_mult(heroku_data,
                               x=['video_0-x-0', 'video_1-x-0'],
                               y='video_0-y-0',
                               color='browser_major_version',
                               pretty_text=True,
                               save_file=True)
-        # time of participation
-        df = appen_data
-        df['country'] = df['country'].fillna('NaN')
-        df['time'] = df['time'] / 60.0  # convert to min
-        analysis.hist(df,
-                      x=['time'],
-                      color='country',
-                      pretty_text=True,
-                      save_file=True)
-        # driving with AVs
-        analysis.scatter(appen_data,
-                         x='driving_in_ad',
-                         y='driving_alongside_ad',
-                         color='year_license',
-                         pretty_text=True,
-                         save_file=True)
-        # mapping to convert likert values to numeric
+ 
         likert_mapping = {'Strongly disagree': 1,
                           'Disagree': 2,
                           'Neither disagree nor agree': 3,
