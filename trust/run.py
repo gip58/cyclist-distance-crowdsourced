@@ -399,7 +399,10 @@ if __name__ == '__main__':
         # all keypresses with confidence interval
         analysis.plot_kp(mapping, conf_interval=0.95)
         # keypresses of an individual stimulus
-        analysis.plot_kp_video(mapping, 'video_0', conf_interval=0.95)
+        analysis.plot_kp_video(mapping,
+                               pp='R51701270114366JF82237X',
+                               stimulus='video_0',
+                               conf_interval=0.95)
         # keypresses of an individual stimulus for an individual pp
         analysis.plot_kp_video(mapping,
                                pp='R51701270114366JF82237X',
