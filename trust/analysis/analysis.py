@@ -273,7 +273,7 @@ class Analysis:
         # save image
         if save_anim:
             self.save_anim(image, anim, self.folder,
-                            '_video_' + str(id_video) + '_animation.mp4')
+                           '_video_' + str(id_video) + '_animation.mp4')
 
     def create_animation_all_stimuli(self, num_stimuli):
         """
