@@ -456,47 +456,7 @@ if __name__ == '__main__':
                               color='browser_major_version',
                               pretty_text=True,
                               save_file=True)
- 
-        likert_mapping = {'Strongly disagree': 1,
-                          'Disagree': 2,
-                          'Neither disagree nor agree': 3,
-                          'Agree': 4,
-                          'Strongly agree': 5}
-        # questions before and after
-        df = all_data
-        print(df.head)
-        df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)  # noqa: E501
-        df['driving_in_ad'] = df['driving_in_ad'].map(likert_mapping)
-        analysis.scatter(df,
-                         x='driving_alongside_ad',  # noqa: E501
-                         y='end-slider-0-0',  # noqa: E501
-                         xaxis_title='Before',
-                         yaxis_title='After',
-                         pretty_text=True,
-                         save_file=True)
-        analysis.scatter(df,
-                         x='driving_in_ad',  # noqa: E501
-                         y='end-slider-1-0',  # noqa: E501
-                         xaxis_title='Before',
-                         yaxis_title='After',
-                         pretty_text=True,
-                         save_file=True)
-        # histogram for driving frequency
-        analysis.hist(appen_data,
-                      x=['driving_freq'],
-                      pretty_text=True,
-                      save_file=True)
-        # map of participants
-        analysis.map(countries_data, color='counts', save_file=True)
-        # map of mean age per country
-        analysis.map(countries_data, color='age', save_file=True)
-        # map of gender per country
-        analysis.map(countries_data, color='gender', save_file=True)
-        # map of year of obtaining license per country
-        analysis.map(countries_data, color='year_license', save_file=True)
-        # map of year of automated driving per country
-        analysis.map(countries_data, color='year_ad', save_file=True)
-        # check if any figures are to be rendered
+
         figures = [manager.canvas.figure
                    for manager in
                    matplotlib._pylab_helpers.Gcf.get_all_fig_managers()]
