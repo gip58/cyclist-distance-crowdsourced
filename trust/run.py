@@ -5,6 +5,7 @@ from tqdm import tqdm
 import os
 # import shutil
 import trust as tr
+from statistics import mean
 
 tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
@@ -322,9 +323,14 @@ if __name__ == '__main__':
                 #                   save_file=True)
                 # # create animation for stimulus
                 points_process = {}
-                for points_dur in range(len(points_duration)):
-                    points_process[points_dur] = points_duration[points_dur][
-                                                                 id_video]
+                # determin amount of points in duration for video_id
+                dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
+                dur = [x for x in dur if str(x) != 'nan']
+                dur = int(round(mean(dur)/1000)*1000)
+                for points_dur in range(0, len(range(0, dur,
+                                               tr.common.get_configs(
+                                                   'hm_resolution')))):
+                    points_process[points_dur] = points_duration[points_dur][id_video]
                 analysis.create_animation(heroku_data,
                                           mapping,
                                           stim_path,

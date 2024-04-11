@@ -23,6 +23,7 @@ from scipy.stats.kde import gaussian_kde
 # from PIL import Image
 import cv2
 import trust as tr
+from statistics import mean
 
 matplotlib.use('TkAgg')
 logger = tr.CustomLogger(__name__)  # use custom logger
@@ -69,15 +70,18 @@ class Analysis:
                                             'video_' + str(id_video) + '.mp4'))  # noqa: E501
         # timestamp
         t = mapping.loc['video_' + str(id_video)][t]
+        self.time = int(t/1000)
+        self.hm_resolution = tr.common.get_configs('hm_resolution')
+        hm_resolution_int = int(tr.common.get_configs('hm_resolution')/1000)
         # check if file is already open
         if not cap.isOpened():
             logger.error('File with frame already open.')
             return
         # go over frames
-        for k in tqdm(range(0, t, tr.common.get_configs('hm_resolution'))):
+        for k in tqdm(range(0, self.time, hm_resolution_int)):
             os.makedirs(os.path.dirname(path), exist_ok=True)
             fps = cap.get(cv2.CAP_PROP_FPS)
-            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k/(1000)))
+            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k))
             ret, frame = cap.read()
             if ret:
                 filename = os.path.join(path,
@@ -255,6 +259,10 @@ class Analysis:
         """
         self.image = image
         self.id_video = id_video
+        dur = df['video_'+str(id_video)+'-dur-0'].tolist()
+        dur = [x for x in dur if str(x) != 'nan']
+        dur = int(round(mean(dur)/1000)*1000)
+        frames = self.time
         # how many ms between update of heatmap on the video
         # self.precision = tr.common.get_configs('heatmap_precision')
         self.t = mapping.loc['video_'+str(id_video)][t]
@@ -265,10 +273,11 @@ class Analysis:
                                                type_heatmap='kdeplot',  # noqa: E501
                                                add_corners=True,  # noqa: E501
                                                save_file=False)
+        tr.common.get_configs('hm_resolution')
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
-                                       frames=len(points),
-                                       interval=self.t/len(points),
+                                       frames=frames,
+                                       interval=self.hm_resolution,
                                        repeat=False)
         # save image
         if save_anim:
@@ -318,17 +327,17 @@ class Analysis:
         """
         self.g.clear()
         # KDE plot data
-        # self.g = sns.kdeplot(x=[item[0] for item in self.points[i]],
-        #                      y=[item[1] for item in self.points[i]],
-        #                      alpha=0.5,
-        #                      fill=True,
-        #                      cmap='RdBu_r')
+        self.g = sns.kdeplot(x=[item[0] for item in self.points[i]],
+                             y=[item[1] for item in self.points[i]],
+                             alpha=0.5,
+                             fill=True,
+                             cmap='RdBu_r')
 
         # Scatter plot data
-        self.g = sns.scatterplot(x=[item[0] for item in self.points[i]],
-                                 y=[item[1] for item in self.points[i]],
-                                 alpha=0.5,
-                                 legend='auto')
+        # self.g = sns.scatterplot(x=[item[0] for item in self.points[i]],
+        #                          y=[item[1] for item in self.points[i]],
+        #                          alpha=0.5,
+        #                          legend='auto')
         # read original image
         im = plt.imread(self.image + '\\frame_' + str([i]) + '.jpg')
         plt.imshow(im)
@@ -342,7 +351,7 @@ class Analysis:
                             hspace=0,
                             wspace=0)
         # textbox with duration
-        durations = range(tr.common.get_configs('hm_resolution'))
+        durations = range(self.hm_resolution)
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         plt.text(0.75,
                  0.98,
