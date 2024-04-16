@@ -32,7 +32,7 @@ SAVE_CSV = True  # load csv files with data
 FILTER_DATA = False  # filter Appen and heroku data
 CLEAN_DATA = False  # clean Appen data
 REJECT_CHEATERS = False  # reject cheaters on Appen
-CALC_COORDS = True  # extract points from heroku data
+CALC_COORDS = False  # extract points from heroku data
 UPDATE_MAPPING = False  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
@@ -310,6 +310,7 @@ if __name__ == '__main__':
                 # analysis.create_gazes(heroku_data,
                 #                       x='video_'+str(id_video)+'-x-0',
                 #                       y='video_'+str(id_video)+'-y-0',
+
                 #                       # pp='R51701252541887JF46247X',
                 #                       id_video=id_video,
                 #                       save_file=True)
@@ -327,9 +328,11 @@ if __name__ == '__main__':
                 dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
                 dur = [x for x in dur if str(x) != 'nan']
                 dur = int(round(mean(dur)/1000)*1000)
+                # for individual
                 for points_dur in range(0, len(range(0, dur,
                                                tr.common.get_configs(
                                                    'hm_resolution')))):
+                    
                     points_process[points_dur] = points_duration[points_dur][id_video]
                 analysis.create_animation(heroku_data,
                                           mapping,

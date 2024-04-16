@@ -327,16 +327,28 @@ class Analysis:
         """
         self.g.clear()
         # KDE plot data
-        self.g = sns.kdeplot(x=[item[0] for item in self.points[i]],
-                             y=[item[1] for item in self.points[i]],
-                             alpha=0.5,
-                             fill=True,
-                             cmap='RdBu_r')
+        # self.g = sns.kdeplot(x=[item[0] for item in self.points[i]],
+        #                      y=[item[1] for item in self.points[i]],
+        #                      alpha=0.5,
+        #                      fill=True,
+        #                      cmap='RdBu_r')
 
         # Scatter plot data
+        # 1 person
+        item1 = ([item[0] for item in self.points[i] ])
+        item1 = item1[2]
+        item2 = ([item[1] for item in self.points[i] ])
+        item2 = item2[2]
+        self.g = sns.scatterplot(x=item1,
+                                 y=item2,
+                                 alpha=0.5,
+                                 hue=[item[0] for item in self.points[i]],
+                                 legend='auto')
+        # all pp
         # self.g = sns.scatterplot(x=[item[0] for item in self.points[i]],
         #                          y=[item[1] for item in self.points[i]],
         #                          alpha=0.5,
+        #                          hue=[item[0] for item in self.points[i]],
         #                          legend='auto')
         # read original image
         im = plt.imread(self.image + '\\frame_' + str([i]) + '.jpg')
@@ -355,8 +367,8 @@ class Analysis:
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         plt.text(0.75,
                  0.98,
-                 'id=' + str(self.id_video) +
-                 ' duration=' + str(round(durations[i]*int(self.t)/1200)),
+                 'id_video=' + str(self.id_video) +
+                 ' time (ms)=' + str(round(durations[i]*int(self.t)/self.hm_resolution)),
                  transform=plt.gca().transAxes,
                  fontsize=12,
                  verticalalignment='top',
