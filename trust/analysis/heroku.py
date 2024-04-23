@@ -450,6 +450,8 @@ class Heroku:
                     pp_height = int(df.iloc[pp]['window_height'])
                     pp_width = int(df.iloc[pp]['window_width'])
 
+                    
+
                     norm_y = height/pp_height
                     norm_x = width/pp_width
                     if type(given_y) == list:
