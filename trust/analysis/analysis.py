@@ -70,9 +70,11 @@ class Analysis:
                                             'video_' + str(id_video) + '.mp4'))  # noqa: E501
         # timestamp
         t = mapping.loc['video_' + str(id_video)][t]
-        self.time = int(t/1000)
+        self.time = int(t)
+        
         self.hm_resolution = tr.common.get_configs('hm_resolution')
-        hm_resolution_int = int(tr.common.get_configs('hm_resolution')/1000)
+        hm_resolution_int = int(tr.common.get_configs('hm_resolution'))
+        
         # check if file is already open
         if not cap.isOpened():
             logger.error('File with frame already open.')
@@ -81,11 +83,11 @@ class Analysis:
         for k in tqdm(range(0, self.time, hm_resolution_int)):
             os.makedirs(os.path.dirname(path), exist_ok=True)
             fps = cap.get(cv2.CAP_PROP_FPS)
-            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k))
+            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k/1000))
             ret, frame = cap.read()
             if ret:
                 filename = os.path.join(path,
-                                        'frame_' + str([k]) + '.jpg')  # noqa: E501
+                                        'frame_' + str([round(k/hm_resolution_int)]) + '.jpg')  # noqa: E501
                 cv2.imwrite(filename,
                             frame,
                             [cv2.IMWRITE_JPEG_QUALITY, 20])
@@ -262,7 +264,8 @@ class Analysis:
         dur = df['video_'+str(id_video)+'-dur-0'].tolist()
         dur = [x for x in dur if str(x) != 'nan']
         dur = int(round(mean(dur)/1000)*1000)
-        frames = self.time
+        frames = int(round(self.time/self.hm_resolution))
+        print(frames)
         # how many ms between update of heatmap on the video
         # self.precision = tr.common.get_configs('heatmap_precision')
         self.t = mapping.loc['video_'+str(id_video)][t]
@@ -336,14 +339,15 @@ class Analysis:
         # Scatter plot data
         # 1 person
         item1 = ([item[0] for item in self.points[i] ])
-        item1 = item1[2]
+        # item1 = item1[4]
         item2 = ([item[1] for item in self.points[i] ])
-        item2 = item2[2]
-        self.g = sns.scatterplot(x=item1,
-                                 y=item2,
+        # item2 = item2[4]
+        self.g = sns.scatterplot(x=item1[5],
+                             y=item2[5],
                                  alpha=0.5,
                                  hue=[item[0] for item in self.points[i]],
-                                 legend='auto')
+                                 legend='auto'
+                                 )
         # all pp
         # self.g = sns.scatterplot(x=[item[0] for item in self.points[i]],
         #                          y=[item[1] for item in self.points[i]],

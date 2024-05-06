@@ -447,22 +447,19 @@ class Heroku:
                     given_x = stim_from_df.iloc[pp][x]
                     # normalize window size among pp
 
-                    pp_height = int(df.iloc[pp]['window_height'])
-                    pp_width = int(df.iloc[pp]['window_width'])
-
-                    
-
-                    norm_y = height/pp_height
-                    norm_x = width/pp_width
+                    # pp_height = int(df.iloc[pp]['window_height'])
+                    # pp_width = int(df.iloc[pp]['window_width'])
+                    # norm_y = height/pp_height
+                    # norm_x = width/pp_width
                     if type(given_y) == list:
                         # Check if imput from stimulus isn't blank
                         if given_x != []:
                             if id_video not in points_duration[duration]:
-                                points_duration[duration][id_video] = [[(given_x[int((duration*len(given_x))/number_dur)] * norm_x),  # noqa: E501
-                                                                        (given_y[int((duration*len(given_y))/number_dur)] * norm_y)]]  # noqa: E501
+                                points_duration[duration][id_video] = [[given_x[round(int((duration*len(given_x))/number_dur))],  # noqa: E501
+                                                                        given_y[round(int((duration*len(given_y))/number_dur))]]]  # noqa: E501
                             else:
-                                points_duration[duration][id_video].append([(given_x[int((duration*len(given_x))/number_dur)] * norm_x),  # noqa: E501
-                                                                            (given_y[int((duration*len(given_y))/number_dur)] * norm_y)])  # noqa: E501
+                                points_duration[duration][id_video].append([given_x[round(int((duration*len(given_x))/number_dur))],  # noqa: E501
+                                                                            given_y[round(int((duration*len(given_y))/number_dur))]])  # noqa: E501
                             # iterate over all values given by the participand
                             # for val in range(len(given_y)-1):
                             #     coords = [given_x[val], given_y[val]]
@@ -502,7 +499,7 @@ class Heroku:
             #             self.file_points_worker_csv)
             # # points for each image for each stimulus duration
             # # create a dataframe to save to csv
-            for duration in range(0, len(points_duration)
+            for duration in range(0, 199
                                   ):
                 df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_duration[duration].items()]))  # noqa: E501
                 df_csv = df_csv.transpose()
