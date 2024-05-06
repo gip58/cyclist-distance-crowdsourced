@@ -71,10 +71,8 @@ class Analysis:
         # timestamp
         t = mapping.loc['video_' + str(id_video)][t]
         self.time = int(t)
-        
         self.hm_resolution = tr.common.get_configs('hm_resolution')
         hm_resolution_int = int(tr.common.get_configs('hm_resolution'))
-        
         # check if file is already open
         if not cap.isOpened():
             logger.error('File with frame already open.')
@@ -265,7 +263,6 @@ class Analysis:
         dur = [x for x in dur if str(x) != 'nan']
         dur = int(round(mean(dur)/1000)*1000)
         frames = int(round(self.time/self.hm_resolution))
-        print(frames)
         # how many ms between update of heatmap on the video
         # self.precision = tr.common.get_configs('heatmap_precision')
         self.t = mapping.loc['video_'+str(id_video)][t]
