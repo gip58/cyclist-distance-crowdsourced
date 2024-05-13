@@ -446,7 +446,6 @@ class Heroku:
                     given_y = stim_from_df.iloc[pp][y]
                     given_x = stim_from_df.iloc[pp][x]
                     # normalize window size among pp
-
                     # pp_height = int(df.iloc[pp]['window_height'])
                     # pp_width = int(df.iloc[pp]['window_width'])
                     # norm_y = height/pp_height

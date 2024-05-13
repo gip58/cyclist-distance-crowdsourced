@@ -40,6 +40,9 @@ SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
 SHOW_OUTPUT_PP = False  # should figures with info about participants
 SHOW_OUTPUT_ET = True  # should figures for eye tracking
 
+
+
+
 file_mapping = 'mapping.p'  # file to save updated mapping
 file_coords = 'coords.p'  # file to save lists with coordinates
 

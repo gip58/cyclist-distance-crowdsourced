@@ -262,21 +262,34 @@ class Analysis:
         dur = df['video_'+str(id_video)+'-dur-0'].tolist()
         dur = [x for x in dur if str(x) != 'nan']
         dur = int(round(mean(dur)/1000)*1000)
-        frames = int(round(self.time/self.hm_resolution))
+        self.framess = int(round(self.time/self.hm_resolution))
         # how many ms between update of heatmap on the video
         # self.precision = tr.common.get_configs('heatmap_precision')
         self.t = mapping.loc['video_'+str(id_video)][t]
         self.points = points
         self.save_frames = save_frames
-        self.fig, self.g = self.create_heatmap(image,
-                                               points[0],
-                                               type_heatmap='kdeplot',  # noqa: E501
-                                               add_corners=True,  # noqa: E501
-                                               save_file=False)
+        self.fig, self.g =  plt.subplots(ncols=2)
+
+        # self.create_heatmap(image,
+        #                                        points[0],
+        #                                        type_heatmap='kdeplot',  # noqa: E501
+        #                                        add_corners=True,  # noqa: E501
+        #                                        save_file=False)
+
+        self.times = np.array(range(self.res,
+                               mapping['video_length'].max() + self.res,
+                               self.res)) / 1000
+        kp_data = np.array([0.0] * len(self.times))
+        for i, data in enumerate(mapping['kp']):
+            # append zeros to match longest duration
+            data = np.pad(data, (0, len(self.times) - len(data)), 'constant')
+            # add data
+            kp_data += np.array(data)
+        self.kp_data = (kp_data / i)
         tr.common.get_configs('hm_resolution')
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
-                                       frames=frames,
+                                       frames=self.framess,
                                        interval=self.hm_resolution,
                                        repeat=False)
         # save image
@@ -325,14 +338,18 @@ class Analysis:
         """
         Helper function to create animation.
         """
-        self.g.clear()
+        self.g[0].clear()
         # KDE plot data
-        self.g = sns.kdeplot(x=[item[0] for item in self.points[i]],
+        self.g[0] = sns.kdeplot(x=[item[0] for item in self.points[i]],
                              y=[item[1] for item in self.points[i]],
                              alpha=0.5,
                              fill=True,
                              cmap='RdBu_r')
+        it = int(round(int(len(self.kp_data))*int(i)/int(self.framess)))
+        print(it)
 
+
+        self.g[1].plot(self.times[it],self.kp_data[it])
         # Scatter plot data
         # 1 person
         # item1 = ([item[0] for item in self.points[i]])
