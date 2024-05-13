@@ -327,24 +327,22 @@ class Analysis:
         """
         self.g.clear()
         # KDE plot data
-        # self.g = sns.kdeplot(x=[item[0] for item in self.points[i]],
-        #                      y=[item[1] for item in self.points[i]],
-        #                      alpha=0.5,
-        #                      fill=True,
-        #                      cmap='RdBu_r')
+        self.g = sns.kdeplot(x=[item[0] for item in self.points[i]],
+                             y=[item[1] for item in self.points[i]],
+                             alpha=0.5,
+                             fill=True,
+                             cmap='RdBu_r')
 
         # Scatter plot data
         # 1 person
-        item1 = ([item[0] for item in self.points[i] ])
-        # item1 = item1[4]
-        item2 = ([item[1] for item in self.points[i] ])
-        # item2 = item2[4]
-        self.g = sns.scatterplot(x=item1[5],
-                             y=item2[5],
-                                 alpha=0.5,
-                                 hue=[item[0] for item in self.points[i]],
-                                 legend='auto'
-                                 )
+        # item1 = ([item[0] for item in self.points[i]])
+        # item2 = ([item[1] for item in self.points[i]])
+        # self.g = sns.scatterplot(x=item1[8],
+        #                          y=item2[8],
+        #                          alpha=0.5,
+        #                          hue=[item[0] for item in self.points[i]],
+        #                          legend='auto'
+        #                          )
         # all pp
         # self.g = sns.scatterplot(x=[item[0] for item in self.points[i]],
         #                          y=[item[1] for item in self.points[i]],
