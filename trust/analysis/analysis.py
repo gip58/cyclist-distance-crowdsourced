@@ -268,7 +268,10 @@ class Analysis:
         self.t = mapping.loc['video_'+str(id_video)][t]
         self.points = points
         self.save_frames = save_frames
-        self.fig, self.g =  plt.subplots(ncols=2)
+        self.fig, self.g =  plt.subplots(ncols=2,
+                                         figsize=(5,5),
+                                         gridspec_kw=dict(width_ratios=[1, 2], 
+                                         wspace=0))
 
         # self.create_heatmap(image,
         #                                        points[0],
@@ -338,18 +341,22 @@ class Analysis:
         """
         Helper function to create animation.
         """
-        self.g[0].clear()
+        self.g[1].clear()
         # KDE plot data
-        self.g[0] = sns.kdeplot(x=[item[0] for item in self.points[i]],
-                             y=[item[1] for item in self.points[i]],
-                             alpha=0.5,
-                             fill=True,
-                             cmap='RdBu_r')
-        it = int(round(int(len(self.kp_data))*int(i)/int(self.framess)))
+        it = int(round(len(self.kp_data)*i/(self.framess)))
         print(it)
-
-
-        self.g[1].plot(self.times[it],self.kp_data[it])
+        self.g[0].plot(np.array(self.times[:it]),
+                       np.array(self.kp_data[:it]),
+                       lw=2)
+        
+        self.g[0].set_xlabel("Time")
+        self.g[0].set_ylabel("number Keypresses")
+        
+        self.g[1] = sns.kdeplot(x=[item[0] for item in self.points[i]],
+                                y=[item[1] for item in self.points[i]],
+                                alpha=0.5,
+                                fill=True,
+                                cmap='RdBu_r')
         # Scatter plot data
         # 1 person
         # item1 = ([item[0] for item in self.points[i]])
