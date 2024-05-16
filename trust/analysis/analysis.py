@@ -256,40 +256,42 @@ class Analysis:
         """
         Create animation for image based on the list of lists of points of
         varying duration.
+        image =  the frames from the stimulus video
+        id_video = which stimulus video is being used
+        dur = duration of given video stimulus
+        self.framess = the ammount of frames that fit into given stimmulus video based on resolution
+        self.points = list containting eye-tracking points
+        self.t = time
+        self.times = time
+        self.fig = figure
+        self.kp_data = keypress data for given stimulus video 
+
         """
         self.image = image
         self.id_video = id_video
+        # calc amounts of steps from duration
         dur = df['video_'+str(id_video)+'-dur-0'].tolist()
         dur = [x for x in dur if str(x) != 'nan']
         dur = int(round(mean(dur)/1000)*1000)
+        # Determing the amount of frames for given video
         self.framess = int(round(self.time/self.hm_resolution))
-        # how many ms between update of heatmap on the video
-        # self.precision = tr.common.get_configs('heatmap_precision')
+        # Determin time 
         self.t = mapping.loc['video_'+str(id_video)][t]
+        # Call eye-tracking points
         self.points = points
         self.save_frames = save_frames
+        # Create subplot figure with heatmap and kp plot
         self.fig, self.g =  plt.subplots(ncols=2,
-                                         figsize=(5,5),
-                                         gridspec_kw=dict(width_ratios=[1, 2], 
+                                         figsize=(20, 10),
+                                         gridspec_kw=dict(width_ratios=[1, 3], 
                                          wspace=0))
-
-        # self.create_heatmap(image,
-        #                                        points[0],
-        #                                        type_heatmap='kdeplot',  # noqa: E501
-        #                                        add_corners=True,  # noqa: E501
-        #                                        save_file=False)
-
+        self.fig.suptitle(' Keypresses and eye-tracking heatmap ', fontsize=20)
+        # Deterin time and data for kp plot
         self.times = np.array(range(self.res,
                                mapping['video_length'].max() + self.res,
                                self.res)) / 1000
-        kp_data = np.array([0.0] * len(self.times))
-        for i, data in enumerate(mapping['kp']):
-            # append zeros to match longest duration
-            data = np.pad(data, (0, len(self.times) - len(data)), 'constant')
-            # add data
-            kp_data += np.array(data)
-        self.kp_data = (kp_data / i)
-        tr.common.get_configs('hm_resolution')
+        self.kp_data = mapping.loc['video_' + str(id_video)]['kp']
+        # Animate frames subplots into one animation using animate function
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
                                        frames=self.framess,
@@ -342,15 +344,21 @@ class Analysis:
         Helper function to create animation.
         """
         self.g[1].clear()
+        durations = range(self.hm_resolution)
         # KDE plot data
         it = int(round(len(self.kp_data)*i/(self.framess)))
         print(it)
         self.g[0].plot(np.array(self.times[:it]),
                        np.array(self.kp_data[:it]),
-                       lw=2)
+                       lw=1,
+                       color='r')
         
         self.g[0].set_xlabel("Time")
         self.g[0].set_ylabel("number Keypresses")
+        self.g[0].set_xlim(0, 50)
+        self.g[0].set_ylim(0, 50)
+        self.g[0].set_title('id_video=' + str(self.id_video) +
+                 ' time (ms)=' + str(round(durations[i]*int(self.t)/self.hm_resolution)))
         
         self.g[1] = sns.kdeplot(x=[item[0] for item in self.points[i]],
                                 y=[item[1] for item in self.points[i]],
@@ -379,23 +387,23 @@ class Analysis:
         # remove axis
         plt.gca().set_axis_off()
         # remove white spaces around figure
-        plt.subplots_adjust(top=1,
-                            bottom=0,
-                            right=1,
-                            left=0,
-                            hspace=0,
-                            wspace=0)
+        # plt.subplots_adjust(top=1,
+        #                     bottom=0,
+        #                     right=1,
+        #                     left=0,
+        #                     hspace=0,
+        #                     wspace=0)
         # textbox with duration
-        durations = range(self.hm_resolution)
+        
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-        plt.text(0.75,
-                 0.98,
-                 'id_video=' + str(self.id_video) +
-                 ' time (ms)=' + str(round(durations[i]*int(self.t)/self.hm_resolution)),
-                 transform=plt.gca().transAxes,
-                 fontsize=12,
-                 verticalalignment='top',
-                 bbox=props)
+        # plt.text(0.75,
+        #          0.98,
+        #          'id_video=' + str(self.id_video) +
+        #          ' time (ms)=' + str(round(durations[i]*int(self.t)/self.hm_resolution)),
+        #          transform=plt.gca().transAxes,
+        #          fontsize=12,
+        #          verticalalignment='top',
+        #          bbox=props)
         # save each frame as file
         if self.save_frames:
             # build suffix for filename
