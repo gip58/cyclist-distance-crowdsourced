@@ -404,12 +404,12 @@ class Heroku:
         if save_points:: save dictionary with points for each worker.
         """
         logger.info('Extracting coordinates for {} stimuli.', self.num_stimuli)
+        # determining the set sample resolution for the heatmap animation
         hm_resolution = tr.common.get_configs('hm_resolution')
         # dictionaries to store points
         points = {}
         points_worker = {}
         points_duration = [{} for x in range(0, 50000, hm_resolution)]
-        
         # window values for normalization 
         height = int(tr.common.get_configs('stimulus_height'))
         width = int(tr.common.get_configs('stimulus_width'))
@@ -423,7 +423,6 @@ class Heroku:
             dur = [x for x in dur if str(x) != 'nan']
             dur = int(round(mean(dur)/1000)*1000)
             number_dur = len(range(0, dur, hm_resolution))
-
             for duration in range(0, number_dur):
                 # create empty list to store points for the stimulus of given
                 # duration
@@ -445,7 +444,7 @@ class Heroku:
                     # input given by participant
                     given_y = stim_from_df.iloc[pp][y]
                     given_x = stim_from_df.iloc[pp][x]
-                    # normalize window size among pp
+                    # # normalize window size among pp
                     # pp_height = int(df.iloc[pp]['window_height'])
                     # pp_width = int(df.iloc[pp]['window_width'])
                     # norm_y = height/pp_height
@@ -453,12 +452,14 @@ class Heroku:
                     if type(given_y) == list:
                         # Check if imput from stimulus isn't blank
                         if given_x != []:
+                            # start adding points to the points_duration list 
                             if id_video not in points_duration[duration]:
                                 points_duration[duration][id_video] = [[given_x[round(int((duration*len(given_x))/number_dur))],  # noqa: E501
                                                                         given_y[round(int((duration*len(given_y))/number_dur))]]]  # noqa: E501
                             else:
                                 points_duration[duration][id_video].append([given_x[round(int((duration*len(given_x))/number_dur))],  # noqa: E501
                                                                             given_y[round(int((duration*len(given_y))/number_dur))]])  # noqa: E501
+                            
                             # iterate over all values given by the participand
                             # for val in range(len(given_y)-1):
                             #     coords = [given_x[val], given_y[val]]
