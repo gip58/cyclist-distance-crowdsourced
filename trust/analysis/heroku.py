@@ -6,8 +6,8 @@ import numpy as np
 from tqdm import tqdm
 from statistics import mean
 import warnings
-
-
+from shapely.geometry.polygon import Polygon
+from shapely.geometry import Point
 import trust as tr
 
 # warning about partial assignment
@@ -413,6 +413,17 @@ class Heroku:
         # window values for normalization 
         height = int(tr.common.get_configs('stimulus_height'))
         width = int(tr.common.get_configs('stimulus_width'))
+        # allowed percentage of codeblocks in the middle
+        allowed_percentage = 0.2
+        area = 100
+        # calculate the middle of the stimulus
+        width_middle = round(width/2)
+        height_middle = round(height/2)
+        # polygon for the centre
+        polygon = Polygon([(width_middle - area, height_middle + area),
+                           (width_middle + area, height_middle + area),
+                           (width_middle - area, height_middle - area),
+                           (width_middle + area, height_middle - area)])
         # loop over stimuli from 1 to self.num_stimuli
         # tqdm adds progress bar
         for id_video in tqdm(range(0, self.num_stimuli)):
@@ -449,33 +460,47 @@ class Heroku:
                     # pp_width = int(df.iloc[pp]['window_width'])
                     # norm_y = height/pp_height
                     # norm_x = width/pp_width
+                    # detected percentage of codeblocks in the middle
+                    detected = 0
+                    # skip if no points for worker
                     if type(given_y) == list:
                         # Check if imput from stimulus isn't blank
                         if given_x != []:
-                            # start adding points to the points_duration list 
-                            if id_video not in points_duration[duration]:
-                                points_duration[duration][id_video] = [[given_x[round(int((duration*len(given_x))/number_dur))],  # noqa: E501
-                                                                        given_y[round(int((duration*len(given_y))/number_dur))]]]  # noqa: E501
-                            else:
-                                points_duration[duration][id_video].append([given_x[round(int((duration*len(given_x))/number_dur))],  # noqa: E501
-                                                                            given_y[round(int((duration*len(given_y))/number_dur))]])  # noqa: E501
-                            
-                            # iterate over all values given by the participand
-                            # for val in range(len(given_y)-1):
-                            #     coords = [given_x[val], given_y[val]]
-                            #     # add coordinates
-                            #     if id_video not in points:
-                            #         points[id_video] = [[(coords[0]),
-                            #                             (coords[1])]]
-                            #     else:
-                            #         points[id_video].append([(coords[0]),
-                            #                                 (coords[1])])
-                            #     if stim_from_df.index[pp] not in points_worker:
-                            #         points_worker[stim_from_df.index[pp]] = [[(coords[0]),  # noqa: E501
-                            #                                                  (coords[1])]]  # noqa: E501
-                            #     else:
-                            #         points_worker[stim_from_df.index[pp]].append([(coords[0]),  # noqa: E501
-                            #                                                       (coords[1])])  # noqa: E501
+                            for val in range(len(given_y)-1):
+                                # convert to point object
+                                point = Point(given_x[val], given_y[val])
+                                # check if point is within a polygon in the middle
+                                if polygon.contains(point):
+                                    # point in the middle detected
+                                    detected += 1
+                                # Check if for the worker there were more than allowed limit of
+                                # points in the middle
+                                if detected / len(given_y) > allowed_percentage:
+                                    continue
+                            if detected / len(given_y) < allowed_percentage:        
+                                # start adding points to the points_duration list 
+                                if id_video not in points_duration[duration]:
+                                    points_duration[duration][id_video] = [[given_x[round(int((duration*len(given_x))/number_dur))],  # noqa: E501
+                                                                            given_y[round(int((duration*len(given_y))/number_dur))]]]  # noqa: E501
+                                else:
+                                    points_duration[duration][id_video].append([given_x[round(int((duration*len(given_x))/number_dur))],  # noqa: E501
+                                                                                given_y[round(int((duration*len(given_y))/number_dur))]])  # noqa: E501
+                                # iterate over all values given by the participand
+                                # for val in range(len(given_y)-1):
+                                #     coords = [given_x[val], given_y[val]]
+                                #     # add coordinates
+                                #     if id_video not in points:
+                                #         points[id_video] = [[(coords[0]),
+                                #                             (coords[1])]]
+                                #     else:
+                                #         points[id_video].append([(coords[0]),
+                                #                                 (coords[1])])
+                                    # if stim_from_df.index[pp] not in points_worker:
+                                    #     points_worker[stim_from_df.index[pp]] = [[(coords[0]),  # noqa: E501
+                                    #                                              (coords[1])]]  # noqa: E501
+                                    # else:
+                                    #     points_worker[stim_from_df.index[pp]].append([(coords[0]),  # noqa: E501
+                                    #                                                   (coords[1])])  # noqa: E501
         # save to csv
         if save_csv:
             # # all points for each image
@@ -487,18 +512,18 @@ class Heroku:
             #               self.file_points_csv + '.csv')
             # logger.info('Saved dictionary of points to csv file {}.csv',
             #             self.file_points_csv)
-            # # all points for each worker
-            # # create a dataframe to save to csv
+            # all points for each worker
+            # create a dataframe to save to csv
             # df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_worker.items()]))  # noqa: E501
             # df_csv = df_csv.transpose()
             # # save to csv
             # df_csv.to_csv(tr.settings.output_dir + '/' +
             #               self.file_points_worker_csv + '.csv')
-            # logger.info('Saved dictionary of points for each worker to csv ' +
-            #             'file {}.csv',
-            #             self.file_points_worker_csv)
-            # # points for each image for each stimulus duration
-            # # create a dataframe to save to csv
+            logger.info('Saved dictionary of points for each worker to csv ' +
+                        'file {}.csv',
+                        self.file_points_worker_csv)
+            # points for each image for each stimulus duration
+            # create a dataframe to save to csv
             for duration in range(0, 199
                                   ):
                 df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_duration[duration].items()]))  # noqa: E501
@@ -734,8 +759,10 @@ class Heroku:
         Args:
             df (dataframe): dataframe with data.
 
+
         Returns:
             dataframe: updated dataframe.
+            centre bais
         """
         logger.info('Filtering heroku data.')
         # 1. People who made mistakes in injected questions
@@ -783,7 +810,6 @@ class Heroku:
                     + ' of unexpected length: {}.',
                     self.allowed_length,
                     df_1.shape[0])
-        # concatenate dfs with filtered data
         old_size = df.shape[0]
         df_filtered = pd.concat([df_1])
         # check if there are people to filter
