@@ -476,7 +476,7 @@ class Heroku:
                                 # Check if for the worker there were more than allowed limit of
                                 # points in the middle
                                 if detected / len(given_y) > allowed_percentage:
-                                    continue
+                                    break
                             if detected / len(given_y) < allowed_percentage:        
                                 # start adding points to the points_duration list 
                                 if id_video not in points_duration[duration]:
