@@ -444,9 +444,7 @@ class Heroku:
                 x = 'video_'+str(id_video)+'-x-0'
                 y = 'video_'+str(id_video)+'-y-0'
                 if x not in df.keys() or y not in df.keys():
-                    logger.debug('Indices not found: {} or {}.',
-                                 x,
-                                 y)
+                    logger.debug('Indices not found: {} or {}.', x, y)
                     continue
                 # trim df
                 stim_from_df = df[[x, y]]
@@ -480,9 +478,11 @@ class Heroku:
                             if detected / len(given_y) < allowed_percentage:        
                                 # start adding points to the points_duration list 
                                 if id_video not in points_duration[duration]:
+                                    print(duration, id_video, round(int((duration*len(given_x))/number_dur)))
                                     points_duration[duration][id_video] = [[given_x[round(int((duration*len(given_x))/number_dur))]*norm_x,  # noqa: E501
                                                                             given_y[round(int((duration*len(given_y))/number_dur))]*norm_y]]  # noqa: E501
                                 else:
+                                    print(duration, id_video, round(int((duration*len(given_x))/number_dur)), [given_x[round(int((duration*len(given_x))/number_dur))]*norm_x, given_y[round(int((duration*len(given_y))/number_dur))]*norm_y])
                                     points_duration[duration][id_video].append([given_x[round(int((duration*len(given_x))/number_dur))]*norm_x,  # noqa: E501
                                                                                 given_y[round(int((duration*len(given_y))/number_dur))]*norm_y])  # noqa: E501
                                 # iterate over all values given by the participand
