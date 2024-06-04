@@ -455,11 +455,11 @@ class Heroku:
                     # input given by participant
                     given_y = stim_from_df.iloc[pp][y]
                     given_x = stim_from_df.iloc[pp][x]
-                    # # normalize window size among pp
-                    # pp_height = int(df.iloc[pp]['window_height'])
-                    # pp_width = int(df.iloc[pp]['window_width'])
-                    # norm_y = height/pp_height
-                    # norm_x = width/pp_width
+                    # normalize window size among pp
+                    pp_height = int(df.iloc[pp]['window_height'])
+                    pp_width = int(df.iloc[pp]['window_width'])
+                    norm_y = height/pp_height
+                    norm_x = width/pp_width
                     # detected percentage of codeblocks in the middle
                     detected = 0
                     # skip if no points for worker
@@ -468,7 +468,7 @@ class Heroku:
                         if given_x != []:
                             for val in range(len(given_y)-1):
                                 # convert to point object
-                                point = Point(given_x[val], given_y[val])
+                                point = Point(given_x[val]*norm_x, given_y[val]*norm_y)
                                 # check if point is within a polygon in the middle
                                 if polygon.contains(point):
                                     # point in the middle detected
@@ -480,11 +480,11 @@ class Heroku:
                             if detected / len(given_y) < allowed_percentage:        
                                 # start adding points to the points_duration list 
                                 if id_video not in points_duration[duration]:
-                                    points_duration[duration][id_video] = [[given_x[round(int((duration*len(given_x))/number_dur))],  # noqa: E501
-                                                                            given_y[round(int((duration*len(given_y))/number_dur))]]]  # noqa: E501
+                                    points_duration[duration][id_video] = [[given_x[round(int((duration*len(given_x))/number_dur))]*norm_x,  # noqa: E501
+                                                                            given_y[round(int((duration*len(given_y))/number_dur))]*norm_y]]  # noqa: E501
                                 else:
-                                    points_duration[duration][id_video].append([given_x[round(int((duration*len(given_x))/number_dur))],  # noqa: E501
-                                                                                given_y[round(int((duration*len(given_y))/number_dur))]])  # noqa: E501
+                                    points_duration[duration][id_video].append([given_x[round(int((duration*len(given_x))/number_dur))]*norm_x,  # noqa: E501
+                                                                                given_y[round(int((duration*len(given_y))/number_dur))]*norm_y])  # noqa: E501
                                 # iterate over all values given by the participand
                                 # for val in range(len(given_y)-1):
                                 #     coords = [given_x[val], given_y[val]]
