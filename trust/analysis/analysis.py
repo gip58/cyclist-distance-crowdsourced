@@ -281,10 +281,11 @@ class Analysis:
         self.points = points
         self.save_frames = save_frames
         # Create subplot figure with heatmap and kp plot
-        self.fig, self.g =  plt.subplots(ncols=2,
+        self.fig, self.g =  plt.subplots(nrows=2,
+                                         ncols=1,
                                          figsize=(20, 10),
-                                         gridspec_kw=dict(width_ratios=[1, 3], 
-                                         wspace=0))
+                                         gridspec_kw=dict(height_ratios=[1,2], 
+                                         hspace=0.2))
         self.fig.suptitle(' Keypresses and eye-tracking heatmap ', fontsize=20)
         # Deterin time and data for kp plot
         self.times = np.array(range(self.res,
