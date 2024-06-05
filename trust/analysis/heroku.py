@@ -6,8 +6,8 @@ import numpy as np
 from tqdm import tqdm
 from statistics import mean
 import warnings
-
-
+from shapely.geometry.polygon import Polygon
+from shapely.geometry import Point
 import trust as tr
 
 # warning about partial assignment
@@ -77,7 +77,7 @@ class Heroku:
         # save data as csv file
         self.save_csv = save_csv
         # read in durarions of stimuli from a config file
-        self.hm_resolution = range(tr.common.get_configs('hm_resolution'))
+        self.hm_resolution_range = range(tr.common.get_configs('hm_resolution'))  # noqa: E501
         self.num_stimuli = tr.common.get_configs('num_stimuli')
 
     def set_data(self, heroku_data):
@@ -404,11 +404,26 @@ class Heroku:
         if save_points:: save dictionary with points for each worker.
         """
         logger.info('Extracting coordinates for {} stimuli.', self.num_stimuli)
+        # determining the set sample resolution for the heatmap animation
+        hm_resolution = tr.common.get_configs('hm_resolution')
         # dictionaries to store points
         points = {}
         points_worker = {}
-        points_duration = [{} for x in range(0, 50000, tr.common.get_configs(
-                                             'hm_resolution'))]
+        points_duration = [{} for x in range(0, 50000, hm_resolution)]
+        # window values for normalization
+        height = int(tr.common.get_configs('stimulus_height'))
+        width = int(tr.common.get_configs('stimulus_width'))
+        # allowed percentage of codeblocks in the middle
+        allowed_percentage = 0.2
+        area = 100
+        # calculate the middle of the stimulus
+        width_middle = round(width/2)
+        height_middle = round(height/2)
+        # polygon for the centre
+        polygon = Polygon([(width_middle - area, height_middle + area),
+                           (width_middle + area, height_middle + area),
+                           (width_middle - area, height_middle - area),
+                           (width_middle + area, height_middle - area)])
         # loop over stimuli from 1 to self.num_stimuli
         # tqdm adds progress bar
         for id_video in tqdm(range(0, self.num_stimuli)):
@@ -418,10 +433,8 @@ class Heroku:
             dur = df['video_'+str(id_video)+'-dur-0'].tolist()
             dur = [x for x in dur if str(x) != 'nan']
             dur = int(round(mean(dur)/1000)*1000)
-
-            for duration in range(0, len(range(0, dur,
-                                               tr.common.get_configs(
-                                                   'hm_resolution')))):
+            number_dur = len(range(0, dur, hm_resolution))
+            for duration in range(0, number_dur):
                 # create empty list to store points for the stimulus of given
                 # duration
                 points_duration[duration][id_video] = []
@@ -431,9 +444,7 @@ class Heroku:
                 x = 'video_'+str(id_video)+'-x-0'
                 y = 'video_'+str(id_video)+'-y-0'
                 if x not in df.keys() or y not in df.keys():
-                    logger.debug('Indices not found: {} or {}.',
-                                 x,
-                                 y)
+                    logger.debug('Indices not found: {} or {}.', x, y)
                     continue
                 # trim df
                 stim_from_df = df[[x, y]]
@@ -442,71 +453,92 @@ class Heroku:
                     # input given by participant
                     given_y = stim_from_df.iloc[pp][y]
                     given_x = stim_from_df.iloc[pp][x]
+                    # normalize window size among pp
+                    pp_height = int(df.iloc[pp]['window_height'])
+                    pp_width = int(df.iloc[pp]['window_width'])
+                    norm_y = height/pp_height
+                    norm_x = width/pp_width
+                    # detected percentage of codeblocks in the middle
+                    detected = 0
+                    # skip if no points for worker
                     if type(given_y) == list:
                         # Check if imput from stimulus isn't blank
                         if given_x != []:
-                            if id_video not in points_duration[duration]:
-                                points_duration[duration][id_video] = [[(given_x[int((duration*len(given_x))/dur)]),  # noqa: E501
-                                                                        (given_y[int((duration*len(given_y))/dur)])]]  # noqa: E501
-                            else:
-                                points_duration[duration][id_video].append([(given_x[int((duration*len(given_x))/dur)]),  # noqa: E501
-                                                                            (given_y[int((duration*len(given_y))/dur)])])  # noqa: E501
-                            # iterate over all values given by the participand
                             for val in range(len(given_y)-1):
-                                coords = [given_x[val], given_y[val]]
-                                # add coordinates
-                                if id_video not in points:
-                                    points[id_video] = [[(coords[0]),
-                                                        (coords[1])]]
+                                # convert to point object
+                                point = Point(given_x[val]*norm_x,
+                                              given_y[val]*norm_y)
+                                # check if point is within a polygon in the middle   # noqa: E501
+                                if polygon.contains(point):
+                                    # point in the middle detected
+                                    detected += 1
+                                # Check if for the worker there were more than
+                                # allowed limit of points in the middle
+                                if detected / len(given_y) > allowed_percentage:     # noqa: E501
+                                    break
+                            if detected / len(given_y) < allowed_percentage:
+                                # start adding points to the points_duration list    # noqa: E501
+                                if id_video not in points_duration[duration]:
+                                    points_duration[duration][id_video] = [[given_x[round(int((duration*len(given_x))/number_dur))]*norm_x,  # noqa: E501
+                                                                            given_y[round(int((duration*len(given_y))/number_dur))]*norm_y]]  # noqa: E501
                                 else:
-                                    points[id_video].append([(coords[0]),
-                                                            (coords[1])])
-                                if stim_from_df.index[pp] not in points_worker:
-                                    points_worker[stim_from_df.index[pp]] = [[(coords[0]),  # noqa: E501
-                                                                             (coords[1])]]  # noqa: E501
-                                else:
-                                    points_worker[stim_from_df.index[pp]].append([(coords[0]),  # noqa: E501
-                                                                                  (coords[1])])  # noqa: E501
+                                    points_duration[duration][id_video].append([given_x[round(int((duration*len(given_x))/number_dur))]*norm_x,  # noqa: E501
+                                                                                given_y[round(int((duration*len(given_y))/number_dur))]*norm_y])  # noqa: E501
+                                # iterate over all values given by the participand   # noqa: E501
+                                # for val in range(len(given_y)-1):
+                                #     coords = [given_x[val], given_y[val]]
+                                #     # add coordinates
+                                #     if id_video not in points:
+                                #         points[id_video] = [[(coords[0]),
+                                #                             (coords[1])]]
+                                #     else:
+                                #         points[id_video].append([(coords[0]),
+                                #                                 (coords[1])])
+                                    # if stim_from_df.index[pp] not in points_worker:             # noqa: E501
+                                    #     points_worker[stim_from_df.index[pp]] = [[(coords[0]),  # noqa: E501
+                                    #                                              (coords[1])]]  # noqa: E501
+                                    # else:
+                                    #     points_worker[stim_from_df.index[pp]].append([(coords[0]),  # noqa: E501
+                                    #                                                   (coords[1])])  # noqa: E501
         # save to csv
         if save_csv:
-            # all points for each image
-            # create a dataframe to save to csv
-            df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points.items()]))  # noqa: E501
-            df_csv = df_csv.transpose()
-            # save to csv
-            df_csv.to_csv(tr.settings.output_dir + '/' +
-                          self.file_points_csv + '.csv')
-            logger.info('Saved dictionary of points to csv file {}.csv',
-                        self.file_points_csv)
+            # # all points for each image
+            # # create a dataframe to save to csv
+            # df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points.items()]))  # noqa: E501
+            # df_csv = df_csv.transpose()
+            # # save to csv
+            # df_csv.to_csv(tr.settings.output_dir + '/' +
+            #               self.file_points_csv + '.csv')
+            # logger.info('Saved dictionary of points to csv file {}.csv',
+            #             self.file_points_csv)
             # all points for each worker
             # create a dataframe to save to csv
-            df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_worker.items()]))  # noqa: E501
-            df_csv = df_csv.transpose()
-            # save to csv
-            df_csv.to_csv(tr.settings.output_dir + '/' +
-                          self.file_points_worker_csv + '.csv')
+            # df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_worker.items()]))  # noqa: E501
+            # df_csv = df_csv.transpose()
+            # # save to csv
+            # df_csv.to_csv(tr.settings.output_dir + '/' +
+            #               self.file_points_worker_csv + '.csv')
             logger.info('Saved dictionary of points for each worker to csv ' +
                         'file {}.csv',
                         self.file_points_worker_csv)
             # points for each image for each stimulus duration
             # create a dataframe to save to csv
-            for duration in range(0, 50000,
-                                  tr.common.get_configs('hm_resolution')):
-                if duration == int:
-                    df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_duration[duration].items()]))  # noqa: E501
-                    df_csv = df_csv.transpose()
-                    # save to csv
-                    df_csv.to_csv(tr.settings.output_dir +
-                                  '/' +
-                                  self.file_points_duration_csv +
-                                  '_' +
-                                  str(self.hm_resolution[duration]) +
-                                  '.csv')
-                    logger.info('Saved dictionary of points for duration {} ' +
-                                'to csv file {}_{}.csv',
-                                str(self.hm_resolution[duration]),
-                                self.file_points_duration_csv,
-                                str(self.hm_resolution[duration]))
+            for duration in range(0, 199
+                                  ):
+                df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_duration[duration].items()]))  # noqa: E501
+                df_csv = df_csv.transpose()
+                # save to csv
+                df_csv.to_csv(tr.settings.output_dir +
+                              '/' +
+                              self.file_points_duration_csv +
+                              '_' +
+                              str(self.hm_resolution_range[duration]) +
+                              '.csv')
+                logger.info('Saved dictionary of points for duration {} ' +
+                            'to csv file {}_{}.csv',
+                            str(self.hm_resolution_range[duration]),
+                            self.file_points_duration_csv,
+                            str(self.hm_resolution_range[duration]))
         # return points
         return points, points_worker, points_duration
 
@@ -726,8 +758,10 @@ class Heroku:
         Args:
             df (dataframe): dataframe with data.
 
+
         Returns:
             dataframe: updated dataframe.
+            centre bais
         """
         logger.info('Filtering heroku data.')
         # 1. People who made mistakes in injected questions
@@ -775,7 +809,6 @@ class Heroku:
                     + ' of unexpected length: {}.',
                     self.allowed_length,
                     df_1.shape[0])
-        # concatenate dfs with filtered data
         old_size = df.shape[0]
         df_filtered = pd.concat([df_1])
         # check if there are people to filter

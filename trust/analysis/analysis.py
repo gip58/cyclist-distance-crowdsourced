@@ -23,6 +23,7 @@ from scipy.stats.kde import gaussian_kde
 # from PIL import Image
 import cv2
 import trust as tr
+from statistics import mean
 
 matplotlib.use('TkAgg')
 logger = tr.CustomLogger(__name__)  # use custom logger
@@ -69,19 +70,22 @@ class Analysis:
                                             'video_' + str(id_video) + '.mp4'))  # noqa: E501
         # timestamp
         t = mapping.loc['video_' + str(id_video)][t]
+        self.time = int(t)
+        self.hm_resolution = tr.common.get_configs('hm_resolution')
+        hm_resolution_int = int(tr.common.get_configs('hm_resolution'))
         # check if file is already open
         if not cap.isOpened():
             logger.error('File with frame already open.')
             return
         # go over frames
-        for k in tqdm(range(0, t, tr.common.get_configs('hm_resolution'))):
+        for k in tqdm(range(0, self.time, hm_resolution_int)):
             os.makedirs(os.path.dirname(path), exist_ok=True)
             fps = cap.get(cv2.CAP_PROP_FPS)
-            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k/(1000)))
+            cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k/1000))
             ret, frame = cap.read()
             if ret:
                 filename = os.path.join(path,
-                                        'frame_' + str([k]) + '.jpg')  # noqa: E501
+                                        'frame_' + str([round(k/hm_resolution_int)]) + '.jpg')  # noqa: E501
                 cv2.imwrite(filename,
                             frame,
                             [cv2.IMWRITE_JPEG_QUALITY, 20])
@@ -252,23 +256,48 @@ class Analysis:
         """
         Create animation for image based on the list of lists of points of
         varying duration.
+        image =  the frames from the stimulus video
+        id_video = which stimulus video is being used
+        dur = duration of given video stimulus
+        self.framess = the ammount of frames that fit into
+            given stimmulus video based on resolution
+        self.points = list containting eye-tracking points
+        self.t = time
+        self.times = time
+        self.fig = figure
+        self.kp_data = keypress data for given stimulus video
+
         """
         self.image = image
         self.id_video = id_video
-        # how many ms between update of heatmap on the video
-        # self.precision = tr.common.get_configs('heatmap_precision')
+        # calc amounts of steps from duration
+        dur = df['video_'+str(id_video)+'-dur-0'].tolist()
+        dur = [x for x in dur if str(x) != 'nan']
+        dur = int(round(mean(dur)/1000)*1000)
+        # Determing the amount of frames for given video
+        self.framess = int(round(self.time/self.hm_resolution))
+        # Determin time
         self.t = mapping.loc['video_'+str(id_video)][t]
+        # Call eye-tracking points
         self.points = points
         self.save_frames = save_frames
-        self.fig, self.g = self.create_heatmap(image,
-                                               points[0],
-                                               type_heatmap='kdeplot',  # noqa: E501
-                                               add_corners=True,  # noqa: E501
-                                               save_file=False)
+        # Create subplot figure with heatmap and kp plot
+        self.fig, self.g = plt.subplots(nrows=2,
+                                        ncols=1,
+                                        figsize=(20, 10),
+                                        gridspec_kw=dict(height_ratios=[1, 2],
+                                                         hspace=0.2))
+        self.fig.suptitle(' Keypresses and eye-tracking heatmap ', fontsize=20)
+        # Deterin time and data for kp plot
+        self.times = np.array(range(self.res,
+                              mapping['video_length'].max() + self.res,
+                              self.res)) / 1000
+        self.kp_data = mapping.loc['video_' + str(id_video)]['kp']
+        # Animate frames subplots into one animation using animate function
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
-                                       frames=len(points),
-                                       interval=self.t/len(points),
+                                       frames=self.framess,
+                                       interval=self.hm_resolution,
                                        repeat=False)
         # save image
         if save_anim:
@@ -316,42 +345,65 @@ class Analysis:
         """
         Helper function to create animation.
         """
-        self.g.clear()
+        self.g[1].clear()
+        durations = range(self.hm_resolution)
         # KDE plot data
-        # self.g = sns.kdeplot(x=[item[0] for item in self.points[i]],
-        #                      y=[item[1] for item in self.points[i]],
-        #                      alpha=0.5,
-        #                      fill=True,
-        #                      cmap='RdBu_r')
+        it = int(round(len(self.kp_data)*i/(self.framess)))
+        print(it)
+        self.g[0].plot(np.array(self.times[:it]),
+                       np.array(self.kp_data[:it]),
+                       lw=1,
+                       color='r')
 
+        self.g[0].set_xlabel("Time")
+        self.g[0].set_ylabel("number Keypresses")
+        self.g[0].set_xlim(0, 50)
+        self.g[0].set_ylim(0, 50)
+        self.g[0].set_title('id_video=' + str(self.id_video))
+        self.g[1] = sns.kdeplot(x=[item[0] for item in self.points[i]],
+                                y=[item[1] for item in self.points[i]],
+                                alpha=0.5,
+                                fill=True,
+                                cmap='RdBu_r')
         # Scatter plot data
-        self.g = sns.scatterplot(x=[item[0] for item in self.points[i]],
-                                 y=[item[1] for item in self.points[i]],
-                                 alpha=0.5,
-                                 legend='auto')
+        # 1 person
+        # item1 = ([item[0] for item in self.points[i]])
+        # item2 = ([item[1] for item in self.points[i]])
+        # self.g = sns.scatterplot(x=item1[8],
+        #                          y=item2[8],
+        #                          alpha=0.5,
+        #                          hue=[item[0] for item in self.points[i]],
+        #                          legend='auto'
+        #                          )
+        # all pp
+        # self.g = sns.scatterplot(x=[item[0] for item in self.points[i]],
+        #                          y=[item[1] for item in self.points[i]],
+        #                          alpha=0.5,
+        #                          hue=[item[0] for item in self.points[i]],
+        #                          legend='auto')
         # read original image
         im = plt.imread(self.image + '\\frame_' + str([i]) + '.jpg')
         plt.imshow(im)
         # remove axis
         plt.gca().set_axis_off()
         # remove white spaces around figure
-        plt.subplots_adjust(top=1,
-                            bottom=0,
-                            right=1,
-                            left=0,
-                            hspace=0,
-                            wspace=0)
+        # plt.subplots_adjust(top=1,
+        #                     bottom=0,
+        #                     right=1,
+        #                     left=0,
+        #                     hspace=0,
+        #                     wspace=0)
         # textbox with duration
-        durations = range(tr.common.get_configs('hm_resolution'))
-        props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-        plt.text(0.75,
-                 0.98,
-                 'id=' + str(self.id_video) +
-                 ' duration=' + str(round(durations[i]*int(self.t)/1200)),
-                 transform=plt.gca().transAxes,
-                 fontsize=12,
-                 verticalalignment='top',
-                 bbox=props)
+
+        # props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        # plt.text(0.75,
+        #          0.98,
+        #          'id_video=' + str(self.id_video) +
+        #          ' time (ms)=' + str(round(durations[i]*int(self.t)/self.hm_resolution)), # noqa: E501
+        #          transform=plt.gca().transAxes,
+        #          fontsize=12,
+        #          verticalalignment='top',
+        #          bbox=props)
         # save each frame as file
         if self.save_frames:
             # build suffix for filename

@@ -5,6 +5,7 @@ from tqdm import tqdm
 import os
 # import shutil
 import trust as tr
+from statistics import mean
 
 tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
@@ -24,15 +25,15 @@ logger = tr.CustomLogger(__name__)  # use custom logger
 # SHOW_OUTPUT_PP = True  # should figures with info about participants
 # SHOW_OUTPUT_ET = True  # should figures for eye tracking
 
-# # for debugging, skip processing
+# for debugging, skip processing
 SAVE_P = False  # save pickle files with data
 LOAD_P = True  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
 FILTER_DATA = False  # filter Appen and heroku data
-CLEAN_DATA = False  # clean Appen data
+CLEAN_DATA = True  # clean Appen data
 REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = True  # extract points from heroku data
-UPDATE_MAPPING = False  # update mapping with keypress data
+UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
 SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
@@ -226,7 +227,6 @@ if __name__ == '__main__':
                               'Strongly agree': 5}
             # questions before and after
             df = all_data
-            print(df.head)
             df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)  # noqa: E501
             df['driving_in_ad'] = df['driving_in_ad'].map(likert_mapping)
             analysis.scatter(df,
@@ -309,6 +309,7 @@ if __name__ == '__main__':
                 # analysis.create_gazes(heroku_data,
                 #                       x='video_'+str(id_video)+'-x-0',
                 #                       y='video_'+str(id_video)+'-y-0',
+
                 #                       # pp='R51701252541887JF46247X',
                 #                       id_video=id_video,
                 #                       save_file=True)
@@ -322,9 +323,15 @@ if __name__ == '__main__':
                 #                   save_file=True)
                 # # create animation for stimulus
                 points_process = {}
-                for points_dur in range(len(points_duration)):
-                    points_process[points_dur] = points_duration[points_dur][
-                                                                 id_video]
+                # determin amount of points in duration for video_id
+                dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
+                dur = [x for x in dur if str(x) != 'nan']
+                dur = int(round(mean(dur)/1000)*1000)
+                # for individual
+                for points_dur in range(0, len(range(0, dur,
+                                               tr.common.get_configs(
+                                                   'hm_resolution')))):
+                    points_process[points_dur] = points_duration[points_dur][id_video]  # noqa: E501
                 analysis.create_animation(heroku_data,
                                           mapping,
                                           stim_path,
