@@ -227,7 +227,6 @@ if __name__ == '__main__':
                               'Strongly agree': 5}
             # questions before and after
             df = all_data
-            print(df.head)
             df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)  # noqa: E501
             df['driving_in_ad'] = df['driving_in_ad'].map(likert_mapping)
             analysis.scatter(df,
