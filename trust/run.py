@@ -17,7 +17,7 @@ logger = tr.CustomLogger(__name__)  # use custom logger
 # FILTER_DATA = True  # filter Appen and heroku data
 # CLEAN_DATA = True  # clean Appen data
 # REJECT_CHEATERS = True  # reject cheaters on Appen
-# CALC_COORDS = False  
+# CALC_COORDS = False
 # UPDATE_MAPPING = True  # update mapping with keypress data
 # SHOW_OUTPUT = True  # should figures be plotted
 # SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
@@ -331,8 +331,7 @@ if __name__ == '__main__':
                 for points_dur in range(0, len(range(0, dur,
                                                tr.common.get_configs(
                                                    'hm_resolution')))):
-                    
-                    points_process[points_dur] = points_duration[points_dur][id_video]
+                    points_process[points_dur] = points_duration[points_dur][id_video]  # noqa: E501
                 analysis.create_animation(heroku_data,
                                           mapping,
                                           stim_path,

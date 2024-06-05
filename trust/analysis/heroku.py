@@ -77,7 +77,7 @@ class Heroku:
         # save data as csv file
         self.save_csv = save_csv
         # read in durarions of stimuli from a config file
-        self.hm_resolution_range = range(tr.common.get_configs('hm_resolution'))
+        self.hm_resolution_range = range(tr.common.get_configs('hm_resolution'))  # noqa: E501
         self.num_stimuli = tr.common.get_configs('num_stimuli')
 
     def set_data(self, heroku_data):
@@ -410,7 +410,7 @@ class Heroku:
         points = {}
         points_worker = {}
         points_duration = [{} for x in range(0, 50000, hm_resolution)]
-        # window values for normalization 
+        # window values for normalization
         height = int(tr.common.get_configs('stimulus_height'))
         width = int(tr.common.get_configs('stimulus_width'))
         # allowed percentage of codeblocks in the middle
@@ -466,24 +466,25 @@ class Heroku:
                         if given_x != []:
                             for val in range(len(given_y)-1):
                                 # convert to point object
-                                point = Point(given_x[val]*norm_x, given_y[val]*norm_y)
-                                # check if point is within a polygon in the middle
+                                point = Point(given_x[val]*norm_x,
+                                              given_y[val]*norm_y)
+                                # check if point is within a polygon in the middle   # noqa: E501
                                 if polygon.contains(point):
                                     # point in the middle detected
                                     detected += 1
-                                # Check if for the worker there were more than allowed limit of
-                                # points in the middle
-                                if detected / len(given_y) > allowed_percentage:
+                                # Check if for the worker there were more than
+                                # allowed limit of points in the middle
+                                if detected / len(given_y) > allowed_percentage:     # noqa: E501
                                     break
-                            if detected / len(given_y) < allowed_percentage:        
-                                # start adding points to the points_duration list 
+                            if detected / len(given_y) < allowed_percentage:
+                                # start adding points to the points_duration list    # noqa: E501
                                 if id_video not in points_duration[duration]:
                                     points_duration[duration][id_video] = [[given_x[round(int((duration*len(given_x))/number_dur))]*norm_x,  # noqa: E501
                                                                             given_y[round(int((duration*len(given_y))/number_dur))]*norm_y]]  # noqa: E501
                                 else:
                                     points_duration[duration][id_video].append([given_x[round(int((duration*len(given_x))/number_dur))]*norm_x,  # noqa: E501
                                                                                 given_y[round(int((duration*len(given_y))/number_dur))]*norm_y])  # noqa: E501
-                                # iterate over all values given by the participand
+                                # iterate over all values given by the participand   # noqa: E501
                                 # for val in range(len(given_y)-1):
                                 #     coords = [given_x[val], given_y[val]]
                                 #     # add coordinates
@@ -493,7 +494,7 @@ class Heroku:
                                 #     else:
                                 #         points[id_video].append([(coords[0]),
                                 #                                 (coords[1])])
-                                    # if stim_from_df.index[pp] not in points_worker:
+                                    # if stim_from_df.index[pp] not in points_worker:             # noqa: E501
                                     #     points_worker[stim_from_df.index[pp]] = [[(coords[0]),  # noqa: E501
                                     #                                              (coords[1])]]  # noqa: E501
                                     # else:
