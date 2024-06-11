@@ -8,6 +8,7 @@ from statistics import mean
 import warnings
 from shapely.geometry.polygon import Polygon
 from shapely.geometry import Point
+import math
 import trust as tr
 
 # warning about partial assignment
@@ -409,7 +410,7 @@ class Heroku:
         # dictionaries to store points
         points = {}
         points_worker = {}
-        points_duration = [{} for x in range(0, 50000, hm_resolution)]
+        points_duration = [{} for x in range(0, 5000000000, hm_resolution)]
         # window values for normalization
         height = int(tr.common.get_configs('stimulus_height'))
         width = int(tr.common.get_configs('stimulus_width'))
@@ -443,16 +444,18 @@ class Heroku:
                 # build names of columns in df
                 x = 'video_'+str(id_video)+'-x-0'
                 y = 'video_'+str(id_video)+'-y-0'
+                t = 'video_'+str(id_video)+'-t-0'
                 if x not in df.keys() or y not in df.keys():
                     logger.debug('Indices not found: {} or {}.', x, y)
                     continue
                 # trim df
-                stim_from_df = df[[x, y]]
+                stim_from_df = df[[x, y, t]]
                 # iterate of data from participants for the given stimulus
                 for pp in range(len(stim_from_df)):
                     # input given by participant
                     given_y = stim_from_df.iloc[pp][y]
                     given_x = stim_from_df.iloc[pp][x]
+                    given_t = stim_from_df.iloc[pp][t]
                     # normalize window size among pp
                     pp_height = int(df.iloc[pp]['window_height'])
                     pp_width = int(df.iloc[pp]['window_width'])
@@ -464,7 +467,8 @@ class Heroku:
                     if type(given_y) == list:
                         # Check if imput from stimulus isn't blank
                         if given_x != []:
-                            for val in range(len(given_y)-1):
+                            length_points = len(given_y)
+                            for val in range(length_points-1):
                                 # convert to point object
                                 point = Point(given_x[val]*norm_x,
                                               given_y[val]*norm_y)
@@ -474,19 +478,30 @@ class Heroku:
                                     detected += 1
                                 # Check if for the worker there were more than
                                 # allowed limit of points in the middle
-                                if detected / len(given_y) > allowed_percentage:     # noqa: E501
+                                if detected / length_points > allowed_percentage:     # noqa: E501
                                     break
-                            if detected / len(given_y) < allowed_percentage:
-                                # start adding points to the points_duration list    # noqa: E501
-                                if id_video not in points_duration[duration]:
-                                    points_duration[duration][id_video] = [[given_x[round(int((duration*len(given_x))/number_dur))]*norm_x,  # noqa: E501
-                                                                            given_y[round(int((duration*len(given_y))/number_dur))]*norm_y]]  # noqa: E501
-                                else:
-                                    points_duration[duration][id_video].append([given_x[round(int((duration*len(given_x))/number_dur))]*norm_x,  # noqa: E501
-                                                                                given_y[round(int((duration*len(given_y))/number_dur))]*norm_y])  # noqa: E501
+                            if detected / length_points < allowed_percentage:     # noqa: E501
+                                
+                                for value in range(length_points):
+                                    t_step = round(given_t[value]/hm_resolution)
+                                    if duration == t_step:
+                                        if id_video not in points_duration[duration]:
+                                            points_duration[duration][id_video] = [[given_x[value]*norm_x,  # noqa: E501
+                                                                                    given_y[value]*norm_y]]  # noqa: E501
+                                        else:
+                                            points_duration[duration][id_video].append([given_x[value]*norm_x,  # noqa: E501
+                                                                                        given_y[value]*norm_y])  # noqa: E501
+                                    if duration < t_step:
+                                        break
+
+                                
+                                
+                                    # start adding points to the points_duration list    # noqa: E501
+                                    
+                                                                                
                                 # iterate over all values given by the participand   # noqa: E501
                                 # for val in range(len(given_y)-1):
-                                #     coords = [given_x[val], given_y[val]]
+                                #     
                                 #     # add coordinates
                                 #     if id_video not in points:
                                 #         points[id_video] = [[(coords[0]),
@@ -518,13 +533,12 @@ class Heroku:
             # # save to csv
             # df_csv.to_csv(tr.settings.output_dir + '/' +
             #               self.file_points_worker_csv + '.csv')
-            logger.info('Saved dictionary of points for each worker to csv ' +
-                        'file {}.csv',
-                        self.file_points_worker_csv)
+            # logger.info('Saved dictionary of points for each worker to csv ' +
+            #             'file {}.csv',
+            #             self.file_points_worker_csv)
             # points for each image for each stimulus duration
             # create a dataframe to save to csv
-            for duration in range(0, 199
-                                  ):
+            for duration in range(len(self.hm_resolution_range)):
                 df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_duration[duration].items()]))  # noqa: E501
                 df_csv = df_csv.transpose()
                 # save to csv

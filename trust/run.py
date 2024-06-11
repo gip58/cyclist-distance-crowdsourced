@@ -328,9 +328,9 @@ if __name__ == '__main__':
                 dur = [x for x in dur if str(x) != 'nan']
                 dur = int(round(mean(dur)/1000)*1000)
                 # for individual
-                for points_dur in range(0, len(range(0, dur,
+                for points_dur in range(0, 199,
                                                tr.common.get_configs(
-                                                   'hm_resolution')))):
+                                                   'hm_resolution')):
                     points_process[points_dur] = points_duration[points_dur][id_video]  # noqa: E501
                 analysis.create_animation(heroku_data,
                                           mapping,
