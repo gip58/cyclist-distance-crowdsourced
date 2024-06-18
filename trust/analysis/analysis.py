@@ -349,7 +349,6 @@ class Analysis:
         durations = range(self.hm_resolution)
         # KDE plot data
         it = int(round(len(self.kp_data)*i/(self.framess)))
-        print(it)
         self.g[0].plot(np.array(self.times[:it]),
                        np.array(self.kp_data[:it]),
                        lw=1,

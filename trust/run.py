@@ -33,7 +33,7 @@ FILTER_DATA = False  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
 REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = True  # extract points from heroku data
-UPDATE_MAPPING = True  # update mapping with keypress data
+UPDATE_MAPPING = False  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
 SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
@@ -290,6 +290,8 @@ if __name__ == '__main__':
             # stimulus video with av ego and target car
             video_1_1 = range(63, 83, 1)
 
+            # print(points_duration[0][0])
+
             # source video/stimulus for a given individual.
             for id_video in tqdm(range(0, tr.common.get_configs(
                                        'num_stimuli')-1)):
@@ -328,10 +330,11 @@ if __name__ == '__main__':
                 dur = [x for x in dur if str(x) != 'nan']
                 dur = int(round(mean(dur)/1000)*1000)
                 # for individual
-                for points_dur in range(0, 199,
-                                               tr.common.get_configs(
-                                                   'hm_resolution')):
-                    points_process[points_dur] = points_duration[points_dur][id_video]  # noqa: E501
+                for points_dur in range(0, self.hm_resolution_range,
+                                               1):
+                    try: points_process[points_dur] = points_duration[points_dur][id_video]  # noqa: E501
+                    except KeyError:
+                        break  
                 analysis.create_animation(heroku_data,
                                           mapping,
                                           stim_path,

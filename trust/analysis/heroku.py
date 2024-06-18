@@ -78,7 +78,7 @@ class Heroku:
         # save data as csv file
         self.save_csv = save_csv
         # read in durarions of stimuli from a config file
-        self.hm_resolution_range = range(tr.common.get_configs('hm_resolution'))  # noqa: E501
+        self.hm_resolution_range = (50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
         self.num_stimuli = tr.common.get_configs('num_stimuli')
 
     def set_data(self, heroku_data):
@@ -493,9 +493,6 @@ class Heroku:
                                                                                         given_y[value]*norm_y])  # noqa: E501
                                     if duration < t_step:
                                         break
-
-                                
-                                
                                     # start adding points to the points_duration list    # noqa: E501
                                     
                                                                                 
@@ -539,7 +536,10 @@ class Heroku:
             # points for each image for each stimulus duration
             # create a dataframe to save to csv
             for duration in range(len(self.hm_resolution_range)):
-                df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_duration[duration].items()]))  # noqa: E501
+                try: 
+                    df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_duration[duration].items()]))  # noqa: E501
+                except KeyError:
+                    break    
                 df_csv = df_csv.transpose()
                 # save to csv
                 df_csv.to_csv(tr.settings.output_dir +
