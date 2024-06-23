@@ -78,7 +78,7 @@ class Heroku:
         # save data as csv file
         self.save_csv = save_csv
         # read in durarions of stimuli from a config file
-        self.hm_resolution_range = (50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
+        self.hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
         self.num_stimuli = tr.common.get_configs('num_stimuli')
 
     def set_data(self, heroku_data):
@@ -535,7 +535,7 @@ class Heroku:
             #             self.file_points_worker_csv)
             # points for each image for each stimulus duration
             # create a dataframe to save to csv
-            for duration in range(len(self.hm_resolution_range)):
+            for duration in range(0, self.hm_resolution_range):
                 try: 
                     df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_duration[duration].items()]))  # noqa: E501
                 except KeyError:
@@ -546,13 +546,13 @@ class Heroku:
                               '/' +
                               self.file_points_duration_csv +
                               '_' +
-                              str(self.hm_resolution_range[duration]) +
+                              str(duration) +
                               '.csv')
                 logger.info('Saved dictionary of points for duration {} ' +
                             'to csv file {}_{}.csv',
-                            str(self.hm_resolution_range[duration]),
+                            str(duration),
                             self.file_points_duration_csv,
-                            str(self.hm_resolution_range[duration]))
+                            str(duration))
         # return points
         return points, points_worker, points_duration
 

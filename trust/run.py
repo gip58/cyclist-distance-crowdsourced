@@ -32,7 +32,7 @@ SAVE_CSV = True  # load csv files with data
 FILTER_DATA = False  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
 REJECT_CHEATERS = False  # reject cheaters on Appen
-CALC_COORDS = True  # extract points from heroku data
+CALC_COORDS = False  # extract points from heroku data
 UPDATE_MAPPING = False  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
@@ -329,8 +329,9 @@ if __name__ == '__main__':
                 dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
                 dur = [x for x in dur if str(x) != 'nan']
                 dur = int(round(mean(dur)/1000)*1000)
+                hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))
                 # for individual
-                for points_dur in range(0, self.hm_resolution_range,
+                for points_dur in range(0, hm_resolution_range,
                                                1):
                     try: points_process[points_dur] = points_duration[points_dur][id_video]  # noqa: E501
                     except KeyError:
