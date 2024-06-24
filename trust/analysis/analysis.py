@@ -269,6 +269,7 @@ class Analysis:
 
         """
         self.image = image
+        self.hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))
         self.id_video = id_video
         # calc amounts of steps from duration
         dur = df['video_'+str(id_video)+'-dur-0'].tolist()
@@ -346,7 +347,7 @@ class Analysis:
         Helper function to create animation.
         """
         self.g[1].clear()
-        durations = range(self.hm_resolution)
+        durations = range(0, self.hm_resolution_range) 
         # KDE plot data
         it = int(round(len(self.kp_data)*i/(self.framess)))
         self.g[0].plot(np.array(self.times[:it]),
