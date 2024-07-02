@@ -403,7 +403,7 @@ if __name__ == '__main__':
             #                     t='video_0-t-0',
             #                     pp='R51701252541887JF46247X',
             #                     id_video='video_0',
-            #                     pretty_text=True,
+            #                     pretty_text=True,self.event_discription
             #                     save_file=True)
         # stitch animations into 1 long videos
         analysis.create_animation_all_stimuli(num_stimuli)
@@ -435,7 +435,7 @@ if __name__ == '__main__':
         # plot of multiple combined AND variables
         # analysis.plot_video_data(mapping, 'video_5',
         #                          ['group', 'criticality'],
-        #                          yaxis_title='Type of ego car and number of pedestrians',  # noqa: E501
+        #                          yaxis_title='Type of ego car and number of pedestrians',  # noqa: E501--`
         #                          conf_interval=0.95)
         # analysis.plot_kp_variables_and(mapping,
         #                                plot_names=['traffic rules',

@@ -285,8 +285,8 @@ class Analysis:
         # Create subplot figure with heatmap and kp plot
         self.fig, self.g = plt.subplots(nrows=2,
                                         ncols=1,
-                                        figsize=(20, 10),
-                                        gridspec_kw=dict(height_ratios=[1, 2],
+                                        figsize=(15, 15),
+                                        gridspec_kw=dict(height_ratios=[1, 4],
                                                          hspace=0.2))
         self.fig.suptitle(' Keypresses and eye-tracking heatmap ', fontsize=20)
         # Deterin time and data for kp plot
@@ -294,6 +294,11 @@ class Analysis:
                               mapping['video_length'].max() + self.res,
                               self.res)) / 1000
         self.kp_data = mapping.loc['video_' + str(id_video)]['kp']
+        self.event =  mapping.loc['video_' + str(id_video)]['events']
+
+        self.event = re.findall(r'\w+',self.event)
+        print(self.event)
+        self.event_discription = re.split(',', mapping.loc['video_' + str(id_video)]['events_description'])
         # Animate frames subplots into one animation using animate function
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
@@ -346,6 +351,7 @@ class Analysis:
         """
         Helper function to create animation.
         """
+        self.g[0].clear()
         self.g[1].clear()
         durations = range(0, self.hm_resolution_range) 
         # KDE plot data
@@ -359,7 +365,16 @@ class Analysis:
         self.g[0].set_ylabel("number Keypresses")
         self.g[0].set_xlim(0, 50)
         self.g[0].set_ylim(0, 50)
-        self.g[0].set_title('id_video=' + str(self.id_video))
+        self.g[0].set_title('video_' + str(self.id_video))
+        length = int(len(self.event))
+        for ev in range(len(self.event)):
+            
+            
+            self.g[0].axvline(x=int(self.event[ev])/1000, label="" + str(self.event_discription[ev]), c=plt.cm.RdYlBu(int(ev)/length))
+            self.g[0].tick_params(axis='x',labelrotation=90)
+            self.g[0].legend()
+            
+
         self.g[1] = sns.kdeplot(x=[item[0] for item in self.points[i]],
                                 y=[item[1] for item in self.points[i]],
                                 alpha=0.5,
