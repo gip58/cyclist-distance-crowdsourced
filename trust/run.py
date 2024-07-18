@@ -281,7 +281,7 @@ if __name__ == '__main__':
             # create eye gaze visualisations for all videos
             logger.info('Producing visualisations of eye gaze data for {} stimuli.',  # noqa: E501
                         tr.common.get_configs('num_stimuli'))
-            # stimulus videos with manual ego and target car
+            # stimulus videos with manual ego and target create_animation_all_stimuli
             video_0_0 = range(0, 20, 1)
             # stimulus vidoe with manual ego car but av target car
             video_0_1 = range(21, 41, 1)
@@ -293,7 +293,7 @@ if __name__ == '__main__':
             # print(points_duration[0][0])
 
             # source video/stimulus for a given individual.
-            for id_video in tqdm(range(0, tr.common.get_configs(
+            for id_video in tqdm(range(13, tr.common.get_configs(
                                        'num_stimuli')-1)):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)

@@ -18,6 +18,7 @@ import warnings
 import unicodedata
 import re
 from tqdm import tqdm
+import matplotlib.patches as patches
 import ast
 from scipy.stats.kde import gaussian_kde
 # from PIL import Image
@@ -70,7 +71,7 @@ class Analysis:
                                             'video_' + str(id_video) + '.mp4'))  # noqa: E501
         # timestamp
         t = mapping.loc['video_' + str(id_video)][t]
-        self.time = int(t)
+        self.time = 30800 #int(t)
         self.hm_resolution = tr.common.get_configs('hm_resolution')
         hm_resolution_int = int(tr.common.get_configs('hm_resolution'))
         # check if file is already open
@@ -283,10 +284,10 @@ class Analysis:
         self.points = points
         self.save_frames = save_frames
         # Create subplot figure with heatmap and kp plot
-        self.fig, self.g = plt.subplots(nrows=2,
+        self.fig, self.g = plt.subplots(nrows=3,
                                         ncols=1,
-                                        figsize=(15, 15),
-                                        gridspec_kw=dict(height_ratios=[1, 4],
+                                        figsize=(20, 20),
+                                        gridspec_kw=dict(height_ratios=[1, 1, 3],
                                                          hspace=0.2))
         self.fig.suptitle(' Keypresses and eye-tracking heatmap ', fontsize=20)
         # Deterin time and data for kp plot
@@ -297,7 +298,12 @@ class Analysis:
         self.event =  mapping.loc['video_' + str(id_video)]['events']
 
         self.event = re.findall(r'\w+',self.event)
-        print(self.event)
+        aoi = tr.common.get_configs('aoi')
+        self.aoi = pd.DataFrame(aoi)
+        self.number_in = []
+        self.aoit = []
+
+        
         self.event_discription = re.split(',', mapping.loc['video_' + str(id_video)]['events_description'])
         # Animate frames subplots into one animation using animate function
         anim = animation.FuncAnimation(self.fig,
@@ -353,6 +359,8 @@ class Analysis:
         """
         self.g[0].clear()
         self.g[1].clear()
+        self.g[2].clear()
+    
         durations = range(0, self.hm_resolution_range) 
         # KDE plot data
         it = int(round(len(self.kp_data)*i/(self.framess)))
@@ -361,25 +369,73 @@ class Analysis:
                        lw=1,
                        color='r')
 
-        self.g[0].set_xlabel("Time")
+        self.g[0].set_xlabel("Time (s)")
         self.g[0].set_ylabel("number Keypresses")
         self.g[0].set_xlim(0, 50)
         self.g[0].set_ylim(0, 50)
         self.g[0].set_title('video_' + str(self.id_video))
+
         length = int(len(self.event))
         for ev in range(len(self.event)):
-            
-            
-            self.g[0].axvline(x=int(self.event[ev])/1000, label="" + str(self.event_discription[ev]), c=plt.cm.RdYlBu(int(ev)/length))
+            self.g[0].axvline(x=int(self.event[ev])/1000,
+                              label="" + str(self.event_discription[ev]),
+                              c=plt.cm.RdYlBu(int(ev)/length),
+                              lw=2)
             self.g[0].tick_params(axis='x',labelrotation=90)
             self.g[0].legend()
-            
+            self.g[1].axvline(x=int(self.event[ev]),
+                              label="" + str(self.event_discription[ev]),
+                              c=plt.cm.RdYlBu(int(ev)/length),
+                              lw=2)
+            self.g[1].tick_params(axis='x',labelrotation=90)
+            self.g[1].legend()
 
-        self.g[1] = sns.kdeplot(x=[item[0] for item in self.points[i]],
+        
+        self.g[1].set_title('Number of eye gazes in area of interest')
+        self.g[1].set_xlabel('Time (ms)')
+        self.g[1].set_ylabel('Number of gazes in Area of Interest')
+        self.g[2].invert_yaxis()
+
+        aoi_x = self.aoi.loc[i][0]
+        aoi_y = self.aoi.loc[i][1]
+        aoi_t = int(self.aoi.loc[i]['t'])
+
+        self.aoit.append(int(aoi_t))
+
+
+        min_x = int(aoi_x) - 100
+        max_x = int(aoi_x) + 100
+        min_y = int(aoi_y) - 100
+        max_y = int(aoi_y) + 100
+        x = [item[0] for item in self.points[i]]
+        y = [item[1] for item in self.points[i]]
+        
+        num = 0
+        for v in range(len(x)):
+            if max_x > x[v] < min_x:
+                continue
+            else:
+                if max_y > y[v] < min_y:
+                    continue
+                else:
+                    num = num + 1
+        
+        self.number_in.append(int(num))
+        self.g[1].set_xlim(0, 50000)  
+        self.g[1].set_ylim(0, 1200)
+        
+        self.g[1].plot(self.aoit,
+                       self.number_in)
+
+        self.g[2] = sns.kdeplot(x=[item[0] for item in self.points[i]],
                                 y=[item[1] for item in self.points[i]],
                                 alpha=0.5,
                                 fill=True,
                                 cmap='RdBu_r')
+        
+        
+        self.g[2].plot([min_x, max_x, max_x, min_x, min_x], [min_y, min_y, max_y, max_y, min_y], color="red")
+        
         # Scatter plot data
         # 1 person
         # item1 = ([item[0] for item in self.points[i]])
@@ -399,8 +455,9 @@ class Analysis:
         # read original image
         im = plt.imread(self.image + '\\frame_' + str([i]) + '.jpg')
         plt.imshow(im)
+
         # remove axis
-        plt.gca().set_axis_off()
+        # plt.gca().set_axis_off()
         # remove white spaces around figure
         # plt.subplots_adjust(top=1,
         #                     bottom=0,
@@ -442,6 +499,7 @@ class Analysis:
             temp_fig = pickle.load(buf)
             # save figure
             self.save_fig(self.image, temp_fig, self.folder, suffix)
+        
         return self.g
 
     def save_anim(self, image, anim, output_subdir, suffix):
