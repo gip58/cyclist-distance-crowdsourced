@@ -6,6 +6,7 @@ import os
 # import shutil
 import trust as tr
 from statistics import mean
+import pandas as pd
 
 tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
@@ -293,7 +294,7 @@ if __name__ == '__main__':
             # print(points_duration[0][0])
 
             # source video/stimulus for a given individual.
-            for id_video in tqdm(range(13, tr.common.get_configs(
+            for id_video in tqdm(range(0, tr.common.get_configs(
                                        'num_stimuli')-1)):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
@@ -317,7 +318,8 @@ if __name__ == '__main__':
                 #                       save_file=True)
                 # Construct heatmap over each video frame previously created
                 # from the source video.
-                # create histogram for stimulus
+                # create histogram for stimulus`
+                
                 # analysis.create_histogram(stim_path,
                 #                   points[id_video],
                 #                   id_video=id_video,
@@ -330,6 +332,9 @@ if __name__ == '__main__':
                 dur = [x for x in dur if str(x) != 'nan']
                 dur = int(round(mean(dur)/1000)*1000)
                 hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))
+              
+               
+
                 # for individual
                 for points_dur in range(0, hm_resolution_range,
                                                1):

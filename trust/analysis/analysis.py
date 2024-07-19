@@ -71,7 +71,7 @@ class Analysis:
                                             'video_' + str(id_video) + '.mp4'))  # noqa: E501
         # timestamp
         t = mapping.loc['video_' + str(id_video)][t]
-        self.time = 30800 #int(t)
+        self.time = int(t)
         self.hm_resolution = tr.common.get_configs('hm_resolution')
         hm_resolution_int = int(tr.common.get_configs('hm_resolution'))
         # check if file is already open
@@ -298,10 +298,18 @@ class Analysis:
         self.event =  mapping.loc['video_' + str(id_video)]['events']
 
         self.event = re.findall(r'\w+',self.event)
-        aoi = tr.common.get_configs('aoi')
-        self.aoi = pd.DataFrame(aoi)
+
+        aoi = pd.read_csv(tr.common.get_configs('aoi'))
+        aoi.set_index('video_id', inplace=True)
         self.number_in = []
         self.aoit = []
+        self.aoi_x = aoi.loc['video_' + str(id_video)]['x']
+        self.aoi_x = self.aoi_x.split(", ")
+        self.aoi_y = aoi.loc['video_' + str(id_video)]['y']
+        self.aoi_y = self.aoi_y.split(", ")
+        self.aoi_t = aoi.loc['video_' + str(id_video)]['t']
+        self.aoi_t = self.aoi_t.split(", ")
+        
 
         
         self.event_discription = re.split(',', mapping.loc['video_' + str(id_video)]['events_description'])
@@ -396,13 +404,14 @@ class Analysis:
         self.g[1].set_ylabel('Number of gazes in Area of Interest')
         self.g[2].invert_yaxis()
 
-        aoi_x = self.aoi.loc[i][0]
-        aoi_y = self.aoi.loc[i][1]
-        aoi_t = int(self.aoi.loc[i]['t'])
+        
+
+        aoi_x = float(self.aoi_x[i])
+        aoi_y = float(self.aoi_y[i])
+        aoi_t = float(self.aoi_t[i])
+        
 
         self.aoit.append(int(aoi_t))
-
-
         min_x = int(aoi_x) - 100
         max_x = int(aoi_x) + 100
         min_y = int(aoi_y) - 100
