@@ -466,7 +466,7 @@ class Analysis:
         plt.imshow(im)
 
         # remove axis
-        # plt.gca().set_axis_off()
+        plt.gca().set_axis_off()
         # remove white spaces around figure
         # plt.subplots_adjust(top=1,
         #                     bottom=0,
