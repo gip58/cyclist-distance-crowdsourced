@@ -44,7 +44,7 @@ class Analysis:
     stim_id = None
     points = None
     save_frames = False
-    folder = '/figures/'
+    folder = '//figures//'
     polygons = None
 
     def __init__(self):

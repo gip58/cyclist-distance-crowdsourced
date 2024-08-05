@@ -295,7 +295,7 @@ if __name__ == '__main__':
 
             # source video/stimulus for a given individual.
             for id_video in tqdm(range(0, tr.common.get_configs(
-                                       'num_stimuli')-1)):
+                                       'num_stimuli'))):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
                 # Deconstruct the source video into its individual frames.
@@ -319,7 +319,7 @@ if __name__ == '__main__':
                 # Construct heatmap over each video frame previously created
                 # from the source video.
                 # create histogram for stimulus`
-                
+
                 # analysis.create_histogram(stim_path,
                 #                   points[id_video],
                 #                   id_video=id_video,
