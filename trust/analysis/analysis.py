@@ -370,18 +370,18 @@ class Analysis:
         self.g[2].clear()
     
         durations = range(0, self.hm_resolution_range) 
-        # KDE plot data
+        # Subplot 1 KP data
         it = int(round(len(self.kp_data)*i/(self.framess)))
         self.g[0].plot(np.array(self.times[:it]),
                        np.array(self.kp_data[:it]),
                        lw=1,
                        color='r')
-
-        self.g[0].set_xlabel("Time (s)")
-        self.g[0].set_ylabel("number Keypresses")
+        self.g[0].set_xlabel("Time (s)", fontsize = 10)
+        self.g[0].set_ylabel("Percentage of Keypresses", fontsize = 10)
         self.g[0].set_xlim(0, 50)
         self.g[0].set_ylim(0, 50)
-        self.g[0].set_title('video_' + str(self.id_video))
+        self.g[0].set_title("Percentage of Keypresses from participant", fontsize = 20)
+        self.g.set_title('video_' + str(self.id_video), fontsize = 25)
 
         length = int(len(self.event))
         for ev in range(len(self.event)):
@@ -391,33 +391,31 @@ class Analysis:
                               lw=2)
             self.g[0].tick_params(axis='x',labelrotation=90)
             self.g[0].legend()
-            self.g[1].axvline(x=int(self.event[ev]),
+            self.g[1].axvline(x=int(self.event[ev])/1000,
                               label="" + str(self.event_discription[ev]),
                               c=plt.cm.RdYlBu(int(ev)/length),
                               lw=2)
             self.g[1].tick_params(axis='x',labelrotation=90)
             self.g[1].legend()
-
-        
-        self.g[1].set_title('Number of eye gazes in area of interest')
-        self.g[1].set_xlabel('Time (ms)')
-        self.g[1].set_ylabel('Number of gazes in Area of Interest')
-        self.g[1].set_xlim(0, 50000)  
-        self.g[1].set_ylim(0, 1200)
-
-
+        # Subplot 2 AOI
+        self.g[1].set_title('Number of eye gazes in area of interest', fontsize = 20)
+        self.g[1].set_xlabel('Time (s)', fontsize = 10)
+        self.g[1].set_ylabel('Number of gazes in Area of Interest', fontsize = 10)
+        self.g[1].set_xlim(0, 50)  
+        self.g[1].set_ylim(0, 400)
+        # AOI data
         aoi_x = float(self.aoi_x[i])
         aoi_y = float(self.aoi_y[i])
         aoi_t = float(self.aoi_t[i])
-        
-
         self.aoit.append(int(aoi_t))
+        # Defining boundaries of AOI
         min_x = int(aoi_x) - 100
         max_x = int(aoi_x) + 100
         min_y = int(aoi_y) - 100
         max_y = int(aoi_y) + 100
         x = [item[0] for item in self.points[i]]
         y = [item[1] for item in self.points[i]]
+        # Filtering data for if they are inside or outside coordinates
         num = 0
         for v in range(len(x)):
             if max_x > x[v] > min_x:
@@ -426,12 +424,11 @@ class Analysis:
                 else:
                     continue
             else:
-                continue
-                    
+                continue 
         self.number_in.append(int(num))
-        self.g[1].plot(self.aoit,
+        self.g[1].plot(self.aoit/1000,
                        self.number_in)
-
+        # Subplot 3 Heatmap
         self.g[2] = sns.kdeplot(x=[item[0] for item in self.points[i]],
                                 y=[item[1] for item in self.points[i]],
                                 alpha=0.5,
