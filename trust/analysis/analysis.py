@@ -44,7 +44,7 @@ class Analysis:
     stim_id = None
     points = None
     save_frames = False
-    folder = '//figures//'
+    folder = '/figures/'
     polygons = None
 
     def __init__(self):
@@ -402,9 +402,9 @@ class Analysis:
         self.g[1].set_title('Number of eye gazes in area of interest')
         self.g[1].set_xlabel('Time (ms)')
         self.g[1].set_ylabel('Number of gazes in Area of Interest')
-        self.g[2].invert_yaxis()
+        self.g[1].set_xlim(0, 50000)  
+        self.g[1].set_ylim(0, 1200)
 
-        
 
         aoi_x = float(self.aoi_x[i])
         aoi_y = float(self.aoi_y[i])
@@ -418,21 +418,17 @@ class Analysis:
         max_y = int(aoi_y) + 100
         x = [item[0] for item in self.points[i]]
         y = [item[1] for item in self.points[i]]
-        
         num = 0
         for v in range(len(x)):
-            if max_x > x[v] < min_x:
-                continue
-            else:
-                if max_y > y[v] < min_y:
-                    continue
-                else:
+            if max_x > x[v] > min_x:
+                if max_y > y[v] > min_y:
                     num = num + 1
-        
+                else:
+                    continue
+            else:
+                continue
+                    
         self.number_in.append(int(num))
-        self.g[1].set_xlim(0, 50000)  
-        self.g[1].set_ylim(0, 1200)
-        
         self.g[1].plot(self.aoit,
                        self.number_in)
 
@@ -441,8 +437,7 @@ class Analysis:
                                 alpha=0.5,
                                 fill=True,
                                 cmap='RdBu_r')
-        
-        
+        self.g[2].invert_yaxis()
         self.g[2].plot([min_x, max_x, max_x, min_x, min_x], [min_y, min_y, max_y, max_y, min_y], color="red")
         
         # Scatter plot data

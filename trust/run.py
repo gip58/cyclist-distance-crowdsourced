@@ -294,7 +294,7 @@ if __name__ == '__main__':
             # print(points_duration[0][0])
 
             # source video/stimulus for a given individual.
-            for id_video in tqdm(range(0, tr.common.get_configs(
+            for id_video in tqdm(range(54, tr.common.get_configs(
                                        'num_stimuli'))):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
