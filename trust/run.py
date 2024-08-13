@@ -294,7 +294,7 @@ if __name__ == '__main__':
             # print(points_duration[0][0])
 
             # source video/stimulus for a given individual.
-            for id_video in tqdm(range(0, 21)):
+            for id_video in tqdm(range(1, 21)):
                 # tr.common.get_configs(
                                        # 'num_stimuli'))):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
@@ -328,6 +328,9 @@ if __name__ == '__main__':
                 #                   save_file=True)
                 # # create animation for stimulus
                 points_process = {}
+                points_process1 = {}
+                points_process2 = {}
+                points_process3 = {}
                 # determin amount of points in duration for video_id
                 dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
                 dur = [x for x in dur if str(x) != 'nan']

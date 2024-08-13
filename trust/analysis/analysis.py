@@ -305,6 +305,9 @@ class Analysis:
         aoi = pd.read_csv(tr.common.get_configs('aoi'))
         aoi.set_index('video_id', inplace=True)
         self.number_in = []
+        self.number_in1 = []
+        self.number_in2 = []
+        self.number_in3 = []
         self.aoit = []
         self.aoi_x = aoi.loc['video_' + str(id_video)]['x']
         self.aoi_x = self.aoi_x.split(", ")
@@ -389,19 +392,24 @@ class Analysis:
         self.g[0].plot(np.array(self.times[:it]),
                        np.array(self.kp_data[:it]),
                        lw=1,
+                       label='Stim 1',
                        color='r')
         self.g[0].plot(np.array(self.times[:it]),
                        np.array(self.kp_data1[:it]),
                        lw=1,
+                       label='Stim 2',
                        color='b')
         self.g[0].plot(np.array(self.times[:it]),
                        np.array(self.kp_data2[:it]),
                        lw=1,
+                       label='Stim 3',
                        color='g')
         self.g[0].plot(np.array(self.times[:it]),
                        np.array(self.kp_data3[:it]),
                        lw=1,
+                       label='Stim 4',
                        color='m')
+        self.g[0].legend()
         self.g[0].set_xlabel("Time (s)", fontsize = 10)
         self.g[0].set_ylabel("Percentage of Keypresses", fontsize = 10)
         self.g[0].set_xlim(0, 50)
@@ -448,7 +456,8 @@ class Analysis:
         y2 = [item[1] for item in self.points2[i]]
         # stim 63 - 83
         x3 = [item[0] for item in self.points3[i]]
-        y4 = [item[1] for item in self.points3[i]]
+        y3
+         = [item[1] for item in self.points3[i]]
         # Filtering data for if they are inside or outside coordinates
         num = 0
         num1 = 0
@@ -462,6 +471,7 @@ class Analysis:
                     continue
             else:
                 continue 
+        for v in range(len(x1)):
             if max_x > x1[v] > min_x:
                 if max_y > y1[v] > min_y:
                     num1 = num1 + 1
@@ -469,6 +479,7 @@ class Analysis:
                     continue
             else:
                 continue
+        for v in range(len(x2)):        
             if max_x > x2[v] > min_x:
                 if max_y > y2[v] > min_y:
                     num2 = num2 + 1
@@ -476,6 +487,7 @@ class Analysis:
                     continue
             else:
                 continue
+        for v in range(len(x3)):        
             if max_x > x3[v] > min_x:
                 if max_y > y3[v] > min_y:
                     num3 = num3 + 1
@@ -490,16 +502,21 @@ class Analysis:
         self.number_in3.append(int(num3))
         self.g[1].plot(self.aoit,
                        self.number_in,
+                       label='Stim 1',
                        color='r')
         self.g[1].plot(self.aoit,
                        self.number_in1,
+                       label='Stim 2',
                        color='b')
         self.g[1].plot(self.aoit,
                        self.number_in2,
+                       label='stim 3',
                        color='g')
         self.g[1].plot(self.aoit,
                        self.number_in3,
+                       label='Stim 4',
                        color='m')
+        self.g[1].legend()
         # Subplot 3 Heatmap
         self.g[2] = sns.kdeplot(x=[item[0] for item in self.points[i]],
                                 y=[item[1] for item in self.points[i]],
