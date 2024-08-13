@@ -289,7 +289,7 @@ class Analysis:
                                         figsize=(20, 20),
                                         gridspec_kw=dict(height_ratios=[1, 1, 3],
                                                          hspace=0.2))
-        self.fig.suptitle(' Keypresses and eye-tracking heatmap ', fontsize=20)
+        self.fig.suptitle(' Keypresses and eye-tracking heatmap video_' + str(self.id_video), fontsize=30)
         # Deterin time and data for kp plot
         self.times = np.array(range(self.res,
                               mapping['video_length'].max() + self.res,
@@ -380,8 +380,8 @@ class Analysis:
         self.g[0].set_ylabel("Percentage of Keypresses", fontsize = 10)
         self.g[0].set_xlim(0, 50)
         self.g[0].set_ylim(0, 50)
-        self.g[0].set_title("Percentage of Keypresses from participant", fontsize = 20)
-        self.g.set_title('video_' + str(self.id_video), fontsize = 25)
+       
+        self.g[0].set_title('Number of keypresses', fontsize = 25)
 
         length = int(len(self.event))
         for ev in range(len(self.event)):
@@ -398,7 +398,7 @@ class Analysis:
             self.g[1].tick_params(axis='x',labelrotation=90)
             self.g[1].legend()
         # Subplot 2 AOI
-        self.g[1].set_title('Number of eye gazes in area of interest', fontsize = 20)
+        self.g[1].set_title('Number of eye gazes in area of interest', fontsize = 25)
         self.g[1].set_xlabel('Time (s)', fontsize = 10)
         self.g[1].set_ylabel('Number of gazes in Area of Interest', fontsize = 10)
         self.g[1].set_xlim(0, 50)  
@@ -407,7 +407,7 @@ class Analysis:
         aoi_x = float(self.aoi_x[i])
         aoi_y = float(self.aoi_y[i])
         aoi_t = float(self.aoi_t[i])
-        self.aoit.append(int(aoi_t))
+        self.aoit.append(int(aoi_t)/1000)
         # Defining boundaries of AOI
         min_x = int(aoi_x) - 100
         max_x = int(aoi_x) + 100
@@ -426,7 +426,7 @@ class Analysis:
             else:
                 continue 
         self.number_in.append(int(num))
-        self.g[1].plot(self.aoit/1000,
+        self.g[1].plot(self.aoit,
                        self.number_in)
         # Subplot 3 Heatmap
         self.g[2] = sns.kdeplot(x=[item[0] for item in self.points[i]],
