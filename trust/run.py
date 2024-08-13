@@ -12,34 +12,34 @@ tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
 
 # const
-SAVE_P = True  # save pickle files with data
-LOAD_P = False  # load pickle files with data
-SAVE_CSV = True  # load csv files with data
-FILTER_DATA = True  # filter Appen and heroku data
-CLEAN_DATA = True  # clean Appen data
-REJECT_CHEATERS = True  # reject cheaters on Appen
-CALC_COORDS = True
-UPDATE_MAPPING = True  # update mapping with keypress data
-SHOW_OUTPUT = True  # should figures be plotted
-SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
-SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
-SHOW_OUTPUT_PP = True  # should figures with info about participants
-SHOW_OUTPUT_ET = True  # should figures for eye tracking
+# SAVE_P = True  # save pickle files with data
+# LOAD_P = False  # load pickle files with data
+# SAVE_CSV = True  # load csv files with data
+# FILTER_DATA = True  # filter Appen and heroku data
+# CLEAN_DATA = True  # clean Appen data
+# REJECT_CHEATERS = True  # reject cheaters on Appen
+# CALC_COORDS = True
+# UPDATE_MAPPING = True  # update mapping with keypress data
+# SHOW_OUTPUT = True  # should figures be plotted
+# SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
+# SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
+# SHOW_OUTPUT_PP = True  # should figures with info about participants
+# SHOW_OUTPUT_ET = True  # should figures for eye tracking
 
 # for debugging, skip processing
-# SAVE_P = False  # save pickle files with data
-# LOAD_P = True  # load pickle files with data
-# SAVE_CSV = True  # load csv files with data
-# FILTER_DATA = False  # filter Appen and heroku data
-# CLEAN_DATA = True  # clean Appen data
-# REJECT_CHEATERS = False  # reject cheaters on Appen
-# CALC_COORDS = False  # extract points from heroku data
-# UPDATE_MAPPING = False  # update mapping with keypress data
-# SHOW_OUTPUT = True  # should figures be plotted
-# SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
-# SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
-# SHOW_OUTPUT_PP = False  # should figures with info about participants
-# SHOW_OUTPUT_ET = True  # should figures for eye tracking
+SAVE_P = False  # save pickle files with data
+LOAD_P = True  # load pickle files with data
+SAVE_CSV = True  # load csv files with data
+FILTER_DATA = False  # filter Appen and heroku data
+CLEAN_DATA = True  # clean Appen data
+REJECT_CHEATERS = False  # reject cheaters on Appen
+CALC_COORDS = False  # extract points from heroku data
+UPDATE_MAPPING = False  # update mapping with keypress data
+SHOW_OUTPUT = True  # should figures be plotted
+SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
+SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
+SHOW_OUTPUT_PP = False  # should figures with info about participants
+SHOW_OUTPUT_ET = True  # should figures for eye tracking
 
 file_mapping = 'mapping.p'  # file to save updated mapping
 file_coords = 'coords.p'  # file to save lists with coordinates
@@ -294,8 +294,9 @@ if __name__ == '__main__':
             # print(points_duration[0][0])
 
             # source video/stimulus for a given individual.
-            for id_video in tqdm(range(0, tr.common.get_configs(
-                                       'num_stimuli'))):
+            for id_video in tqdm(range(0, 21)):
+                # tr.common.get_configs(
+                                       # 'num_stimuli'))):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
                 # Deconstruct the source video into its individual frames.
@@ -341,11 +342,32 @@ if __name__ == '__main__':
                     try: points_process[points_dur] = points_duration[points_dur][id_video]  # noqa: E501
                     except KeyError:
                         break  
+                
+                for points_dur in range(0, hm_resolution_range,
+                                               1):
+                    try: points_process1[points_dur] = points_duration[points_dur][id_video+21]  # noqa: E501
+                    except KeyError:
+                        break  
+
+                for points_dur in range(0, hm_resolution_range,
+                                               1):
+                    try: points_process2[points_dur] = points_duration[points_dur][id_video+42]  # noqa: E501
+                    except KeyError:
+                        break          
+                
+                for points_dur in range(0, hm_resolution_range,
+                                               1):
+                    try: points_process3[points_dur] = points_duration[points_dur][id_video+63]  # noqa: E501
+                    except KeyError:
+                        break  
                 analysis.create_animation(heroku_data,
                                           mapping,
                                           stim_path,
                                           id_video,
                                           points_process,
+                                          points_process1,
+                                          points_process2,
+                                          points_process3,
                                           t='video_length',
                                           save_anim=True,
                                           save_frames=True)
