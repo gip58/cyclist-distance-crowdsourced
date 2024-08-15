@@ -456,8 +456,7 @@ class Analysis:
         y2 = [item[1] for item in self.points2[i]]
         # stim 63 - 83
         x3 = [item[0] for item in self.points3[i]]
-        y3
-         = [item[1] for item in self.points3[i]]
+        y3 = [item[1] for item in self.points3[i]]
         # Filtering data for if they are inside or outside coordinates
         num = 0
         num1 = 0
