@@ -8,7 +8,7 @@ from statistics import mean
 import warnings
 from shapely.geometry.polygon import Polygon
 from shapely.geometry import Point
-import math
+# import math
 import trust as tr
 
 # warning about partial assignment
@@ -481,11 +481,10 @@ class Heroku:
                                 if detected / length_points > allowed_percentage:     # noqa: E501
                                     break
                             if detected / length_points < allowed_percentage:     # noqa: E501
-                                
-                                for value in range(length_points):
-                                    t_step = round(given_t[value]/hm_resolution)
+                                for value in range(length_points):                # noqa: E501
+                                    t_step = round(given_t[value]/hm_resolution)  # noqa: E501
                                     if duration == t_step:
-                                        if id_video not in points_duration[duration]:
+                                        if id_video not in points_duration[duration]:                      # noqa: E501
                                             points_duration[duration][id_video] = [[given_x[value]*norm_x,  # noqa: E501
                                                                                     given_y[value]*norm_y]]  # noqa: E501
                                         else:
@@ -494,11 +493,8 @@ class Heroku:
                                     if duration < t_step:
                                         break
                                     # start adding points to the points_duration list    # noqa: E501
-                                    
-                                                                                
                                 # iterate over all values given by the participand   # noqa: E501
                                 # for val in range(len(given_y)-1):
-                                #     
                                 #     # add coordinates
                                 #     if id_video not in points:
                                 #         points[id_video] = [[(coords[0]),
@@ -530,16 +526,16 @@ class Heroku:
             # # save to csv
             # df_csv.to_csv(tr.settings.output_dir + '/' +
             #               self.file_points_worker_csv + '.csv')
-            # logger.info('Saved dictionary of points for each worker to csv ' +
+            # logger.info('Saved dictionary of points for each worker to csv ' +  # noqa: E501
             #             'file {}.csv',
             #             self.file_points_worker_csv)
             # points for each image for each stimulus duration
             # create a dataframe to save to csv
             for duration in range(0, self.hm_resolution_range):
-                try: 
+                try:
                     df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_duration[duration].items()]))  # noqa: E501
                 except KeyError:
-                    break    
+                    break
                 df_csv = df_csv.transpose()
                 # save to csv
                 df_csv.to_csv(tr.settings.output_dir +

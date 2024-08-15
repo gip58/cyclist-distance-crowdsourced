@@ -6,7 +6,7 @@ import os
 # import shutil
 import trust as tr
 from statistics import mean
-import pandas as pd
+# import pandas as pd
 
 tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
@@ -282,7 +282,7 @@ if __name__ == '__main__':
             # create eye gaze visualisations for all videos
             logger.info('Producing visualisations of eye gaze data for {} stimuli.',  # noqa: E501
                         tr.common.get_configs('num_stimuli'))
-            # stimulus videos with manual ego and target create_animation_all_stimuli
+            # stimulus videos with manual ego and target create_animation_all_stimuli  # noqa: E501
             video_0_0 = range(0, 20, 1)
             # stimulus vidoe with manual ego car but av target car
             video_0_1 = range(21, 41, 1)
@@ -291,12 +291,9 @@ if __name__ == '__main__':
             # stimulus video with av ego and target car
             video_1_1 = range(63, 83, 1)
 
-            # print(points_duration[0][0])
-
             # source video/stimulus for a given individual.
             for id_video in tqdm(range(1, 21)):
-                # tr.common.get_configs(
-                                       # 'num_stimuli'))):
+                # tr.common.get_configs('num_stimuli'))):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
                 # Deconstruct the source video into its individual frames.
@@ -335,34 +332,28 @@ if __name__ == '__main__':
                 dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
                 dur = [x for x in dur if str(x) != 'nan']
                 dur = int(round(mean(dur)/1000)*1000)
-                hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))
-              
-               
-
+                hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
                 # for individual
-                for points_dur in range(0, hm_resolution_range,
-                                               1):
-                    try: points_process[points_dur] = points_duration[points_dur][id_video]  # noqa: E501
+                for points_dur in range(0, hm_resolution_range, 1):
+                    try:
+                        points_process[points_dur] = points_duration[points_dur][id_video]  # noqa: E501
                     except KeyError:
-                        break  
-                
-                for points_dur in range(0, hm_resolution_range,
-                                               1):
-                    try: points_process1[points_dur] = points_duration[points_dur][id_video+21]  # noqa: E501
+                        break
+                for points_dur in range(0, hm_resolution_range, 1):
+                    try:
+                        points_process1[points_dur] = points_duration[points_dur][id_video+21]  # noqa: E501
                     except KeyError:
-                        break  
-
-                for points_dur in range(0, hm_resolution_range,
-                                               1):
-                    try: points_process2[points_dur] = points_duration[points_dur][id_video+42]  # noqa: E501
+                        break
+                for points_dur in range(0, hm_resolution_range, 1):
+                    try:
+                        points_process2[points_dur] = points_duration[points_dur][id_video+42]  # noqa: E501
                     except KeyError:
-                        break          
-                
-                for points_dur in range(0, hm_resolution_range,
-                                               1):
-                    try: points_process3[points_dur] = points_duration[points_dur][id_video+63]  # noqa: E501
+                        break
+                for points_dur in range(0, hm_resolution_range, 1):
+                    try:
+                        points_process3[points_dur] = points_duration[points_dur][id_video+63]  # noqa: E501
                     except KeyError:
-                        break  
+                        break
                 analysis.create_animation(heroku_data,
                                           mapping,
                                           stim_path,
