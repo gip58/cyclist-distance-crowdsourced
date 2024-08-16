@@ -12,34 +12,34 @@ tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
 
 # const
-# SAVE_P = True  # save pickle files with data
-# LOAD_P = False  # load pickle files with data
-# SAVE_CSV = True  # load csv files with data
-# FILTER_DATA = True  # filter Appen and heroku data
-# CLEAN_DATA = True  # clean Appen data
-# REJECT_CHEATERS = True  # reject cheaters on Appen
-# CALC_COORDS = True
-# UPDATE_MAPPING = True  # update mapping with keypress data
-# SHOW_OUTPUT = True  # should figures be plotted
-# SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
-# SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
-# SHOW_OUTPUT_PP = True  # should figures with info about participants
-# SHOW_OUTPUT_ET = True  # should figures for eye tracking
+SAVE_P = True  # save pickle files with data
+LOAD_P = False  # load pickle files with data
+SAVE_CSV = True  # load csv files with data
+FILTER_DATA = True  # filter Appen and heroku data
+CLEAN_DATA = True  # clean Appen data
+REJECT_CHEATERS = True  # reject cheaters on Appen
+CALC_COORDS = True
+UPDATE_MAPPING = True  # update mapping with keypress data
+SHOW_OUTPUT = True  # should figures be plotted
+SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
+SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
+SHOW_OUTPUT_PP = True  # should figures with info about participants
+SHOW_OUTPUT_ET = True  # should figures for eye tracking
 
 # for debugging, skip processing
-SAVE_P = False  # save pickle files with data
-LOAD_P = True  # load pickle files with data
-SAVE_CSV = True  # load csv files with data
-FILTER_DATA = False  # filter Appen and heroku data
-CLEAN_DATA = True  # clean Appen data
-REJECT_CHEATERS = False  # reject cheaters on Appen
-CALC_COORDS = False  # extract points from heroku data
-UPDATE_MAPPING = False  # update mapping with keypress data
-SHOW_OUTPUT = True  # should figures be plotted
-SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
-SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
-SHOW_OUTPUT_PP = False  # should figures with info about participants
-SHOW_OUTPUT_ET = True  # should figures for eye tracking
+# SAVE_P = False  # save pickle files with data
+# LOAD_P = True  # load pickle files with data
+# SAVE_CSV = True  # load csv files with data
+# FILTER_DATA = False  # filter Appen and heroku data
+# CLEAN_DATA = True  # clean Appen data
+# REJECT_CHEATERS = False  # reject cheaters on Appen
+# CALC_COORDS = False  # extract points from heroku data
+# UPDATE_MAPPING = False  # update mapping with keypress data
+# SHOW_OUTPUT = True  # should figures be plotted
+# SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
+# SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
+# SHOW_OUTPUT_PP = False  # should figures with info about participants
+# SHOW_OUTPUT_ET = True  # should figures for eye tracking
 
 file_mapping = 'mapping.p'  # file to save updated mapping
 file_coords = 'coords.p'  # file to save lists with coordinates
@@ -329,9 +329,7 @@ if __name__ == '__main__':
                 points_process2 = {}
                 points_process3 = {}
                 # determin amount of points in duration for video_id
-                dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
-                dur = [x for x in dur if str(x) != 'nan']
-                dur = int(round(mean(dur)/1000)*1000)
+                dur = mapping.iloc[id_video]['video_length']
                 hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
                 # for individual
                 for points_dur in range(0, hm_resolution_range, 1):
