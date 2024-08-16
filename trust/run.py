@@ -125,32 +125,32 @@ if __name__ == '__main__':
         # Visualisation of keypress data
         if SHOW_OUTPUT_KP:
             # all keypresses with confidence interval
-            # analysis.plot_kp(mapping, conf_interval=0.95)
+            analysis.plot_kp(mapping, conf_interval=0.95)
             # keypresses of all individual stimuli
-            # logger.info('Creating figures for keypress data of individual stimuli.')
-            # for stim in tqdm(range(num_stimuli)):  # tqdm adds progress bar
-            #     # extract timestamps of events
-            #     vert_lines = list(map(int, re.findall(r'\d+', mapping.loc['video_' + str(stim), 'events'])))
-            #     # convert to s
-            #     vert_lines = [x / 1000 for x in vert_lines]
-            #     # extract annotations
-            #     vert_line_annotations = mapping.loc['video_' + str(stim), 'events_description'].split(',')
-            #     # remove [
-            #     vert_line_annotations[0] = vert_line_annotations[0][1:]
-            #     # remove [
-            #     vert_line_annotations[-1] = vert_line_annotations[-1][:-1]
-            #     # plot
-            #     analysis.plot_kp_video(mapping,
-            #                            'video_' + str(stim),
-            #                            vert_lines=vert_lines,
-            #                            vert_lines_width=1,
-            #                            vert_lines_dash='solid',
-            #                            vert_lines_colour='red',
-            #                            vert_lines_annotations=vert_line_annotations,
-            #                            vert_lines_annotations_position='top right',
-            #                            vert_lines_annotations_font_size=12,
-            #                            vert_lines_annotations_colour='red',
-            #                            conf_interval=0.95)
+            logger.info('Creating figures for keypress data of individual stimuli.')
+            for stim in tqdm(range(num_stimuli)):  # tqdm adds progress bar
+                # extract timestamps of events
+                vert_lines = list(map(int, re.findall(r'\d+', mapping.loc['video_' + str(stim), 'events'])))
+                # convert to s
+                vert_lines = [int(x) / 1000 for x in vert_lines]
+                # extract annotations
+                vert_line_annotations = mapping.loc['video_' + str(stim), 'events_description'].split(',')
+                # remove [
+                vert_line_annotations[0] = vert_line_annotations[0][1:]
+                # remove [
+                vert_line_annotations[-1] = vert_line_annotations[-1][:-1]
+                # plot
+                analysis.plot_kp_video(mapping,
+                                       'video_' + str(stim),
+                                       vert_lines=vert_lines,
+                                       vert_lines_width=1,
+                                       vert_lines_dash='solid',
+                                       vert_lines_colour='red',
+                                       vert_lines_annotations=vert_line_annotations,
+                                       vert_lines_annotations_position='top right',
+                                       vert_lines_annotations_font_size=12,
+                                       vert_lines_annotations_colour='red',
+                                       conf_interval=0.95)
             # keypresses of groups of stimuli
             logger.info('Creating bar plots of keypress data for groups of stimuli.')
             for stim in tqdm(range(int(num_stimuli/4))):  # tqdm adds progress bar
@@ -160,7 +160,7 @@ if __name__ == '__main__':
                 # extract timestamps of events
                 vert_lines = list(map(int, re.findall(r'\d+', df.loc['video_' + str(stim), 'events'])))
                 # convert to s
-                vert_lines = [x / 1000 for x in vert_lines]
+                vert_lines = [int(x) / 1000 for x in vert_lines]
                 # extract annotations
                 vert_line_annotations = df.loc['video_' + str(stim), 'events_description'].split(',')
                 # remove [
@@ -176,7 +176,8 @@ if __name__ == '__main__':
                                         vert_lines_annotations=vert_line_annotations,
                                         vert_lines_annotations_position='top right',
                                         vert_lines_annotations_font_size=12,
-                                        vert_lines_annotations_colour='red',name_file='kp_videos_'+','.join([str(i) for i in ids]))
+                                        vert_lines_annotations_colour='red',
+                                        name_file='kp_videos_'+','.join([str(i) for i in ids]))
             # keypresses of an individual stimulus for an individual pp
             # TODO: choose better example
             analysis.plot_kp_video_pp(mapping,

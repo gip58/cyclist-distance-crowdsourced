@@ -1340,7 +1340,7 @@ class Analysis:
                 yaxis_title='Percentage of trials with response key pressed',
                 xaxis_range=None, yaxis_range=None, save_file=True):
         """Plot keypress data.
-        
+
         Args:
             df (dataframe): dataframe with keypress data.
             conf_interval (float, optional): show confidence interval defined
@@ -1416,7 +1416,7 @@ class Analysis:
                       yaxis_title='Percentage of trials with response key pressed', xaxis_range=None, yaxis_range=None,
                       save_file=True):
         """Plot keypresses with multiple variables as a filter.
-        
+
         Args:
             df (dataframe): dataframe with keypress data.
             stimulus (str): name of stimulus.
@@ -1435,7 +1435,7 @@ class Analysis:
             xaxis_range (list, optional): range of x axis in format [min, max].
             yaxis_range (list, optional): range of y axis in format [min, max].
             save_file (bool, optional): flag for saving an html file with plot.
-        
+
         Deleted Parameters:
             annotation_position (str, optional): Description
         """
@@ -1477,9 +1477,9 @@ class Analysis:
                 fig.add_vline(
                     x=line,
                     line_width=vert_lines_width,
-                    line_dash=vert_lines_dash, 
+                    line_dash=vert_lines_dash,
                     line_color=vert_lines_colour,
-                    annotation_text=annotation, 
+                    annotation_text=annotation,
                     annotation_position=vert_lines_annotations_position,
                     annotation_font_size=vert_lines_annotations_font_size,
                     annotation_font_color=vert_lines_annotations_colour)
@@ -1727,9 +1727,9 @@ class Analysis:
                 fig.add_vline(
                     x=line,
                     line_width=vert_lines_width,
-                    line_dash=vert_lines_dash, 
+                    line_dash=vert_lines_dash,
                     line_color=vert_lines_colour,
-                    annotation_text=annotation, 
+                    annotation_text=annotation,
                     annotation_position=vert_lines_annotations_position,
                     annotation_font_size=vert_lines_annotations_font_size,
                     annotation_font_color=vert_lines_annotations_colour)
