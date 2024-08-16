@@ -1328,8 +1328,7 @@ class Analysis:
         if save_file:
             self.save_plotly(fig,
                              'hist_stim_duration' +
-                             '-'.join(t['start'].strftime('%m.%d.%Y,%H:%M:%S') +  # noqa: E501
-                                      '-' +
+                             '-'.join(t['start'].strftime('%m.%d.%Y,%H:%M:%S') + '-' +
                                       t['end'].strftime('%m.%d.%Y,%H:%M:%S')
                                       for t in time_ranges),
                              self.folder)
@@ -1391,7 +1390,7 @@ class Analysis:
                                      fill='tonexty',
                                      fillcolor='rgba(0,100,80,0.2)',
                                      line=dict(color='rgba(255,255,255,0)'),
-                                     hoverinfo="skip",
+                                     hoverinfo='skip',
                                      showlegend=False))
         # define range of y axis
         if not yaxis_range:
@@ -1409,19 +1408,17 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_kp_video(self, df, stimulus, extention='mp4', conf_interval=None,
-                      xaxis_title='Time (s)',
-                      yaxis_title='Percentage of trials with ' +
-                                  'response key pressed',
-                      xaxis_range=None, yaxis_range=None, save_file=True):
+    def plot_kp_video(self, df, stimulus, extention='mp4', conf_interval=None, vert_lines=None, xaxis_title='Time (s)',
+                      yaxis_title='Percentage of trials with response key pressed', xaxis_range=None, yaxis_range=None,
+                      save_file=True):
         """Plot keypresses with multiple variables as a filter.
 
         Args:
             df (dataframe): dataframe with keypress data.
             stimulus (str): name of stimulus.
             extention (str, optional): extension of stimulus.
-            conf_interval (float, optional): show confidence interval defined
-                                             by argument.
+            conf_interval (float, optional): show confidence interval defined by argument.
+            vert_lines (list, optional): list of events to draw formatted as values on x axis.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
@@ -1431,7 +1428,7 @@ class Analysis:
         # extract video length
         video_len = df.loc[stimulus]['video_length']
         # calculate times
-        times = np.array(range(self.res, video_len + self.res, self.res)) / 1000  # noqa: E501
+        times = np.array(range(self.res, video_len + self.res, self.res)) / 1000
         # keypress data
         kp_data = df.loc[stimulus]['kp']
         # plot keypresses
@@ -1460,6 +1457,14 @@ class Analysis:
                                      line=dict(color='rgba(255,255,255,0)'),
                                      hoverinfo="skip",
                                      showlegend=False))
+        # draw vertical lines
+        if vert_lines:
+            for line in vert_lines:
+                fig.add_vline(
+                    x=line,
+                    line_width=3,
+                    line_dash='dash', 
+                    line_color='green')
         # define range of y axis
         if not yaxis_range:
             yaxis_range = [0, max(y_upper) if conf_interval else max(kp_data)]
