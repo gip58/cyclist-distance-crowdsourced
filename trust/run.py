@@ -6,7 +6,6 @@ import os
 import trust as tr
 import re
 from statistics import mean
-from enum import Enum
 
 
 tr.logs(show_level='info', show_color=True)
