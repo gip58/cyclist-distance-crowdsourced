@@ -6,7 +6,6 @@ import os
 import trust as tr
 import re
 from statistics import mean
-from typing import Iterable, cast
 from enum import Enum
 
 
@@ -135,7 +134,8 @@ if __name__ == '__main__':
                 # extract timestamps of events
                 vert_lines = list(map(int, re.findall(r'\d+', mapping.loc['video_' + str(stim), 'events'])))
                 # convert to s
-                vert_lines = [x / 1000 for x in cast(Iterable[Enum], vert_lines)]
+                x: Enum
+                vert_lines = [x / 1000 for x in vert_lines]
                 # extract annotations
                 vert_line_annotations = mapping.loc['video_' + str(stim), 'events_description'].split(',')
                 # remove [
@@ -163,7 +163,8 @@ if __name__ == '__main__':
                 # extract timestamps of events
                 vert_lines = list(map(int, re.findall(r'\d+', df.loc['video_' + str(stim), 'events'])))
                 # convert to s
-                vert_lines = [int(x) / 1000 for x in cast(Iterable[Enum], vert_lines)]
+                x: Enum
+                vert_lines = [x / 1000 for x in vert_lines]
                 # extract annotations
                 vert_line_annotations = df.loc['video_' + str(stim), 'events_description'].split(',')
                 # remove [
