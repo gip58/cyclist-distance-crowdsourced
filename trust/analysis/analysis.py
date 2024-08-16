@@ -18,6 +18,7 @@ import warnings
 import unicodedata
 import re
 from tqdm import tqdm
+# import matplotlib.patches as patches
 import ast
 from scipy.stats.kde import gaussian_kde
 # from PIL import Image
@@ -250,6 +251,9 @@ class Analysis:
                          image,
                          id_video,
                          points,
+                         points1,
+                         points2,
+                         points3,
                          t,
                          save_anim=False,
                          save_frames=False):
@@ -269,6 +273,7 @@ class Analysis:
 
         """
         self.image = image
+        self.hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
         self.id_video = id_video
         # calc amounts of steps from duration
         dur = df['video_'+str(id_video)+'-dur-0'].tolist()
@@ -282,17 +287,49 @@ class Analysis:
         self.points = points
         self.save_frames = save_frames
         # Create subplot figure with heatmap and kp plot
-        self.fig, self.g = plt.subplots(nrows=2,
+        self.fig, self.g = plt.subplots(nrows=3,
                                         ncols=1,
-                                        figsize=(20, 10),
-                                        gridspec_kw=dict(height_ratios=[1, 2],
+                                        figsize=(20, 20),
+                                        gridspec_kw=dict(height_ratios=[1, 1, 3],  # noqa: E501
                                                          hspace=0.2))
-        self.fig.suptitle(' Keypresses and eye-tracking heatmap ', fontsize=20)
+        self.fig.suptitle(' Keypresses and eye-tracking heatmap video_' +
+                          str(self.id_video), fontsize=30)
         # Deterin time and data for kp plot
         self.times = np.array(range(self.res,
                               mapping['video_length'].max() + self.res,
                               self.res)) / 1000
         self.kp_data = mapping.loc['video_' + str(id_video)]['kp']
+        self.event = mapping.loc['video_' + str(id_video)]['events']
+
+        self.event = re.findall(r'\w+', self.event)
+
+        aoi = pd.read_csv(tr.common.get_configs('aoi'))
+        aoi.set_index('video_id', inplace=True)
+        self.number_in = []
+        self.number_in1 = []
+        self.number_in2 = []
+        self.number_in3 = []
+        self.aoit = []
+        self.aoi_x = aoi.loc['video_' + str(id_video)]['x']
+        self.aoi_x = self.aoi_x.split(", ")
+        self.aoi_y = aoi.loc['video_' + str(id_video)]['y']
+        self.aoi_y = self.aoi_y.split(", ")
+        self.aoi_t = aoi.loc['video_' + str(id_video)]['t']
+        self.aoi_t = self.aoi_t.split(", ")
+
+        # for comparison between stimulus
+        # stim 21 - 41
+        self.kp_data1 = mapping.loc['video_' + str(id_video+21)]['kp']
+        self.points1 = points1
+        # stim 42 - 62
+        self.kp_data2 = mapping.loc['video_' + str(id_video+42)]['kp']
+        self.points2 = points2
+        # stim 63 - 83
+        self.kp_data3 = mapping.loc['video_' + str(id_video+63)]['kp']
+        self.points3 = points3
+        # Event discription for in the animation plots
+        self.event_discription = re.split(',', mapping.loc['video_' +
+                                          str(id_video)]['events_description'])
         # Animate frames subplots into one animation using animate function
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
@@ -345,36 +382,150 @@ class Analysis:
         """
         Helper function to create animation.
         """
+        self.g[0].clear()
         self.g[1].clear()
-        durations = range(self.hm_resolution)
-        # KDE plot data
+        self.g[2].clear()
+
+        durations = range(0, self.hm_resolution_range)
+        # Subplot 1 KP data
         it = int(round(len(self.kp_data)*i/(self.framess)))
-        print(it)
         self.g[0].plot(np.array(self.times[:it]),
                        np.array(self.kp_data[:it]),
                        lw=1,
+                       label='Stim 1',
                        color='r')
-
-        self.g[0].set_xlabel("Time")
-        self.g[0].set_ylabel("number Keypresses")
+        self.g[0].plot(np.array(self.times[:it]),
+                       np.array(self.kp_data1[:it]),
+                       lw=1,
+                       label='Stim 2',
+                       color='b')
+        self.g[0].plot(np.array(self.times[:it]),
+                       np.array(self.kp_data2[:it]),
+                       lw=1,
+                       label='Stim 3',
+                       color='g')
+        self.g[0].plot(np.array(self.times[:it]),
+                       np.array(self.kp_data3[:it]),
+                       lw=1,
+                       label='Stim 4',
+                       color='m')
+        self.g[0].legend()
+        self.g[0].set_xlabel("Time (s)", fontsize=10)
+        self.g[0].set_ylabel("Percentage of Keypresses", fontsize=10)
         self.g[0].set_xlim(0, 50)
         self.g[0].set_ylim(0, 50)
-        self.g[0].set_title('id_video=' + str(self.id_video))
-        self.g[1] = sns.kdeplot(x=[item[0] for item in self.points[i]],
+        self.g[0].set_title('Number of keypresses', fontsize=25)
+
+        length = int(len(self.event))
+        for ev in range(len(self.event)):
+            self.g[0].axvline(x=int(self.event[ev])/1000,
+                              label="" + str(self.event_discription[ev]),
+                              c=plt.cm.RdYlBu(int(ev)/length),
+                              lw=2)
+            self.g[0].tick_params(axis='x', labelrotation=90)
+            self.g[0].legend()
+            self.g[1].axvline(x=int(self.event[ev])/1000,
+                              label="" + str(self.event_discription[ev]),
+                              c=plt.cm.RdYlBu(int(ev)/length),
+                              lw=2)
+            self.g[1].tick_params(axis='x', labelrotation=90)
+            self.g[1].legend()
+        # Subplot 2 AOI
+        self.g[1].set_title('Number of eye gazes in area of interest', fontsize=25)  # noqa: E501
+        self.g[1].set_xlabel('Time (s)', fontsize=10)
+        self.g[1].set_ylabel('Number of gazes in Area of Interest', fontsize=10)  # noqa: E501
+        self.g[1].set_xlim(0, 50)
+        self.g[1].set_ylim(0, 400)
+        # AOI data
+        aoi_x = float(self.aoi_x[i])
+        aoi_y = float(self.aoi_y[i])
+        aoi_t = float(self.aoi_t[i])
+        self.aoit.append(int(aoi_t)/1000)
+        # Defining boundaries of AOI
+        min_x = int(aoi_x) - 100
+        max_x = int(aoi_x) + 100
+        min_y = int(aoi_y) - 100
+        max_y = int(aoi_y) + 100
+        x = [item[0] for item in self.points[i]]
+        y = [item[1] for item in self.points[i]]
+        # stim 21 - 41
+        x1 = [item[0] for item in self.points1[i]]
+        y1 = [item[1] for item in self.points1[i]]
+        # stim 42 - 62
+        x2 = [item[0] for item in self.points2[i]]
+        y2 = [item[1] for item in self.points2[i]]
+        # stim 63 - 83
+        x3 = [item[0] for item in self.points3[i]]
+        y3 = [item[1] for item in self.points3[i]]
+        # Filtering data for if they are inside or outside coordinates
+        num = 0
+        num1 = 0
+        num2 = 0
+        num3 = 0
+        for v in range(len(x)):
+            if max_x > x[v] > min_x:
+                if max_y > y[v] > min_y:
+                    num = num + 1
+                else:
+                    continue
+            else:
+                continue
+        for v in range(len(x1)):
+            if max_x > x1[v] > min_x:
+                if max_y > y1[v] > min_y:
+                    num1 = num1 + 1
+                else:
+                    continue
+            else:
+                continue
+        for v in range(len(x2)):
+            if max_x > x2[v] > min_x:
+                if max_y > y2[v] > min_y:
+                    num2 = num2 + 1
+                else:
+                    continue
+            else:
+                continue
+        for v in range(len(x3)):
+            if max_x > x3[v] > min_x:
+                if max_y > y3[v] > min_y:
+                    num3 = num3 + 1
+                else:
+                    continue
+            else:
+                continue
+
+        self.number_in.append(int(num))
+        self.number_in1.append(int(num1))
+        self.number_in2.append(int(num2))
+        self.number_in3.append(int(num3))
+        self.g[1].plot(self.aoit,
+                       self.number_in,
+                       label='Stim 1',
+                       color='r')
+        self.g[1].plot(self.aoit,
+                       self.number_in1,
+                       label='Stim 2',
+                       color='b')
+        self.g[1].plot(self.aoit,
+                       self.number_in2,
+                       label='stim 3',
+                       color='g')
+        self.g[1].plot(self.aoit,
+                       self.number_in3,
+                       label='Stim 4',
+                       color='m')
+        self.g[1].legend()
+        # Subplot 3 Heatmap
+        self.g[2] = sns.kdeplot(x=[item[0] for item in self.points[i]],
                                 y=[item[1] for item in self.points[i]],
                                 alpha=0.5,
                                 fill=True,
                                 cmap='RdBu_r')
+        self.g[2].invert_yaxis()
+        self.g[2].plot([min_x, max_x, max_x, min_x, min_x], [min_y, min_y, max_y, max_y, min_y], color="red")  # noqa: E501
+
         # Scatter plot data
-        # 1 person
-        # item1 = ([item[0] for item in self.points[i]])
-        # item2 = ([item[1] for item in self.points[i]])
-        # self.g = sns.scatterplot(x=item1[8],
-        #                          y=item2[8],
-        #                          alpha=0.5,
-        #                          hue=[item[0] for item in self.points[i]],
-        #                          legend='auto'
-        #                          )
         # all pp
         # self.g = sns.scatterplot(x=[item[0] for item in self.points[i]],
         #                          y=[item[1] for item in self.points[i]],
@@ -384,6 +535,7 @@ class Analysis:
         # read original image
         im = plt.imread(self.image + '\\frame_' + str([i]) + '.jpg')
         plt.imshow(im)
+
         # remove axis
         plt.gca().set_axis_off()
         # remove white spaces around figure
@@ -427,6 +579,7 @@ class Analysis:
             temp_fig = pickle.load(buf)
             # save figure
             self.save_fig(self.image, temp_fig, self.folder, suffix)
+
         return self.g
 
     def save_anim(self, image, anim, output_subdir, suffix):

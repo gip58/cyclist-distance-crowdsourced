@@ -6,6 +6,7 @@ import os
 # import shutil
 import trust as tr
 from statistics import mean
+# import pandas as pd
 
 tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
@@ -17,7 +18,7 @@ logger = tr.CustomLogger(__name__)  # use custom logger
 # FILTER_DATA = True  # filter Appen and heroku data
 # CLEAN_DATA = True  # clean Appen data
 # REJECT_CHEATERS = True  # reject cheaters on Appen
-# CALC_COORDS = False
+# CALC_COORDS = True
 # UPDATE_MAPPING = True  # update mapping with keypress data
 # SHOW_OUTPUT = True  # should figures be plotted
 # SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
@@ -32,8 +33,8 @@ SAVE_CSV = True  # load csv files with data
 FILTER_DATA = False  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
 REJECT_CHEATERS = False  # reject cheaters on Appen
-CALC_COORDS = True  # extract points from heroku data
-UPDATE_MAPPING = True  # update mapping with keypress data
+CALC_COORDS = False  # extract points from heroku data
+UPDATE_MAPPING = False  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
 SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
@@ -281,7 +282,7 @@ if __name__ == '__main__':
             # create eye gaze visualisations for all videos
             logger.info('Producing visualisations of eye gaze data for {} stimuli.',  # noqa: E501
                         tr.common.get_configs('num_stimuli'))
-            # stimulus videos with manual ego and target car
+            # stimulus videos with manual ego and target create_animation_all_stimuli  # noqa: E501
             video_0_0 = range(0, 20, 1)
             # stimulus vidoe with manual ego car but av target car
             video_0_1 = range(21, 41, 1)
@@ -291,8 +292,8 @@ if __name__ == '__main__':
             video_1_1 = range(63, 83, 1)
 
             # source video/stimulus for a given individual.
-            for id_video in tqdm(range(0, tr.common.get_configs(
-                                       'num_stimuli')-1)):
+            for id_video in tqdm(range(1, 21)):
+                # tr.common.get_configs('num_stimuli'))):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
                 # Deconstruct the source video into its individual frames.
@@ -315,7 +316,8 @@ if __name__ == '__main__':
                 #                       save_file=True)
                 # Construct heatmap over each video frame previously created
                 # from the source video.
-                # create histogram for stimulus
+                # create histogram for stimulus`
+
                 # analysis.create_histogram(stim_path,
                 #                   points[id_video],
                 #                   id_video=id_video,
@@ -323,20 +325,43 @@ if __name__ == '__main__':
                 #                   save_file=True)
                 # # create animation for stimulus
                 points_process = {}
+                points_process1 = {}
+                points_process2 = {}
+                points_process3 = {}
                 # determin amount of points in duration for video_id
                 dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
                 dur = [x for x in dur if str(x) != 'nan']
                 dur = int(round(mean(dur)/1000)*1000)
+                hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
                 # for individual
-                for points_dur in range(0, len(range(0, dur,
-                                               tr.common.get_configs(
-                                                   'hm_resolution')))):
-                    points_process[points_dur] = points_duration[points_dur][id_video]  # noqa: E501
+                for points_dur in range(0, hm_resolution_range, 1):
+                    try:
+                        points_process[points_dur] = points_duration[points_dur][id_video]  # noqa: E501
+                    except KeyError:
+                        break
+                for points_dur in range(0, hm_resolution_range, 1):
+                    try:
+                        points_process1[points_dur] = points_duration[points_dur][id_video+21]  # noqa: E501
+                    except KeyError:
+                        break
+                for points_dur in range(0, hm_resolution_range, 1):
+                    try:
+                        points_process2[points_dur] = points_duration[points_dur][id_video+42]  # noqa: E501
+                    except KeyError:
+                        break
+                for points_dur in range(0, hm_resolution_range, 1):
+                    try:
+                        points_process3[points_dur] = points_duration[points_dur][id_video+63]  # noqa: E501
+                    except KeyError:
+                        break
                 analysis.create_animation(heroku_data,
                                           mapping,
                                           stim_path,
                                           id_video,
                                           points_process,
+                                          points_process1,
+                                          points_process2,
+                                          points_process3,
                                           t='video_length',
                                           save_anim=True,
                                           save_frames=True)
@@ -399,7 +424,7 @@ if __name__ == '__main__':
             #                     t='video_0-t-0',
             #                     pp='R51701252541887JF46247X',
             #                     id_video='video_0',
-            #                     pretty_text=True,
+            #                     pretty_text=True,self.event_discription
             #                     save_file=True)
         # stitch animations into 1 long videos
         analysis.create_animation_all_stimuli(num_stimuli)
@@ -431,7 +456,7 @@ if __name__ == '__main__':
         # plot of multiple combined AND variables
         # analysis.plot_video_data(mapping, 'video_5',
         #                          ['group', 'criticality'],
-        #                          yaxis_title='Type of ego car and number of pedestrians',  # noqa: E501
+        #                          yaxis_title='Type of ego car and number of pedestrians',  # noqa: E501--`
         #                          conf_interval=0.95)
         # analysis.plot_kp_variables_and(mapping,
         #                                plot_names=['traffic rules',
