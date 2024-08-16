@@ -26,6 +26,7 @@ import cv2
 import trust as tr
 from statistics import mean
 
+
 matplotlib.use('TkAgg')
 logger = tr.CustomLogger(__name__)  # use custom logger
 
@@ -631,7 +632,6 @@ class Analysis:
         plt.rc('axes', titlesize=m_font)    # fontsize of the subplot title
         # create figure
         fig = plt.figure(figsize=(34, 20))
-        print(sns.__version__)
         g = sns.heatmap(corr,
                         annot=True,
                         mask=mask,
@@ -704,10 +704,10 @@ class Analysis:
         grouped barplot.
 
         Args:
-            df (dataframe): dataframe with data from appen.
+            df (dataframe): dataframe with stimuli data.
+            y (list): column names of dataframe to plot.
             x (list): values in index of dataframe to plot for. If no value is
                       given, the index of df is used.
-            y (list): column names of dataframe to plot.
             stacked (bool, optional): show as stacked chart.
             pretty_text (bool, optional): prettify ticks by replacing _ with
                                           spaces and capitilisng each value.
@@ -778,7 +778,6 @@ class Analysis:
                           yaxis_title=yaxis_title)
         # format text labels
         if show_text_labels:
-            print(text)
             fig.update_traces(texttemplate='%{text:.2f}')
         # show all ticks on x axis
         if show_all_xticks:
@@ -1328,8 +1327,7 @@ class Analysis:
         if save_file:
             self.save_plotly(fig,
                              'hist_stim_duration' +
-                             '-'.join(t['start'].strftime('%m.%d.%Y,%H:%M:%S') +  # noqa: E501
-                                      '-' +
+                             '-'.join(t['start'].strftime('%m.%d.%Y,%H:%M:%S') + '-' +
                                       t['end'].strftime('%m.%d.%Y,%H:%M:%S')
                                       for t in time_ranges),
                              self.folder)
@@ -1391,7 +1389,7 @@ class Analysis:
                                      fill='tonexty',
                                      fillcolor='rgba(0,100,80,0.2)',
                                      line=dict(color='rgba(255,255,255,0)'),
-                                     hoverinfo="skip",
+                                     hoverinfo='skip',
                                      showlegend=False))
         # define range of y axis
         if not yaxis_range:
@@ -1409,29 +1407,41 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_kp_video(self, df, stimulus, extention='mp4', conf_interval=None,
-                      xaxis_title='Time (s)',
-                      yaxis_title='Percentage of trials with ' +
-                                  'response key pressed',
-                      xaxis_range=None, yaxis_range=None, save_file=True):
+    def plot_kp_video(self, df, stimulus, extention='mp4', conf_interval=None, vert_lines=None,
+                      vert_lines_width=3, vert_lines_dash='solid',
+                      vert_lines_colour='green', vert_lines_annotations=None,
+                      vert_lines_annotations_position='top right', vert_lines_annotations_font_size=20,
+                      vert_lines_annotations_colour='blue', xaxis_title='Time (s)',
+                      yaxis_title='Percentage of trials with response key pressed', xaxis_range=None, yaxis_range=None,
+                      save_file=True):
         """Plot keypresses with multiple variables as a filter.
 
         Args:
             df (dataframe): dataframe with keypress data.
             stimulus (str): name of stimulus.
             extention (str, optional): extension of stimulus.
-            conf_interval (float, optional): show confidence interval defined
-                                             by argument.
+            conf_interval (float, optional): show confidence interval defined by argument.
+            vert_lines (list, optional): list of events to draw formatted as values on x axis.
+            vert_lines_width (int, optional): thickness of the vertical lines.
+            vert_lines_dash (str, optional): type of the vertical lines.
+            vert_lines_colour (str, optional): colour of the vertical lines.
+            vert_lines_annotations (list, optional): text of annotations for the vertical lines.
+            vert_lines_annotations_position (str, optional): position of annotations for the vertical lines.
+            vert_lines_annotations_font_size (int, optional): font size of annotations for the vertical lines.
+            vert_lines_annotations_colour (str, optional): colour of annotations for the vertical lines.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
             yaxis_range (list, optional): range of y axis in format [min, max].
             save_file (bool, optional): flag for saving an html file with plot.
+
+        Deleted Parameters:
+            annotation_position (str, optional): Description
         """
         # extract video length
         video_len = df.loc[stimulus]['video_length']
         # calculate times
-        times = np.array(range(self.res, video_len + self.res, self.res)) / 1000  # noqa: E501
+        times = np.array(range(self.res, video_len + self.res, self.res)) / 1000
         # keypress data
         kp_data = df.loc[stimulus]['kp']
         # plot keypresses
@@ -1460,6 +1470,18 @@ class Analysis:
                                      line=dict(color='rgba(255,255,255,0)'),
                                      hoverinfo="skip",
                                      showlegend=False))
+        # draw vertical lines with annotations
+        if vert_lines:
+            for line, annotation in zip(vert_lines, vert_lines_annotations):
+                fig.add_vline(
+                    x=line,
+                    line_width=vert_lines_width,
+                    line_dash=vert_lines_dash,
+                    line_color=vert_lines_colour,
+                    annotation_text=annotation,
+                    annotation_position=vert_lines_annotations_position,
+                    annotation_font_size=vert_lines_annotations_font_size,
+                    annotation_font_color=vert_lines_annotations_colour)
         # define range of y axis
         if not yaxis_range:
             yaxis_range = [0, max(y_upper) if conf_interval else max(kp_data)]
@@ -1658,13 +1680,24 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_kp_videos(self, df, xaxis_title='Time (s)',
+    def plot_kp_videos(self, df, vert_lines=None, vert_lines_width=3, vert_lines_dash='solid',
+                       vert_lines_colour='green', vert_lines_annotations=None,
+                       vert_lines_annotations_position='top right', vert_lines_annotations_font_size=20,
+                       vert_lines_annotations_colour='blue', xaxis_title='Time (s)',
                        yaxis_title='Percentage of trials with response key pressed',
                        xaxis_range=None, yaxis_range=None, save_file=True, name_file=None):
         """Plot keypresses with multiple variables as a filter.
 
         Args:
             df (dataframe): dataframe with keypress data.
+            vert_lines (list, optional): list of events to draw formatted as values on x axis.
+            vert_lines_width (int, optional): thickness of the vertical lines.
+            vert_lines_dash (str, optional): type of the vertical lines.
+            vert_lines_colour (str, optional): colour of the vertical lines.
+            vert_lines_annotations (list, optional): text of annotations for the vertical lines.
+            vert_lines_annotations_position (str, optional): position of annotations for the vertical lines.
+            vert_lines_annotations_font_size (int, optional): font size of annotations for the vertical lines.
+            vert_lines_annotations_colour (str, optional): colour of annotations for the vertical lines.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
@@ -1673,7 +1706,7 @@ class Analysis:
             name_file (str, optional): name of file to save.
         """
         # calculate times
-        times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000  # noqa: E501
+        times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000
         # plotly
         fig = subplots.make_subplots(rows=1,
                                      cols=1,
@@ -1687,11 +1720,22 @@ class Analysis:
                                      name=os.path.splitext(index)[0]),
                           row=1,
                           col=1)
+        # draw vertical lines with annotations
+        if vert_lines:
+            for line, annotation in zip(vert_lines, vert_lines_annotations):
+                fig.add_vline(
+                    x=line,
+                    line_width=vert_lines_width,
+                    line_dash=vert_lines_dash,
+                    line_color=vert_lines_colour,
+                    annotation_text=annotation,
+                    annotation_position=vert_lines_annotations_position,
+                    annotation_font_size=vert_lines_annotations_font_size,
+                    annotation_font_color=vert_lines_annotations_colour)
         buttons = list([dict(label='All',
                              method='update',
                              args=[{'visible': [True] * df.shape[0]},
-                                   {'title': 'Keypresses for individual stimuli',  # noqa: E501
-                                    'showlegend': True}])])
+                                   {'title': 'Keypresses for individual stimuli', 'showlegend': True}])])
         # counter for traversing through stimuli
         counter_rows = 0
         # go over extracted videos
@@ -1724,6 +1768,131 @@ class Analysis:
         else:
             fig.show()
 
+    def plot_kp_slider_videos(self, df, y: list, x=None, vert_lines=None, vert_lines_width=3, vert_lines_dash='solid',
+                              vert_lines_colour='green', vert_lines_annotations=None,
+                              vert_lines_annotations_position='top right', vert_lines_annotations_font_size=20,
+                              vert_lines_annotations_colour='blue', xaxis_kp_title='Time (s)',
+                              yaxis_kp_title='Percentage of trials with response key pressed',
+                              xaxis_kp_range=None, yaxis_kp_range=None, stacked=False, pretty_text=False,
+                              orientation='v', xaxis_slider_title='Stimulus', yaxis_slider_show=False,
+                              yaxis_slider_title=None, show_text_labels=False, name_file=None, save_file=True):
+        """Plot keypresses with multiple variables as a filter and slider questions for the stimuli.
+
+        Args:
+            df (dataframe): dataframe with stimuli data.
+            y (list): column names of dataframe to plot.
+            x (list): values in index of dataframe to plot for. If no value is given, the index of df is used.
+            vert_lines (list, optional): list of events to draw formatted as values on x axis.
+            vert_lines_width (int, optional): thickness of the vertical lines.
+            vert_lines_dash (str, optional): type of the vertical lines.
+            vert_lines_colour (str, optional): colour of the vertical lines.
+            vert_lines_annotations (list, optional): text of annotations for the vertical lines.
+            vert_lines_annotations_position (str, optional): position of annotations for the vertical lines.
+            vert_lines_annotations_font_size (int, optional): font size of annotations for the vertical lines.
+            vert_lines_annotations_colour (str, optional): colour of annotations for the vertical lines.
+            xaxis_kp_title (str, optional): title for x axis. for the keypress plot
+            yaxis_kp_title (str, optional): title for y axis. for the keypress plot
+            xaxis_kp_range (None, optional): range of x axis in format [min, max] for the keypress plot.
+            yaxis_kp_range (None, optional): range of x axis in format [min, max] for the keypress plot.
+            stacked (bool, optional): show as stacked chart.
+            pretty_text (bool, optional): prettify ticks by replacing _ with spaces and capitalising each value.
+            orientation (str, optional): orientation of bars. v=vertical, h=horizontal.
+            xaxis_slider_title (None, optional): title for x axis. for the slider data plot.
+            yaxis_slider_show (bool, optional): show y axis or not.
+            yaxis_slider_title (None, optional): title for y axis. for the slider data plot.
+            show_text_labels (bool, optional): output automatically positioned text labels.
+            name_file (str, optional): name of file to save.
+            save_file (bool, optional): flag for saving an html file with plot.
+        """
+        logger.info('Creating figure keypress+slider for {}.', df.index.tolist())
+        # calculate times
+        times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000
+        # plotly
+        fig = subplots.make_subplots(rows=1,
+                                     cols=2,
+                                     column_widths=[0.8, 0.2],
+                                     subplot_titles=('Mean keypress values', 'Responses to sliders'),
+                                     specs=[[{}, {}]],
+                                     horizontal_spacing=0.05,
+                                     shared_xaxes=False)
+        # Plot keypress data
+        for index, row in df.iterrows():
+            values = row['kp']
+            fig.add_trace(go.Scatter(y=values,
+                                     mode='lines',
+                                     x=times,
+                                     name=os.path.splitext(index)[0]),
+                          row=1,
+                          col=1)
+        # draw vertical lines with annotations
+        if vert_lines:
+            for line, annotation in zip(vert_lines, vert_lines_annotations):
+                fig.add_vline(
+                    x=line,
+                    line_width=vert_lines_width,
+                    line_dash=vert_lines_dash,
+                    line_color=vert_lines_colour,
+                    annotation_text=annotation,
+                    annotation_position=vert_lines_annotations_position,
+                    annotation_font_size=vert_lines_annotations_font_size,
+                    annotation_font_color=vert_lines_annotations_colour)
+        # update axis
+        fig.update_xaxes(title_text=xaxis_kp_title, range=xaxis_kp_range, row=1, col=1)
+        fig.update_yaxes(title_text=yaxis_kp_title, range=yaxis_kp_range, row=1, col=1)
+        # prettify text
+        if pretty_text:
+            for variable in y:
+                # check if column contains strings
+                if isinstance(df.iloc[0][variable], str):
+                    # replace underscores with spaces
+                    df[variable] = df[variable].str.replace('_', ' ')
+                    # capitalise
+                    df[variable] = df[variable].str.capitalize()
+        # Plot slider data
+        # use index of df if no is given
+        if not x:
+            x = df.index
+        # go over variables to plot
+        for variable in y:
+            # showing text labels
+            if show_text_labels:
+                text = df[variable]
+            else:
+                text = None
+            # plot variable
+            fig.add_trace(go.Bar(x=x,
+                                 y=df[variable],
+                                 name=variable,
+                                 orientation=orientation,
+                                 text=text,
+                                 textposition='auto'),
+                          row=1, col=2)
+        # update axis
+        fig.update_xaxes(title_text=xaxis_slider_title, row=1, col=2)
+        fig.update_yaxes(title_text=yaxis_slider_title, row=1, col=2)
+        fig.update_yaxes(visible=yaxis_slider_show, row=1, col=2)
+        # update template
+        fig.update_layout(template=self.template)
+        # format text labels
+        if show_text_labels:
+            fig.update_traces(texttemplate='%{text:.2f}')
+        # stacked bar chart
+        if stacked:
+            fig.update_layout(barmode='stack')
+        # legeng
+        fig.update_layout(legend=dict(
+                                x=0.7,
+                                y=0.95))
+        # save file
+        if save_file:
+            if not name_file:
+                self.save_plotly(fig, 'kp_videos_sliders', self.folder)
+            else:
+                self.save_plotly(fig, name_file, self.folder)
+        # open it in localhost instead
+        else:
+            fig.show()
+
     def plot_kp_variable(self, df, variable, values=None,
                          xaxis_title='Time (s)',
                          yaxis_title='Percentage of trials with ' +
@@ -1742,10 +1911,9 @@ class Analysis:
             yaxis_range (list, optional): range of y axis in format [min, max].
             save_file (bool, optional): flag for saving an html file with plot.
         """
-        logger.info('Creating visualisation of keypresses based on values ' +
-                    '{} of variable {} .', values, variable)
+        logger.info('Creating visualisation of keypresses based on values {} of variable {} .', values, variable)
         # calculate times
-        times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000  # noqa: E501
+        times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000
         # if no values specified, plot value
         if not values:
             values = df[variable].unique()

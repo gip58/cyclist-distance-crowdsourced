@@ -4,7 +4,9 @@ import matplotlib._pylab_helpers
 from tqdm import tqdm
 import os
 import trust as tr
+import re
 from statistics import mean
+
 
 tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
@@ -28,15 +30,15 @@ logger = tr.CustomLogger(__name__)  # use custom logger
 SAVE_P = False  # save pickle files with data
 LOAD_P = True  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
-FILTER_DATA = False  # filter Appen and heroku data
+FILTER_DATA = True  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
 REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = False  # extract points from heroku data
 UPDATE_MAPPING = False  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
-SHOW_OUTPUT_ST = True  # should figures with stimulus data be plotted
-SHOW_OUTPUT_PP = True  # should figures with info about participants be plotted
+SHOW_OUTPUT_ST = False  # should figures with stimulus data be plotted
+SHOW_OUTPUT_PP = False  # should figures with info about participants be plotted
 SHOW_OUTPUT_ET = False  # should figures for eye tracking be plotted
 
 file_mapping = 'mapping.p'  # file to save updated mapping
@@ -123,26 +125,82 @@ if __name__ == '__main__':
         logger.info('Creating figures.')
         # Visualisation of keypress data
         if SHOW_OUTPUT_KP:
-            # all keypresses with confidence interval
-            analysis.plot_kp(mapping, conf_interval=0.95)
-            # keypresses of all individual stimuli
-            logger.info('Creating figures for keypress data of individual stimuli.')
-            for stim in tqdm(range(num_stimuli)):  # tqdm adds progress bar
-                analysis.plot_kp_video(mapping, 'video_' + str(stim), conf_interval=0.95)
+            # # all keypresses with confidence interval
+            # analysis.plot_kp(mapping, conf_interval=0.95)
+            # # keypresses of all individual stimuli
+            # logger.info('Creating figures for keypress data of individual stimuli.')
+            # for stim in tqdm(range(num_stimuli)):  # tqdm adds progress bar
+            #     # extract timestamps of events
+            #     vert_lines = list(map(int, re.findall(r'\d+', mapping.loc['video_' + str(stim), 'events'])))
+            #     # convert to s
+            #     vert_lines = [x / 1000 for x in vert_lines]  # type: ignore
+            #     # extract annotations
+            #     vert_line_annotations = mapping.loc['video_' + str(stim), 'events_description'].split(',')
+            #     # remove [
+            #     vert_line_annotations[0] = vert_line_annotations[0][1:]
+            #     # remove ]
+            #     vert_line_annotations[-1] = vert_line_annotations[-1][:-1]
+            #     # plot
+            #     analysis.plot_kp_video(mapping,
+            #                            'video_' + str(stim),
+            #                            vert_lines=vert_lines,
+            #                            vert_lines_width=1,
+            #                            vert_lines_dash='solid',
+            #                            vert_lines_colour='red',
+            #                            vert_lines_annotations=vert_line_annotations,
+            #                            vert_lines_annotations_position='top right',
+            #                            vert_lines_annotations_font_size=12,
+            #                            vert_lines_annotations_colour='red',
+            #                            conf_interval=0.95)
             # keypresses of groups of stimuli
             logger.info('Creating bar plots of keypress data for groups of stimuli.')
             for stim in tqdm(range(int(num_stimuli/4))):  # tqdm adds progress bar
                 # ids of stimuli that belong to the same group
                 ids = [stim, stim + int(num_stimuli/4), stim + int(num_stimuli/4*2), stim + int(num_stimuli/4*3)]
                 df = mapping[mapping['id'].isin(ids)]
-                analysis.plot_kp_videos(df, name_file='kp_videos_'+','.join([str(i) for i in ids]))
-            # keypresses of an individual stimulus for an individual pp
-            # TODO: choose better example
-            analysis.plot_kp_video_pp(mapping,
-                                      heroku_data,
-                                      pp='R51701197342646JF16777X',
-                                      stimulus='video_2',
-                                      conf_interval=0.95)
+                # extract timestamps of events
+                vert_lines = list(map(int, re.findall(r'\d+', df.loc['video_' + str(stim), 'events'])))
+                # convert to s
+                vert_lines = [x / 1000 for x in vert_lines]  # type: ignore
+                # extract annotations
+                vert_line_annotations = df.loc['video_' + str(stim), 'events_description'].split(',')
+                # remove [
+                vert_line_annotations[0] = vert_line_annotations[0][1:]
+                # remove ]
+                vert_line_annotations[-1] = vert_line_annotations[-1][:-1]
+                # # plot just keypresses
+                # analysis.plot_kp_videos(df,
+                #                         vert_lines=vert_lines,
+                #                         vert_lines_width=1,
+                #                         vert_lines_dash='solid',
+                #                         vert_lines_colour='red',
+                #                         vert_lines_annotations=vert_line_annotations,
+                #                         vert_lines_annotations_position='top right',
+                #                         vert_lines_annotations_font_size=12,
+                #                         vert_lines_annotations_colour='red',
+                #                         name_file='kp_videos_'+','.join([str(i) for i in ids]))
+                # plot keypress data and slider questions
+                analysis.plot_kp_slider_videos(df,
+                                               y=['slider-0', 'slider-1', 'slider-2'],
+                                               vert_lines=vert_lines,
+                                               vert_lines_width=1,
+                                               vert_lines_dash='solid',
+                                               vert_lines_colour='red',
+                                               vert_lines_annotations=vert_line_annotations,
+                                               vert_lines_annotations_position='top right',
+                                               vert_lines_annotations_font_size=12,
+                                               vert_lines_annotations_colour='red',
+                                               yaxis_slider_title=None,
+                                               show_text_labels=True,
+                                               stacked=True,
+                                               yaxis_slider_show=False,
+                                               name_file='kp_videos_sliders_'+','.join([str(i) for i in ids]))
+            # # keypresses of an individual stimulus for an individual pp
+            # analysis.plot_kp_video_pp(mapping,
+            #                           heroku_data,
+            #                           pp='R51701197342646JF16777X',
+            #                           stimulus='video_2',
+            #                           conf_interval=0.95)
             # keypresses of all videos individually
             analysis.plot_kp_videos(mapping)
             # keypress based on the type of ego car
@@ -377,7 +435,7 @@ if __name__ == '__main__':
                 # shutil.rmtree(os.path.join(tr.settings.output_dir, 'frames'))
                 # Creating a for loop that makes an eye gazes/heatmap for every
                 # create animation for stimulus
-                # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],     # noqa: E501
+                # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],
                 #                       x=['avg_object', 'avg_person', 'avg_car'],
                 #                       y='avg_kp',
                 #                       trendline='ols',
