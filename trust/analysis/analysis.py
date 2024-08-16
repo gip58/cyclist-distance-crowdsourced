@@ -276,7 +276,7 @@ class Analysis:
         self.hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
         self.id_video = id_video
         # calc amounts of steps from duration
-        dur = self.mapping.loc[id_video]['video_length']
+        dur = mapping.iloc[id_video]['video_length']
         # Determing the amount of frames for given video
         self.framess = int(round(self.time/self.hm_resolution))
         # Determin time

@@ -3,6 +3,7 @@ import json
 import os
 import pandas as pd
 import numpy as np
+import re
 from tqdm import tqdm
 from statistics import mean
 import warnings
@@ -445,6 +446,7 @@ class Heroku:
                 x = 'video_'+str(id_video)+'-x-0'
                 y = 'video_'+str(id_video)+'-y-0'
                 t = 'video_'+str(id_video)+'-t-0'
+
                 if x not in df.keys() or y not in df.keys():
                     logger.debug('Indices not found: {} or {}.', x, y)
                     continue
@@ -472,6 +474,7 @@ class Heroku:
                                 # convert to point object
                                 point = Point(given_x[val]*norm_x,
                                               given_y[val]*norm_y)
+
                                 # check if point is within a polygon in the middle   # noqa: E501
                                 if polygon.contains(point):
                                     # point in the middle detected
