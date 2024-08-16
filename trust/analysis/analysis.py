@@ -25,7 +25,6 @@ from scipy.stats.kde import gaussian_kde
 import cv2
 import trust as tr
 from statistics import mean
-from plotly.subplots import make_subplots
 
 
 matplotlib.use('TkAgg')
@@ -1778,7 +1777,7 @@ class Analysis:
                               orientation='v', xaxis_slider_title='Stimulus', yaxis_slider_show=False,
                               yaxis_slider_title=None, show_text_labels=False, name_file=None, save_file=True):
         """Plot keypresses with multiple variables as a filter and slider questions for the stimuli.
-        
+
         Args:
             df (dataframe): dataframe with stimuli data.
             y (list): column names of dataframe to plot.
