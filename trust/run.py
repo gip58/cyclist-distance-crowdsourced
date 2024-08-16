@@ -133,9 +133,23 @@ if __name__ == '__main__':
                 vert_lines = list(map(int, re.findall(r'\d+', mapping.loc['video_' + str(stim), 'events'])))
                 # convert to s
                 vert_lines = [x / 1000 for x in vert_lines]
+                # extract annotations
+                vert_line_annotations = mapping.loc['video_' + str(stim), 'events_description'].split(',')
+                # remove [
+                vert_line_annotations[0] = vert_line_annotations[0][1:]
+                # remove [
+                vert_line_annotations[-1] = vert_line_annotations[-1][:-1]
+                # plot
                 analysis.plot_kp_video(mapping,
                                        'video_' + str(stim),
                                        vert_lines=vert_lines,
+                                       vert_lines_width=1,
+                                       vert_lines_dash='solid',
+                                       vert_lines_colour='red',
+                                       vert_lines_annotations=vert_line_annotations,
+                                       vert_lines_annotations_position='top right',
+                                       vert_lines_annotations_font_size=12,
+                                       vert_lines_annotations_colour='red',
                                        conf_interval=0.95)
             # keypresses of groups of stimuli
             logger.info('Creating bar plots of keypress data for groups of stimuli.')

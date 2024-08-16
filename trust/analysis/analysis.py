@@ -1340,7 +1340,7 @@ class Analysis:
                 yaxis_title='Percentage of trials with response key pressed',
                 xaxis_range=None, yaxis_range=None, save_file=True):
         """Plot keypress data.
-
+        
         Args:
             df (dataframe): dataframe with keypress data.
             conf_interval (float, optional): show confidence interval defined
@@ -1408,22 +1408,36 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_kp_video(self, df, stimulus, extention='mp4', conf_interval=None, vert_lines=None, xaxis_title='Time (s)',
+    def plot_kp_video(self, df, stimulus, extention='mp4', conf_interval=None, vert_lines=None,
+                      vert_lines_width=3, vert_lines_dash='solid',
+                      vert_lines_colour='green', vert_lines_annotations=None,
+                      vert_lines_annotations_position='top right', vert_lines_annotations_font_size=20,
+                      vert_lines_annotations_colour='blue', xaxis_title='Time (s)',
                       yaxis_title='Percentage of trials with response key pressed', xaxis_range=None, yaxis_range=None,
                       save_file=True):
         """Plot keypresses with multiple variables as a filter.
-
+        
         Args:
             df (dataframe): dataframe with keypress data.
             stimulus (str): name of stimulus.
             extention (str, optional): extension of stimulus.
             conf_interval (float, optional): show confidence interval defined by argument.
             vert_lines (list, optional): list of events to draw formatted as values on x axis.
+            vert_lines_width (int, optional): thickness of the vertical lines.
+            vert_lines_dash (str, optional): type of the vertical lines.
+            vert_lines_colour (str, optional): colour of the vertical lines.
+            vert_lines_annotations (list, optional): text of annotations for the vertical lines.
+            vert_lines_annotations_position (str, optional): position of annotations for the vertical lines.
+            vert_lines_annotations_font_size (int, optional): font size of annotations for the vertical lines.
+            vert_lines_annotations_colour (str, optional): colour of annotations for the vertical lines.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
             yaxis_range (list, optional): range of y axis in format [min, max].
             save_file (bool, optional): flag for saving an html file with plot.
+        
+        Deleted Parameters:
+            annotation_position (str, optional): Description
         """
         # extract video length
         video_len = df.loc[stimulus]['video_length']
@@ -1457,14 +1471,18 @@ class Analysis:
                                      line=dict(color='rgba(255,255,255,0)'),
                                      hoverinfo="skip",
                                      showlegend=False))
-        # draw vertical lines
+        # draw vertical lines with annotations
         if vert_lines:
-            for line in vert_lines:
+            for line, annotation in zip(vert_lines, vert_lines_annotations):
                 fig.add_vline(
                     x=line,
-                    line_width=3,
-                    line_dash='dash', 
-                    line_color='green')
+                    line_width=vert_lines_width,
+                    line_dash=vert_lines_dash, 
+                    line_color=vert_lines_colour,
+                    annotation_text=annotation, 
+                    annotation_position=vert_lines_annotations_position,
+                    annotation_font_size=vert_lines_annotations_font_size,
+                    annotation_font_color=vert_lines_annotations_colour)
         # define range of y axis
         if not yaxis_range:
             yaxis_range = [0, max(y_upper) if conf_interval else max(kp_data)]
