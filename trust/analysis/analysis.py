@@ -599,7 +599,6 @@ class Analysis:
         # clear animation from memory
         plt.close(self.fig)
 
-    # TODO: fix error with value of string not used as float
     def corr_matrix(self, df, columns_drop, save_file=False):
         """
         Output correlation matrix.
@@ -632,6 +631,7 @@ class Analysis:
         plt.rc('axes', titlesize=m_font)    # fontsize of the subplot title
         # create figure
         fig = plt.figure(figsize=(34, 20))
+        print(sns.__version__)
         g = sns.heatmap(corr,
                         annot=True,
                         mask=mask,
@@ -778,7 +778,8 @@ class Analysis:
                           yaxis_title=yaxis_title)
         # format text labels
         if show_text_labels:
-            fig.update_traces(texttemplate='%{text:.2s}')
+            print(text)
+            fig.update_traces(texttemplate='%{text:.2f}')
         # show all ticks on x axis
         if show_all_xticks:
             fig.update_layout(xaxis=dict(dtick=1))
@@ -1408,8 +1409,7 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_kp_video(self, df, stimulus, pp, extention='mp4',
-                      conf_interval=None,
+    def plot_kp_video(self, df, stimulus, extention='mp4', conf_interval=None,
                       xaxis_title='Time (s)',
                       yaxis_title='Percentage of trials with ' +
                                   'response key pressed',
@@ -1419,8 +1419,7 @@ class Analysis:
         Args:
             df (dataframe): dataframe with keypress data.
             stimulus (str): name of stimulus.
-            pp (str, optional): individual participant or 'all'.
-            extension (str, optional): extension of stimulus.
+            extention (str, optional): extension of stimulus.
             conf_interval (float, optional): show confidence interval defined
                                              by argument.
             xaxis_title (str, optional): title for x axis.
@@ -1429,7 +1428,6 @@ class Analysis:
             yaxis_range (list, optional): range of y axis in format [min, max].
             save_file (bool, optional): flag for saving an html file with plot.
         """
-        # todo: implement for 1 pp
         # extract video length
         video_len = df.loc[stimulus]['video_length']
         # calculate times
@@ -1471,7 +1469,6 @@ class Analysis:
                           yaxis_title=yaxis_title,
                           xaxis_range=xaxis_range,
                           yaxis_range=yaxis_range)
-        self.kp = fig
         # save file
         if save_file:
             self.save_plotly(fig, 'kp_' + stimulus, self.folder)
@@ -1629,16 +1626,16 @@ class Analysis:
         # buttons = list([dict(label='All',
         #                      method='update',
         #                      args=[{'visible': [True] * df.shape[0]},
-        #                            {'title': 'Keypresses for individual stimuli',  # noqa: E501
+        #                            {'title': 'Keypresses for individual stimuli',
         #                             'showlegend': True}])])
 
         for col in cols:
             video_len = df.loc[stimulus]['video_length']
             # calculate times
-            times = np.array(range(self.res, video_len + self.res, self.res)) / 1000  # noqa: E501
+            times = np.array(range(self.res, video_len + self.res, self.res)) / 1000
             # keypress data
             kp_data = df.loc[stimulus][col]
-            if type(kp_data) != list:
+            if type(kp_data) is not list:
                 kp_data = ast.literal_eval(kp_data)
             # plot keypresses
             fig.add_trace(go.Scatter(y=kp_data,
@@ -1662,9 +1659,8 @@ class Analysis:
             fig.show()
 
     def plot_kp_videos(self, df, xaxis_title='Time (s)',
-                       yaxis_title='Percentage of trials with ' +
-                                   'response key pressed',
-                       xaxis_range=None, yaxis_range=None, save_file=True):
+                       yaxis_title='Percentage of trials with response key pressed',
+                       xaxis_range=None, yaxis_range=None, save_file=True, name_file=None):
         """Plot keypresses with multiple variables as a filter.
 
         Args:
@@ -1674,6 +1670,7 @@ class Analysis:
             xaxis_range (list, optional): range of x axis in format [min, max].
             yaxis_range (list, optional): range of y axis in format [min, max].
             save_file (bool, optional): flag for saving an html file with plot.
+            name_file (str, optional): name of file to save.
         """
         # calculate times
         times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000  # noqa: E501
@@ -1719,7 +1716,10 @@ class Analysis:
                           yaxis_range=yaxis_range)
         # save file
         if save_file:
-            self.save_plotly(fig, 'kp_videos', self.folder)
+            if not name_file:
+                self.save_plotly(fig, 'kp_videos', self.folder)
+            else:
+                self.save_plotly(fig, name_file, self.folder)
         # open it in localhost instead
         else:
             fig.show()

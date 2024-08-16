@@ -3,10 +3,8 @@ import matplotlib.pyplot as plt
 import matplotlib._pylab_helpers
 from tqdm import tqdm
 import os
-# import shutil
 import trust as tr
 from statistics import mean
-# import pandas as pd
 
 tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
@@ -17,14 +15,14 @@ logger = tr.CustomLogger(__name__)  # use custom logger
 # SAVE_CSV = True  # load csv files with data
 # FILTER_DATA = True  # filter Appen and heroku data
 # CLEAN_DATA = True  # clean Appen data
-# REJECT_CHEATERS = True  # reject cheaters on Appen
-# CALC_COORDS = True
+# REJECT_CHEATERS = False  # reject cheaters on Appen
+# CALC_COORDS = False  # extract points from heroku data
 # UPDATE_MAPPING = True  # update mapping with keypress data
 # SHOW_OUTPUT = True  # should figures be plotted
 # SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
 # SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
 # SHOW_OUTPUT_PP = True  # should figures with info about participants
-# SHOW_OUTPUT_ET = True  # should figures for eye tracking
+# SHOW_OUTPUT_ET = False  # should figures for eye tracking
 
 # for debugging, skip processing
 SAVE_P = False  # save pickle files with data
@@ -36,10 +34,10 @@ REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = False  # extract points from heroku data
 UPDATE_MAPPING = False  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
-SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
-SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
-SHOW_OUTPUT_PP = False  # should figures with info about participants
-SHOW_OUTPUT_ET = True  # should figures for eye tracking
+SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
+SHOW_OUTPUT_ST = True  # should figures with stimulus data be plotted
+SHOW_OUTPUT_PP = True  # should figures with info about participants be plotted
+SHOW_OUTPUT_ET = False  # should figures for eye tracking be plotted
 
 file_mapping = 'mapping.p'  # file to save updated mapping
 file_coords = 'coords.p'  # file to save lists with coordinates
@@ -63,13 +61,12 @@ if __name__ == '__main__':
     appen_data = appen.read_data(filter_data=FILTER_DATA,
                                  clean_data=CLEAN_DATA)
     # read frames
-
     # get keys in data files
     heroku_data_keys = heroku_data.keys()
     appen_data_keys = appen_data.keys()
     # flag and reject cheaters
     if REJECT_CHEATERS:
-        qa = tr.analysis.QA(file_cheaters=tr.common.get_configs('file_cheaters'),  # noqa: E501
+        qa = tr.analysis.QA(file_cheaters=tr.common.get_configs('file_cheaters'),
                             job_id=tr.common.get_configs('appen_job'))
         qa.reject_users()
         qa.ban_users()
@@ -89,7 +86,6 @@ if __name__ == '__main__':
     appen.show_info()  # show info for filtered data
     # generate country-specific data
     countries_data = appen.process_countries()
-
     # create arrays with coordinates for stimuli
     if CALC_COORDS:
         points, _, points_duration = heroku.points(heroku_data)
@@ -100,7 +96,6 @@ if __name__ == '__main__':
         points, points_duration = tr.common.load_from_p(file_coords,
                                                         'points data')
     # update mapping with keypress data
-
     if UPDATE_MAPPING:
         # read in mapping of stimuli
         mapping = heroku.read_mapping()
@@ -120,10 +115,9 @@ if __name__ == '__main__':
                             mapping,
                             'mapping of stimuli')
     else:
-        mapping = tr.common.load_from_p(file_mapping,
-                                        'mapping of stimuli')
+        mapping = tr.common.load_from_p(file_mapping, 'mapping of stimuli')
+    # Output
     if SHOW_OUTPUT:
-        # Output
         analysis = tr.analysis.Analysis()
         num_stimuli = tr.common.get_configs('num_stimuli')
         logger.info('Creating figures.')
@@ -131,9 +125,19 @@ if __name__ == '__main__':
         if SHOW_OUTPUT_KP:
             # all keypresses with confidence interval
             analysis.plot_kp(mapping, conf_interval=0.95)
-            # keypresses of an individual stimulus
-            # analysis.plot_kp_video(mapping, 'video_0', conf_interval=0.95)
+            # keypresses of all individual stimuli
+            logger.info('Creating figures for keypress data of individual stimuli.')
+            for stim in tqdm(range(num_stimuli)):  # tqdm adds progress bar
+                analysis.plot_kp_video(mapping, 'video_' + str(stim), conf_interval=0.95)
+            # keypresses of groups of stimuli
+            logger.info('Creating bar plots of keypress data for groups of stimuli.')
+            for stim in tqdm(range(int(num_stimuli/4))):  # tqdm adds progress bar
+                # ids of stimuli that belong to the same group
+                ids = [stim, stim + int(num_stimuli/4), stim + int(num_stimuli/4*2), stim + int(num_stimuli/4*3)]
+                df = mapping[mapping['id'].isin(ids)]
+                analysis.plot_kp_videos(df, name_file='kp_videos_'+','.join([str(i) for i in ids]))
             # keypresses of an individual stimulus for an individual pp
+            # TODO: choose better example
             analysis.plot_kp_video_pp(mapping,
                                       heroku_data,
                                       pp='R51701197342646JF16777X',
@@ -141,59 +145,41 @@ if __name__ == '__main__':
                                       conf_interval=0.95)
             # keypresses of all videos individually
             analysis.plot_kp_videos(mapping)
-            # 1 var, all values
+            # keypress based on the type of ego car
             analysis.plot_kp_variable(mapping, 'ego_car')
-            # 1 var, certain values
-            analysis.plot_kp_variable(mapping,
-                                      'target_car',
-                                      [0, 1])
-            analysis.plot_kp_variable(mapping,
-                                      'group',
-                                      [0, 1, 2, 3])
+            # keypress based on the type of ego car
+            analysis.plot_kp_variable(mapping, 'target_car')
+            # keypress based on the pp group
+            analysis.plot_kp_variable(mapping, 'group')
             # TODO: make plot_video_data work
             # plot of multiple combined AND variables
-            analysis.plot_video_data(mapping, 'video_5',
-                                     ['group', 'criticality'],
-                                     yaxis_title='Type of ego car and number of pedestrians',  # noqa: E501
-                                     conf_interval=0.95)
-            analysis.plot_kp_variables_and(mapping,
-                                           plot_names=['traffic rules',
-                                                       'no traffic rules'],
-                                           variables_list=[[{'variable': 'traffic_rules',  # noqa: E501
-                                                             'value': 'stop_sign'},        # noqa: E501
-                                                            {'variable': 'traffic_rules',  # noqa: E501
-                                                             'value': 'traffic_lights'},   # noqa: E501
-                                                            {'variable': 'traffic_rules',  # noqa: E501
-                                                             'value': 'ped_crossing'}],    # noqa: E501
-                                                           [{'variable': 'traffic_rules',  # noqa: E501
-                                                             'value': 'none'}]])  # noqa: E501
-            # plot of separate variables
-            analysis.plot_kp_variables_or(mapping,
-                                          variables=[{'variable': 'cross_look',  # noqa: E501
-                                                      'value': 'Crossing_Looking'},     # noqa: E501
-                                                     {'variable': 'cross_look',  # noqa: E501
-                                                      'value': 'notCrossing_Looking'},  # noqa: E501
-                                                     {'variable': 'cross_look',  # noqa: E501
-                                                      'value': 'Crossing_notLooking'},  # noqa: E501
-                                                     {'variable': 'cross_look',  # noqa: E501
-                                                      'value': 'nonspecific'}])  # noqa: E501
+            # analysis.plot_video_data(mapping, 'video_5',
+            #                          ['group', 'criticality'],
+            #                          yaxis_title='Type of ego car and number of pedestrians',
+            #                          conf_interval=0.95)
         # Visualisation of stimulus data
         if SHOW_OUTPUT_ST:
-            # post-trial questions
-            # note: post-stimulus slider questions are stored as video_0-as-0 in  # noqa: E501
-            #       the form of eg [100, 0, 0].
-            analysis.bar(heroku_data,
-                         y=['video_0-slider-0-0', 'video_0-slider-1-0', 'video_0-slider-2-0'],  # noqa: E501
+            # post stimulus questions for all stimuli
+            analysis.bar(mapping,
+                         y=['slider-0', 'slider-1', 'slider-2'],
+                         stacked=True,
+                         show_text_labels=True,
                          pretty_text=True,
                          save_file=True)
-            analysis.hist(heroku_data,
-                          x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-slider-')],  # noqa: E501
-                          nbins=100,
-                          pretty_text=True,
-                          save_file=True)
+            # post-trial questions of all individual stimuli
+            logger.info('Creating bar plots of post-trial questions for groups of stimuli.')
+            for stim in tqdm(range(int(num_stimuli/4))):  # tqdm adds progress bar
+                # ids of stimuli that belong to the same group
+                ids = [stim, stim + int(num_stimuli/4), stim + int(num_stimuli/4*2), stim + int(num_stimuli/4*3)]
+                df = mapping[mapping['id'].isin(ids)]
+                analysis.bar(df,
+                             y=['slider-0', 'slider-1', 'slider-2'],
+                             stacked=True,
+                             show_text_labels=True,
+                             pretty_text=True,
+                             save_file=True)
             # columns to drop in correlation matrix and scatter matrix
-            columns_drop = ['description', 'video_length', 'min_dur',
-                            'max_dur', 'kp']
+            columns_drop = ['events_description', 'description', 'video_length', 'min_dur', 'max_dur', 'kp', 'events']
             # set nan to -1
             df = mapping.fillna(-1)
             # create correlation matrix
@@ -216,7 +202,7 @@ if __name__ == '__main__':
                              save_file=True)
             # stimulus duration
             analysis.hist(heroku_data,
-                          x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-dur')],  # noqa: E501
+                          x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-dur')],
                           nbins=100,
                           pretty_text=True,
                           save_file=True)
@@ -228,18 +214,18 @@ if __name__ == '__main__':
                               'Strongly agree': 5}
             # questions before and after
             df = all_data
-            df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)  # noqa: E501
+            df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)
             df['driving_in_ad'] = df['driving_in_ad'].map(likert_mapping)
             analysis.scatter(df,
-                             x='driving_alongside_ad',  # noqa: E501
-                             y='end-slider-0-0',  # noqa: E501
+                             x='driving_alongside_ad',
+                             y='end-slider-0-0',
                              xaxis_title='Before',
                              yaxis_title='After',
                              pretty_text=True,
                              save_file=True)
             analysis.scatter(df,
-                             x='driving_in_ad',  # noqa: E501
-                             y='end-slider-1-0',  # noqa: E501
+                             x='driving_in_ad',
+                             y='end-slider-1-0',
                              xaxis_title='Before',
                              yaxis_title='After',
                              pretty_text=True,
@@ -278,11 +264,11 @@ if __name__ == '__main__':
             # map of year of automated driving per country
             analysis.map(countries_data, color='year_ad', save_file=True)
         # Visualisation of eye tracking data
-        if SHOW_OUTPUT_ET:            # df = all_data
+        if SHOW_OUTPUT_ET:
             # create eye gaze visualisations for all videos
-            logger.info('Producing visualisations of eye gaze data for {} stimuli.',  # noqa: E501
+            logger.info('Producing visualisations of eye gaze data for {} stimuli.',
                         tr.common.get_configs('num_stimuli'))
-            # stimulus videos with manual ego and target create_animation_all_stimuli  # noqa: E501
+            # stimulus videos with manual ego and target create_animation_all_stimuli
             video_0_0 = range(0, 20, 1)
             # stimulus vidoe with manual ego car but av target car
             video_0_1 = range(21, 41, 1)
@@ -294,8 +280,7 @@ if __name__ == '__main__':
             # source video/stimulus for a given individual.
             for id_video in tqdm(range(1, 21)):
                 # tr.common.get_configs('num_stimuli'))):
-                logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
-                            id_video)
+                logger.info('Producing visualisations of eye gaze data for stimulus {}.', id_video)
                 # Deconstruct the source video into its individual frames.
                 stim_path = os.path.join(tr.settings.output_dir, 'frames')
                 # To allow for overlaying the heatmap for each frame later on.
@@ -332,26 +317,26 @@ if __name__ == '__main__':
                 dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
                 dur = [x for x in dur if str(x) != 'nan']
                 dur = int(round(mean(dur)/1000)*1000)
-                hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
+                hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))
                 # for individual
                 for points_dur in range(0, hm_resolution_range, 1):
                     try:
-                        points_process[points_dur] = points_duration[points_dur][id_video]  # noqa: E501
+                        points_process[points_dur] = points_duration[points_dur][id_video]
                     except KeyError:
                         break
                 for points_dur in range(0, hm_resolution_range, 1):
                     try:
-                        points_process1[points_dur] = points_duration[points_dur][id_video+21]  # noqa: E501
+                        points_process1[points_dur] = points_duration[points_dur][id_video+21]
                     except KeyError:
                         break
                 for points_dur in range(0, hm_resolution_range, 1):
                     try:
-                        points_process2[points_dur] = points_duration[points_dur][id_video+42]  # noqa: E501
+                        points_process2[points_dur] = points_duration[points_dur][id_video+42]
                     except KeyError:
                         break
                 for points_dur in range(0, hm_resolution_range, 1):
                     try:
-                        points_process3[points_dur] = points_duration[points_dur][id_video+63]  # noqa: E501
+                        points_process3[points_dur] = points_duration[points_dur][id_video+63]
                     except KeyError:
                         break
                 analysis.create_animation(heroku_data,
@@ -390,107 +375,44 @@ if __name__ == '__main__':
                 #                           save_frames=True)
                 # # remove temp folder with frames
                 # shutil.rmtree(os.path.join(tr.settings.output_dir, 'frames'))
-            # todo: add comment with description
-            analysis.scatter_mult(heroku_data,
-                                  x=['video_0-x-0', 'video_1-x-0'],
-                                  y='video_0-y-0',
-                                  color='browser_major_version',
-                                  pretty_text=True,
-                                  save_file=True)
-            # Creating a for loop that makes an eye gazes/heatmap for every
-            # create animation for stimulus
-            # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],     # noqa: E501
-            #                       x=['avg_object', 'avg_person', 'avg_car'],
-            #                       y='avg_kp',
-            #                       trendline='ols',
-            #                       xaxis_title='Object count',
-            #                       yaxis_title='Mean keypresses (%)',
-            #                       marginal_y=None,
-            #                       marginal_x='rug',
-            #                       save_file=True)
-            # Create individual scatter plot for given video and participant.
-            analysis.scatter_et(heroku_data,
-                                x='video_0-x-0',
-                                y='video_0-y-0',
-                                t='video_0-t-0',
-                                pp='R51701252541887JF46247X',
-                                id_video='video_0',
-                                pretty_text=True,
-                                save_file=True)
-            # Create individual heatmap for given video and participant.
-            # analysis.heatmap(heroku_data,
-            #                     x='video_0-x-0',
-            #                     y='video_0-y-0',
-            #                     t='video_0-t-0',
-            #                     pp='R51701252541887JF46247X',
-            #                     id_video='video_0',
-            #                     pretty_text=True,self.event_discription
-            #                     save_file=True)
+                # Creating a for loop that makes an eye gazes/heatmap for every
+                # create animation for stimulus
+                # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],     # noqa: E501
+                #                       x=['avg_object', 'avg_person', 'avg_car'],
+                #                       y='avg_kp',
+                #                       trendline='ols',
+                #                       xaxis_title='Object count',
+                #                       yaxis_title='Mean keypresses (%)',
+                #                       marginal_y=None,
+                #                       marginal_x='rug',
+                #                       save_file=True)
+                # todo: add comment with description
+                analysis.scatter_mult(heroku_data,
+                                      x=['video_0-x-0', 'video_1-x-0'],
+                                      y='video_0-y-0',
+                                      color='browser_major_version',
+                                      pretty_text=True,
+                                      save_file=True)
+                # Create individual scatter plot for given video and participant.
+                analysis.scatter_et(heroku_data,
+                                    x='video_0-x-0',
+                                    y='video_0-y-0',
+                                    t='video_0-t-0',
+                                    pp='R51701252541887JF46247X',
+                                    id_video='video_0',
+                                    pretty_text=True,
+                                    save_file=True)
+                # Create individual heatmap for given video and participant.
+                # analysis.heatmap(heroku_data,
+                #                     x='video_0-x-0',
+                #                     y='video_0-y-0',
+                #                     t='video_0-t-0',
+                #                     pp='R51701252541887JF46247X',
+                #                     id_video='video_0',
+                #                     pretty_text=True,self.event_discription
+                #                     save_file=True)
         # stitch animations into 1 long videos
         analysis.create_animation_all_stimuli(num_stimuli)
-        # all keypresses with confidence interval
-        analysis.plot_kp(mapping, conf_interval=0.95)
-        # keypresses of an individual stimulus
-        analysis.plot_kp_video(mapping,
-                               pp='R51701270114366JF82237X',
-                               stimulus='video_0',
-                               conf_interval=0.95)
-        # keypresses of an individual stimulus for an individual pp
-        analysis.plot_kp_video(mapping,
-                               pp='R51701270114366JF82237X',
-                               stimulus='video_0',
-                               conf_interval=0.95)
-        # keypresses of all videos individually
-        analysis.plot_kp_videos(mapping)
-        # 1 var, all values
-        analysis.plot_kp_variable(mapping, 'ego_car',
-                                  [0, 1])
-        # 1 var, certain values
-        analysis.plot_kp_variable(mapping,
-                                  'target_car',
-                                  [0, 1])
-        analysis.plot_kp_variable(mapping,
-                                  'group',
-                                  [0, 1, 2, 3])
-        # TODO: make plot_video_data work
-        # plot of multiple combined AND variables
-        # analysis.plot_video_data(mapping, 'video_5',
-        #                          ['group', 'criticality'],
-        #                          yaxis_title='Type of ego car and number of pedestrians',  # noqa: E501--`
-        #                          conf_interval=0.95)
-        # analysis.plot_kp_variables_and(mapping,
-        #                                plot_names=['traffic rules',
-        #                                            'no traffic rules'],
-        #                                variables_list=[[{'variable': 'traffic_rules',  # noqa: E501
-        #                                                  'value': 'stop_sign'},        # noqa: E501
-        #                                                 {'variable': 'traffic_rules',  # noqa: E501
-        #                                                  'value': 'traffic_lights'},   # noqa: E501
-        #                                                 {'variable': 'traffic_rules',  # noqa: E501
-        #                                                  'value': 'ped_crossing'}],    # noqa: E501
-        #                                                [{'variable': 'traffic_rules',  # noqa: E501
-        #                                                  'value': 'none'}]])
-        # # plot of separate variables
-        # analysis.plot_kp_variables_or(mapping,
-        #                               variables=[{'variable': 'cross_look',
-        #                                           'value': 'Crossing_Looking'},     # noqa: E501
-        #                                          {'variable': 'cross_look',
-        #                                           'value': 'notCrossing_Looking'},  # noqa: E501
-        #                                          {'variable': 'cross_look',
-        #                                           'value': 'Crossing_notLooking'},  # noqa: E501
-        #                                          {'variable': 'cross_look',
-        #                                           'value': 'nonspecific'}])
-        # post-trial questions
-        # analysis.bar(heroku_data,
-        #              y=['video_0-slider-0-0', 'video_0-slider-1-0', 'video_0-slider-2-0'],  # noqa: E501
-        #              pretty_text=True,
-        #              save_file=True)
-
-        analysis.scatter_mult(heroku_data,
-                              x=['video_0-x-0', 'video_1-x-0'],
-                              y='video_0-y-0',
-                              color='browser_major_version',
-                              pretty_text=True,
-                              save_file=True)
 
         figures = [manager.canvas.figure
                    for manager in

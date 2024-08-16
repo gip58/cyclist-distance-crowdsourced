@@ -219,7 +219,7 @@ class Heroku:
                         et_data = data_cell['webgazer_data']
                         logger.debug('Found {} points in eye tracking data.',
                                      len(et_data))
-                        # extract x,y,t Values
+                        # extract x,y,t values
                         x = [point['x'] for point in et_data]
                         y = [point['y'] for point in et_data]
                         t = [point['t'] for point in et_data]
@@ -252,8 +252,7 @@ class Heroku:
                             continue
                         # record given answers
                         responses = data_cell['response']
-                        logger.debug('Found responses to questions {}.',
-                                     responses)
+                        logger.debug('Found responses to questions {}.', responses)
                         # unpack questions and answers
                         questions = []
                         answers = []
