@@ -134,8 +134,7 @@ if __name__ == '__main__':
                 # extract timestamps of events
                 vert_lines = list(map(int, re.findall(r'\d+', mapping.loc['video_' + str(stim), 'events'])))
                 # convert to s
-                x: Enum
-                vert_lines = [x / 1000 for x in vert_lines]
+                vert_lines = [x / 1000 for x in vert_lines]  # type: ignore
                 # extract annotations
                 vert_line_annotations = mapping.loc['video_' + str(stim), 'events_description'].split(',')
                 # remove [
@@ -163,8 +162,7 @@ if __name__ == '__main__':
                 # extract timestamps of events
                 vert_lines = list(map(int, re.findall(r'\d+', df.loc['video_' + str(stim), 'events'])))
                 # convert to s
-                x: Enum
-                vert_lines = [x / 1000 for x in vert_lines]
+                vert_lines = [x / 1000 for x in vert_lines]  # type: ignore
                 # extract annotations
                 vert_line_annotations = df.loc['video_' + str(stim), 'events_description'].split(',')
                 # remove [
