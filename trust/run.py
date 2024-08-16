@@ -6,6 +6,9 @@ import os
 import trust as tr
 import re
 from statistics import mean
+from typing import Iterable, cast
+from enum import Enum
+
 
 tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
@@ -132,7 +135,7 @@ if __name__ == '__main__':
                 # extract timestamps of events
                 vert_lines = list(map(int, re.findall(r'\d+', mapping.loc['video_' + str(stim), 'events'])))
                 # convert to s
-                vert_lines = [int(x) / 1000 for x in vert_lines]
+                vert_lines = [x / 1000 for x in cast(Iterable[Enum], vert_lines)]
                 # extract annotations
                 vert_line_annotations = mapping.loc['video_' + str(stim), 'events_description'].split(',')
                 # remove [
@@ -160,7 +163,7 @@ if __name__ == '__main__':
                 # extract timestamps of events
                 vert_lines = list(map(int, re.findall(r'\d+', df.loc['video_' + str(stim), 'events'])))
                 # convert to s
-                vert_lines = [int(x) / 1000 for x in vert_lines]
+                vert_lines = [int(x) / 1000 for x in cast(Iterable[Enum], vert_lines)]
                 # extract annotations
                 vert_line_annotations = df.loc['video_' + str(stim), 'events_description'].split(',')
                 # remove [
@@ -178,13 +181,12 @@ if __name__ == '__main__':
                                         vert_lines_annotations_font_size=12,
                                         vert_lines_annotations_colour='red',
                                         name_file='kp_videos_'+','.join([str(i) for i in ids]))
-            # keypresses of an individual stimulus for an individual pp
-            # TODO: choose better example
-            analysis.plot_kp_video_pp(mapping,
-                                      heroku_data,
-                                      pp='R51701197342646JF16777X',
-                                      stimulus='video_2',
-                                      conf_interval=0.95)
+            # # keypresses of an individual stimulus for an individual pp
+            # analysis.plot_kp_video_pp(mapping,
+            #                           heroku_data,
+            #                           pp='R51701197342646JF16777X',
+            #                           stimulus='video_2',
+            #                           conf_interval=0.95)
             # keypresses of all videos individually
             analysis.plot_kp_videos(mapping)
             # keypress based on the type of ego car
