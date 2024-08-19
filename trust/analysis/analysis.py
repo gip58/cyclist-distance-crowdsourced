@@ -68,8 +68,7 @@ class Analysis:
         if not os.path.exists(path):
             os.makedirs(path)
         # video file in the folder with stimuli
-        cap = cv2.VideoCapture(os.path.join(tr.common.get_configs('path_stimuli'),
-                                            'video_' + str(id_video) + '.mp4'))
+        cap = cv2.VideoCapture(os.path.join(tr.common.get_configs('path_stimuli'), 'video_' + str(id_video) + '.mp4'))
         # timestamp
         t = mapping.loc['video_' + str(id_video)][t]
         self.time = int(t)
@@ -86,11 +85,8 @@ class Analysis:
             cap.set(cv2.CAP_PROP_POS_FRAMES, round(fps * k/1000))
             ret, frame = cap.read()
             if ret:
-                filename = os.path.join(path,
-                                        'frame_' + str([round(k/hm_resolution_int)]) + '.jpg')
-                cv2.imwrite(filename,
-                            frame,
-                            [cv2.IMWRITE_JPEG_QUALITY, 20])
+                filename = os.path.join(path, 'frame_' + str([round(k/hm_resolution_int)]) + '.jpg')
+                cv2.imwrite(filename, frame, [cv2.IMWRITE_JPEG_QUALITY, 20])
 
     def create_histogram(self,
                          image,
@@ -106,8 +102,7 @@ class Analysis:
         """
         # check if data is present
         if not points:
-            logger.error('Not enough data. Histogram was not created for {}.',
-                         image)
+            logger.error('Not enough data. Histogram was not created for {}.', image)
             return
         # get dimensions of stimulus
         width = tr.common.get_configs('stimulus_width')
@@ -149,8 +144,7 @@ class Analysis:
         # todo: remove datapoints in corners in heatmaps
         # check if data is present
         if not points:
-            logger.error('Not enough data. Heatmap was not created for {}.',
-                         image)
+            logger.error('Not enough data. Heatmap was not created for {}.', image)
             return
         # get dimensions of base image
         width = tr.common.get_configs('stimulus_width')
@@ -169,12 +163,10 @@ class Analysis:
         # compute data for the heatmap
         try:
             k = gaussian_kde(np.vstack([x, y]))
-            xi, yi = np.mgrid[x.min():x.max():x.size**0.5*1j,
-                              y.min():y.max():y.size**0.5*1j]
+            xi, yi = np.mgrid[x.min():x.max():x.size**0.5*1j, y.min():y.max():y.size**0.5*1j]
             zi = k(np.vstack([xi.flatten(), yi.flatten()]))
         except (np.linalg.LinAlgError, np.linalg.LinAlgError, ValueError):
-            logger.error('Not enough data. Heatmap was not created for {}.',
-                         image)
+            logger.error('Not enough data. Heatmap was not created for {}.', image)
             return
         # create figure object with given dpi and dimensions
         dpi = 150
@@ -183,30 +175,23 @@ class Analysis:
         suffix_file = ''  # suffix to add to saved image
         if type_heatmap == 'contourf':
             try:
-                g = plt.contourf(xi, yi, zi.reshape(xi.shape),
-                                 alpha=0.5)
+                g = plt.contourf(xi, yi, zi.reshape(xi.shape), alpha=0.5)
                 plt.margins(0, 0)
                 plt.gca().xaxis.set_major_locator(plt.NullLocator())
                 plt.gca().yaxis.set_major_locator(plt.NullLocator())
             except TypeError:
-                logger.error('Not enough data. Heatmap was not created for '
-                             + '{}.',
-                             image)
+                logger.error('Not enough data. Heatmap was not created for {}.', image)
                 plt.close(fig)  # clear figure from memory
                 return
             suffix_file = '_contourf.jpg'
         elif type_heatmap == 'pcolormesh':
             try:
-                g = plt.pcolormesh(xi, yi, zi.reshape(xi.shape),
-                                   shading='auto',
-                                   alpha=0.5)
+                g = plt.pcolormesh(xi, yi, zi.reshape(xi.shape), shading='auto', alpha=0.5)
                 plt.margins(0, 0)
                 plt.gca().xaxis.set_major_locator(plt.NullLocator())
                 plt.gca().yaxis.set_major_locator(plt.NullLocator())
             except TypeError:
-                logger.error('Not enough data. Heatmap was not created for '
-                             + '{}.',
-                             image)
+                logger.error('Not enough data. Heatmap was not created for {}.', image)
                 plt.close(fig)  # clear figure from memory
                 return
             suffix_file = '_pcolormesh.jpg'
@@ -218,9 +203,7 @@ class Analysis:
                                 fill=True,
                                 cmap="RdBu_r")
             except TypeError:
-                logger.error('Not enough data. Heatmap was not created for '
-                             + '{}.',
-                             image)
+                logger.error('Not enough data. Heatmap was not created for {}.', image)
                 fig.clf()  # clear figure from memory
                 return
             suffix_file = '_kdeplot.jpg'
@@ -293,8 +276,7 @@ class Analysis:
                                         figsize=(20, 20),
                                         gridspec_kw=dict(height_ratios=[1, 1, 3],
                                                          hspace=0.2))
-        self.fig.suptitle(' Keypresses and eye-tracking heatmap video_' +
-                          str(self.id_video), fontsize=30)
+        self.fig.suptitle(' Keypresses and eye-tracking heatmap video_' + str(self.id_video), fontsize=30)
         # Deterin time and data for kp plot
         self.times = np.array(range(self.res,
                               mapping['video_length'].max() + self.res,
@@ -317,7 +299,6 @@ class Analysis:
         self.aoi_y = self.aoi_y.split(", ")
         self.aoi_t = aoi.loc['video_' + str(id_video)]['t']
         self.aoi_t = self.aoi_t.split(", ")
-
         # for comparison between stimulus
         # stim 21 - 41
         self.kp_data1 = mapping.loc['video_' + str(id_video+21)]['kp']
@@ -329,8 +310,7 @@ class Analysis:
         self.kp_data3 = mapping.loc['video_' + str(id_video+63)]['kp']
         self.points3 = points3
         # Event discription for in the animation plots
-        self.event_discription = re.split(',', mapping.loc['video_' +
-                                          str(id_video)]['events_description'])
+        self.event_discription = re.split(',', mapping.loc['video_' + str(id_video)]['events_description'])
         # Animate frames subplots into one animation using animate function
         anim = animation.FuncAnimation(self.fig,
                                        self.animate,
@@ -339,15 +319,13 @@ class Analysis:
                                        repeat=False)
         # save image
         if save_anim:
-            self.save_anim(image, anim, self.folder,
-                           '_video_' + str(id_video) + '_animation.mp4')
+            self.save_anim(image, anim, self.folder, '_video_' + str(id_video) + '_animation.mp4')
 
     def create_animation_all_stimuli(self, num_stimuli):
         """
         Create long video with all animations.
         """
-        logger.info('Creating long video with all animations for {} stimuli.',
-                    num_stimuli)
+        logger.info('Creating long video with all animations for {} stimuli.', num_stimuli)
         # create path
         path = tr.settings.output_dir + self.folder
         if not os.path.exists(path):
@@ -552,7 +530,7 @@ class Analysis:
         # plt.text(0.75,
         #          0.98,
         #          'id_video=' + str(self.id_video) +
-        #          ' time (ms)=' + str(round(durations[i]*int(self.t)/self.hm_resolution)), # noqa: E501
+        #          ' time (ms)=' + str(round(durations[i]*int(self.t)/self.hm_resolution)),
         #          transform=plt.gca().transAxes,
         #          fontsize=12,
         #          verticalalignment='top',
