@@ -68,8 +68,8 @@ class Analysis:
         if not os.path.exists(path):
             os.makedirs(path)
         # video file in the folder with stimuli
-        cap = cv2.VideoCapture(os.path.join(tr.common.get_configs('path_stimuli'),  # noqa: E501
-                                            'video_' + str(id_video) + '.mp4'))  # noqa: E501
+        cap = cv2.VideoCapture(os.path.join(tr.common.get_configs('path_stimuli'),
+                                            'video_' + str(id_video) + '.mp4'))
         # timestamp
         t = mapping.loc['video_' + str(id_video)][t]
         self.time = int(t)
@@ -87,7 +87,7 @@ class Analysis:
             ret, frame = cap.read()
             if ret:
                 filename = os.path.join(path,
-                                        'frame_' + str([round(k/hm_resolution_int)]) + '.jpg')  # noqa: E501
+                                        'frame_' + str([round(k/hm_resolution_int)]) + '.jpg')
                 cv2.imwrite(filename,
                             frame,
                             [cv2.IMWRITE_JPEG_QUALITY, 20])
@@ -274,7 +274,7 @@ class Analysis:
 
         """
         self.image = image
-        self.hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
+        self.hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))
         self.id_video = id_video
         # calc amounts of steps from duration
         dur = df['video_'+str(id_video)+'-dur-0'].tolist()
@@ -291,7 +291,7 @@ class Analysis:
         self.fig, self.g = plt.subplots(nrows=3,
                                         ncols=1,
                                         figsize=(20, 20),
-                                        gridspec_kw=dict(height_ratios=[1, 1, 3],  # noqa: E501
+                                        gridspec_kw=dict(height_ratios=[1, 1, 3],
                                                          hspace=0.2))
         self.fig.suptitle(' Keypresses and eye-tracking heatmap video_' +
                           str(self.id_video), fontsize=30)
@@ -432,9 +432,9 @@ class Analysis:
             self.g[1].tick_params(axis='x', labelrotation=90)
             self.g[1].legend()
         # Subplot 2 AOI
-        self.g[1].set_title('Number of eye gazes in area of interest', fontsize=25)  # noqa: E501
+        self.g[1].set_title('Number of eye gazes in area of interest', fontsize=25)
         self.g[1].set_xlabel('Time (s)', fontsize=10)
-        self.g[1].set_ylabel('Number of gazes in Area of Interest', fontsize=10)  # noqa: E501
+        self.g[1].set_ylabel('Number of gazes in Area of Interest', fontsize=10)
         self.g[1].set_xlim(0, 50)
         self.g[1].set_ylim(0, 400)
         # AOI data
@@ -524,7 +524,7 @@ class Analysis:
                                 fill=True,
                                 cmap='RdBu_r')
         self.g[2].invert_yaxis()
-        self.g[2].plot([min_x, max_x, max_x, min_x, min_x], [min_y, min_y, max_y, max_y, min_y], color="red")  # noqa: E501
+        self.g[2].plot([min_x, max_x, max_x, min_x, min_x], [min_y, min_y, max_y, max_y, min_y], color="red")
 
         # Scatter plot data
         # all pp
@@ -1094,7 +1094,7 @@ class Analysis:
                          animation_frame=t,
                          marginal_x='violin',
                          marginal_y='violin',
-                         title='scatter_' + ' ' + id_video + ' ' + 'participant' + ' ' + pp)  # noqa: E501
+                         title='scatter_' + ' ' + id_video + ' ' + 'participant' + ' ' + pp)
 
         # update layout
         fig.update_layout(template=self.template,
@@ -1193,29 +1193,29 @@ class Analysis:
         fig.update_layout(template=self.template,
                           height=height,
                           width=width,
-                          title='heatmap_scatter_animation'+' ' + id_video + ' ' + 'participant'+' '+pp,  # noqa: E501
+                          title='heatmap_scatter_animation'+' ' + id_video + ' ' + 'participant'+' '+pp,
                           xaxis_range=[0, 2*width],
                           yaxis_range=[0, 2*height],
                           updatemenus=[dict(type='buttons',
                                             buttons=[dict(label='Play',
                                                           method='animate',
                                                           args=[None,
-                                                                dict(fromcurrent=True,  # noqa: E501
-                                                                     transition={'duration': 10},  # noqa: E501
-                                                                     frame=dict(redraw=True,  # noqa: E501
-                                                                                duration=100))]),  # noqa: E501
+                                                                dict(fromcurrent=True,
+                                                                     transition={'duration': 10},
+                                                                     frame=dict(redraw=True,
+                                                                                duration=100))]),
                                                      dict(label='Pause',
                                                           method='animate',
                                                           args=[[None],
-                                                                dict(fromcurrent=True,  # noqa: E501
-                                                                     mode='immediate',  # noqa: E501
-                                                                     transition={'duration': 10},  # noqa: E501
-                                                                     frame=dict(redraw=True,  # noqa: E501
-                                                                                duration=100))])])])  # noqa: E501
+                                                                dict(fromcurrent=True,
+                                                                     mode='immediate',
+                                                                     transition={'duration': 10},
+                                                                     frame=dict(redraw=True,
+                                                                                duration=100))])])])
         # save file
         if save_file:
             self.save_plotly(fig,
-                             'heatmap_animation' + id_video+'_participant_' + pp,  # noqa: E501
+                             'heatmap_animation' + id_video+'_participant_' + pp,
                              self.folder)
         # open it in localhost instead
         else:
@@ -1336,10 +1336,10 @@ class Analysis:
             fig.show()
 
     def plot_kp(self, df, conf_interval=None, xaxis_title='Time (s)',
-                yaxis_title='Percentage of trials with response key pressed',
-                xaxis_range=None, yaxis_range=None, save_file=True):
+                yaxis_title='Percentage of trials with response key pressed', xaxis_range=None, yaxis_range=None,
+                save_file=True, fig_save_width=1320, fig_save_height=680):
         """Plot keypress data.
-
+        
         Args:
             df (dataframe): dataframe with keypress data.
             conf_interval (float, optional): show confidence interval defined
@@ -1349,6 +1349,8 @@ class Analysis:
             xaxis_range (list, optional): range of x axis in format [min, max].
             yaxis_range (list, optional): range of y axis in format [min, max].
             save_file (bool, optional): flag for saving an html file with plot.
+            fig_save_width (int, optional): width of figures to be saved.
+            fig_save_height (int, optional): height of figures to be saved.
         """
         logger.info('Creating visualisations of keypresses for all data.')
         # calculate times
@@ -1372,8 +1374,7 @@ class Analysis:
         # show confidence interval
         if conf_interval:
             # calculate condidence interval
-            (y_lower, y_upper) = self.get_conf_interval_bounds(kp_data,
-                                                               conf_interval)
+            (y_lower, y_upper) = self.get_conf_interval_bounds(kp_data, conf_interval)
             # plot interval
             fig.add_trace(go.Scatter(name='Upper Bound',
                                      x=times,
@@ -1402,7 +1403,7 @@ class Analysis:
                           yaxis_range=yaxis_range)
         # save file
         if save_file:
-            self.save_plotly(fig, 'kp', self.folder)
+            self.save_plotly(fig, 'kp', self.folder, width=fig_save_width, height=fig_save_height)
         # open it in localhost instead
         else:
             fig.show()
@@ -1413,9 +1414,9 @@ class Analysis:
                       vert_lines_annotations_position='top right', vert_lines_annotations_font_size=20,
                       vert_lines_annotations_colour='blue', xaxis_title='Time (s)',
                       yaxis_title='Percentage of trials with response key pressed', xaxis_range=None, yaxis_range=None,
-                      save_file=True):
+                      save_file=True, fig_save_width=1320, fig_save_height=680):
         """Plot keypresses with multiple variables as a filter.
-
+        
         Args:
             df (dataframe): dataframe with keypress data.
             stimulus (str): name of stimulus.
@@ -1434,7 +1435,9 @@ class Analysis:
             xaxis_range (list, optional): range of x axis in format [min, max].
             yaxis_range (list, optional): range of y axis in format [min, max].
             save_file (bool, optional): flag for saving an html file with plot.
-
+            fig_save_width (int, optional): width of figures to be saved.
+            fig_save_height (int, optional): height of figures to be saved.
+        
         Deleted Parameters:
             annotation_position (str, optional): Description
         """
@@ -1493,7 +1496,7 @@ class Analysis:
                           yaxis_range=yaxis_range)
         # save file
         if save_file:
-            self.save_plotly(fig, 'kp_' + stimulus, self.folder)
+            self.save_plotly(fig, 'kp_' + stimulus, self.folder, width=fig_save_width, height=fig_save_height)
         # open it in localhost instead
         else:
             fig.show()
@@ -1502,26 +1505,29 @@ class Analysis:
                          conf_interval=None, trendline=None,
                          xaxis_title='Time (s)',
                          yaxis_title='response key pressed',
-                         xaxis_range=None, yaxis_range=None, save_file=True):
+                         xaxis_range=None, yaxis_range=None, save_file=True,fig_save_width=1320, fig_save_height=680):
         """Plot keypresses data of one stimulus for 1 participant.
-
+        
         Args:
-            df (dataframe): dataframe with keypress data.
+            df (dataframe): dataframe with simulus data.
+            dt (dataframe): dataframe with keypress data.
             stimulus (str): name of stimulus.
             pp (str): ID of participant.
-            conf_interval (float, optional): show confidence interval defined
-                                             by argument.
+            conf_interval (float, optional): show confidence interval defined by argument.
+            trendline (None, optional): Description
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
             yaxis_range (list, optional): range of y axis in format [min, max].
             save_file (bool, optional): flag for saving an html file with plot.
+            fig_save_width (int, optional): width of figures to be saved.
+            fig_save_height (int, optional): height of figures to be saved.
         """
         # todo: implement for 1 pp
         # extract video length
         video_len = df.loc[stimulus]['video_length']
         # calculate times
-        times = np.array(range(self.res, video_len + self.res, self.res)) / 1000  # noqa: E501
+        times = np.array(range(self.res, video_len + self.res, self.res)) / 1000
         # keypress data
         kp_data_time = dt.loc[pp]['video_10-rt-0']
         kp_ar = np.array(kp_data_time)
@@ -1532,7 +1538,7 @@ class Analysis:
         fig = px.line(x=kp_data_time,
                       y=kp_data,
                       # animation_frame=kp_data_time,
-                      title='Keypresses for stimulus ' + stimulus + ' for participant ' + pp)  # noqa: E501
+                      title='Keypresses for stimulus ' + stimulus + ' for participant ' + pp)
 
         # # update layout
         fig.update_layout(template=self.template,
@@ -1542,7 +1548,7 @@ class Analysis:
                           yaxis_range=yaxis_range)
         # save file
         if save_file:
-            self.save_plotly(fig, 'kp_' + stimulus, self.folder)
+            self.save_plotly(fig, 'kp_' + stimulus, self.folder, width=fig_save_width, height=fig_save_height)
         # open it in localhost instead
         else:
             fig.show()
@@ -1556,7 +1562,7 @@ class Analysis:
         # extract video length
         video_len = df.loc[stimulus]['video_length']
         # calculate times
-        times = np.array(range(self.res, video_len + self.res, self.res)) / 1000  # noqa: E501
+        times = np.array(range(self.res, video_len + self.res, self.res)) / 1000
         # keypress data
         kp_data = df.loc[stimulus]['kp']
         # plot keypresses
@@ -1575,17 +1581,17 @@ class Analysis:
                                             buttons=[dict(label='Play',
                                                           method='animate',
                                                           args=[None,
-                                                                dict(fromcurrent=True,  # noqa: E501
-                                                                     transition={'duration': 10},  # noqa: E501
-                                                                     frame=dict(redraw=True,  # noqa: E501
-                                                                                duration=100))]),  # noqa: E501
+                                                                dict(fromcurrent=True,
+                                                                     transition={'duration': 10},
+                                                                     frame=dict(redraw=True,
+                                                                                duration=100))]),
                                                      dict(label='Pause',
                                                           method='animate',
                                                           args=[[None],
-                                                                dict(fromcurrent=True,  # noqa: E501
-                                                                     mode='immediate',  # noqa: E501
-                                                                     transition={'duration': 10},  # noqa: E501
-                                                                     frame=dict(redraw=True, duration=100))])])])  # noqa: E501
+                                                                dict(fromcurrent=True,
+                                                                     mode='immediate',
+                                                                     transition={'duration': 10},
+                                                                     frame=dict(redraw=True, duration=100))])])])
         if conf_interval:
             # calculate condidence interval
             (y_lower, y_upper) = self.get_conf_interval_bounds(kp_data,
@@ -1685,9 +1691,10 @@ class Analysis:
                        vert_lines_annotations_position='top right', vert_lines_annotations_font_size=20,
                        vert_lines_annotations_colour='blue', xaxis_title='Time (s)',
                        yaxis_title='Percentage of trials with response key pressed',
-                       xaxis_range=None, yaxis_range=None, save_file=True, name_file=None):
+                       xaxis_range=None, yaxis_range=None, save_file=True, fig_save_width=1320, fig_save_height=680,
+                       show_menu=False, name_file=None):
         """Plot keypresses with multiple variables as a filter.
-
+        
         Args:
             df (dataframe): dataframe with keypress data.
             vert_lines (list, optional): list of events to draw formatted as values on x axis.
@@ -1703,6 +1710,9 @@ class Analysis:
             xaxis_range (list, optional): range of x axis in format [min, max].
             yaxis_range (list, optional): range of y axis in format [min, max].
             save_file (bool, optional): flag for saving an html file with plot.
+            fig_save_width (int, optional): width of figures to be saved.
+            fig_save_height (int, optional): height of figures to be saved.
+            show_menu (bool, optional): show menu on top left with variables to select for plotting.
             name_file (str, optional): name of file to save.
         """
         # calculate times
@@ -1736,20 +1746,22 @@ class Analysis:
                              method='update',
                              args=[{'visible': [True] * df.shape[0]},
                                    {'title': 'Keypresses for individual stimuli', 'showlegend': True}])])
-        # counter for traversing through stimuli
-        counter_rows = 0
-        # go over extracted videos
-        for index, row in df.iterrows():
-            visibility = [[counter_rows == j] for j in range(df.shape[0])]
-            visibility = [item for sublist in visibility for item in sublist]
-            button = dict(label=os.path.splitext(index)[0],
-                          method='update',
-                          args=[{'visible': visibility},
-                                {'title': os.path.splitext(index)[0]}])
-            buttons.append(button)
-            counter_rows = counter_rows + 1
-        updatemenus = [dict(x=-0.15, buttons=buttons, showactive=True)]
-        fig['layout']['updatemenus'] = updatemenus
+        # show menu with selection of variable to plot
+        if show_menu:
+            # counter for traversing through stimuli
+            counter_rows = 0
+            # go over extracted videos
+            for index, row in df.iterrows():
+                visibility = [[counter_rows == j] for j in range(df.shape[0])]
+                visibility = [item for sublist in visibility for item in sublist]
+                button = dict(label=os.path.splitext(index)[0],
+                              method='update',
+                              args=[{'visible': visibility},
+                                    {'title': os.path.splitext(index)[0]}])
+                buttons.append(button)
+                counter_rows = counter_rows + 1
+            updatemenus = [dict(x=-0.15, buttons=buttons, showactive=True)]
+            fig['layout']['updatemenus'] = updatemenus
         # update layout
         fig['layout']['title'] = 'Keypresses for individual stimuli'
         # update layout
@@ -1761,9 +1773,9 @@ class Analysis:
         # save file
         if save_file:
             if not name_file:
-                self.save_plotly(fig, 'kp_videos', self.folder)
+                self.save_plotly(fig, 'kp_videos', self.folder, width=fig_save_width, height=fig_save_height)
             else:
-                self.save_plotly(fig, name_file, self.folder)
+                self.save_plotly(fig, name_file, self.folder, width=fig_save_width, height=fig_save_height)
         # open it in localhost instead
         else:
             fig.show()
@@ -1775,9 +1787,10 @@ class Analysis:
                               yaxis_kp_title='Percentage of trials with response key pressed',
                               xaxis_kp_range=None, yaxis_kp_range=None, stacked=False, pretty_text=False,
                               orientation='v', xaxis_slider_title='Stimulus', yaxis_slider_show=False,
-                              yaxis_slider_title=None, show_text_labels=False, name_file=None, save_file=True):
+                              yaxis_slider_title=None, show_text_labels=False, name_file=None, save_file=True,
+                              fig_save_width=1320, fig_save_height=680):
         """Plot keypresses with multiple variables as a filter and slider questions for the stimuli.
-
+        
         Args:
             df (dataframe): dataframe with stimuli data.
             y (list): column names of dataframe to plot.
@@ -1803,6 +1816,8 @@ class Analysis:
             show_text_labels (bool, optional): output automatically positioned text labels.
             name_file (str, optional): name of file to save.
             save_file (bool, optional): flag for saving an html file with plot.
+            fig_save_width (int, optional): width of figures to be saved.
+            fig_save_height (int, optional): height of figures to be saved.
         """
         logger.info('Creating figure keypress+slider for {}.', df.index.tolist())
         # calculate times
@@ -1879,27 +1894,25 @@ class Analysis:
         # stacked bar chart
         if stacked:
             fig.update_layout(barmode='stack')
-        # legeng
-        fig.update_layout(legend=dict(
-                                x=0.7,
-                                y=0.95))
+        # legend
+        fig.update_layout(legend=dict(x=0.7, y=0.95))
         # save file
         if save_file:
             if not name_file:
-                self.save_plotly(fig, 'kp_videos_sliders', self.folder)
+                self.save_plotly(fig, 'kp_videos_sliders', self.folder, remove_margins=True, width=fig_save_width,
+                                 height=fig_save_height)
             else:
-                self.save_plotly(fig, name_file, self.folder)
+                self.save_plotly(fig, name_file, self.folder, remove_margins=True, width=fig_save_width,
+                                 height=fig_save_height)
         # open it in localhost instead
         else:
             fig.show()
 
-    def plot_kp_variable(self, df, variable, values=None,
-                         xaxis_title='Time (s)',
-                         yaxis_title='Percentage of trials with ' +
-                                     'response key pressed',
-                         xaxis_range=None, yaxis_range=None, save_file=True):
+    def plot_kp_variable(self, df, variable, values=None, xaxis_title='Time (s)',
+                         yaxis_title='Percentage of trials with response key pressed', xaxis_range=None,
+                         yaxis_range=None, show_menu=False, save_file=True, fig_save_width=1320, fig_save_height=680):
         """Plot figures of values of a certain variable.
-
+        
         Args:
             df (dataframe): dataframe with keypress data.
             variable (str): variable to plot.
@@ -1909,7 +1922,10 @@ class Analysis:
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
             yaxis_range (list, optional): range of y axis in format [min, max].
+            show_menu (bool, optional): show menu on top left with variables to select for plotting.
             save_file (bool, optional): flag for saving an html file with plot.
+            fig_save_width (int, optional): width of figures to be saved.
+            fig_save_height (int, optional): height of figures to be saved.
         """
         logger.info('Creating visualisation of keypresses based on values {} of variable {} .', values, variable)
         # calculate times
@@ -1945,7 +1961,7 @@ class Analysis:
                                      shared_xaxes=True)
         # plot each variable in data
         for data in extracted_data:
-            fig.add_trace(go.Scatter(y=data['data'],  # noqa: E501
+            fig.add_trace(go.Scatter(y=data['data'],
                                      mode='lines',
                                      x=times,
                                      name=str(data['value'])),
@@ -1957,20 +1973,22 @@ class Analysis:
                              args=[{'visible': [True] * len(values)},
                                    {'title': 'All',
                                     'showlegend': True}])])
-        # counter for traversing through stimuli
-        counter_rows = 0
-        for value in values:
-            visibility = [[counter_rows == j] for j in range(len(values))]
-            visibility = [item for sublist in visibility for item in sublist]  # noqa: E501
-            button = dict(label=str(value),
-                          method='update',
-                          args=[{'visible': visibility},
-                                {'title': str(value)}])
-            buttons.append(button)
-            counter_rows = counter_rows + 1
-        # add menu
-        updatemenus = [dict(x=-0.15, buttons=buttons, showactive=True)]
-        fig['layout']['updatemenus'] = updatemenus
+        # show menu with selection of variable to plot
+        if show_menu:
+            # counter for traversing through stimuli
+            counter_rows = 0
+            for value in values:
+                visibility = [[counter_rows == j] for j in range(len(values))]
+                visibility = [item for sublist in visibility for item in sublist]
+                button = dict(label=str(value),
+                              method='update',
+                              args=[{'visible': visibility},
+                                    {'title': str(value)}])
+                buttons.append(button)
+                counter_rows = counter_rows + 1
+            # add menu
+            updatemenus = [dict(x=-0.15, buttons=buttons, showactive=True)]
+            fig['layout']['updatemenus'] = updatemenus
         # update layout
         fig['layout']['title'] = 'Keypresses for ' + variable
         # update layout
@@ -1984,18 +2002,20 @@ class Analysis:
             self.save_plotly(fig,
                              'kp_' + variable + '-' +
                              '-'.join(str(val) for val in values),
-                             self.folder)
+                             self.folder,
+                             remove_margins=True,
+                             width=fig_save_width,
+                             height=fig_save_height)
         # open it in localhost instead
         else:
             fig.show()
 
     def plot_kp_variables_or(self, df, variables, xaxis_title='Time (s)',
-                             yaxis_title='Percentage of trials with ' +
-                                         'response key pressed',
-                             xaxis_range=None, yaxis_range=None,
-                             save_file=True):
+                             yaxis_title='Percentage of trials with response key pressed',
+                             xaxis_range=None, yaxis_range=None, show_menu=False,
+                             save_file=True, fig_save_width=1320, fig_save_height=680):
         """Separate plots of keypresses with multiple variables as a filter.
-
+        
         Args:
             df (dataframe): dataframe with keypress data.
             variables (list): variables to plot.
@@ -2003,17 +2023,18 @@ class Analysis:
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
             yaxis_range (list, optional): range of y axis in format [min, max].
+            show_menu (bool, optional): show menu on top left with variables to select for plotting.
             save_file (bool, optional): flag for saving an html file with plot.
+            fig_save_width (int, optional): width of figures to be saved.
+            fig_save_height (int, optional): height of figures to be saved.
         """
-        logger.info('Creating visualisation of keypresses based on ' +
-                    'variables {} with OR filter.', variables)
+        logger.info('Creating visualisation of keypresses based on variables {} with OR filter.', variables)
         # build string with variables
         variables_str = ''
         for variable in variables:
-            variables_str = variables_str + '_' + str(variable['variable']) +\
-                '-' + str(variable['value'])
+            variables_str = variables_str + '_' + str(variable['variable']) + '-' + str(variable['value'])
         # calculate times
-        times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000  # noqa: E501
+        times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000
         # extract data for values
         extracted_data = []
         for var in variables:
@@ -2025,45 +2046,44 @@ class Analysis:
             else:
                 df_f = df[var['variable'].isnull()]
             # go over extracted videos
-            for index, row in df_f.iterrows():  # noqa: E501
+            for index, row in df_f.iterrows():
                 kp_data = kp_data + np.array(row['kp'])
             # divide sums of values over number of rows that qualify
             if df_f.shape[0]:
                 kp_data = kp_data / df_f.shape[0]
-            extracted_data.append({'value': str(var['variable']) + '-' + str(var['value']),  # noqa: E501
-                                   'data': kp_data})
+            extracted_data.append({'value': str(var['variable']) + '-' + str(var['value']), 'data': kp_data})
         # plotly figure
-        fig = subplots.make_subplots(rows=1,
-                                     cols=1,
-                                     shared_xaxes=True)
+        fig = subplots.make_subplots(rows=1, cols=1, shared_xaxes=True)
         # plot each variable in data
         for data in extracted_data:
-            fig.add_trace(go.Scatter(y=data['data'],  # noqa: E501
+            fig.add_trace(go.Scatter(y=data['data'],
                                      mode='lines',
                                      x=times,
-                                     name=data['value']),  # noqa: E501
+                                     name=data['value']),
                           row=1,
                           col=1)
-        # create tabs
-        buttons = list([dict(label='All',
-                             method='update',
-                             args=[{'visible': [True] * len(variables)},
-                                   {'title': 'All',
-                                    'showlegend': True}])])
-        # counter for traversing through stimuli
-        counter_rows = 0
-        for data in extracted_data:
-            visibility = [[counter_rows == j] for j in range(len(variables))]
-            visibility = [item for sublist in visibility for item in sublist]
-            button = dict(label=data['value'],
-                          method='update',
-                          args=[{'visible': visibility},
-                                {'title': data['value']}])  # noqa: E501
-            buttons.append(button)
-            counter_rows = counter_rows + 1
-        # add menu
-        updatemenus = [dict(x=-0.15, buttons=buttons, showactive=True)]
-        fig['layout']['updatemenus'] = updatemenus
+        # show menu with selection of variable to plot
+        if show_menu:
+            # create tabs
+            buttons = list([dict(label='All',
+                                 method='update',
+                                 args=[{'visible': [True] * len(variables)},
+                                       {'title': 'All',
+                                        'showlegend': True}])])
+            # counter for traversing through stimuli
+            counter_rows = 0
+            for data in extracted_data:
+                visibility = [[counter_rows == j] for j in range(len(variables))]
+                visibility = [item for sublist in visibility for item in sublist]
+                button = dict(label=data['value'],
+                              method='update',
+                              args=[{'visible': visibility},
+                                    {'title': data['value']}])
+                buttons.append(button)
+                counter_rows = counter_rows + 1
+            # add menu
+            updatemenus = [dict(x=-0.15, buttons=buttons, showactive=True)]
+            fig['layout']['updatemenus'] = updatemenus
         # update layout
         fig['layout']['title'] = 'Keypresses with OR filter'
         # update layout
@@ -2074,7 +2094,8 @@ class Analysis:
                           yaxis_range=yaxis_range)
         # save file
         if save_file:
-            self.save_plotly(fig, 'kp_or' + variables_str, self.folder)
+            self.save_plotly(fig, 'kp_or' + variables_str, self.folder, remove_margins=True, width=fig_save_width,
+                             height=fig_save_height)
         # open it in localhost instead
         else:
             fig.show()
@@ -2082,15 +2103,15 @@ class Analysis:
     def plot_kp_variables_and(self, df, plot_names, variables_list,
                               conf_interval=None,
                               xaxis_title='Time (s)',
-                              yaxis_title='Percentage of trials with ' +
-                                          'response key pressed',
+                              yaxis_title='Percentage of trials with response key pressed',
                               xaxis_range=None, yaxis_range=None,
-                              save_file=True):
+                              save_file=True, fig_save_width=1320, fig_save_height=680):
         """Separate plots of keypresses with multiple variables as a filter.
-
+        
         Args:
             df (dataframe): dataframe with keypress data.
-            variables (list): variables to plot.
+            plot_names (list): names of plots.
+            variables_list (list): variables to plot.
             conf_interval (float, optional): show confidence interval defined
                                              by argument.
             xaxis_title (str, optional): title for x axis.
@@ -2098,9 +2119,16 @@ class Analysis:
             xaxis_range (list, optional): range of x axis in format [min, max].
             yaxis_range (list, optional): range of y axis in format [min, max].
             save_file (bool, optional): flag for saving an html file with plot.
+            fig_save_width (int, optional): width of figures to be saved.
+            fig_save_height (int, optional): height of figures to be saved.
+        
+        Deleted Parameters:
+            variables (list): variables to plot.
+        
+        Returns:
+            TYPE: Description
         """
-        logger.info('Creating visualisation of keypresses based on ' +
-                    'variables {} with AND filter.', variables_list)
+        logger.info('Creating visualisation of keypresses based on variables {} with AND filter.', variables_list)
         # build string with variables
         # create an empty figure, to add scatters to
         fig = subplots.make_subplots(rows=1,
@@ -2113,7 +2141,7 @@ class Analysis:
             for variable in variables:
                 variables_str = variables_str + '_' + str(variable['variable'])
             # calculate times
-            times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000  # noqa: E501
+            times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000
             # filter df based on variables given
             for var in variables:
                 # non-nan value (provide as np.nan)
@@ -2135,25 +2163,24 @@ class Analysis:
             if df_f.shape[0]:
                 kp_data = kp_data / df_f.shape[0]
             # plot each variable in data
-            fig.add_trace(go.Scatter(y=kp_data,  # noqa: E501
+            fig.add_trace(go.Scatter(y=kp_data,
                                      mode='lines',
                                      x=times,
-                                     name=plot_names[counter]),  # noqa: E501
+                                     name=plot_names[counter]),
                           row=1,
                           col=1)
-
-        # show confidence interval
+            # show confidence interval
             if conf_interval:
                 # calculate condidence interval
                 (y_lower, y_upper) = self.get_conf_interval_bounds(kp_data,
-                                                                   conf_interval)  # noqa: E501
+                                                                   conf_interval)
                 # plot interval
                 fig.add_trace(go.Scatter(name='Upper Bound',
                                          x=times,
                                          y=y_upper,
                                          mode='lines',
                                          fillcolor='rgba(0,100,80,0.2)',
-                                         line=dict(color='rgba(255,255,255,0)'),  # noqa: E501
+                                         line=dict(color='rgba(255,255,255,0)'),
                                          hoverinfo="skip",
                                          showlegend=False))
                 fig.add_trace(go.Scatter(name='Lower Bound',
@@ -2161,12 +2188,12 @@ class Analysis:
                                          y=y_lower,
                                          fill='tonexty',
                                          fillcolor='rgba(0,100,80,0.2)',
-                                         line=dict(color='rgba(255,255,255,0)'),  # noqa: E501
+                                         line=dict(color='rgba(255,255,255,0)'),
                                          hoverinfo="skip",
                                          showlegend=False))
             # define range of y axis
             if not yaxis_range:
-                yaxis_range = [0, max(y_upper) if conf_interval else max(kp_data)]  # noqa: E501
+                yaxis_range = [0, max(y_upper) if conf_interval else max(kp_data)]
             # update layout
             fig.update_layout(template=self.template,
                               xaxis_title=xaxis_title,
@@ -2176,7 +2203,8 @@ class Analysis:
             counter = counter + 1
         # save file
         if save_file:
-            self.save_plotly(fig, 'kp_and' + variables_str, self.folder)
+            self.save_plotly(fig, 'kp_and' + variables_str, self.folder, remove_margins=True, width=fig_save_width,
+                             height=fig_save_height)
         # open it in localhost instead
         else:
             fig.show()
@@ -2206,14 +2234,17 @@ class Analysis:
         else:
             fig.show()
 
-    def save_plotly(self, fig, name, output_subdir):
+    def save_plotly(self, fig, name, output_subdir, remove_margins=False, width=1320, height=680):
         """
         Helper function to save figure as html file.
-
+        
         Args:
             fig (plotly figure): figure object.
             name (str): name of html file.
-            output_subdir (str): Folder for saving file.
+            output_subdir (str): folder for saving file.
+            remove_margins (bool, optional): remove white margins around EPS figure.
+            width (int, optional): width of figures to be saved.
+            height (int, optional): height of figures to be saved.
         """
         # build path
         path = tr.settings.output_dir + output_subdir
@@ -2224,8 +2255,13 @@ class Analysis:
             name = name[:255 - len(path) - 5]
         # save as html
         py.offline.plot(fig, filename=os.path.join(path + name + '.html'))
+        # remove white margins
+        if remove_margins:
+            fig.update_layout(margin=dict(l=2, r=2, t=20, b=12))
+        # save as eps
+        fig.write_image(os.path.join(path + name + '.eps'), width=width, height=height)
         # save as png
-        fig.write_image(os.path.join(path + name + '.eps'), width=1320, height=680) 
+        fig.write_image(os.path.join(path + name + '.png'), width=width, height=height) 
 
     def save_fig(self, image, fig, output_subdir, suffix, pad_inches=0):
         """
@@ -2346,7 +2382,7 @@ class Analysis:
 
     def slugify(self, value, allow_unicode=False):
         """
-        Taken from https://github.com/django/django/blob/master/django/utils/text.py  # noqa: E501
+        Taken from https://github.com/django/django/blob/master/django/utils/text.py
         Convert to ASCII if 'allow_unicode' is False. Convert spaces or repeated
         dashes to single dashes. Remove characters that aren't alphanumerics,
         underscores, or hyphens. Convert to lowercase. Also strip leading and
@@ -2357,6 +2393,6 @@ class Analysis:
             value = unicodedata.normalize('NFKC', value)
         else:
             value = unicodedata.normalize('NFKD', value).encode('ascii',
-                                                                'ignore').decode('ascii')  # noqa: E501
+                                                                'ignore').decode('ascii')
         value = re.sub(r'[^\w\s-]', '', value.lower())
         return re.sub(r'[-\s]+', '-', value).strip('-_')

@@ -208,13 +208,13 @@ if __name__ == '__main__':
             #                           stimulus='video_2',
             #                           conf_interval=0.95)
             # keypresses of all videos individually
-            analysis.plot_kp_videos(mapping)
+            analysis.plot_kp_videos(mapping, show_menu=False)
             # keypress based on the type of ego car
-            analysis.plot_kp_variable(mapping, 'ego_car')
+            analysis.plot_kp_variable(mapping, 'ego_car', show_menu=False)
             # keypress based on the type of ego car
-            analysis.plot_kp_variable(mapping, 'target_car')
+            analysis.plot_kp_variable(mapping, 'target_car', show_menu=False)
             # keypress based on the pp group
-            analysis.plot_kp_variable(mapping, 'group')
+            analysis.plot_kp_variable(mapping, 'group', show_menu=False)
             # TODO: make plot_video_data work
             # plot of multiple combined AND variables
             # analysis.plot_video_data(mapping, 'video_5',
