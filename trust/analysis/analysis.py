@@ -1475,8 +1475,8 @@ class Analysis:
             fig.show()
 
     def plot_video_data(self, df, stimulus, cols, extention='mp4', conf_interval=None, xaxis_title='Time (s)',
-                        yaxis_title='Percentage of trials with response key pressed', xaxis_range=None, yaxis_range=None,
-                        save_file=True):
+                        yaxis_title='Percentage of trials with response key pressed', xaxis_range=None,
+                        yaxis_range=None, save_file=True):
         """Plot keypresses with multiple variables as a filter.
 
         Args:
