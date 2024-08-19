@@ -18,10 +18,8 @@ import warnings
 import unicodedata
 import re
 from tqdm import tqdm
-# import matplotlib.patches as patches
 import ast
 from scipy.stats.kde import gaussian_kde
-# from PIL import Image
 import cv2
 import trust as tr
 from statistics import mean
@@ -88,13 +86,7 @@ class Analysis:
                 filename = os.path.join(path, 'frame_' + str([round(k/hm_resolution_int)]) + '.jpg')
                 cv2.imwrite(filename, frame, [cv2.IMWRITE_JPEG_QUALITY, 20])
 
-    def create_histogram(self,
-                         image,
-                         points,
-                         id_video,
-                         density_coef=10,
-                         suffix='_histogram.jpg',
-                         save_file=False):
+    def create_histogram(self, image, points, id_video, density_coef=10, suffix='_histogram.jpg', save_file=False):
         """
         Create histogram for image based on the list of lists of points.
         density_coef: coeficient for division of dimensions for density of
@@ -118,8 +110,7 @@ class Analysis:
         # build histogram
         plt.hist2d(x=x,
                    y=-y,  # convert to the reference system in image
-                   bins=[round(width/density_coef),
-                         round(height/density_coef)],
+                   bins=[round(width/density_coef), round(height/density_coef)],
                    cmap=plt.cm.jet)
         plt.colorbar()
         # remove white spaces around figure
@@ -129,12 +120,7 @@ class Analysis:
             self.save_fig(image, fig,
                           self.folder, '_video_' + str(id_video)+suffix)
 
-    def create_heatmap(self,
-                       image,
-                       points,
-                       type_heatmap='contourf',
-                       add_corners=True,
-                       save_file=False):
+    def create_heatmap(self, image, points, type_heatmap='contourf', add_corners=True, save_file=False):
         """
         Create heatmap for image based on the list of lists of points.
         add_corners: add points to the corners to have the heatmap ovelay the
@@ -197,11 +183,7 @@ class Analysis:
             suffix_file = '_pcolormesh.jpg'
         elif type_heatmap == 'kdeplot':
             try:
-                g = sns.kdeplot(x=x,
-                                y=y,
-                                alpha=0.5,
-                                fill=True,
-                                cmap="RdBu_r")
+                g = sns.kdeplot(x=x, y=y, alpha=0.5, fill=True, cmap="RdBu_r")
             except TypeError:
                 logger.error('Not enough data. Heatmap was not created for {}.', image)
                 fig.clf()  # clear figure from memory
@@ -217,29 +199,14 @@ class Analysis:
         # remove axis
         plt.gca().set_axis_off()
         # remove white spaces around figure
-        plt.subplots_adjust(top=1,
-                            bottom=0,
-                            right=1,
-                            left=0,
-                            hspace=0,
-                            wspace=0)
+        plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
         # save image
         if save_file:
             self.save_fig(image, fig, '/figures/', suffix_file)
         # return graph objects
         return fig, g
 
-    def create_animation(self,
-                         df,
-                         mapping,
-                         image,
-                         id_video,
-                         points,
-                         points1,
-                         points2,
-                         points3,
-                         t,
-                         save_anim=False,
+    def create_animation(self, df, mapping, image, id_video, points, points1, points2, points3, t, save_anim=False,
                          save_frames=False):
         """
         Create animation for image based on the list of lists of points of
@@ -254,7 +221,6 @@ class Analysis:
         self.times = time
         self.fig = figure
         self.kp_data = keypress data for given stimulus video
-
         """
         self.image = image
         self.hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))
@@ -601,34 +567,25 @@ class Analysis:
         l_font = 18   # large
         plt.rc('font', size=s_font)         # controls default text sizes
         plt.rc('axes', titlesize=s_font)    # fontsize of the axes title
-        plt.rc('axes', labelsize=s_font)   # fontsize of the axes labels
-        plt.rc('xtick', labelsize=vs_font)   # fontsize of the tick labels
-        plt.rc('ytick', labelsize=vs_font)   # fontsize of the tick labels
+        plt.rc('axes', labelsize=s_font)    # fontsize of the axes labels
+        plt.rc('xtick', labelsize=vs_font)  # fontsize of the tick labels
+        plt.rc('ytick', labelsize=vs_font)  # fontsize of the tick labels
         plt.rc('legend', fontsize=s_font)   # fontsize of the legend
         plt.rc('figure', titlesize=l_font)  # fontsize of the figure title
         plt.rc('axes', titlesize=m_font)    # fontsize of the subplot title
         # create figure
         fig = plt.figure(figsize=(34, 20))
-        g = sns.heatmap(corr,
-                        annot=True,
-                        mask=mask,
-                        cmap='coolwarm',
-                        fmt=".2f")
+        g = sns.heatmap(corr, annot=True, mask=mask, cmap='coolwarm', fmt=".2f")
         # rotate ticks
         for item in g.get_xticklabels():
             item.set_rotation(55)
         # save image
         if save_file:
-            self.save_fig('all',
-                          fig,
-                          self.folder,
-                          '_corr_matrix.jpg',
-                          pad_inches=0.05)
+            self.save_fig('all', fig, self.folder, '_corr_matrix.jpg', pad_inches=0.05)
         # revert font
         self.reset_font()
 
-    def scatter_matrix(self, df, columns_drop, color=None, symbol=None,
-                       diagonal_visible=False, xaxis_title=None,
+    def scatter_matrix(self, df, columns_drop, color=None, symbol=None, diagonal_visible=False, xaxis_title=None,
                        yaxis_title=None, save_file=False):
         """
         Output scatter matrix.
@@ -651,10 +608,7 @@ class Analysis:
         # create dimensions list after dropping columns
         dimensions = df.keys()
         # plot matrix
-        fig = px.scatter_matrix(df,
-                                dimensions=dimensions,
-                                color=color,
-                                symbol=symbol)
+        fig = px.scatter_matrix(df, dimensions=dimensions, color=color, symbol=symbol)
         # update layout
         fig.update_layout(template=self.template,
                           width=5000,
@@ -671,10 +625,8 @@ class Analysis:
         else:
             fig.show()
 
-    def bar(self, df, y: list, x=None, stacked=False, pretty_text=False,
-            orientation='v', xaxis_title=None, yaxis_title=None,
-            show_all_xticks=False, show_all_yticks=False,
-            show_text_labels=False, save_file=False):
+    def bar(self, df, y: list, x=None, stacked=False, pretty_text=False, orientation='v', xaxis_title=None,
+            yaxis_title=None, show_all_xticks=False, show_all_yticks=False, show_text_labels=False, save_file=False):
         """
         Barplot for questionnaire data. Passing a list with one variable will
         output a simple barplot; passing a list of variables will output a
@@ -683,19 +635,15 @@ class Analysis:
         Args:
             df (dataframe): dataframe with stimuli data.
             y (list): column names of dataframe to plot.
-            x (list): values in index of dataframe to plot for. If no value is
-                      given, the index of df is used.
+            x (list): values in index of dataframe to plot for. If no value is given, the index of df is used.
             stacked (bool, optional): show as stacked chart.
-            pretty_text (bool, optional): prettify ticks by replacing _ with
-                                          spaces and capitilisng each value.
-            orientation (str, optional): orientation of bars. v=vertical,
-                                         h=horizontal.
+            pretty_text (bool, optional): prettify ticks by replacing _ with spaces and capitilisng each value.
+            orientation (str, optional): orientation of bars. v=vertical, h=horizontal.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             show_all_xticks (bool, optional): show all ticks on x axis.
             show_all_yticks (bool, optional): show all ticks on y axis.
-            show_text_labels (bool, optional): output automatically positionsed
-                                               text labels.
+            show_text_labels (bool, optional): output automatically positioned text labels.
             save_file (bool, optional): flag for saving an html file with plot.
         """
         logger.info('Creating bar chart for x={} and y={}', x, y)
@@ -739,7 +687,7 @@ class Analysis:
             counter_rows = 0
             for variable in y:
                 visibility = [[counter_rows == j] for j in range(len(y))]
-                visibility = [item for sublist in visibility for item in sublist]  # type: ignore # noqa: E501
+                visibility = [item for sublist in visibility for item in sublist]  # type: ignore
                 button = dict(label=variable,
                               method='update',
                               args=[{'visible': visibility},
@@ -750,9 +698,7 @@ class Analysis:
             fig['layout']['updatemenus'] = updatemenus
             fig['layout']['title'] = 'All'
         # update layout
-        fig.update_layout(template=self.template,
-                          xaxis_title=xaxis_title,
-                          yaxis_title=yaxis_title)
+        fig.update_layout(template=self.template, xaxis_title=xaxis_title, yaxis_title=yaxis_title)
         # format text labels
         if show_text_labels:
             fig.update_traces(texttemplate='%{text:.2f}')
@@ -767,20 +713,15 @@ class Analysis:
             fig.update_layout(barmode='stack')
         # save file
         if save_file:
-            file_name = 'bar_' + '-'.join(str(val) for val in y) + '_' + \
-                        '-'.join(str(val) for val in x)
-            self.save_plotly(fig,
-                             file_name,
-                             self.folder)
+            file_name = 'bar_' + '-'.join(str(val) for val in y) + '_' + '-'.join(str(val) for val in x)
+            self.save_plotly(fig, file_name, self.folder)
         # open it in localhost instead
         else:
             fig.show()
 
-    def scatter(self, df, x, y, color=None, symbol=None, size=None, text=None,
-                trendline=None, hover_data=None, marker_size=None,
-                pretty_text=False, marginal_x='violin', marginal_y='violin',
-                xaxis_title=None, yaxis_title=None, xaxis_range=None,
-                yaxis_range=None, save_file=True):
+    def scatter(self, df, x, y, color=None, symbol=None, size=None, text=None, trendline=None, hover_data=None,
+                marker_size=None,  pretty_text=False, marginal_x='violin', marginal_y='violin', xaxis_title=None,
+                yaxis_title=None, xaxis_range=None, yaxis_range=None, save_file=True):
         """
         Output scatter plot of variables x and y with optional assignment of
         colour and size.
@@ -790,20 +731,15 @@ class Analysis:
             x (str): dataframe column to plot on x axis.
             y (str): dataframe column to plot on y axis.
             color (str, optional): dataframe column to assign color of points.
-            symbol (str, optional): dataframe column to assign symbol of
-                                    points.
+            symbol (str, optional): dataframe column to assign symbol of points.
             size (str, optional): dataframe column to assign soze of points.
             text (str, optional): dataframe column to assign text labels.
             trendline (str, optional): trendline. Can be 'ols', 'lowess'
             hover_data (list, optional): dataframe columns to show on hover.
-            marker_size (int, optional): size of marker. Should not be used
-                                         together with size argument.
-            pretty_text (bool, optional): prettify ticks by replacing _ with
-                                          spaces and capitilisng each value.
-            marginal_x (str, optional): type of marginal on x axis. Can be
-                                        'histogram', 'rug', 'box', or 'violin'.
-            marginal_y (str, optional): type of marginal on y axis. Can be
-                                        'histogram', 'rug', 'box', or 'violin'.
+            marker_size (int, optional): size of marker. Should not be used together with size argument.
+            pretty_text (bool, optional): prettify ticks by replacing _ with spaces and capitilisng each value.
+            marginal_x (str, optional): type of marginal on x axis. Can be 'histogram', 'rug', 'box', or 'violin'.
+            marginal_y (str, optional): type of marginal on y axis. Can be 'histogram', 'rug', 'box', or 'violin'.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
@@ -813,14 +749,12 @@ class Analysis:
         logger.info('Creating scatter plot for x={} and y={}.', x, y)
         # using size and marker_size is not supported
         if marker_size and size:
-            logger.error('Arguments marker_size and size cannot be used'
-                         + ' together.')
+            logger.error('Arguments marker_size and size cannot be used together.')
             return -1
         # using marker_size with histogram marginal(s) is not supported
         if (marker_size and
                 (marginal_x == 'histogram' or marginal_y == 'histogram')):
-            logger.error('Argument marker_size cannot be used together with'
-                         + ' histogram marginal(s).')
+            logger.error('Argument marker_size cannot be used together with histogram marginal(s).')
             return -1
         # prettify text
         if pretty_text:
@@ -878,18 +812,14 @@ class Analysis:
             fig.update_traces(marker=dict(size=marker_size))
         # save file
         if save_file:
-            self.save_plotly(fig,
-                             'scatter_' + x + '-' + y,
-                             self.folder)
+            self.save_plotly(fig, 'scatter_' + x + '-' + y, self.folder)
         # open it in localhost instead
         else:
             fig.show()
 
-    def scatter_mult(self, df, x, y, color=None, symbol=None,
-                     text=None, trendline=None, hover_data=None,
-                     marker_size=None, pretty_text=False, marginal_x='violin',
-                     marginal_y='violin', xaxis_title=None, yaxis_title=None,
-                     xaxis_range=None, yaxis_range=None, save_file=True):
+    def scatter_mult(self, df, x, y, color=None, symbol=None, text=None, trendline=None, hover_data=None,
+                     marker_size=None, pretty_text=False, marginal_x='violin', marginal_y='violin', xaxis_title=None,
+                     yaxis_title=None, xaxis_range=None, yaxis_range=None, save_file=True):
         """
         Output scatter plot of multiple variables x and y with optional
         assignment of colour and size.
@@ -898,19 +828,14 @@ class Analysis:
             df (dataframe): dataframe with data from heroku.
             x (str): dataframe columns to plot on x axis.
             y (str): dataframe column to plot on y axis.
-            symbol (str, optional): dataframe column to assign symbol of
-                                    points.
+            symbol (str, optional): dataframe column to assign symbol of points.
             text (str, optional): dataframe column to assign text labels.
             trendline (str, optional): trendline. Can be 'ols', 'lowess'
             hover_data (list, optional): dataframe columns to show on hover.
-            marker_size (int, optional): size of marker. Should not be used
-                                         together with size argument.
-            pretty_text (bool, optional): prettify ticks by replacing _ with
-                                          spaces and capitilisng each value.
-            marginal_x (str, optional): type of marginal on x axis. Can be
-                                        'histogram', 'rug', 'box', or 'violin'.
-            marginal_y (str, optional): type of marginal on y axis. Can be
-                                        'histogram', 'rug', 'box', or 'violin'.
+            marker_size (int, optional): size of marker. Should not be used together with size argument.
+            pretty_text (bool, optional): prettify ticks by replacing _ with spaces and capitilisng each value.
+            marginal_x (str, optional): type of marginal on x axis. Can be 'histogram', 'rug', 'box', or 'violin'.
+            marginal_y (str, optional): type of marginal on y axis. Can be 'histogram', 'rug', 'box', or 'violin'.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
@@ -922,8 +847,7 @@ class Analysis:
         # using marker_size with histogram marginal(s) is not supported
         if (marker_size and
                 (marginal_x == 'histogram' or marginal_y == 'histogram')):
-            logger.error('Argument marker_size cannot be used together with'
-                         + ' histogram marginal(s).')
+            logger.error('Argument marker_size cannot be used together with histogram marginal(s).')
             return -1
         # prettify text
         if pretty_text:
@@ -995,18 +919,9 @@ class Analysis:
                                       xanchor='right',
                                       x=0.78
                                       ))
-
-        # results = px.get_trendline_results(fig)
-        # for i in range(len(x)):
-        #     print(results.px_fit_results.iloc[i].summary())
-        # change marker size
-        # if marker_size:
-        #    fig.update_traces(marker=dict(size=marker_size))
-
         # change marker size
         if marker_size:
             fig.update_traces(marker=dict(size=marker_size))
-
         # save file
         if save_file:
             self.save_plotly(fig,
@@ -1016,7 +931,6 @@ class Analysis:
         else:
             fig.show()
 
-    # todo: @Job, add docstring
     def scatter_et(self, df, x, y, t, pp, id_video, pretty_text=False,
                    marginal_x='violin', marginal_y='violin', xaxis_title=None,
                    xaxis_range=True, yaxis_title=None, yaxis_range=True,
@@ -1028,15 +942,12 @@ class Analysis:
             df (dataframe): dataframe with data from Heroku.
             x (list): dataframe column to plot on x axis.
             y (list): dataframe column to plot on y axis.
-            t (list): dataframe column to determin timespan
+            t (list): dataframe column to determine timespan
             pp (int): participant ID.
             id_video (int): stimulus video ID.
-            pretty_text (bool, optional): prettify ticks by replacing _ with
-                                          spaces and capitalising each value.
-            marginal_x (str, optional): type of marginal on x axis. Can be
-                                        'histogram', 'rug', 'box', or 'violin'.
-            marginal_y (str, optional): type of marginal on y axis. Can be
-                                        'histogram', 'rug', 'box', or 'violin'.
+            pretty_text (bool, optional): prettify ticks by replacing _ with spaces and capitalising each value.
+            marginal_x (str, optional): type of marginal on x axis. Can be 'histogram', 'rug', 'box', or 'violin'.
+            marginal_y (str, optional): type of marginal on y axis. Can be 'histogram', 'rug', 'box', or 'violin'.
             xaxis_range (list, optional): range of the x-axis plot.
             yaxis_range (list, optional): range of the y-axis plot.
             xaxis_title (str, optional): title for x axis.
@@ -1044,7 +955,6 @@ class Analysis:
             save_file (bool, optional): flag for saving an html file with plot.
         """
         logger.info('Creating scatter_map for x={} and y={}.', x, y)
-
         # extracting x and y values for given ID participant
         width = tr.common.get_configs('stimulus_width')
         height = tr.common.get_configs('stimulus_height')
@@ -1082,17 +992,13 @@ class Analysis:
 
         # save file
         if save_file:
-            self.save_plotly(fig,
-                             'scatter_map_' + id_video+'_participant_' + pp,
-                             self.folder)
+            self.save_plotly(fig, 'scatter_map_' + id_video+'_participant_' + pp, self.folder)
         # open it in localhost instead
         else:
             fig.show()
 
-    def heatmap(self, df, x, y, t, id_video, pp, pretty_text=False,
-                marginal_x='violin', marginal_y='violin', xaxis_title=None,
-                xaxis_range=True, yaxis_title=None, yaxis_range=True,
-                save_file=True):
+    def heatmap(self, df, x, y, t, id_video, pp, pretty_text=False, marginal_x='violin', marginal_y='violin',
+                xaxis_title=None, xaxis_range=True, yaxis_title=None, yaxis_range=True, save_file=True):
         """
         Output heatmap plot of variables x and y.
 
@@ -1100,12 +1006,9 @@ class Analysis:
             df (dataframe): dataframe with data from heroku.
             x (list): dataframe column to plot on x axis.
             y (list): dataframe column to plot on y axis.
-            pretty_text (bool, optional): prettify ticks by replacing _ with
-                                          spaces and capitalising each value.
-            marginal_x (str, optional): type of marginal on x axis. Can be
-                                        'histogram', 'rug', 'box', or 'violin'.
-            marginal_y (str, optional): type of marginal on y axis. Can be
-                                        'histogram', 'rug', 'box', or 'violin'.
+            pretty_text (bool, optional): prettify ticks by replacing _ with spaces and capitalising each value.
+            marginal_x (str, optional): type of marginal on x axis. Can be 'histogram', 'rug', 'box', or 'violin'.
+            marginal_y (str, optional): type of marginal on y axis. Can be 'histogram', 'rug', 'box', or 'violin'.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             save_file (bool, optional): flag for saving an html file with plot.
@@ -1119,13 +1022,11 @@ class Analysis:
         xmin, xmax = min(x), max(x)
         for i, val in enumerate(y):
             x[i] = ((val-xmin) / (xmax-xmin))*width
-
         ymin, ymax = min(y), max(y)
         for i, val in enumerate(y):
             y[i] = ((val-ymin) / (ymax-ymin))*height
 
         t = df.loc[pp][t]
-
         #  prettify ticks
         if pretty_text:
             if isinstance(x, str):  # check if string
@@ -1139,7 +1040,6 @@ class Analysis:
             if isinstance(y, str):  # check if string
                 # replace underscores with spaces
                 df[y] = df[y].str.replace('_', ' ')
-
                 # capitalise
                 df[y] = df[y].str.capitalize()
             else:
@@ -1149,7 +1049,6 @@ class Analysis:
                 df[t] = df[t].str.replace('_', ' ')
                 # capitalise
                 df[t] = df[t].str.capitalize()
-
         pp = str(pp)
         [go.Histogram2d(x=x[i:], y=y[i:]) for i in range(len(int(x)))]
         # build layers of animation heatmap and scatter
@@ -1191,9 +1090,7 @@ class Analysis:
                                                                                 duration=100))])])])
         # save file
         if save_file:
-            self.save_plotly(fig,
-                             'heatmap_animation' + id_video+'_participant_' + pp,
-                             self.folder)
+            self.save_plotly(fig, 'heatmap_animation' + id_video+'_participant_' + pp, self.folder)
         # open it in localhost instead
         else:
             # plotly.offline.plot(fig, auto_play = False)
@@ -1201,9 +1098,8 @@ class Analysis:
             # show.fig(fig, auto_play=False)
             logger.error('show not implemented')
 
-    def hist(self, df, x, nbins=None, color=None, pretty_text=False,
-             marginal='rug', xaxis_title=None, yaxis_title=None,
-             save_file=True):
+    def hist(self, df, x, nbins=None, color=None, pretty_text=False, marginal='rug', xaxis_title=None,
+             yaxis_title=None, save_file=True):
         """
         Output histogram of time of participation.
 
@@ -1212,10 +1108,8 @@ class Analysis:
             x (list): column names of dataframe to plot.
             nbins (int, optional): number of bins in histogram.
             color (str, optional): dataframe column to assign color of circles.
-            pretty_text (bool, optional): prettify ticks by replacing _ with
-                                          spaces and capitilisng each value.
-            marginal (str, optional): type of marginal on x axis. Can be
-                                      'histogram', 'rug', 'box', or 'violin'.
+            pretty_text (bool, optional): prettify ticks by replacing _ with spaces and capitilisng each value.
+            marginal (str, optional): type of marginal on x axis. Can be 'histogram', 'rug', 'box', or 'violin'.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             save_file (bool, optional): flag for saving an html file with plot.
@@ -1223,8 +1117,7 @@ class Analysis:
         logger.info('Creating histogram for x={}.', x)
         # using colour with multiple values to plot not supported
         if color and len(x) > 1:
-            logger.error('Color property can be used only with a single' +
-                         ' variable to plot.')
+            logger.error('Color property can be used only with a single variable to plot.')
             return -1
         # prettify ticks
         if pretty_text:
@@ -1242,27 +1135,21 @@ class Analysis:
                 df[color] = df[color].str.capitalize()
         # create figure
         if color:
-            fig = px.histogram(df[x], nbins=nbins, marginal=marginal,
-                               color=df[color])
+            fig = px.histogram(df[x], nbins=nbins, marginal=marginal, color=df[color])
         else:
             fig = px.histogram(df[x], nbins=nbins, marginal=marginal)
         # ticks as numbers
         fig.update_layout(xaxis=dict(tickformat='digits'))
         # update layout
-        fig.update_layout(template=self.template,
-                          xaxis_title=xaxis_title,
-                          yaxis_title=yaxis_title)
+        fig.update_layout(template=self.template, xaxis_title=xaxis_title, yaxis_title=yaxis_title)
         # save file
         if save_file:
-            self.save_plotly(fig,
-                             'hist_' + '-'.join(str(val) for val in x),
-                             self.folder)
+            self.save_plotly(fig, 'hist_' + '-'.join(str(val) for val in x), self.folder)
         # open it in localhost instead
         else:
             fig.show()
 
-    def hist_stim_duration_time(self, df, time_ranges, nbins=0,
-                                save_file=True):
+    def hist_stim_duration_time(self, df, time_ranges, nbins=0, save_file=True):
         """
         Output distribution of stimulus durations for time ranges.
 
@@ -1272,8 +1159,7 @@ class Analysis:
             nbins (int, optional): number of bins in histogram.
             save_file (bool, optional): flag for saving an html file with plot.
         """
-        logger.info('Creating histogram of stimulus durations for time ' +
-                    'ranges.')
+        logger.info('Creating histogram of stimulus durations for time ranges.')
         # columns with durations
         col_dur = df.columns[df.columns.to_series().str.contains('-dur')]
         # extract durations of stimuli
@@ -1291,11 +1177,9 @@ class Analysis:
         df = df.dropna()
         # create figure
         if nbins:
-            fig = px.histogram(df[col_dur], nbins=nbins, marginal='rug',
-                               color=df['range'], barmode='overlay')
+            fig = px.histogram(df[col_dur], nbins=nbins, marginal='rug', color=df['range'], barmode='overlay')
         else:
-            fig = px.histogram(df[col_dur], marginal='rug', color=df['range'],
-                               barmode='overlay')
+            fig = px.histogram(df[col_dur], marginal='rug', color=df['range'], barmode='overlay')
         # ticks as numbers
         fig.update_layout(xaxis=dict(tickformat='digits'))
         # update layout
@@ -1319,8 +1203,7 @@ class Analysis:
 
         Args:
             df (dataframe): dataframe with keypress data.
-            conf_interval (float, optional): show confidence interval defined
-                                             by argument.
+            conf_interval (float, optional): show confidence interval defined by argument.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
@@ -1331,9 +1214,7 @@ class Analysis:
         """
         logger.info('Creating visualisations of keypresses for all data.')
         # calculate times
-        times = np.array(range(self.res,
-                               df['video_length'].max() + self.res,
-                               self.res)) / 1000
+        times = np.array(range(self.res,  df['video_length'].max() + self.res, self.res)) / 1000
         # add all data together. Must be converted to np array to add together
         kp_data = np.array([0.0] * len(times))
         for i, data in enumerate(df['kp']):
@@ -1345,9 +1226,7 @@ class Analysis:
         # create figure
         fig = go.Figure()
         # plot keypresses
-        fig = px.line(y=kp_data,
-                      x=times,
-                      title='Keypresses for all stimuli')
+        fig = px.line(y=kp_data, x=times, title='Keypresses for all stimuli')
         # show confidence interval
         if conf_interval:
             # calculate condidence interval
@@ -1527,12 +1406,9 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_kp_animate(self, df, stimulus, pp='all', extention='mp4',
-                        conf_interval=None,
-                        xaxis_title='Time (s)',
-                        yaxis_title='Percentage of trials with ' +
-                                    'response key pressed',
-                        xaxis_range=None, yaxis_range=None, save_file=True):
+    def plot_kp_animate(self, df, stimulus, pp='all', extention='mp4', conf_interval=None, xaxis_title='Time (s)',
+                        yaxis_title='Percentage of trials with response key pressed', xaxis_range=None,
+                        yaxis_range=None, save_file=True):
         # extract video length
         video_len = df.loc[stimulus]['video_length']
         # calculate times
@@ -1567,9 +1443,8 @@ class Analysis:
                                                                      transition={'duration': 10},
                                                                      frame=dict(redraw=True, duration=100))])])])
         if conf_interval:
-            # calculate condidence interval
-            (y_lower, y_upper) = self.get_conf_interval_bounds(kp_data,
-                                                               conf_interval)
+            # calculate confidence interval
+            (y_lower, y_upper) = self.get_conf_interval_bounds(kp_data, conf_interval)
             # plot interval
             fig.add_trace(go.Scatter(name='Upper Bound',
                                      x=times,
@@ -1599,12 +1474,9 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_video_data(self, df, stimulus, cols, extention='mp4',
-                        conf_interval=None,
-                        xaxis_title='Time (s)',
-                        yaxis_title='Percentage of trials with ' +
-                                    'response key pressed',
-                        xaxis_range=None, yaxis_range=None, save_file=True):
+    def plot_video_data(self, df, stimulus, cols, extention='mp4', conf_interval=None, xaxis_title='Time (s)',
+                        yaxis_title='Percentage of trials with response key pressed', xaxis_range=None,
+                        yaxis_range=None, save_file=True):
         """Plot keypresses with multiple variables as a filter.
 
         Args:
@@ -1612,8 +1484,7 @@ class Analysis:
             stimulus (str): name of stimulus.
             cols: columns of which to plot
             extention (str, optional): extension of stimulus.
-            conf_interval (float, optional): show confidence interval defined
-                                             by argument.
+            conf_interval (float, optional): show confidence interval defined by argument.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
@@ -1692,9 +1563,7 @@ class Analysis:
         # calculate times
         times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000
         # plotly
-        fig = subplots.make_subplots(rows=1,
-                                     cols=1,
-                                     shared_xaxes=True)
+        fig = subplots.make_subplots(rows=1, cols=1, shared_xaxes=True)
         # plot for all videos
         for index, row in df.iterrows():
             values = row['kp']
@@ -1890,8 +1759,7 @@ class Analysis:
         Args:
             df (dataframe): dataframe with keypress data.
             variable (str): variable to plot.
-            values (list, optional): values of variable to plot. If None, all
-                                     values are plotted.
+            values (list, optional): values of variable to plot. If None, all values are plotted.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
@@ -1921,18 +1789,14 @@ class Analysis:
             for index, row in df_f.iterrows():
                 data_row = np.array(row['kp'])
                 # append zeros to match longest duration
-                data_row = np.pad(data_row, (0, len(times) - len(data_row)),
-                                  'constant')
+                data_row = np.pad(data_row, (0, len(times) - len(data_row)), 'constant')
                 kp_data = kp_data + data_row
             # divide sums of values over number of rows that qualify
             if df_f.shape[0]:
                 kp_data = kp_data / df_f.shape[0]
-            extracted_data.append({'value': value,
-                                   'data': kp_data})
+            extracted_data.append({'value': value, 'data': kp_data})
         # plotly figure
-        fig = subplots.make_subplots(rows=1,
-                                     cols=1,
-                                     shared_xaxes=True)
+        fig = subplots.make_subplots(rows=1, cols=1, shared_xaxes=True)
         # plot each variable in data
         for data in extracted_data:
             fig.add_trace(go.Scatter(y=data['data'],
@@ -2074,20 +1938,17 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_kp_variables_and(self, df, plot_names, variables_list,
-                              conf_interval=None,
-                              xaxis_title='Time (s)',
+    def plot_kp_variables_and(self, df, plot_names, variables_list, conf_interval=None, xaxis_title='Time (s)',
                               yaxis_title='Percentage of trials with response key pressed',
-                              xaxis_range=None, yaxis_range=None,
-                              save_file=True, fig_save_width=1320, fig_save_height=680):
+                              xaxis_range=None, yaxis_range=None, save_file=True, fig_save_width=1320,
+                              fig_save_height=680):
         """Separate plots of keypresses with multiple variables as a filter.
 
         Args:
             df (dataframe): dataframe with keypress data.
             plot_names (list): names of plots.
             variables_list (list): variables to plot.
-            conf_interval (float, optional): show confidence interval defined
-                                             by argument.
+            conf_interval (float, optional): show confidence interval defined by argument.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
@@ -2105,9 +1966,7 @@ class Analysis:
         logger.info('Creating visualisation of keypresses based on variables {} with AND filter.', variables_list)
         # build string with variables
         # create an empty figure, to add scatters to
-        fig = subplots.make_subplots(rows=1,
-                                     cols=1,
-                                     shared_xaxes=True)
+        fig = subplots.make_subplots(rows=1, cols=1, shared_xaxes=True)
         counter = 0
         # retrieve lists to make combined AND plot
         for variables in variables_list:
@@ -2146,8 +2005,7 @@ class Analysis:
             # show confidence interval
             if conf_interval:
                 # calculate condidence interval
-                (y_lower, y_upper) = self.get_conf_interval_bounds(kp_data,
-                                                                   conf_interval)
+                (y_lower, y_upper) = self.get_conf_interval_bounds(kp_data, conf_interval)
                 # plot interval
                 fig.add_trace(go.Scatter(name='Upper Bound',
                                          x=times,
@@ -2299,9 +2157,7 @@ class Analysis:
                 width = rect.get_width()
                 x = rect.get_x()
                 y = rect.get_y()
-                # The height of the bar is the data value and can be used as
-                # the label
-                # show demical points
+                # The height of the bar is the data value and can be used as the label show demical points
                 if decimal:
                     label_text = f'{height:.2f}'
                 else:
@@ -2310,11 +2166,7 @@ class Analysis:
                 label_y = y + height / 2
                 # plot only when height is greater than specified value
                 if height > 0:
-                    ax.text(label_x,
-                            label_y,
-                            label_text,
-                            ha='center',
-                            va='center')
+                    ax.text(label_x, label_y, label_text, ha='center', va='center')
 
     def reset_font(self):
         """
@@ -2343,10 +2195,7 @@ class Analysis:
             list of lsits: lower and uppoer bounds.
         """
         # calculate condidence interval
-        conf_interval = st.t.interval(conf_interval,
-                                      len(data) - 1,
-                                      loc=np.mean(data),
-                                      scale=st.sem(data))
+        conf_interval = st.t.interval(conf_interval, len(data) - 1, loc=np.mean(data), scale=st.sem(data))
         # calcuate bounds
         # todo: cross-check if correct
         y_lower = data - conf_interval[0]
@@ -2365,7 +2214,6 @@ class Analysis:
         if allow_unicode:
             value = unicodedata.normalize('NFKC', value)
         else:
-            value = unicodedata.normalize('NFKD', value).encode('ascii',
-                                                                'ignore').decode('ascii')
+            value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
         value = re.sub(r'[^\w\s-]', '', value.lower())
         return re.sub(r'[-\s]+', '-', value).strip('-_')
