@@ -1813,7 +1813,7 @@ class Analysis:
                                      column_widths=[0.8, 0.2],
                                      subplot_titles=('Mean keypress values', 'Responses to sliders'),
                                      specs=[[{}, {}]],
-                                     horizontal_spacing=0.05,
+                                     horizontal_spacing=0.00,
                                      shared_xaxes=False)
         # Plot keypress data
         for index, row in df.iterrows():
