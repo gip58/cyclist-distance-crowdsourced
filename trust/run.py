@@ -233,7 +233,7 @@ if __name__ == '__main__':
             # post-trial questions of all individual stimuli
             logger.info('Creating bar plots of post-trial questions for groups of stimuli.')
             for stim in tqdm(range(int(num_stimuli/4))):  # tqdm adds progress bar
-                # ids of stimuli that belong to the same group
+                # get ids of stimuli that belong to the same group
                 ids = [stim, stim + int(num_stimuli/4), stim + int(num_stimuli/4*2), stim + int(num_stimuli/4*3)]
                 df = mapping[mapping['id'].isin(ids)]
                 analysis.bar(df,
