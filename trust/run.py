@@ -168,7 +168,11 @@ if __name__ == '__main__':
                 vert_line_annotations[0] = vert_line_annotations[0][1:]
                 # remove ]
                 vert_line_annotations[-1] = vert_line_annotations[-1][:-1]
-                # # plot just keypresses
+                # create list with ids of labels for outputting just numbers
+                vert_line_annotations_num = []
+                for x in range(1, len(vert_line_annotations) + 1):
+                    vert_line_annotations_num.append(x)
+                # # plot keypresses for each video€
                 # analysis.plot_kp_videos(df,
                 #                         vert_lines=vert_lines,
                 #                         vert_lines_width=1,
@@ -182,14 +186,16 @@ if __name__ == '__main__':
                 # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(df,
                                                y=['slider-0', 'slider-1', 'slider-2'],
+                                               xaxis_kp_range=[0, 43],  # hardcode based on the longest stimulus
+                                               yaxis_kp_range=[0, 60],  # hardcode based on the highest recorded value
                                                vert_lines=vert_lines,
                                                vert_lines_width=1,
                                                vert_lines_dash='solid',
-                                               vert_lines_colour='red',
-                                               vert_lines_annotations=vert_line_annotations,
+                                               vert_lines_colour='black',
+                                               vert_lines_annotations=vert_line_annotations_num,
                                                vert_lines_annotations_position='top right',
                                                vert_lines_annotations_font_size=12,
-                                               vert_lines_annotations_colour='red',
+                                               vert_lines_annotations_colour='black',
                                                yaxis_slider_title=None,
                                                show_text_labels=True,
                                                stacked=True,
