@@ -539,7 +539,7 @@ class Analysis:
         if self.save_frames:
             # build suffix for filename
             suffix = '_kdeplot_' + str(durations[i]) + '.jpg'
-            # copy figure in buffer to prevent distruction of object
+            # copy figure in buffer to prevent destruction of object
             buf = io.BytesIO()
             pickle.dump(self.fig, buf)
             buf.seek(0)
@@ -551,14 +551,13 @@ class Analysis:
         if self.save_frames:
             # build suffix for filename
             suffix = '_kdeplot_' + str(durations[i]) + '.jpg'
-            # copy figure in buffer to prevent distruction of object
+            # copy figure in buffer to prevent destruction of object
             buf = io.BytesIO()
             pickle.dump(self.fig, buf)
             buf.seek(0)
             temp_fig = pickle.load(buf)
             # save figure
             self.save_fig(self.image, temp_fig, self.folder, suffix)
-
         return self.g
 
     def save_anim(self, image, anim, output_subdir, suffix):
@@ -1317,7 +1316,7 @@ class Analysis:
                 yaxis_title='Percentage of trials with response key pressed', xaxis_range=None, yaxis_range=None,
                 save_file=True, fig_save_width=1320, fig_save_height=680):
         """Plot keypress data.
-        
+
         Args:
             df (dataframe): dataframe with keypress data.
             conf_interval (float, optional): show confidence interval defined
@@ -1394,7 +1393,7 @@ class Analysis:
                       yaxis_title='Percentage of trials with response key pressed', xaxis_range=None, yaxis_range=None,
                       save_file=True, fig_save_width=1320, fig_save_height=680):
         """Plot keypresses with multiple variables as a filter.
-        
+
         Args:
             df (dataframe): dataframe with keypress data.
             stimulus (str): name of stimulus.
@@ -1415,9 +1414,6 @@ class Analysis:
             save_file (bool, optional): flag for saving an html file with plot.
             fig_save_width (int, optional): width of figures to be saved.
             fig_save_height (int, optional): height of figures to be saved.
-        
-        Deleted Parameters:
-            annotation_position (str, optional): Description
         """
         # extract video length
         video_len = df.loc[stimulus]['video_length']
@@ -1483,9 +1479,9 @@ class Analysis:
                          conf_interval=None, trendline=None,
                          xaxis_title='Time (s)',
                          yaxis_title='response key pressed',
-                         xaxis_range=None, yaxis_range=None, save_file=True,fig_save_width=1320, fig_save_height=680):
+                         xaxis_range=None, yaxis_range=None, save_file=True, fig_save_width=1320, fig_save_height=680):
         """Plot keypresses data of one stimulus for 1 participant.
-        
+
         Args:
             df (dataframe): dataframe with simulus data.
             dt (dataframe): dataframe with keypress data.
@@ -1672,7 +1668,7 @@ class Analysis:
                        xaxis_range=None, yaxis_range=None, save_file=True, fig_save_width=1320, fig_save_height=680,
                        show_menu=False, name_file=None):
         """Plot keypresses with multiple variables as a filter.
-        
+
         Args:
             df (dataframe): dataframe with keypress data.
             vert_lines (list, optional): list of events to draw formatted as values on x axis.
@@ -1768,7 +1764,7 @@ class Analysis:
                               yaxis_slider_title=None, show_text_labels=False, name_file=None, save_file=True,
                               fig_save_width=1320, fig_save_height=680):
         """Plot keypresses with multiple variables as a filter and slider questions for the stimuli.
-        
+
         Args:
             df (dataframe): dataframe with stimuli data.
             y (list): column names of dataframe to plot.
@@ -1890,7 +1886,7 @@ class Analysis:
                          yaxis_title='Percentage of trials with response key pressed', xaxis_range=None,
                          yaxis_range=None, show_menu=False, save_file=True, fig_save_width=1320, fig_save_height=680):
         """Plot figures of values of a certain variable.
-        
+
         Args:
             df (dataframe): dataframe with keypress data.
             variable (str): variable to plot.
@@ -1993,7 +1989,7 @@ class Analysis:
                              xaxis_range=None, yaxis_range=None, show_menu=False,
                              save_file=True, fig_save_width=1320, fig_save_height=680):
         """Separate plots of keypresses with multiple variables as a filter.
-        
+
         Args:
             df (dataframe): dataframe with keypress data.
             variables (list): variables to plot.
@@ -2085,7 +2081,7 @@ class Analysis:
                               xaxis_range=None, yaxis_range=None,
                               save_file=True, fig_save_width=1320, fig_save_height=680):
         """Separate plots of keypresses with multiple variables as a filter.
-        
+
         Args:
             df (dataframe): dataframe with keypress data.
             plot_names (list): names of plots.
@@ -2188,8 +2184,7 @@ class Analysis:
             fig.show()
 
     def map(self, df, color, save_file=True):
-        """Map of countries of participation with color based on column in
-           dataframe.
+        """Map of countries of participation with color based on column in dataframe.
 
         Args:
             df (dataframe): dataframe with keypress data.
