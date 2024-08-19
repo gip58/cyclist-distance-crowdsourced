@@ -2222,9 +2222,10 @@ class Analysis:
         # limit name to 255 char
         if len(path) + len(name) > 250:
             name = name[:255 - len(path) - 5]
-        file_plot = os.path.join(path + name + '.html')
-        # save to file
-        py.offline.plot(fig, filename=file_plot)
+        # save as html
+        py.offline.plot(fig, filename=os.path.join(path + name + '.html'))
+        # save as png
+        fig.write_image(os.path.join(path + name + '.eps'), width=1320, height=680) 
 
     def save_fig(self, image, fig, output_subdir, suffix, pad_inches=0):
         """
