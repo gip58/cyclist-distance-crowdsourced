@@ -208,13 +208,13 @@ if __name__ == '__main__':
             #                           stimulus='video_2',
             #                           conf_interval=0.95)
             # keypresses of all videos individually
-            analysis.plot_kp_videos(mapping)
+            analysis.plot_kp_videos(mapping, show_menu=False)
             # keypress based on the type of ego car
-            analysis.plot_kp_variable(mapping, 'ego_car')
+            analysis.plot_kp_variable(mapping, 'ego_car', show_menu=False)
             # keypress based on the type of ego car
-            analysis.plot_kp_variable(mapping, 'target_car')
+            analysis.plot_kp_variable(mapping, 'target_car', show_menu=False)
             # keypress based on the pp group
-            analysis.plot_kp_variable(mapping, 'group')
+            analysis.plot_kp_variable(mapping, 'group', show_menu=False)
             # TODO: make plot_video_data work
             # plot of multiple combined AND variables
             # analysis.plot_video_data(mapping, 'video_5',
@@ -233,7 +233,7 @@ if __name__ == '__main__':
             # post-trial questions of all individual stimuli
             logger.info('Creating bar plots of post-trial questions for groups of stimuli.')
             for stim in tqdm(range(int(num_stimuli/4))):  # tqdm adds progress bar
-                # ids of stimuli that belong to the same group
+                # get ids of stimuli that belong to the same group
                 ids = [stim, stim + int(num_stimuli/4), stim + int(num_stimuli/4*2), stim + int(num_stimuli/4*3)]
                 df = mapping[mapping['id'].isin(ids)]
                 analysis.bar(df,
