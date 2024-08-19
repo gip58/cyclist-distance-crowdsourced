@@ -2095,10 +2095,10 @@ class Analysis:
             save_file (bool, optional): flag for saving an html file with plot.
             fig_save_width (int, optional): width of figures to be saved.
             fig_save_height (int, optional): height of figures to be saved.
-        
+
         Deleted Parameters:
             variables (list): variables to plot.
-        
+
         Returns:
             TYPE: Description
         """
@@ -2210,7 +2210,7 @@ class Analysis:
     def save_plotly(self, fig, name, output_subdir, remove_margins=False, width=1320, height=680):
         """
         Helper function to save figure as html file.
-        
+
         Args:
             fig (plotly figure): figure object.
             name (str): name of html file.
@@ -2234,7 +2234,7 @@ class Analysis:
         # save as eps
         fig.write_image(os.path.join(path + name + '.eps'), width=width, height=height)
         # save as png
-        fig.write_image(os.path.join(path + name + '.png'), width=width, height=height) 
+        fig.write_image(os.path.join(path + name + '.png'), width=width, height=height)
 
     def save_fig(self, image, fig, output_subdir, suffix, pad_inches=0):
         """
