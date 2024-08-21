@@ -135,8 +135,9 @@ class Heroku:
                 # record worker_code in the row. assuming that each row has at
                 # least one worker_code
                 worker_code = [d['worker_code'] for d in list_row['data'] if 'worker_code' in d][0]  # noqa: E501
-                if re.search("lab_pp_", worker_code) == None:
-                    continue
+                if tr.common.get_configs('only_lab') == 1:
+                    if re.search("lab_pp_", worker_code) == None:
+                        continue
                 # go over cells in the row with data
                 for data_cell in list_row['data']:
                     # extract meta info form the call

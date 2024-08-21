@@ -304,9 +304,21 @@ class Analysis:
         aoi = pd.read_csv(tr.common.get_configs('aoi'))
         aoi.set_index('video_id', inplace=True)
         self.number_in = []
-        self.number_in1 = []
-        self.number_in2 = []
-        self.number_in3 = []
+        if tr.common.get_configs('Combined_animation') == True:
+            self.number_in1 = []
+            self.number_in2 = []
+            self.number_in3 = []
+            # for comparison between stimulus
+            # stim 21 - 41
+            self.kp_data1 = mapping.loc['video_' + str(id_video+21)]['kp']
+            self.points1 = points1
+            # stim 42 - 62
+            self.kp_data2 = mapping.loc['video_' + str(id_video+42)]['kp']
+            self.points2 = points2
+            # stim 63 - 83
+            self.kp_data3 = mapping.loc['video_' + str(id_video+63)]['kp']
+            self.points3 = points3
+        # Extracting AOI coordinate data
         self.aoit = []
         self.aoi_x = aoi.loc['video_' + str(id_video)]['x']
         self.aoi_x = self.aoi_x.split(", ")
@@ -315,16 +327,7 @@ class Analysis:
         self.aoi_t = aoi.loc['video_' + str(id_video)]['t']
         self.aoi_t = self.aoi_t.split(", ")
 
-        # for comparison between stimulus
-        # stim 21 - 41
-        self.kp_data1 = mapping.loc['video_' + str(id_video+21)]['kp']
-        self.points1 = points1
-        # stim 42 - 62
-        self.kp_data2 = mapping.loc['video_' + str(id_video+42)]['kp']
-        self.points2 = points2
-        # stim 63 - 83
-        self.kp_data3 = mapping.loc['video_' + str(id_video+63)]['kp']
-        self.points3 = points3
+        
         # Event discription for in the animation plots
         self.event_discription = re.split(',', mapping.loc['video_' +
                                           str(id_video)]['events_description'])
@@ -392,29 +395,33 @@ class Analysis:
                        lw=1,
                        label='Stim 1',
                        color='r')
-        self.g[0].plot(np.array(self.times[:it]),
-                       np.array(self.kp_data1[:it]),
-                       lw=1,
-                       label='Stim 2',
-                       color='b')
-        self.g[0].plot(np.array(self.times[:it]),
-                       np.array(self.kp_data2[:it]),
-                       lw=1,
-                       label='Stim 3',
-                       color='g')
-        self.g[0].plot(np.array(self.times[:it]),
-                       np.array(self.kp_data3[:it]),
-                       lw=1,
-                       label='Stim 4',
-                       color='m')
+        # If animations are combined scenarios
+        if tr.common.get_configs('Combined_animation') == 1:
+            self.g[0].plot(np.array(self.times[:it]),
+                           np.array(self.kp_data1[:it]),
+                           lw=1,
+                           label='Stim 2',
+                           color='b')
+            self.g[0].plot(np.array(self.times[:it]),
+                           np.array(self.kp_data2[:it]),
+                           lw=1,
+                           label='Stim 3',
+                           color='g')
+            self.g[0].plot(np.array(self.times[:it]),
+                           np.array(self.kp_data3[:it]),
+                           lw=1,
+                           label='Stim 4',
+                           color='m')
+        # Adding legend and formating to figure
         self.g[0].legend()
         self.g[0].set_xlabel("Time (s)", fontsize=10)
         self.g[0].set_ylabel("Percentage of Keypresses", fontsize=10)
         self.g[0].set_xlim(0, 50)
         self.g[0].set_ylim(0, 50)
         self.g[0].set_title('Number of keypresses', fontsize=25)
-
+        # Extract time stamps for events from appen data to dislay in plot
         length = int(len(self.event))
+        # Plot event lines in kp and aoi plot
         for ev in range(len(self.event)):
             self.g[0].axvline(x=int(self.event[ev])/1000,
                               label="" + str(self.event_discription[ev]),
@@ -422,6 +429,7 @@ class Analysis:
                               lw=2)
             self.g[0].tick_params(axis='x', labelrotation=90)
             self.g[0].legend()
+
             self.g[1].axvline(x=int(self.event[ev])/1000,
                               label="" + str(self.event_discription[ev]),
                               c=plt.cm.RdYlBu(int(ev)/length),
@@ -433,7 +441,7 @@ class Analysis:
         self.g[1].set_xlabel('Time (s)', fontsize=10)
         self.g[1].set_ylabel('Number of gazes in Area of Interest', fontsize=10)  # noqa: E501
         self.g[1].set_xlim(0, 50)
-        self.g[1].set_ylim(0, 400)
+        self.g[1].set_ylim(0, 35)
         # AOI data
         aoi_x = float(self.aoi_x[i])
         aoi_y = float(self.aoi_y[i])
@@ -446,20 +454,63 @@ class Analysis:
         max_y = int(aoi_y) + 100
         x = [item[0] for item in self.points[i]]
         y = [item[1] for item in self.points[i]]
-        # stim 21 - 41
-        x1 = [item[0] for item in self.points1[i]]
-        y1 = [item[1] for item in self.points1[i]]
-        # stim 42 - 62
-        x2 = [item[0] for item in self.points2[i]]
-        y2 = [item[1] for item in self.points2[i]]
-        # stim 63 - 83
-        x3 = [item[0] for item in self.points3[i]]
-        y3 = [item[1] for item in self.points3[i]]
+        if tr.common.get_configs('Combined_animation') == 1:
+            # stim 21 - 41
+            x1 = [item[0] for item in self.points1[i]]
+            y1 = [item[1] for item in self.points1[i]]
+            # stim 42 - 62
+            x2 = [item[0] for item in self.points2[i]]
+            y2 = [item[1] for item in self.points2[i]]
+            # stim 63 - 83
+            x3 = [item[0] for item in self.points3[i]]
+            y3 = [item[1] for item in self.points3[i]]
+            # Filtering data for inside or outside coordinates
+            num1 = 0
+            num2 = 0
+            num3 = 0
+            for v in range(len(x1)):
+                if max_x > x1[v] > min_x:
+                    if max_y > y1[v] > min_y:
+                        num1 = num1 + 1
+                    else:
+                        continue
+                else:
+                    continue
+            for v in range(len(x2)):
+                if max_x > x2[v] > min_x:
+                    if max_y > y2[v] > min_y:
+                        num2 = num2 + 1
+                    else:
+                        continue
+                else:
+                    continue
+            for v in range(len(x3)):
+                if max_x > x3[v] > min_x:
+                    if max_y > y3[v] > min_y:
+                        num3 = num3 + 1
+                    else:
+                        continue
+                else:
+                    continue
+            self.number_in1.append(int(num1))
+            self.number_in2.append(int(num2))
+            self.number_in3.append(int(num3))
+            # plot AOI gazes 
+            self.g[1].plot(self.aoit,
+                           self.number_in1,
+                           label='Stim 2',
+                           color='b')
+            self.g[1].plot(self.aoit,
+                           self.number_in2,
+                           label='stim 3',
+                           color='g')
+            self.g[1].plot(self.aoit,
+                           self.number_in3,
+                           label='Stim 4',
+                           color='m')
+
         # Filtering data for if they are inside or outside coordinates
         num = 0
-        num1 = 0
-        num2 = 0
-        num3 = 0
         for v in range(len(x)):
             if max_x > x[v] > min_x:
                 if max_y > y[v] > min_y:
@@ -468,51 +519,12 @@ class Analysis:
                     continue
             else:
                 continue
-        for v in range(len(x1)):
-            if max_x > x1[v] > min_x:
-                if max_y > y1[v] > min_y:
-                    num1 = num1 + 1
-                else:
-                    continue
-            else:
-                continue
-        for v in range(len(x2)):
-            if max_x > x2[v] > min_x:
-                if max_y > y2[v] > min_y:
-                    num2 = num2 + 1
-                else:
-                    continue
-            else:
-                continue
-        for v in range(len(x3)):
-            if max_x > x3[v] > min_x:
-                if max_y > y3[v] > min_y:
-                    num3 = num3 + 1
-                else:
-                    continue
-            else:
-                continue
-
         self.number_in.append(int(num))
-        self.number_in1.append(int(num1))
-        self.number_in2.append(int(num2))
-        self.number_in3.append(int(num3))
         self.g[1].plot(self.aoit,
                        self.number_in,
                        label='Stim 1',
                        color='r')
-        self.g[1].plot(self.aoit,
-                       self.number_in1,
-                       label='Stim 2',
-                       color='b')
-        self.g[1].plot(self.aoit,
-                       self.number_in2,
-                       label='stim 3',
-                       color='g')
-        self.g[1].plot(self.aoit,
-                       self.number_in3,
-                       label='Stim 4',
-                       color='m')
+        # add legned for figure
         self.g[1].legend()
         # Subplot 3 Heatmap
         self.g[2] = sns.kdeplot(x=[item[0] for item in self.points[i]],

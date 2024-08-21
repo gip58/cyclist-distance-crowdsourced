@@ -81,7 +81,8 @@ if __name__ == '__main__':
     logger.info('Data from {} participants included in analysis.',
                 all_data.shape[0])
     # update original data files
-    # heroku_data = all_data[all_data.columns.intersection(heroku_data_keys)]
+    if tr.common.get_configs('only_lab') == 0:
+        heroku_data = all_data[all_data.columns.intersection(heroku_data_keys)]
     heroku_data = heroku_data.set_index('worker_code')
     heroku.set_data(heroku_data)  # update object with filtered data
     appen_data = all_data[all_data.columns.intersection(appen_data_keys)]
@@ -293,10 +294,16 @@ if __name__ == '__main__':
             video_1_0 = range(42, 62, 1)
             # stimulus video with av ego and target car
             video_1_1 = range(63, 83, 1)
+            if tr.common.get_configs('Combined_animation') == 1:
+                num_anim = 21
+                logger.info('Animation is set to combined animations of all for scenarios in one figure')
+            else:
+                num_anim = tr.common.get_configs('num_stimuli')
+                logger.info('Animation is set to single stimuli animations in one figure')
 
             # source video/stimulus for a given individual.
-            for id_video in tqdm(range(1, 21)):
-                # tr.common.get_configs('num_stimuli'))):
+            for id_video in tqdm(range(6, num_anim)):
+                
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
                 # Deconstruct the source video into its individual frames.
@@ -326,7 +333,7 @@ if __name__ == '__main__':
                 #                   id_video=id_video,
                 #                   density_coef=20,
                 #                   save_file=True)
-                # # create animation for stimulus
+                # create animation for stimulus
                 points_process = {}
                 points_process1 = {}
                 points_process2 = {}
@@ -334,27 +341,33 @@ if __name__ == '__main__':
                 # determin amount of points in duration for video_id
                 dur = mapping.iloc[id_video]['video_length']
                 hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
-                # for individual
+                # To create animation for scenario 1,2,3 & 4 in the same animation extract for all senarios.
+                # for individual animations or scenario 1
                 for points_dur in range(0, hm_resolution_range, 1):
                     try:
                         points_process[points_dur] = points_duration[points_dur][id_video]  # noqa: E501
                     except KeyError:
                         break
-                for points_dur in range(0, hm_resolution_range, 1):
-                    try:
-                        points_process1[points_dur] = points_duration[points_dur][id_video+21]  # noqa: E501
-                    except KeyError:
-                        break
-                for points_dur in range(0, hm_resolution_range, 1):
-                    try:
-                        points_process2[points_dur] = points_duration[points_dur][id_video+42]  # noqa: E501
-                    except KeyError:
-                        break
-                for points_dur in range(0, hm_resolution_range, 1):
-                    try:
-                        points_process3[points_dur] = points_duration[points_dur][id_video+63]  # noqa: E501
-                    except KeyError:
-                        break
+                # check if animations is set for combined
+                if tr.common.get_configs('Combined_animation') == True: 
+                    # Scenario 2
+                    for points_dur in range(0, hm_resolution_range, 1):
+                        try:
+                            points_process1[points_dur] = points_duration[points_dur][id_video+21]  # noqa: E501
+                        except KeyError:
+                            break
+                    # Scenario 3
+                    for points_dur in range(0, hm_resolution_range, 1):
+                        try:
+                            points_process2[points_dur] = points_duration[points_dur][id_video+42]  # noqa: E501
+                        except KeyError:
+                            break
+                    # Scenario 4
+                    for points_dur in range(0, hm_resolution_range, 1):
+                        try:
+                            points_process3[points_dur] = points_duration[points_dur][id_video+63]  # noqa: E501
+                        except KeyError:
+                            break
                 analysis.create_animation(heroku_data,
                                           mapping,
                                           stim_path,
