@@ -27,14 +27,14 @@ logger = tr.CustomLogger(__name__)  # use custom logger
 # SHOW_OUTPUT_ET = True  # should figures for eye tracking
 
 # for debugging, skip processing
-SAVE_P = False # save pickle files with data
-LOAD_P = True  # load pickle files with data
+SAVE_P = True # save pickle files with data
+LOAD_P = False  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
 FILTER_DATA = True # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
 REJECT_CHEATERS = True # reject cheaters on Appen
 CALC_COORDS = False # extract points from heroku data
-UPDATE_MAPPING = False  # update mapping with keypress data
+UPDATE_MAPPING = True # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
 SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
@@ -83,9 +83,10 @@ if __name__ == '__main__':
     # update original data files
     if tr.common.get_configs('only_lab') == 0:
         heroku_data = all_data[all_data.columns.intersection(heroku_data_keys)]
+        appen_data = all_data[all_data.columns.intersection(appen_data_keys)]
     heroku_data = heroku_data.set_index('worker_code')
     heroku.set_data(heroku_data)  # update object with filtered data
-    appen_data = all_data[all_data.columns.intersection(appen_data_keys)]
+    
     appen_data = appen_data.set_index('worker_code')
     appen.set_data(appen_data)  # update object with filtered data
     appen.show_info()  # show info for filtered data
