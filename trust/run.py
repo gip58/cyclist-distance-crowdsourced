@@ -21,14 +21,14 @@ logger = tr.CustomLogger(__name__)  # use custom logger
 # CALC_COORDS = True
 # UPDATE_MAPPING = True  # update mapping with keypress data
 # SHOW_OUTPUT = True  # should figures be plotted
-# SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
+# SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
 # SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
 # SHOW_OUTPUT_PP = True  # should figures with info about participants
 # SHOW_OUTPUT_ET = True  # should figures for eye tracking
 
 # for debugging, skip processing
-SAVE_P = True # save pickle files with data
-LOAD_P = False  # load pickle files with data
+SAVE_P = False # save pickle files with data
+LOAD_P = True  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
 FILTER_DATA = True # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
@@ -96,7 +96,6 @@ if __name__ == '__main__':
 
     # create arrays with coordinates for stimuli
     if CALC_COORDS:
-        print(heroku_data)
         points, _, points_duration = heroku.points(heroku_data)
         tr.common.save_to_p(file_coords,
                             [points, points_duration],
@@ -287,14 +286,6 @@ if __name__ == '__main__':
             # create eye gaze visualisations for all videos
             logger.info('Producing visualisations of eye gaze data for {} stimuli.',  # noqa: E501
                         tr.common.get_configs('num_stimuli'))
-            # stimulus videos with manual ego and target create_animation_all_stimuli  # noqa: E501
-            video_0_0 = range(0, 20, 1)
-            # stimulus vidoe with manual ego car but av target car
-            video_0_1 = range(21, 41, 1)
-            # stimulus video with av ego car but manual target car
-            video_1_0 = range(42, 62, 1)
-            # stimulus video with av ego and target car
-            video_1_1 = range(63, 83, 1)
             if tr.common.get_configs('Combined_animation') == 1:
                 num_anim = 21
                 logger.info('Animation is set to combined animations of all for scenarios in one figure')
@@ -303,7 +294,7 @@ if __name__ == '__main__':
                 logger.info('Animation is set to single stimuli animations in one figure')
 
             # source video/stimulus for a given individual.
-            for id_video in tqdm(range(6, num_anim)):
+            for id_video in tqdm(range(35, num_anim)):
                 
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
@@ -350,7 +341,7 @@ if __name__ == '__main__':
                     except KeyError:
                         break
                 # check if animations is set for combined
-                if tr.common.get_configs('Combined_animation') == True: 
+                if tr.common.get_configs('Combined_animation') == 1: 
                     # Scenario 2
                     for points_dur in range(0, hm_resolution_range, 1):
                         try:

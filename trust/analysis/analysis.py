@@ -417,7 +417,7 @@ class Analysis:
         self.g[0].set_xlabel("Time (s)", fontsize=10)
         self.g[0].set_ylabel("Percentage of Keypresses", fontsize=10)
         self.g[0].set_xlim(0, 50)
-        self.g[0].set_ylim(0, 50)
+        
         self.g[0].set_title('Number of keypresses', fontsize=25)
         # Extract time stamps for events from appen data to dislay in plot
         length = int(len(self.event))
@@ -427,22 +427,27 @@ class Analysis:
                               label="" + str(self.event_discription[ev]),
                               c=plt.cm.RdYlBu(int(ev)/length),
                               lw=2)
-            self.g[0].tick_params(axis='x', labelrotation=90)
-            self.g[0].legend()
+            self.g[0].tick_params(axis='x')
+            self.g[0].legend(fontsize=15)
 
             self.g[1].axvline(x=int(self.event[ev])/1000,
                               label="" + str(self.event_discription[ev]),
                               c=plt.cm.RdYlBu(int(ev)/length),
                               lw=2)
-            self.g[1].tick_params(axis='x', labelrotation=90)
-            self.g[1].legend()
+            self.g[1].tick_params(axis='x')
+            self.g[1].legend(fontsize=15)
         # Subplot 2 AOI
         self.g[1].set_title('Number of eye gazes in area of interest', fontsize=25)  # noqa: E501
         self.g[1].set_xlabel('Time (s)', fontsize=10)
-        self.g[1].set_ylabel('Number of gazes in Area of Interest', fontsize=10)  # noqa: E501
+        self.g[1].set_ylabel('Number of gazes in Area of Interest', fontsize=15)  # noqa: E501
+        if tr.common.get_configs('only_lab') == 1:
+            self.g[1].set_ylim(0, 35)
+            self.g[0].set_ylim(0, 80)
+        else:
+            self.g[1].set_ylim(0, 600)
+            self.g[0].set_ylim(0, 50)
         self.g[1].set_xlim(0, 50)
-        self.g[1].set_ylim(0, 35)
-        # AOI data
+                # AOI data
         aoi_x = float(self.aoi_x[i])
         aoi_y = float(self.aoi_y[i])
         aoi_t = float(self.aoi_t[i])
@@ -525,7 +530,7 @@ class Analysis:
                        label='Stim 1',
                        color='r')
         # add legned for figure
-        self.g[1].legend()
+        self.g[1].legend(fontsize=15)
         # Subplot 3 Heatmap
         self.g[2] = sns.kdeplot(x=[item[0] for item in self.points[i]],
                                 y=[item[1] for item in self.points[i]],
