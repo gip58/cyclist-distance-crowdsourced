@@ -393,24 +393,24 @@ class Analysis:
         self.g[0].plot(np.array(self.times[:it]),
                        np.array(self.kp_data[:it]),
                        lw=1,
-                       label='Stim 1',
+                       label='Video_' + str(self.id_video),
                        color='r')
         # If animations are combined scenarios
         if tr.common.get_configs('Combined_animation') == 1:
             self.g[0].plot(np.array(self.times[:it]),
                            np.array(self.kp_data1[:it]),
                            lw=1,
-                           label='Stim 2',
+                           label='Video_' + str(self.id_video+21),
                            color='b')
             self.g[0].plot(np.array(self.times[:it]),
                            np.array(self.kp_data2[:it]),
                            lw=1,
-                           label='Stim 3',
+                           label='Video_' + str(self.id_video+42),
                            color='g')
             self.g[0].plot(np.array(self.times[:it]),
                            np.array(self.kp_data3[:it]),
                            lw=1,
-                           label='Stim 4',
+                           label='Video_' + str(self.id_video+63),
                            color='m')
         # Adding legend and formating to figure
         self.g[0].legend()
@@ -503,15 +503,15 @@ class Analysis:
             # plot AOI gazes 
             self.g[1].plot(self.aoit,
                            self.number_in1,
-                           label='Stim 2',
+                           label='Video_' + str(self.id_video+21),
                            color='b')
             self.g[1].plot(self.aoit,
                            self.number_in2,
-                           label='stim 3',
+                           label='Video_' + str(self.id_video+42),
                            color='g')
             self.g[1].plot(self.aoit,
                            self.number_in3,
-                           label='Stim 4',
+                           label='Video_' + str(self.id_video+63),
                            color='m')
 
         # Filtering data for if they are inside or outside coordinates
@@ -527,7 +527,7 @@ class Analysis:
         self.number_in.append(int(num))
         self.g[1].plot(self.aoit,
                        self.number_in,
-                       label='Stim 1',
+                       label='Video_' + str(self.id_video),
                        color='r')
         # add legned for figure
         self.g[1].legend(fontsize=15)
