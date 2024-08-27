@@ -294,7 +294,7 @@ if __name__ == '__main__':
                 logger.info('Animation is set to single stimuli animations in one figure')
 
             # source video/stimulus for a given individual.
-            for id_video in tqdm(range(35, num_anim)):
+            for id_video in tqdm(range(0, num_anim)):
                 
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
