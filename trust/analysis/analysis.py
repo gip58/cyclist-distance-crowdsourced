@@ -18,8 +18,10 @@ import warnings
 import unicodedata
 import re
 from tqdm import tqdm
+from math import factorial
 # import matplotlib.patches as patches
 import ast
+from scipy.signal import savgol_filter
 from scipy.stats.kde import gaussian_kde
 # from PIL import Image
 import cv2
@@ -90,6 +92,8 @@ class Analysis:
                 cv2.imwrite(filename,
                             frame,
                             [cv2.IMWRITE_JPEG_QUALITY, 20])
+    
+
 
     def create_histogram(self,
                          image,
@@ -497,20 +501,32 @@ class Analysis:
                         continue
                 else:
                     continue
-            self.number_in1.append(int(num1))
-            self.number_in2.append(int(num2))
-            self.number_in3.append(int(num3))
+            if i < 10:
+                self.number_in1.append(int(num1))
+                number_in_plot1 = self.number_in1
+                self.number_in2.append(int(num2))
+                number_in_plot2 = self.number_in2
+                self.number_in3.append(int(num3))
+                number_in_plot3 = self.number_in3
+                
+            else: 
+                self.number_in1 = np.append(self.number_in1,int(num1))
+                number_in_plot1 = savgol_filter(self.number_in1, 10, 2)
+                self.number_in2 = np.append(self.number_in2,int(num2))
+                number_in_plot2 = savgol_filter(self.number_in2, 10, 2)
+                self.number_in3 = np.append(self.number_in3,int(num3))
+                number_in_plot3 = savgol_filter(self.number_in3, 10, 2)
             # plot AOI gazes 
             self.g[1].plot(self.aoit,
-                           self.number_in1,
+                           number_in_plot1,
                            label='Video_' + str(self.id_video+21),
                            color='b')
             self.g[1].plot(self.aoit,
-                           self.number_in2,
+                           number_in_plot2,
                            label='Video_' + str(self.id_video+42),
                            color='g')
             self.g[1].plot(self.aoit,
-                           self.number_in3,
+                           number_in_plot3,
                            label='Video_' + str(self.id_video+63),
                            color='m')
 
@@ -524,9 +540,14 @@ class Analysis:
                     continue
             else:
                 continue
-        self.number_in.append(int(num))
+        if i < 10:
+            self.number_in.append(int(num))
+            number_in_plot = self.number_in
+        else:
+            self.number_in = np.append(self.number_in,int(num))
+            number_in_plot = savgol_filter(self.number_in, 10, 2)
         self.g[1].plot(self.aoit,
-                       self.number_in,
+                       number_in_plot,
                        label='Video_' + str(self.id_video),
                        color='r')
         # add legned for figure
