@@ -81,47 +81,47 @@ Plot of AOI Video_19 All Participants
 Plot of AOI Video_20 All Participants
 
 ### For only lab participants
-![plot_Lab_only_0](figures/Lab_only_AOI_0.html?raw=true)
+[![plot_Lab_only_0](figures/Lab_only_AOI_0.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_0.html)
 Plot of AOI Video_0 Lab only Participants
-![plot_Lab_only_1](figures/Lab_only_AOI_1.html?raw=true)
+[![plot_Lab_only_1](figures/Lab_only_AOI_1.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_1.html)
 Plot of AOI Video_1 Lab only Participants
-![plot_Lab_only_2](figures/Lab_only_AOI_2.html?raw=true)
+[![plot_Lab_only_2](figures/Lab_only_AOI_2.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_2.html)
 Plot of AOI Video_2 Lab only Participants
-![plot_Lab_only_3](figures/Lab_only_AOI_3.html?raw=true)
+[![plot_Lab_only_3](figures/Lab_only_AOI_3.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_3.html)
 Plot of AOI Video_3 Lab only Participants
-![plot_Lab_only_4](figures/Lab_only_AOI_4.html?raw=true)
+[![plot_Lab_only_4](figures/Lab_only_AOI_4.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_4.html)
 Plot of AOI Video_4 Lab only Participants
-![plot_Lab_only_5](figures/Lab_only_AOI_5.html?raw=true)
+[![plot_Lab_only_5](figures/Lab_only_AOI_5.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_5.html)
 Plot of AOI Video_5 Lab only Participants
-![plot_Lab_only_6](figures/Lab_only_AOI_6.html?raw=true)
+[![plot_Lab_only_6](figures/Lab_only_AOI_6.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_6.html)
 Plot of AOI Video_6 Lab only Participants
-![plot_Lab_only_7](figures/Lab_only_AOI_7.html?raw=true)
+[![plot_Lab_only_7](figures/Lab_only_AOI_7.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_7.html)
 Plot of AOI Video_7 Lab only Participants
-![plot_Lab_only_8](figures/Lab_only_AOI_8.html?raw=true)
+[![plot_Lab_only_8](figures/Lab_only_AOI_8.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_8.html)
 Plot of AOI Video_8 Lab only Participants
-![plot_Lab_only_9](figures/Lab_only_AOI_9.html?raw=true)
+[![plot_Lab_only_9](figures/Lab_only_AOI_9.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_9.html)
 Plot of AOI Video_9 Lab only Participants
-![plot_Lab_only_10](figures/Lab_only_AOI_10.html?raw=true)
+[![plot_Lab_only_10](figures/Lab_only_AOI_10.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_10.html)
 Plot of AOI Video_10 Lab only Participants
-![plot_Lab_only_11](figures/Lab_only_AOI_11.html?raw=true)
+[![plot_Lab_only_11](figures/Lab_only_AOI_11.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_11.html)
 Plot of AOI Video_11 Lab only Participants
-![plot_Lab_only_12](figures/Lab_only_AOI_12.html?raw=true)
+[![plot_Lab_only_12](figures/Lab_only_AOI_12.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_12.html)
 Plot of AOI Video_12 Lab only Participants
-![plot_Lab_only_13](figures/Lab_only_AOI_13.html?raw=true)
+[![plot_Lab_only_13](figures/Lab_only_AOI_13.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_13.html)
 Plot of AOI Video_13 Lab only Participants
-![plot_Lab_only_14](figures/Lab_only_AOI_14.html?raw=true)
+[![plot_Lab_only_14](figures/Lab_only_AOI_14.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_14.html)
 Plot of AOI Video_14 Lab only Participants
-![plot_Lab_only_15](figures/Lab_only_AOI_15.html?raw=true)
+[![plot_Lab_only_15](figures/Lab_only_AOI_15.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_15.html)
 Plot of AOI Video_15 Lab only Participants
-![plot_Lab_only_16](figures/Lab_only_AOI_16.html?raw=true)
+[![plot_Lab_only_16](figures/Lab_only_AOI_16.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_16.html)
 Plot of AOI Video_16 Lab only Participants
-![plot_Lab_only_17](figures/Lab_only_AOI_17.html?raw=true)
+[![plot_Lab_only_17](figures/Lab_only_AOI_17.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_17.html)
 Plot of AOI Video_17 Lab only Participants
-![plot_Lab_only_18](figures/Lab_only_AOI_18.html?raw=true)
+[![plot_Lab_only_18](figures/Lab_only_AOI_18.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_18.html)
 Plot of AOI Video_18 Lab only Participants
-![plot_Lab_only_19](figures/Lab_only_AOI_19.html?raw=true)
+[![plot_Lab_only_19](figures/Lab_only_AOI_19.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_19.html)
 Plot of AOI Video_19 Lab only Participants
-![plot_Lab_only_20](figures/Lab_only_AOI_20.html?raw=true)
+[![plot_Lab_only_20](figures/Lab_only_AOI_20.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_20.html)
 Plot of AOI Video_20 Lab only Participants
 
 ]
