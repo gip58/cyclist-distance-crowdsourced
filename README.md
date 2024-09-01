@@ -36,6 +36,7 @@ The source files of the video stimuli are outputted from Unity to `config.path_s
 Check that you are indeed in the parent folder for running command `pip install -e trust-crowdsourced`. This command will not work from inside of the folder containing the repo.
 
 ## Figures
+For the analysis plots of the AOI data where made for two groups. 
 ### For all participants
 [![plot_all_0](figures/AOI_0.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_0.html)
 Plot of AOI Video_0 All Participants
