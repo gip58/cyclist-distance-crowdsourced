@@ -69,7 +69,7 @@ Plot of AOI Video_13 All Participants
 Plot of AOI Video_14 All Participants
 ![plot_all_15](figures/AOI_15.html?raw=true)
 Plot of AOI Video_15 All Participants
-[![plot_all_16](figures/AOI_16.html?raw=true)](https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_16.html)
+[![plot_all_16](figures/AOI_16.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_16.html)
 Plot of AOI Video_16 All Participants
 ![plot_all_17](figures/AOI_17.html?raw=true)
 Plot of AOI Video_17 All Participants
