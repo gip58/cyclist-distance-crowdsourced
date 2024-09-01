@@ -34,3 +34,6 @@ The source files of the video stimuli are outputted from Unity to `config.path_s
 ### Troubleshooting setup
 #### ERROR: trust-crowdsourced is not a valid editable requirement
 Check that you are indeed in the parent folder for running command `pip install -e trust-crowdsourced`. This command will not work from inside of the folder containing the repo.
+
+## Figures
+![plot](figures/AOI_1.html?raw=tru)
