@@ -37,47 +37,47 @@ Check that you are indeed in the parent folder for running command `pip install 
 
 ## Figures
 ### For all participants
-![plot_all_0](figures/AOI_0.html?raw=true)
+[![plot_all_0](figures/AOI_0.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_0.html)
 Plot of AOI Video_0 All Participants
-![plot_all_1](figures/AOI_1.html?raw=true)
+[![plot_all_1](figures/AOI_1.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_1.html)
 Plot of AOI Video_1 All Participants
-![plot_all_2](figures/AOI_2.html?raw=true)
+[![plot_all_2](figures/AOI_2.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_2.html)
 Plot of AOI Video_2 All Participants
-![plot_all_3](figures/AOI_3.html?raw=true)
+[![plot_all_3](figures/AOI_3.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_3.html)
 Plot of AOI Video_3 All Participants
-![plot_all_4](figures/AOI_4.html?raw=true)
+[![plot_all_4](figures/AOI_4.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_4.html)
 Plot of AOI Video_4 All Participants
-![plot_all_5](figures/AOI_5.html?raw=true)
+[![plot_all_5](figures/AOI_5.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_5.html)
 Plot of AOI Video_5 All Participants
-![plot_all_6](figures/AOI_6.html?raw=true)
+[![plot_all_6](figures/AOI_6.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_6.html)
 Plot of AOI Video_6 All Participants
-![plot_all_7](figures/AOI_7.html?raw=true)
+[![plot_all_7](figures/AOI_7.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_7.html)
 Plot of AOI Video_7 All Participants
-![plot_all_8](figures/AOI_8.html?raw=true)
+[![plot_all_8](figures/AOI_8.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_8.html)
 Plot of AOI Video_8 All Participants
-![plot_all_9](figures/AOI_9.html?raw=true)
+[![plot_all_9](figures/AOI_9.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_9.html)
 Plot of AOI Video_9 All Participants
-![plot_all_10](figures/AOI_10.html?raw=true)
+[![plot_all_10](figures/AOI_10.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_10.html)
 Plot of AOI Video_10 All Participants
-![plot_all_11](figures/AOI_11.html?raw=true)
+[![plot_all_11](figures/AOI_11.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_11.html)
 Plot of AOI Video_11 All Participants
-![plot_all_12](figures/AOI_12.html?raw=true)
+[![plot_all_12](figures/AOI_12.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_12.html)
 Plot of AOI Video_12 All Participants
-![plot_all_13](figures/AOI_13.html?raw=true)
+[![plot_all_13](figures/AOI_13.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_13.html)
 Plot of AOI Video_13 All Participants
-![plot_all_14](figures/AOI_14.html?raw=true)
+[![plot_all_14](figures/AOI_14.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_14.html)
 Plot of AOI Video_14 All Participants
-![plot_all_15](figures/AOI_15.html?raw=true)
+[![plot_all_15](figures/AOI_15.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_15.html)
 Plot of AOI Video_15 All Participants
 [![plot_all_16](figures/AOI_16.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_16.html)
 Plot of AOI Video_16 All Participants
-![plot_all_17](figures/AOI_17.html?raw=true)
+[![plot_all_17](figures/AOI_17.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_17.html)
 Plot of AOI Video_17 All Participants
-![plot_all_18](figures/AOI_18.html?raw=true)
+[![plot_all_18](figures/AOI_18.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_18.html)
 Plot of AOI Video_18 All Participants
-![plot_all_19](figures/AOI_19.html?raw=true)
+[![plot_all_19](figures/AOI_19.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_19.html)
 Plot of AOI Video_19 All Participants
-![plot_all_20](figures/AOI_20.html?raw=true)
+[![plot_all_20](figures/AOI_20.html?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_20.html)
 Plot of AOI Video_20 All Participants
 
 ### For only lab participants
