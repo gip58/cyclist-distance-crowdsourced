@@ -391,8 +391,9 @@ class Analysis:
         self.g[1].clear()
         self.g[2].clear()
 
+
         durations = range(0, self.hm_resolution_range)
-        # Subplot 1 KP data
+        # # Subplot 1 KP data
         it = int(round(len(self.kp_data)*i/(self.framess)))
         self.g[0].plot(np.array(self.times[:it]),
                        np.array(self.kp_data[:it]),
@@ -561,6 +562,27 @@ class Analysis:
         self.g[2].invert_yaxis()
         self.g[2].plot([min_x, max_x, max_x, min_x, min_x], [min_y, min_y, max_y, max_y, min_y], color="red")  # noqa: E501
 
+        if i == self.framess-1:
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in,
+                    mode='lines',
+                    name='video_' + str(self.id_video)))
+            fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in1,
+                    mode='lines',
+                    name='video_' + str(self.id_video+21)))
+            fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in2,
+                    mode='lines', name='video_' + str(self.id_video+42)))
+            fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in3,
+                    mode='lines', name='video_' + str(self.id_video+63)))
+                
+            fig.update_layout(template=self.template,
+                              xaxis_title='time(ms)',
+                              yaxis_title="Number of gazes in AOI")
+            file_name = 'Lab_only_AOI_' + str(self.id_video)      
+            self.save_plotly(fig,
+                             file_name,
+                             self.folder)
+
         # Scatter plot data
         # all pp
         # self.g = sns.scatterplot(x=[item[0] for item in self.points[i]],
@@ -575,12 +597,12 @@ class Analysis:
         # remove axis
         plt.gca().set_axis_off()
         # remove white spaces around figure
-        # plt.subplots_adjust(top=1,
-        #                     bottom=0,
-        #                     right=1,
-        #                     left=0,
-        #                     hspace=0,
-        #                     wspace=0)
+        plt.subplots_adjust(top=1,
+                            bottom=0,
+                            right=1,
+                            left=0,
+                            hspace=0,
+                            wspace=0)
         # textbox with duration
 
         # props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
@@ -729,6 +751,34 @@ class Analysis:
         # open it in localhost instead
         else:
             fig.show()
+
+    def plotlyplot(self):
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in,
+                mode='lines',
+                name=str(self.id_video)))
+        fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in1,
+                mode='lines',
+                name=str(self.id_video+21)))
+        fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in2,
+                mode='lines', name=str(self.id_video+42)))
+        fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in3,
+                mode='lines', name=str(self.id_video+63)))
+            
+        fig.update_layout(template=self.template,
+                          xaxis_title='time(ms)',
+                          yaxis_title="Number of gazes in AOI")
+        
+
+
+
+
+        if save_file:
+            file_name = 'AOI_' + str(self.id_video)
+                    
+            self.save_plotly(fig,
+                             file_name,
+                             self.folder)
 
     def bar(self, df, y: list, x=None, stacked=False, pretty_text=False,
             orientation='v', xaxis_title=None, yaxis_title=None,
