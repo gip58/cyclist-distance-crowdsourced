@@ -123,6 +123,3 @@ Plot of AOI Video_18 Lab only Participants
 Plot of AOI Video_19 Lab only Participants
 [![plot_Lab_only_20](figures/Lab_only_AOI_20.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_20.html)
 Plot of AOI Video_20 Lab only Participants
-
-]
-
