@@ -393,7 +393,7 @@ class Analysis:
 
 
         durations = range(0, self.hm_resolution_range)
-        # # Subplot 1 KP data
+        # Subplot 1 KP data
         it = int(round(len(self.kp_data)*i/(self.framess)))
         self.g[0].plot(np.array(self.times[:it]),
                        np.array(self.kp_data[:it]),
@@ -564,21 +564,24 @@ class Analysis:
 
         if i == self.framess-1:
             fig = go.Figure()
-            fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in,
+            print(np.array(self.kp_data[it]))
+            fig.add_trace(go.Scatter(x=np.array(self.times[:it]), y=np.array(self.kp_data[:it]),
                     mode='lines',
                     name='video_' + str(self.id_video)))
-            fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in1,
+            fig.add_trace(go.Scatter(x=np.array(self.times[:it]), y=np.array(self.kp_data1[:it]),
                     mode='lines',
                     name='video_' + str(self.id_video+21)))
-            fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in2,
-                    mode='lines', name='video_' + str(self.id_video+42)))
-            fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in3,
-                    mode='lines', name='video_' + str(self.id_video+63)))
+            fig.add_trace(go.Scatter(x=np.array(self.times[:it]), y=np.array(self.kp_data2[:it]),
+                    mode='lines',
+                    name='video_' + str(self.id_video+42)))
+            fig.add_trace(go.Scatter(x=np.array(self.times[:it]), y=np.array(self.kp_data3[:it]),
+                    mode='lines',
+                    name='video_' + str(self.id_video+63)))
                 
             fig.update_layout(template=self.template,
                               xaxis_title='time(ms)',
-                              yaxis_title="Number of gazes in AOI")
-            file_name = 'Lab_only_AOI_' + str(self.id_video)      
+                              yaxis_title="Number of KP")
+            file_name = 'Lab_only_KP_' + str(self.id_video)      
             self.save_plotly(fig,
                              file_name,
                              self.folder)
@@ -591,18 +594,18 @@ class Analysis:
         #                          hue=[item[0] for item in self.points[i]],
         #                          legend='auto')
         # read original image
-        im = plt.imread(self.image + '\\frame_' + str([i]) + '.jpg')
-        plt.imshow(im)
+        # im = plt.imread(self.image + '\\frame_' + str([i]) + '.jpg')
+        # plt.imshow(im)
 
-        # remove axis
-        plt.gca().set_axis_off()
-        # remove white spaces around figure
-        plt.subplots_adjust(top=1,
-                            bottom=0,
-                            right=1,
-                            left=0,
-                            hspace=0,
-                            wspace=0)
+        # # remove axis
+        # plt.gca().set_axis_off()
+        # # remove white spaces around figure
+        # plt.subplots_adjust(top=1,
+        #                     bottom=0,
+        #                     right=1,
+        #                     left=0,
+        #                     hspace=0,
+        #                     wspace=0)
         # textbox with duration
 
         # props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
@@ -752,33 +755,6 @@ class Analysis:
         else:
             fig.show()
 
-    def plotlyplot(self):
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in,
-                mode='lines',
-                name=str(self.id_video)))
-        fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in1,
-                mode='lines',
-                name=str(self.id_video+21)))
-        fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in2,
-                mode='lines', name=str(self.id_video+42)))
-        fig.add_trace(go.Scatter(x=self.aoi_t, y=self.number_in3,
-                mode='lines', name=str(self.id_video+63)))
-            
-        fig.update_layout(template=self.template,
-                          xaxis_title='time(ms)',
-                          yaxis_title="Number of gazes in AOI")
-        
-
-
-
-
-        if save_file:
-            file_name = 'AOI_' + str(self.id_video)
-                    
-            self.save_plotly(fig,
-                             file_name,
-                             self.folder)
 
     def bar(self, df, y: list, x=None, stacked=False, pretty_text=False,
             orientation='v', xaxis_title=None, yaxis_title=None,
