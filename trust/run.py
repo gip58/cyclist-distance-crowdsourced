@@ -5,7 +5,7 @@ from tqdm import tqdm
 import os
 # import shutil
 import trust as tr
-from statistics import mean
+# from statistics import mean
 # import pandas as pd
 
 tr.logs(show_level='info', show_color=True)
@@ -27,16 +27,16 @@ logger = tr.CustomLogger(__name__)  # use custom logger
 # SHOW_OUTPUT_ET = True  # should figures for eye tracking
 
 # for debugging, skip processing
-SAVE_P = False # save pickle files with data
+SAVE_P = False  # save pickle files with data
 LOAD_P = True  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
-FILTER_DATA = True # filter Appen and heroku data
+FILTER_DATA = True  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
-REJECT_CHEATERS = True # reject cheaters on Appen
-CALC_COORDS = False # extract points from heroku data
-UPDATE_MAPPING = True # update mapping with keypress data
+REJECT_CHEATERS = True  # reject cheaters on Appen
+CALC_COORDS = False  # extract points from heroku data
+UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
-SHOW_OUTPUT_KP = False # should figures with keypress data be plotted
+SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
 SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
 SHOW_OUTPUT_PP = False  # should figures with info about participants
 SHOW_OUTPUT_ET = True  # should figures for eye tracking
@@ -86,13 +86,11 @@ if __name__ == '__main__':
         appen_data = all_data[all_data.columns.intersection(appen_data_keys)]
     heroku_data = heroku_data.set_index('worker_code')
     heroku.set_data(heroku_data)  # update object with filtered data
-    
     appen_data = appen_data.set_index('worker_code')
     appen.set_data(appen_data)  # update object with filtered data
     appen.show_info()  # show info for filtered data
     # generate country-specific data
     countries_data = appen.process_countries()
-
 
     # create arrays with coordinates for stimuli
     if CALC_COORDS:
@@ -288,14 +286,13 @@ if __name__ == '__main__':
                         tr.common.get_configs('num_stimuli'))
             if tr.common.get_configs('Combined_animation') == 1:
                 num_anim = 21
-                logger.info('Animation is set to combined animations of all for scenarios in one figure')
+                logger.info('Animation is set to combined animations of all for scenarios in one figure')  # noqa: E501
             else:
                 num_anim = tr.common.get_configs('num_stimuli')
-                logger.info('Animation is set to single stimuli animations in one figure')
+                logger.info('Animation is set to single stimuli animations in one figure')  # noqa: E501
 
             # source video/stimulus for a given individual.
             for id_video in tqdm(range(0, num_anim)):
-                
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
                 # Deconstruct the source video into its individual frames.
@@ -333,7 +330,8 @@ if __name__ == '__main__':
                 # determin amount of points in duration for video_id
                 dur = mapping.iloc[id_video]['video_length']
                 hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
-                # To create animation for scenario 1,2,3 & 4 in the same animation extract for all senarios.
+                # To create animation for scenario 1,2,3 & 4 in the
+                # same animation extract for all senarios.
                 # for individual animations or scenario 1
                 for points_dur in range(0, hm_resolution_range, 1):
                     try:
@@ -341,7 +339,7 @@ if __name__ == '__main__':
                     except KeyError:
                         break
                 # check if animations is set for combined
-                if tr.common.get_configs('Combined_animation') == 1: 
+                if tr.common.get_configs('Combined_animation') == 1:
                     # Scenario 2
                     for points_dur in range(0, hm_resolution_range, 1):
                         try:

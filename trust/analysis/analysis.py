@@ -18,7 +18,6 @@ import warnings
 import unicodedata
 import re
 from tqdm import tqdm
-from math import factorial
 # import matplotlib.patches as patches
 import ast
 from scipy.signal import savgol_filter
@@ -26,7 +25,6 @@ from scipy.stats.kde import gaussian_kde
 # from PIL import Image
 import cv2
 import trust as tr
-from statistics import mean
 
 matplotlib.use('TkAgg')
 logger = tr.CustomLogger(__name__)  # use custom logger
@@ -92,8 +90,6 @@ class Analysis:
                 cv2.imwrite(filename,
                             frame,
                             [cv2.IMWRITE_JPEG_QUALITY, 20])
-    
-
 
     def create_histogram(self,
                          image,
@@ -280,7 +276,7 @@ class Analysis:
         self.hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
         self.id_video = id_video
         # calc amounts of steps from duration
-        dur = mapping.iloc[id_video]['video_length']
+        # dur = mapping.iloc[id_video]['video_length']
         # Determing the amount of frames for given video
         self.framess = int(round(self.time/self.hm_resolution))
         # Determin time
@@ -302,13 +298,11 @@ class Analysis:
                               self.res)) / 1000
         self.kp_data = mapping.loc['video_' + str(id_video)]['kp']
         self.event = mapping.loc['video_' + str(id_video)]['events']
-
         self.event = re.findall(r'\w+', self.event)
-
         aoi = pd.read_csv(tr.common.get_configs('aoi'))
         aoi.set_index('video_id', inplace=True)
         self.number_in = []
-        if tr.common.get_configs('Combined_animation') == True:
+        if tr.common.get_configs('Combined_animation') == 1:
             self.number_in1 = []
             self.number_in2 = []
             self.number_in3 = []
@@ -331,7 +325,6 @@ class Analysis:
         self.aoi_t = aoi.loc['video_' + str(id_video)]['t']
         self.aoi_t = self.aoi_t.split(", ")
 
-        
         # Event discription for in the animation plots
         self.event_discription = re.split(',', mapping.loc['video_' +
                                           str(id_video)]['events_description'])
@@ -391,7 +384,6 @@ class Analysis:
         self.g[1].clear()
         self.g[2].clear()
 
-
         durations = range(0, self.hm_resolution_range)
         # Subplot 1 KP data
         it = int(round(len(self.kp_data)*i/(self.framess)))
@@ -422,7 +414,6 @@ class Analysis:
         self.g[0].set_xlabel("Time (s)", fontsize=10)
         self.g[0].set_ylabel("Percentage of Keypresses", fontsize=10)
         self.g[0].set_xlim(0, 50)
-        
         self.g[0].set_title('Number of keypresses', fontsize=25)
         # Extract time stamps for events from appen data to dislay in plot
         length = int(len(self.event))
@@ -452,7 +443,7 @@ class Analysis:
             self.g[1].set_ylim(0, 600)
             self.g[0].set_ylim(0, 50)
         self.g[1].set_xlim(0, 50)
-                # AOI data
+        # AOI data
         aoi_x = float(self.aoi_x[i])
         aoi_y = float(self.aoi_y[i])
         aoi_t = float(self.aoi_t[i])
@@ -462,6 +453,7 @@ class Analysis:
         max_x = int(aoi_x) + 100
         min_y = int(aoi_y) - 100
         max_y = int(aoi_y) + 100
+        # stim 0 - 20 or all stim when not combined
         x = [item[0] for item in self.points[i]]
         y = [item[1] for item in self.points[i]]
         if tr.common.get_configs('Combined_animation') == 1:
@@ -509,15 +501,15 @@ class Analysis:
                 number_in_plot2 = self.number_in2
                 self.number_in3.append(int(num3))
                 number_in_plot3 = self.number_in3
-                
-            else: 
-                self.number_in1 = np.append(self.number_in1,int(num1))
+
+            else:
+                self.number_in1 = np.append(self.number_in1, int(num1))
                 number_in_plot1 = savgol_filter(self.number_in1, 10, 2)
-                self.number_in2 = np.append(self.number_in2,int(num2))
+                self.number_in2 = np.append(self.number_in2, int(num2))
                 number_in_plot2 = savgol_filter(self.number_in2, 10, 2)
-                self.number_in3 = np.append(self.number_in3,int(num3))
+                self.number_in3 = np.append(self.number_in3, int(num3))
                 number_in_plot3 = savgol_filter(self.number_in3, 10, 2)
-            # plot AOI gazes 
+            # plot AOI gazes
             self.g[1].plot(self.aoit,
                            number_in_plot1,
                            label='Video_' + str(self.id_video+21),
@@ -545,7 +537,7 @@ class Analysis:
             self.number_in.append(int(num))
             number_in_plot = self.number_in
         else:
-            self.number_in = np.append(self.number_in,int(num))
+            self.number_in = np.append(self.number_in, int(num))
             number_in_plot = savgol_filter(self.number_in, 10, 2)
         self.g[1].plot(self.aoit,
                        number_in_plot,
@@ -561,31 +553,33 @@ class Analysis:
                                 cmap='RdBu_r')
         self.g[2].invert_yaxis()
         self.g[2].plot([min_x, max_x, max_x, min_x, min_x], [min_y, min_y, max_y, max_y, min_y], color="red")  # noqa: E501
-
-        if i == self.framess-1:
-            fig = go.Figure()
-            print(np.array(self.kp_data[it]))
-            fig.add_trace(go.Scatter(x=np.array(self.times[:it]), y=np.array(self.kp_data[:it]),
-                    mode='lines',
-                    name='video_' + str(self.id_video)))
-            fig.add_trace(go.Scatter(x=np.array(self.times[:it]), y=np.array(self.kp_data1[:it]),
-                    mode='lines',
-                    name='video_' + str(self.id_video+21)))
-            fig.add_trace(go.Scatter(x=np.array(self.times[:it]), y=np.array(self.kp_data2[:it]),
-                    mode='lines',
-                    name='video_' + str(self.id_video+42)))
-            fig.add_trace(go.Scatter(x=np.array(self.times[:it]), y=np.array(self.kp_data3[:it]),
-                    mode='lines',
-                    name='video_' + str(self.id_video+63)))
-                
-            fig.update_layout(template=self.template,
-                              xaxis_title='time(ms)',
-                              yaxis_title="Number of KP")
-            file_name = 'Lab_only_KP_' + str(self.id_video)      
-            self.save_plotly(fig,
-                             file_name,
-                             self.folder)
-
+        if tr.common.get_configs('plotlyplot') == 1:
+            if i == self.framess-1:
+                fig = go.Figure()
+                print(np.array(self.kp_data[it]))
+                fig.add_trace(go.Scatter(x=np.array(self.times[:it]),
+                                         y=np.array(self.kp_data[:it]),
+                                         mode='lines',
+                                         name='video_' + str(self.id_video)))     # noqa: E501
+                fig.add_trace(go.Scatter(x=np.array(self.times[:it]),
+                                         y=np.array(self.kp_data1[:it]),
+                                         mode='lines',
+                                         name='video_' + str(self.id_video+21)))  # noqa: E501
+                fig.add_trace(go.Scatter(x=np.array(self.times[:it]),
+                                         y=np.array(self.kp_data2[:it]),
+                                         mode='lines',
+                                         name='video_' + str(self.id_video+42)))  # noqa: E501
+                fig.add_trace(go.Scatter(x=np.array(self.times[:it]),
+                                         y=np.array(self.kp_data3[:it]),
+                                         mode='lines',
+                                         name='video_' + str(self.id_video+63)))  # noqa: E501
+                fig.update_layout(template=self.template,
+                                  xaxis_title='time(ms)',
+                                  yaxis_title="Number of KP")
+                file_name = 'Lab_only_KP_' + str(self.id_video)
+                self.save_plotly(fig,
+                                 file_name,
+                                 self.folder)
         # Scatter plot data
         # all pp
         # self.g = sns.scatterplot(x=[item[0] for item in self.points[i]],
@@ -594,20 +588,19 @@ class Analysis:
         #                          hue=[item[0] for item in self.points[i]],
         #                          legend='auto')
         # read original image
-        # im = plt.imread(self.image + '\\frame_' + str([i]) + '.jpg')
-        # plt.imshow(im)
+        im = plt.imread(self.image + '\\frame_' + str([i]) + '.jpg')
+        plt.imshow(im)
 
-        # # remove axis
-        # plt.gca().set_axis_off()
-        # # remove white spaces around figure
-        # plt.subplots_adjust(top=1,
-        #                     bottom=0,
-        #                     right=1,
-        #                     left=0,
-        #                     hspace=0,
-        #                     wspace=0)
+        # remove axis
+        plt.gca().set_axis_off()
+        # remove white spaces around figure
+        plt.subplots_adjust(top=1,
+                            bottom=0,
+                            right=1,
+                            left=0,
+                            hspace=0,
+                            wspace=0)
         # textbox with duration
-
         # props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         # plt.text(0.75,
         #          0.98,
@@ -754,7 +747,6 @@ class Analysis:
         # open it in localhost instead
         else:
             fig.show()
-
 
     def bar(self, df, y: list, x=None, stacked=False, pretty_text=False,
             orientation='v', xaxis_title=None, yaxis_title=None,
