@@ -387,6 +387,7 @@ class Analysis:
         else:
             self.g[1].set_ylim(0, 600)
             self.g[0].set_ylim(0, 50)
+        self.g[1].set_xlim(0, 50)
         # AOI data
         aoi_x = float(self.aoi_x[i])
         aoi_y = float(self.aoi_y[i])
