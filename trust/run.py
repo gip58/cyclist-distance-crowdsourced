@@ -4,10 +4,10 @@ import matplotlib._pylab_helpers
 from tqdm import tqdm
 import os
 import trust as tr
+# from statistics import mean
+# import pandas as pd
 import re
 from statistics import mean
-
-
 tr.logs(show_level='info', show_color=True)
 logger = tr.CustomLogger(__name__)  # use custom logger
 
@@ -21,7 +21,7 @@ logger = tr.CustomLogger(__name__)  # use custom logger
 # CALC_COORDS = False  # extract points from heroku data
 # UPDATE_MAPPING = True  # update mapping with keypress data
 # SHOW_OUTPUT = True  # should figures be plotted
-# SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
+# SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
 # SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
 # SHOW_OUTPUT_PP = True  # should figures with info about participants
 # SHOW_OUTPUT_ET = False  # should figures for eye tracking
@@ -32,14 +32,14 @@ LOAD_P = True  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
 FILTER_DATA = True  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
-REJECT_CHEATERS = False  # reject cheaters on Appen
+REJECT_CHEATERS = True  # reject cheaters on Appen
 CALC_COORDS = False  # extract points from heroku data
-UPDATE_MAPPING = False  # update mapping with keypress data
+UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
-SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
+SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
 SHOW_OUTPUT_ST = False  # should figures with stimulus data be plotted
 SHOW_OUTPUT_PP = False  # should figures with info about participants be plotted
-SHOW_OUTPUT_ET = False  # should figures for eye tracking be plotted
+SHOW_OUTPUT_ET = True  # should figures for eye tracking be plotted
 
 file_mapping = 'mapping.p'  # file to save updated mapping
 file_coords = 'coords.p'  # file to save lists with coordinates
@@ -53,6 +53,7 @@ if __name__ == '__main__':
                                 save_csv=SAVE_CSV)
     # read heroku data
     heroku_data = heroku.read_data(filter_data=FILTER_DATA)
+
     # create object for working with appen data
     file_appen = tr.common.get_configs('file_appen')
     appen = tr.analysis.Appen(file_data=file_appen,
@@ -79,10 +80,11 @@ if __name__ == '__main__':
     logger.info('Data from {} participants included in analysis.',
                 all_data.shape[0])
     # update original data files
-    heroku_data = all_data[all_data.columns.intersection(heroku_data_keys)]
+    if tr.common.get_configs('only_lab') == 0:
+        heroku_data = all_data[all_data.columns.intersection(heroku_data_keys)]
+        appen_data = all_data[all_data.columns.intersection(appen_data_keys)]
     heroku_data = heroku_data.set_index('worker_code')
     heroku.set_data(heroku_data)  # update object with filtered data
-    appen_data = all_data[all_data.columns.intersection(appen_data_keys)]
     appen_data = appen_data.set_index('worker_code')
     appen.set_data(appen_data)  # update object with filtered data
     appen.show_info()  # show info for filtered data
@@ -332,19 +334,17 @@ if __name__ == '__main__':
             # create eye gaze visualisations for all videos
             logger.info('Producing visualisations of eye gaze data for {} stimuli.',
                         tr.common.get_configs('num_stimuli'))
-            # stimulus videos with manual ego and target create_animation_all_stimuli
-            video_0_0 = range(0, 20, 1)
-            # stimulus vidoe with manual ego car but av target car
-            video_0_1 = range(21, 41, 1)
-            # stimulus video with av ego car but manual target car
-            video_1_0 = range(42, 62, 1)
-            # stimulus video with av ego and target car
-            video_1_1 = range(63, 83, 1)
+            if tr.common.get_configs('Combined_animation') == 1:
+                num_anim = 21
+                logger.info('Animation is set to combined animations of all for scenarios in one figure')  # noqa: E501
+            else:
+                num_anim = tr.common.get_configs('num_stimuli')
+                logger.info('Animation is set to single stimuli animations in one figure')  # noqa: E501
 
             # source video/stimulus for a given individual.
-            for id_video in tqdm(range(1, 21)):
-                # tr.common.get_configs('num_stimuli'))):
-                logger.info('Producing visualisations of eye gaze data for stimulus {}.', id_video)
+            for id_video in tqdm(range(0, num_anim)):
+                logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
+                            id_video)
                 # Deconstruct the source video into its individual frames.
                 stim_path = os.path.join(tr.settings.output_dir, 'frames')
                 # To allow for overlaying the heatmap for each frame later on.
@@ -372,37 +372,47 @@ if __name__ == '__main__':
                 #                   id_video=id_video,
                 #                   density_coef=20,
                 #                   save_file=True)
-                # # create animation for stimulus
+                # create animation for stimulus
                 points_process = {}
                 points_process1 = {}
                 points_process2 = {}
                 points_process3 = {}
                 # determin amount of points in duration for video_id
+                dur = mapping.iloc[id_video]['video_length']
+                hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
+                # To create animation for scenario 1,2,3 & 4 in the
+                # same animation extract for all senarios.
+                # for individual animations or scenario
                 dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
                 dur = [x for x in dur if str(x) != 'nan']
                 dur = int(round(mean(dur)/1000)*1000)
                 hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))
-                # for individual
+                # for individual stim
                 for points_dur in range(0, hm_resolution_range, 1):
                     try:
                         points_process[points_dur] = points_duration[points_dur][id_video]
                     except KeyError:
                         break
-                for points_dur in range(0, hm_resolution_range, 1):
-                    try:
-                        points_process1[points_dur] = points_duration[points_dur][id_video+21]
-                    except KeyError:
-                        break
-                for points_dur in range(0, hm_resolution_range, 1):
-                    try:
-                        points_process2[points_dur] = points_duration[points_dur][id_video+42]
-                    except KeyError:
-                        break
-                for points_dur in range(0, hm_resolution_range, 1):
-                    try:
-                        points_process3[points_dur] = points_duration[points_dur][id_video+63]
-                    except KeyError:
-                        break
+                # check if animations is set for combined
+                if tr.common.get_configs('Combined_animation') == 1:
+                    # Scenario 2
+                    for points_dur in range(0, hm_resolution_range, 1):
+                        try:
+                            points_process1[points_dur] = points_duration[points_dur][id_video+21]  # noqa: E501
+                        except KeyError:
+                            break
+                    # Scenario 3
+                    for points_dur in range(0, hm_resolution_range, 1):
+                        try:
+                            points_process2[points_dur] = points_duration[points_dur][id_video+42]  # noqa: E501
+                        except KeyError:
+                            break
+                    # Scenario 4
+                    for points_dur in range(0, hm_resolution_range, 1):
+                        try:
+                            points_process3[points_dur] = points_duration[points_dur][id_video+63]  # noqa: E501
+                        except KeyError:
+                            break
                 analysis.create_animation(heroku_data,
                                           mapping,
                                           stim_path,

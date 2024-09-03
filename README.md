@@ -34,3 +34,182 @@ The source files of the video stimuli are outputted from Unity to `config.path_s
 ### Troubleshooting setup
 #### ERROR: trust-crowdsourced is not a valid editable requirement
 Check that you are indeed in the parent folder for running command `pip install -e trust-crowdsourced`. This command will not work from inside of the folder containing the repo.
+
+## Figures
+For the analysis plots of the AOI data were made for two groups. 
+## Area of Interest (AOI)
+### For all participants
+[![plot_all_0](figures/AOI_0.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_0.html)
+Plot of AOI Video_0 All Participants
+[![plot_all_1](figures/AOI_1.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_1.html)
+Plot of AOI Video_1 All Participants
+[![plot_all_2](figures/AOI_2.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_2.html)
+Plot of AOI Video_2 All Participants
+[![plot_all_3](figures/AOI_3.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_3.html)
+Plot of AOI Video_3 All Participants
+[![plot_all_4](figures/AOI_4.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_4.html)
+Plot of AOI Video_4 All Participants
+[![plot_all_5](figures/AOI_5.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_5.html)
+Plot of AOI Video_5 All Participants
+[![plot_all_6](figures/AOI_6.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_6.html)
+Plot of AOI Video_6 All Participants
+[![plot_all_7](figures/AOI_7.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_7.html)
+Plot of AOI Video_7 All Participants
+[![plot_all_8](figures/AOI_8.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_8.html)
+Plot of AOI Video_8 All Participants
+[![plot_all_9](figures/AOI_9.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_9.html)
+Plot of AOI Video_9 All Participants
+[![plot_all_10](figures/AOI_10.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_10.html)
+Plot of AOI Video_10 All Participants
+[![plot_all_11](figures/AOI_11.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_11.html)
+Plot of AOI Video_11 All Participants
+[![plot_all_12](figures/AOI_12.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_12.html)
+Plot of AOI Video_12 All Participants
+[![plot_all_13](figures/AOI_13.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_13.html)
+Plot of AOI Video_13 All Participants
+[![plot_all_14](figures/AOI_14.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_14.html)
+Plot of AOI Video_14 All Participants
+[![plot_all_15](figures/AOI_15.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_15.html)
+Plot of AOI Video_15 All Participants
+[![plot_all_16](figures/AOI_16.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_16.html)
+Plot of AOI Video_16 All Participants
+[![plot_all_17](figures/AOI_17.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_17.html)
+Plot of AOI Video_17 All Participants
+[![plot_all_18](figures/AOI_18.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_18.html)
+Plot of AOI Video_18 All Participants
+[![plot_all_19](figures/AOI_19.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_19.html)
+Plot of AOI Video_19 All Participants
+[![plot_all_20](figures/AOI_20.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/AOI_20.html)
+Plot of AOI Video_20 All Participants
+
+### For only lab participants
+[![plot_Lab_only_0](figures/Lab_only_AOI_0.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_0.html)
+Plot of AOI Video_0 Lab only Participants
+[![plot_Lab_only_1](figures/Lab_only_AOI_1.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_1.html)
+Plot of AOI Video_1 Lab only Participants
+[![plot_Lab_only_2](figures/Lab_only_AOI_2.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_2.html)
+Plot of AOI Video_2 Lab only Participants
+[![plot_Lab_only_3](figures/Lab_only_AOI_3.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_3.html)
+Plot of AOI Video_3 Lab only Participants
+[![plot_Lab_only_4](figures/Lab_only_AOI_4.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_4.html)
+Plot of AOI Video_4 Lab only Participants
+[![plot_Lab_only_5](figures/Lab_only_AOI_5.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_5.html)
+Plot of AOI Video_5 Lab only Participants
+[![plot_Lab_only_6](figures/Lab_only_AOI_6.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_6.html)
+Plot of AOI Video_6 Lab only Participants
+[![plot_Lab_only_7](figures/Lab_only_AOI_7.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_7.html)
+Plot of AOI Video_7 Lab only Participants
+[![plot_Lab_only_8](figures/Lab_only_AOI_8.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_8.html)
+Plot of AOI Video_8 Lab only Participants
+[![plot_Lab_only_9](figures/Lab_only_AOI_9.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_9.html)
+Plot of AOI Video_9 Lab only Participants
+[![plot_Lab_only_10](figures/Lab_only_AOI_10.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_10.html)
+Plot of AOI Video_10 Lab only Participants
+[![plot_Lab_only_11](figures/Lab_only_AOI_11.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_11.html)
+Plot of AOI Video_11 Lab only Participants
+[![plot_Lab_only_12](figures/Lab_only_AOI_12.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_12.html)
+Plot of AOI Video_12 Lab only Participants
+[![plot_Lab_only_13](figures/Lab_only_AOI_13.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_13.html)
+Plot of AOI Video_13 Lab only Participants
+[![plot_Lab_only_14](figures/Lab_only_AOI_14.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_14.html)
+Plot of AOI Video_14 Lab only Participants
+[![plot_Lab_only_15](figures/Lab_only_AOI_15.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_15.html)
+Plot of AOI Video_15 Lab only Participants
+[![plot_Lab_only_16](figures/Lab_only_AOI_16.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_16.html)
+Plot of AOI Video_16 Lab only Participants
+[![plot_Lab_only_17](figures/Lab_only_AOI_17.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_17.html)
+Plot of AOI Video_17 Lab only Participants
+[![plot_Lab_only_18](figures/Lab_only_AOI_18.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_18.html)
+Plot of AOI Video_18 Lab only Participants
+[![plot_Lab_only_19](figures/Lab_only_AOI_19.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_19.html)
+Plot of AOI Video_19 Lab only Participants
+[![plot_Lab_only_20](figures/Lab_only_AOI_20.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_AOI_20.html)
+Plot of AOI Video_20 Lab only Participants
+
+## Key press (KP)
+[![plot_all_0](figures/KP_0.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_0.html)
+Plot of KP Video_0 All Participants
+[![plot_all_1](figures/KP_1.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_1.html)
+Plot of KP Video_1 All Participants
+[![plot_all_2](figures/KP_2.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_2.html)
+Plot of KP Video_2 All Participants
+[![plot_all_3](figures/KP_3.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_3.html)
+Plot of KP Video_3 All Participants
+[![plot_all_4](figures/KP_4.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_4.html)
+Plot of KP Video_4 All Participants
+[![plot_all_5](figures/KP_5.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_5.html)
+Plot of KP Video_5 All Participants
+[![plot_all_6](figures/KP_6.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_6.html)
+Plot of KP Video_6 All Participants
+[![plot_all_7](figures/KP_7.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_7.html)
+Plot of KP Video_7 All Participants
+[![plot_all_8](figures/KP_8.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_8.html)
+Plot of KP Video_8 All Participants
+[![plot_all_9](figures/KP_9.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_9.html)
+Plot of KP Video_9 All Participants
+[![plot_all_10](figures/KP_10.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_10.html)
+Plot of KP Video_10 All Participants
+[![plot_all_11](figures/KP_11.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_11.html)
+Plot of KP Video_11 All Participants
+[![plot_all_12](figures/KP_12.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_12.html)
+Plot of KP Video_12 All Participants
+[![plot_all_13](figures/KP_13.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_13.html)
+Plot of KP Video_13 All Participants
+[![plot_all_14](figures/KP_14.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_14.html)
+Plot of KP Video_14 All Participants
+[![plot_all_15](figures/KP_15.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_15.html)
+Plot of KP Video_15 All Participants
+[![plot_all_16](figures/KP_16.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_16.html)
+Plot of KP Video_16 All Participants
+[![plot_all_17](figures/KP_17.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_17.html)
+Plot of KP Video_17 All Participants
+[![plot_all_18](figures/KP_18.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_18.html)
+Plot of KP Video_18 All Participants
+[![plot_all_19](figures/KP_19.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_19.html)
+Plot of KP Video_19 All Participants
+[![plot_all_20](figures/KP_20.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/KP_20.html)
+Plot of KP Video_20 All Participants
+
+### For only lab participants
+[![plot_Lab_only_0](figures/Lab_only_KP_0.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_0.html)
+Plot of KP Video_0 Lab only Participants
+[![plot_Lab_only_1](figures/Lab_only_KP_1.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_1.html)
+Plot of KP Video_1 Lab only Participants
+[![plot_Lab_only_2](figures/Lab_only_KP_2.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_2.html)
+Plot of KP Video_2 Lab only Participants
+[![plot_Lab_only_3](figures/Lab_only_KP_3.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_3.html)
+Plot of KP Video_3 Lab only Participants
+[![plot_Lab_only_4](figures/Lab_only_KP_4.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_4.html)
+Plot of KP Video_4 Lab only Participants
+[![plot_Lab_only_5](figures/Lab_only_KP_5.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_5.html)
+Plot of KP Video_5 Lab only Participants
+[![plot_Lab_only_6](figures/Lab_only_KP_6.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_6.html)
+Plot of KP Video_6 Lab only Participants
+[![plot_Lab_only_7](figures/Lab_only_KP_7.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_7.html)
+Plot of KP Video_7 Lab only Participants
+[![plot_Lab_only_8](figures/Lab_only_KP_8.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_8.html)
+Plot of KP Video_8 Lab only Participants
+[![plot_Lab_only_9](figures/Lab_only_KP_9.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_9.html)
+Plot of KP Video_9 Lab only Participants
+[![plot_Lab_only_10](figures/Lab_only_KP_10.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_10.html)
+Plot of KP Video_10 Lab only Participants
+[![plot_Lab_only_11](figures/Lab_only_KP_11.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_11.html)
+Plot of KP Video_11 Lab only Participants
+[![plot_Lab_only_12](figures/Lab_only_KP_12.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_12.html)
+Plot of KP Video_12 Lab only Participants
+[![plot_Lab_only_13](figures/Lab_only_KP_13.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_13.html)
+Plot of KP Video_13 Lab only Participants
+[![plot_Lab_only_14](figures/Lab_only_KP_14.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_14.html)
+Plot of KP Video_14 Lab only Participants
+[![plot_Lab_only_15](figures/Lab_only_KP_15.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_15.html)
+Plot of KP Video_15 Lab only Participants
+[![plot_Lab_only_16](figures/Lab_only_KP_16.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_16.html)
+Plot of KP Video_16 Lab only Participants
+[![plot_Lab_only_17](figures/Lab_only_KP_17.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_17.html)
+Plot of KP Video_17 Lab only Participants
+[![plot_Lab_only_18](figures/Lab_only_KP_18.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_18.html)
+Plot of KP Video_18 Lab only Participants
+[![plot_Lab_only_19](figures/Lab_only_KP_19.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_19.html)
+Plot of KP Video_19 Lab only Participants
+[![plot_Lab_only_20](figures/Lab_only_KP_20.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/issue-11-lap_people/figures/Lab_only_KP_20.html)
+Plot of KP Video_20 Lab only Participants

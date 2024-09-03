@@ -19,10 +19,10 @@ import unicodedata
 import re
 from tqdm import tqdm
 import ast
+from scipy.signal import savgol_filter
 from scipy.stats.kde import gaussian_kde
 import cv2
 import trust as tr
-from statistics import mean
 
 
 matplotlib.use('TkAgg')
@@ -226,9 +226,7 @@ class Analysis:
         self.hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))
         self.id_video = id_video
         # calc amounts of steps from duration
-        dur = df['video_'+str(id_video)+'-dur-0'].tolist()
-        dur = [x for x in dur if str(x) != 'nan']
-        dur = int(round(mean(dur)/1000)*1000)
+        # dur = mapping.iloc[id_video]['video_length']
         # Determing the amount of frames for given video
         self.framess = int(round(self.time/self.hm_resolution))
         # Determin time
@@ -249,15 +247,25 @@ class Analysis:
                               self.res)) / 1000
         self.kp_data = mapping.loc['video_' + str(id_video)]['kp']
         self.event = mapping.loc['video_' + str(id_video)]['events']
-
         self.event = re.findall(r'\w+', self.event)
-
         aoi = pd.read_csv(tr.common.get_configs('aoi'))
         aoi.set_index('video_id', inplace=True)
         self.number_in = []
-        self.number_in1 = []
-        self.number_in2 = []
-        self.number_in3 = []
+        if tr.common.get_configs('Combined_animation') == 1:
+            self.number_in1 = []
+            self.number_in2 = []
+            self.number_in3 = []
+            # for comparison between stimulus
+            # stim 21 - 41
+            self.kp_data1 = mapping.loc['video_' + str(id_video+21)]['kp']
+            self.points1 = points1
+            # stim 42 - 62
+            self.kp_data2 = mapping.loc['video_' + str(id_video+42)]['kp']
+            self.points2 = points2
+            # stim 63 - 83
+            self.kp_data3 = mapping.loc['video_' + str(id_video+63)]['kp']
+            self.points3 = points3
+        # Extracting AOI coordinate data
         self.aoit = []
         self.aoi_x = aoi.loc['video_' + str(id_video)]['x']
         self.aoi_x = self.aoi_x.split(", ")
@@ -265,16 +273,6 @@ class Analysis:
         self.aoi_y = self.aoi_y.split(", ")
         self.aoi_t = aoi.loc['video_' + str(id_video)]['t']
         self.aoi_t = self.aoi_t.split(", ")
-        # for comparison between stimulus
-        # stim 21 - 41
-        self.kp_data1 = mapping.loc['video_' + str(id_video+21)]['kp']
-        self.points1 = points1
-        # stim 42 - 62
-        self.kp_data2 = mapping.loc['video_' + str(id_video+42)]['kp']
-        self.points2 = points2
-        # stim 63 - 83
-        self.kp_data3 = mapping.loc['video_' + str(id_video+63)]['kp']
-        self.points3 = points3
         # Event discription for in the animation plots
         self.event_discription = re.split(',', mapping.loc['video_' + str(id_video)]['events_description'])
         # Animate frames subplots into one animation using animate function
@@ -337,50 +335,59 @@ class Analysis:
         self.g[0].plot(np.array(self.times[:it]),
                        np.array(self.kp_data[:it]),
                        lw=1,
-                       label='Stim 1',
+                       label='Video_' + str(self.id_video),
                        color='r')
-        self.g[0].plot(np.array(self.times[:it]),
-                       np.array(self.kp_data1[:it]),
-                       lw=1,
-                       label='Stim 2',
-                       color='b')
-        self.g[0].plot(np.array(self.times[:it]),
-                       np.array(self.kp_data2[:it]),
-                       lw=1,
-                       label='Stim 3',
-                       color='g')
-        self.g[0].plot(np.array(self.times[:it]),
-                       np.array(self.kp_data3[:it]),
-                       lw=1,
-                       label='Stim 4',
-                       color='m')
+        # If animations are combined scenarios
+        if tr.common.get_configs('Combined_animation') == 1:
+            self.g[0].plot(np.array(self.times[:it]),
+                           np.array(self.kp_data1[:it]),
+                           lw=1,
+                           label='Video_' + str(self.id_video+21),
+                           color='b')
+            self.g[0].plot(np.array(self.times[:it]),
+                           np.array(self.kp_data2[:it]),
+                           lw=1,
+                           label='Video_' + str(self.id_video+42),
+                           color='g')
+            self.g[0].plot(np.array(self.times[:it]),
+                           np.array(self.kp_data3[:it]),
+                           lw=1,
+                           label='Video_' + str(self.id_video+63),
+                           color='m')
+        # Adding legend and formating to figure
         self.g[0].legend()
         self.g[0].set_xlabel("Time (s)", fontsize=10)
         self.g[0].set_ylabel("Percentage of Keypresses", fontsize=10)
         self.g[0].set_xlim(0, 50)
-        self.g[0].set_ylim(0, 50)
         self.g[0].set_title('Number of keypresses', fontsize=25)
-
+        # Extract time stamps for events from appen data to dislay in plot
         length = int(len(self.event))
+        # Plot event lines in kp and aoi plot
         for ev in range(len(self.event)):
             self.g[0].axvline(x=int(self.event[ev])/1000,
                               label="" + str(self.event_discription[ev]),
                               c=plt.cm.RdYlBu(int(ev)/length),
                               lw=2)
-            self.g[0].tick_params(axis='x', labelrotation=90)
-            self.g[0].legend()
+            self.g[0].tick_params(axis='x')
+            self.g[0].legend(fontsize=15)
+
             self.g[1].axvline(x=int(self.event[ev])/1000,
                               label="" + str(self.event_discription[ev]),
                               c=plt.cm.RdYlBu(int(ev)/length),
                               lw=2)
-            self.g[1].tick_params(axis='x', labelrotation=90)
-            self.g[1].legend()
+            self.g[1].tick_params(axis='x')
+            self.g[1].legend(fontsize=15)
         # Subplot 2 AOI
         self.g[1].set_title('Number of eye gazes in area of interest', fontsize=25)
         self.g[1].set_xlabel('Time (s)', fontsize=10)
-        self.g[1].set_ylabel('Number of gazes in Area of Interest', fontsize=10)
+        self.g[1].set_ylabel('Number of gazes in Area of Interest', fontsize=15)  # noqa: E501
+        if tr.common.get_configs('only_lab') == 1:
+            self.g[1].set_ylim(0, 35)
+            self.g[0].set_ylim(0, 80)
+        else:
+            self.g[1].set_ylim(0, 600)
+            self.g[0].set_ylim(0, 50)
         self.g[1].set_xlim(0, 50)
-        self.g[1].set_ylim(0, 400)
         # AOI data
         aoi_x = float(self.aoi_x[i])
         aoi_y = float(self.aoi_y[i])
@@ -391,22 +398,78 @@ class Analysis:
         max_x = int(aoi_x) + 100
         min_y = int(aoi_y) - 100
         max_y = int(aoi_y) + 100
+        # stim 0 - 20 or all stim when not combined
         x = [item[0] for item in self.points[i]]
         y = [item[1] for item in self.points[i]]
-        # stim 21 - 41
-        x1 = [item[0] for item in self.points1[i]]
-        y1 = [item[1] for item in self.points1[i]]
-        # stim 42 - 62
-        x2 = [item[0] for item in self.points2[i]]
-        y2 = [item[1] for item in self.points2[i]]
-        # stim 63 - 83
-        x3 = [item[0] for item in self.points3[i]]
-        y3 = [item[1] for item in self.points3[i]]
+        if tr.common.get_configs('Combined_animation') == 1:
+            # stim 21 - 41
+            x1 = [item[0] for item in self.points1[i]]
+            y1 = [item[1] for item in self.points1[i]]
+            # stim 42 - 62
+            x2 = [item[0] for item in self.points2[i]]
+            y2 = [item[1] for item in self.points2[i]]
+            # stim 63 - 83
+            x3 = [item[0] for item in self.points3[i]]
+            y3 = [item[1] for item in self.points3[i]]
+            # Filtering data for inside or outside coordinates
+            num1 = 0
+            num2 = 0
+            num3 = 0
+            for v in range(len(x1)):
+                if max_x > x1[v] > min_x:
+                    if max_y > y1[v] > min_y:
+                        num1 = num1 + 1
+                    else:
+                        continue
+                else:
+                    continue
+            for v in range(len(x2)):
+                if max_x > x2[v] > min_x:
+                    if max_y > y2[v] > min_y:
+                        num2 = num2 + 1
+                    else:
+                        continue
+                else:
+                    continue
+            for v in range(len(x3)):
+                if max_x > x3[v] > min_x:
+                    if max_y > y3[v] > min_y:
+                        num3 = num3 + 1
+                    else:
+                        continue
+                else:
+                    continue
+            if i < 10:
+                self.number_in1.append(int(num1))
+                number_in_plot1 = self.number_in1
+                self.number_in2.append(int(num2))
+                number_in_plot2 = self.number_in2
+                self.number_in3.append(int(num3))
+                number_in_plot3 = self.number_in3
+
+            else:
+                self.number_in1 = np.append(self.number_in1, int(num1))
+                number_in_plot1 = savgol_filter(self.number_in1, 10, 2)
+                self.number_in2 = np.append(self.number_in2, int(num2))
+                number_in_plot2 = savgol_filter(self.number_in2, 10, 2)
+                self.number_in3 = np.append(self.number_in3, int(num3))
+                number_in_plot3 = savgol_filter(self.number_in3, 10, 2)
+            # plot AOI gazes
+            self.g[1].plot(self.aoit,
+                           number_in_plot1,
+                           label='Video_' + str(self.id_video+21),
+                           color='b')
+            self.g[1].plot(self.aoit,
+                           number_in_plot2,
+                           label='Video_' + str(self.id_video+42),
+                           color='g')
+            self.g[1].plot(self.aoit,
+                           number_in_plot3,
+                           label='Video_' + str(self.id_video+63),
+                           color='m')
+
         # Filtering data for if they are inside or outside coordinates
         num = 0
-        num1 = 0
-        num2 = 0
-        num3 = 0
         for v in range(len(x)):
             if max_x > x[v] > min_x:
                 if max_y > y[v] > min_y:
@@ -415,52 +478,18 @@ class Analysis:
                     continue
             else:
                 continue
-        for v in range(len(x1)):
-            if max_x > x1[v] > min_x:
-                if max_y > y1[v] > min_y:
-                    num1 = num1 + 1
-                else:
-                    continue
-            else:
-                continue
-        for v in range(len(x2)):
-            if max_x > x2[v] > min_x:
-                if max_y > y2[v] > min_y:
-                    num2 = num2 + 1
-                else:
-                    continue
-            else:
-                continue
-        for v in range(len(x3)):
-            if max_x > x3[v] > min_x:
-                if max_y > y3[v] > min_y:
-                    num3 = num3 + 1
-                else:
-                    continue
-            else:
-                continue
-
-        self.number_in.append(int(num))
-        self.number_in1.append(int(num1))
-        self.number_in2.append(int(num2))
-        self.number_in3.append(int(num3))
+        if i < 10:
+            self.number_in.append(int(num))
+            number_in_plot = self.number_in
+        else:
+            self.number_in = np.append(self.number_in, int(num))
+            number_in_plot = savgol_filter(self.number_in, 10, 2)
         self.g[1].plot(self.aoit,
-                       self.number_in,
-                       label='Stim 1',
+                       number_in_plot,
+                       label='Video_' + str(self.id_video),
                        color='r')
-        self.g[1].plot(self.aoit,
-                       self.number_in1,
-                       label='Stim 2',
-                       color='b')
-        self.g[1].plot(self.aoit,
-                       self.number_in2,
-                       label='stim 3',
-                       color='g')
-        self.g[1].plot(self.aoit,
-                       self.number_in3,
-                       label='Stim 4',
-                       color='m')
-        self.g[1].legend()
+        # add legned for figure
+        self.g[1].legend(fontsize=15)
         # Subplot 3 Heatmap
         self.g[2] = sns.kdeplot(x=[item[0] for item in self.points[i]],
                                 y=[item[1] for item in self.points[i]],
@@ -468,7 +497,35 @@ class Analysis:
                                 fill=True,
                                 cmap='RdBu_r')
         self.g[2].invert_yaxis()
-        self.g[2].plot([min_x, max_x, max_x, min_x, min_x], [min_y, min_y, max_y, max_y, min_y], color="red")
+        self.g[2].plot([min_x, max_x, max_x, min_x, min_x], [min_y, min_y, max_y, max_y, min_y], color="red")  # noqa: E501
+
+        if tr.common.get_configs('plotlyplot') == 1:
+            if i == self.framess-1:
+                fig = go.Figure()
+                print(np.array(self.kp_data[it]))
+                fig.add_trace(go.Scatter(x=np.array(self.times[:it]),
+                                         y=np.array(self.kp_data[:it]),
+                                         mode='lines',
+                                         name='video_' + str(self.id_video)))     # noqa: E501
+                fig.add_trace(go.Scatter(x=np.array(self.times[:it]),
+                                         y=np.array(self.kp_data1[:it]),
+                                         mode='lines',
+                                         name='video_' + str(self.id_video+21)))  # noqa: E501
+                fig.add_trace(go.Scatter(x=np.array(self.times[:it]),
+                                         y=np.array(self.kp_data2[:it]),
+                                         mode='lines',
+                                         name='video_' + str(self.id_video+42)))  # noqa: E501
+                fig.add_trace(go.Scatter(x=np.array(self.times[:it]),
+                                         y=np.array(self.kp_data3[:it]),
+                                         mode='lines',
+                                         name='video_' + str(self.id_video+63)))  # noqa: E501
+                fig.update_layout(template=self.template,
+                                  xaxis_title='time(ms)',
+                                  yaxis_title="Number of KP")
+                file_name = 'Lab_only_KP_' + str(self.id_video)
+                self.save_plotly(fig,
+                                 file_name,
+                                 self.folder)
 
         # Scatter plot data
         # all pp
@@ -484,14 +541,13 @@ class Analysis:
         # remove axis
         plt.gca().set_axis_off()
         # remove white spaces around figure
-        # plt.subplots_adjust(top=1,
-        #                     bottom=0,
-        #                     right=1,
-        #                     left=0,
-        #                     hspace=0,
-        #                     wspace=0)
+        plt.subplots_adjust(top=1,
+                            bottom=0,
+                            right=1,
+                            left=0,
+                            hspace=0,
+                            wspace=0)
         # textbox with duration
-
         # props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         # plt.text(0.75,
         #          0.98,

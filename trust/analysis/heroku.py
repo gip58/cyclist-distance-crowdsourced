@@ -3,6 +3,7 @@ import json
 import os
 import pandas as pd
 import numpy as np
+import re
 from tqdm import tqdm
 from statistics import mean
 import warnings
@@ -134,6 +135,9 @@ class Heroku:
                 # record worker_code in the row. assuming that each row has at
                 # least one worker_code
                 worker_code = [d['worker_code'] for d in list_row['data'] if 'worker_code' in d][0]  # noqa: E501
+                if tr.common.get_configs('only_lab') == 1:
+                    if re.search("lab_pp_", worker_code) is None:
+                        continue
                 # go over cells in the row with data
                 for data_cell in list_row['data']:
                     # extract meta info form the call
@@ -430,9 +434,7 @@ class Heroku:
             # create empty list to store points for the stimulus
             points[id_video] = []
             # loop over durations of stimulus
-            dur = df['video_'+str(id_video)+'-dur-0'].tolist()
-            dur = [x for x in dur if str(x) != 'nan']
-            dur = int(round(mean(dur)/1000)*1000)
+            dur = self.mapping.loc[id_video]['video_length']
             number_dur = len(range(0, dur, hm_resolution))
             for duration in range(0, number_dur):
                 # create empty list to store points for the stimulus of given
@@ -444,6 +446,7 @@ class Heroku:
                 x = 'video_'+str(id_video)+'-x-0'
                 y = 'video_'+str(id_video)+'-y-0'
                 t = 'video_'+str(id_video)+'-t-0'
+
                 if x not in df.keys() or y not in df.keys():
                     logger.debug('Indices not found: {} or {}.', x, y)
                     continue
@@ -471,6 +474,7 @@ class Heroku:
                                 # convert to point object
                                 point = Point(given_x[val]*norm_x,
                                               given_y[val]*norm_y)
+
                                 # check if point is within a polygon in the middle   # noqa: E501
                                 if polygon.contains(point):
                                     # point in the middle detected
