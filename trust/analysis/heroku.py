@@ -223,7 +223,7 @@ class Heroku:
                         et_data = data_cell['webgazer_data']
                         logger.debug('Found {} points in eye tracking data.',
                                      len(et_data))
-                        # extract x,y,t Values
+                        # extract x,y,t values
                         x = [point['x'] for point in et_data]
                         y = [point['y'] for point in et_data]
                         t = [point['t'] for point in et_data]
@@ -256,8 +256,7 @@ class Heroku:
                             continue
                         # record given answers
                         responses = data_cell['response']
-                        logger.debug('Found responses to questions {}.',
-                                     responses)
+                        logger.debug('Found responses to questions {}.', responses)
                         # unpack questions and answers
                         questions = []
                         answers = []
@@ -467,7 +466,7 @@ class Heroku:
                     # detected percentage of codeblocks in the middle
                     detected = 0
                     # skip if no points for worker
-                    if type(given_y) == list:
+                    if type(given_y) is list:
                         # Check if imput from stimulus isn't blank
                         if given_x != []:
                             length_points = len(given_y)
@@ -606,7 +605,7 @@ class Heroku:
                                     counter_filtered = counter_filtered + 1
                                     continue
                             # check if data is string to filter out nan data
-                            if type(row) == list:
+                            if type(row) is list:
                                 # saving amount of times the video has been
                                 # watched
                                 counter_data = counter_data + 1
@@ -706,7 +705,7 @@ class Heroku:
                         # loop over rows in column
                         for pp, row in enumerate(col_data):
                             # filter out empty values
-                            if type(row) == list:
+                            if type(row) is list:
                                 order = self.heroku_data.iloc[pp][video_order]  # noqa: E501
                                 # check if injection question is present
                                 if 'injection' in order:
