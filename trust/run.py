@@ -382,7 +382,7 @@ if __name__ == '__main__':
                 hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
                 # To create animation for scenario 1,2,3 & 4 in the
                 # same animation extract for all senarios.
-                # for individual animations or scenario 
+                # for individual animations or scenario
                 dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
                 dur = [x for x in dur if str(x) != 'nan']
                 dur = int(round(mean(dur)/1000)*1000)
