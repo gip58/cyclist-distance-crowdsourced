@@ -127,6 +127,7 @@ Plot of AOI Video_19 Lab only Participants
 Plot of AOI Video_20 Lab only Participants
 
 ## Key press (KP)
+### All participants
 [![plot_all_0](figures/all_KP_0.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/main/figures/all_KP_0.html)
 Plot of KP Video_0 All Participants
 [![plot_all_1](figures/all_KP_1.png?raw=true)](https://htmlpreview.github.io/?https://github.com/bazilinskyy/trust-crowdsourced/blob/main/figures/all_KP_1.html)
