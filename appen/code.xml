@@ -255,30 +255,9 @@
 </p>
 <p class="header2">Open 
   <strong>
-    <a target="_blank" href="https://trust-crowdsourced.herokuapp.com">this link</a>
+    <a target="_blank" href="https://cyclist-distance-crowdsourced.herokuapp.com">this link</a>
   </strong> to start the experiment.
 </p>
-
-<cml:text label="Type the code that you received at the end of the experiment." class="" validates="required regex" data-validates-regex="^R5\d+\s?JF\d+\s?7X\s?$" data-validates-regex-message="Please enter the correct code to receive your money."/>
-<p class="header">
-  <strong>Interview part of this study:</strong>
-  <br/>
-  <br/>
-  We are conducting interviews as part of this study, and we would like to select a 
-  <strong>limited number</strong> of participants for an additional interview based on their own will and availability. 
-  <br/>
-  <br/>
-  If you <strong>choose to provide your email address below and are selected</strong>, we will contact you through that email address you filled in. You will receive<strong> approximately 0.50 USD</strong> as compensation for the extra interview. The compensation will be transferred to your PayPal account after the interview, so please ensure that you have <strong>a PayPal account</strong> before providing your email. 
-  <br/>
-  <br/>
-  Thank you for your understanding and willingness to contribute to our research. Your insights and experiences would be valuable to our study.
-  <br/>
-  <br/>
-  Would you like to get further information or participate in our interviews? If yes, please provide your email address below.
-</p>
-<cml:textarea label="If yes, please provide your email address:" class=""/>
-<p class="header">
-  <strong>Miscellaneous questions</strong>
-</p>
+<cml:text label="Type the code that you received at the end of the experiment." class="" validates="required regex" data-validates-regex="^G5\d+\s?BG\d+\s?5M\s?$" data-validates-regex-message="Please enter the correct code to receive your money."/>
 <cml:text label="In which year do you think that most cars will be able to drive fully automatically in your country of residence?" class="" validates="required"/>
 <cml:textarea label="Please provide any suggestions that could help engineers to build safe and enjoyable automated cars." class=""/>
