@@ -1,21 +1,21 @@
 {
-  "name": "trust-crowdsourced",
+  "name": "cyclist-distance-crowdsourced.sublime-project",
   "version": "0.1",
-  "description": "Crowdsourced experiment on interaction between automated vehicles and pedestrians.",
+  "description": "Crowdsourced experiment on overtaking cyclists.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bazilinskyy/trust-crowdsourced.git"
+    "url": "git+https://github.com/gip58/cyclist-distance-crowdsourced.git"
   },
   "author": "Pavlo Bazilinskyy",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bazilinskyy/trust-crowdsourced/issues"
+    "url": "https://github.com/gip58/cyclist-distance-crowdsourced/issues"
   },
-  "homepage": "https://github.com/bazilinskyy/trust-crowdsourced",
+  "homepage": "https://github.com/gip58/cyclist-distance-crowdsourced",
   "dependencies": {
     "body-parser": "^1.15.2",
     "ejs": "^3.1.8",

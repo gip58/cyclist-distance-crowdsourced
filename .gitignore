@@ -201,12 +201,12 @@ secret
 
 # Ignore all files starting with an underscore.
 **/_*
-!trust-unity/**/_*
+!dcycl-unity/**/_*
 !__init__.py
 
 # Pickle files
-trust/analysis/*.p
-trust/*.p
+dcycl/analysis/*.p
+dcycl/*.p
 
 # lightning
 **/LightingData.asset
