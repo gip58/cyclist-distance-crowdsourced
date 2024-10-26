@@ -46,6 +46,12 @@
 </cml:radios>
 <cml:text label="If you answered 'Other' in the previous question, please describe your input device below."/>
 <cml:text label="At which age did you obtain your first license for driving a car?" class="" validates="positiveInteger"/>
+<cml:radios label="Do you hold a valid driver's license?" class="" validates="required">
+  <cml:radio label="Yes" id="" value="yes"/>
+  <cml:radio label="No" id="" value="no"/>
+</cml:radios>
+<cml:text label="From which country is the driving license issued?" class="" validates="required positiveInteger"/>
+<cml:text label="How many years have you been driving? " class="" validates="required positiveInteger"/>
 <cml:radios label="On average, how often did you drive a car in the last 12 months?" class="" validates="required">
   <cml:radio label="Every day" value="every_day"/>
   <cml:radio label="4 to 6 days a week" value="4_to_6_days_a_week"/>
@@ -68,186 +74,74 @@
   <cml:radio label="More than 100,000 km (more than 62,137 mi)" id="" value="more_than_100000_km_more_than_62137_mi"/>
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
-<cml:checkboxes label="Which option(s) best describe(s) your experience with automated* cars?" class="" id="" validates="required">
-  <cml:checkbox label="I have never used or been in automated cars" value="i_have_never_used_or_been_in_automated_cars"/>
-  <cml:checkbox label="I have experience with driving a car with automated functions (e.g. adaptive cruise control, lane-keeping system)." value="i_have_experience_with_driving_a_car_with_automated_functions"/>
-  <cml:checkbox label="I have had a ride in an automated car (e.g. robotaxi or automated shuttle) as a passenger." value="i_have_had_a_ride_in_an_automated_car_as_a_passenger"/>
-  <cml:checkbox label=" I have encountered automated cars (e.g. robotaxis or automated shuttles)  while driving." id="" value="i_have_encountered_automated_cars_while_driving"/>
-  <cml:checkbox label="I work in a related field (e.g. automated car development, driver support technology, research on automated car functions or regulation for automated driving technologies)." id="" value="i_work_in_a_related_field"/>
-  <cml:checkbox label="Other" id="" value="other"/>
-  <cml:checkbox label="I prefer not to respond." id="" value="i_prefer_not_to_respond"/>
-</cml:checkboxes>
-<cml:text label="If you answered 'Other' in the previous question, please describe your experience(s) below."/>
+<p class="header">
+  <strong>Driving and Cyclist Interaction</strong>
+</p>
+<cml:checkboxes label="While driving  have you ever encountered a cyclist that required you to overtake them? " class="" id="" validates="required">
+    <cml:checkbox label="I have never encountered cyclists" value="i_have_never_used_or_been_in_automated_cars"/>
+    <cml:checkbox label="I have encountered cyclists but I refrain from overtaking"/>
+    <cml:checkbox label="I have encountered multiple cyclists."/>
+    <cml:checkbox label="Other" id="" value="other"/>
+    <cml:checkbox label="I prefer not to respond." id="" value="i_prefer_not_to_respond"/>
+  </cml:checkboxes>
+<cml:text label="If you answered 'Other' in the previous question, please describe your experience(s) below." class="" validates="required positiveInteger"/>
+<cml:text label="When overtaking a cyclist, how do you determine a safe distance?" class="" validates="required positiveInteger"/>
+<cml:text label="What factors influence your decision on how much space to leave when overtaking a cyclist (e.g., road width, speed, traffic conditions)?"/>
+<cml:checkboxes label="Are you aware of any laws or guidelines in your country or within the EU that specify the minimum distance a car should maintain when overtaking a cyclist?" class="" id="" validates="required">
+    <cml:checkbox label="I have never heard of laws or guidelines" value="i_have_never_used_or_been_in_automated_cars"/>
+    <cml:checkbox label="I have heard laws or guidelines"/>
+    <cml:checkbox label="I am fully aware of laws or guidelines"/>
+    <cml:checkbox label="Other" id="" value="other"/>
+    <cml:text label="If you answered 'Other' in the previous question, please describe your experience(s) below."/>
+<cml:text label="Do you think the current laws or guidelines are sufficient to ensure cyclists' safety? Why or why not?" class="" validates="required positiveInteger"/>
+<cml:text label="What challenges have you encountered when trying to maintain a safe distance from cyclists while driving?" class="" validates="required positiveInteger"/>
+<cml:text label="Have you ever felt pressured by other drivers or traffic conditions to overtake a cyclist more closely than you would prefer?"/>
+  <cml:radios label="Do you cycle or use bikes as a means of transport? " class="" validates="required">
+  <cml:radio label="Yes" value="Yes"/>
+  <cml:radio label="No" value="No"/>
+  <cml:radio label="Sometimes" value="Sometimes"/>
+<cml:radios label="Do you cycle or use bicycles as a means of transport? " class="" validates="required">
+  <cml:radio label="Yes" value="Yes"/>
+  <cml:radio label="No" value="No"/>
+  <cml:radio label="To some extend " value="Sometimes"/>
+  <cml:text label="If so, how?"/>
 <p class="header2">
- *Please note that in this study, the term 
-  <strong>'automated'</strong> refers to the state where the car driving system is taking control and operating without direct human intervention.
-  <br/>
+ <strong>Cycling Experience (If Applicable)</strong>
 </p>
-<cml:ratings label="Please indicate your general attitude towards automated cars." class="" id="" validates="required">
-  <cml:rating label="Very Negative" id="" value="very_negative"/>
-  <cml:rating label="Negative" id="" value="negative"/>
-  <cml:rating label="Neutral" id="" value="neutral"/>
-  <cml:rating label="Positive" id="" value="positive"/>
-  <cml:rating label="Very Positive" id="" value="very_positive"/>
-</cml:ratings>
-<cml:radios label="Who do you think is more capable of conducting driving-related tasks?" class="" validates="required">
-  <cml:radio label="An automated car" id="" value="an_automated_car"/>
-  <cml:radio label="A human driver" id="" value="a_human_driver"/>
-  <cml:radio label="The automated car and the human driver are equally capable " id="" value="the_automated_car_and_the_human_driver_are_equally_capable"/>
-  <cml:radio label="I don't know" id="" value="i_dont_know"/>
-</cml:radios>
-<p class="header">
-  <strong>How often do you do the following?</strong>
+<cml:text label="As a cyclist, what are your biggest concerns when vehicles overtake you on the road? " />
+<cml:text label="Have you ever had a near incident or an incident due to a car overtaking you too close? How did that experience impact your sense of safety while cycling?"/>
+<p class="header2">
+  <strong>Behavioural Adjustments </strong>
 </p>
-<cml:radios label="Becoming angered by a particular type of driver, and indicate your hostility by whatever means you can." class="" id="" validates="required">
-  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
-  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
-  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
-  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
-  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
-  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
-</cml:radios>
-<cml:radios label="Disregarding the speed limit on a motorway." class="" id="" validates="required">
-  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
-  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
-  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
-  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
-  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
-  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
-</cml:radios>
-<cml:radios label="Disregarding the speed limit on a residential road." class="" id="" validates="required">
-  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
-  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
-  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
-  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
-  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
-  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
-</cml:radios>
-<cml:radios label="Driving so close to the car in front that it would be difficult to stop in an emergency." class="" id="" validates="required">
-  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
-  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
-  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
-  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
-  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
-  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
-</cml:radios>
-<cml:radios label="Racing away from traffic lights with the intention of beating the driver next to you." class="" id="" validates="required">
-  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
-  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
-  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
-  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
-  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
-  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
-</cml:radios>
-<cml:radios label="Sounding your horn to indicate your annoyance with another road user." class="" id="" validates="required">
-  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
-  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
-  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
-  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
-  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
-  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
-</cml:radios>
-<cml:radios label="Using a phone in your hands while driving." class="" id="" validates="required">
-  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
-  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
-  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
-  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
-  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
-  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
-</cml:radios>
-<cml:radios label="Doing my best not to be obstacle for other drivers." class="" id="" validates="required">
-  <cml:radio label="0 times per month" id="" value="0_times_per_month"/>
-  <cml:radio label="1 to 3 times per month" id="" value="1_to_3_times_per_month"/>
-  <cml:radio label="4 to 6 times per month" id="" value="4_to_6_times_per_month"/>
-  <cml:radio label="7 to 9 times per month" id="" value="7_to_9_times_per_month"/>
-  <cml:radio label="10 or more times per month" id="" value="10_or_more_times_per_month"/>
-  <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
-</cml:radios>
-<cml:radios label="I would like to communicate with other road users while driving (for instance, using eye contact, gestures, verbal communication, etc.)." class="" id="" validates="required">
-  <cml:radio label="Strongly disagree"/>
-  <cml:radio label="Disagree"/>
-  <cml:radio label="Neither disagree nor agree"/>
-  <cml:radio label="Agree"/>
-  <cml:radio label="Strongly agree"/>
-</cml:radios>
-<p class="header">
-  <strong>To what extent do you agree or disagree with the following statements?</strong>
+<cml:text label="Do you change your behaviour when driving in areas with high cycling traffic? If so, how? " class="" validates="required positiveInteger"/>
+<cml:text label="If you cycle, do you alter your route or timing to avoid areas where drivers tend to pass too closely?"/>
+<p class="header2">
+  <strong>Attitude Toward Cyclists </strong>
 </p>
-<cml:radios label="Science and technology make our way of life change too fast." class="" id="" validates="required">
-  <cml:radio label="Strongly disagree"/>
-  <cml:radio label="Disagree"/>
-  <cml:radio label="Neither disagree nor agree"/>
-  <cml:radio label="Agree"/>
-  <cml:radio label="Strongly agree"/>
-  <cml:radio label="Don't know"/>
-</cml:radios>
-<cml:radios label="I'm not interested in new technologies" class="" id="" validates="required">
-  <cml:radio label="Strongly disagree"/>
-  <cml:radio label="Disagree"/>
-  <cml:radio label="Neither disagree nor agree"/>
-  <cml:radio label="Agree"/>
-  <cml:radio label="Strongly agree"/>
-  <cml:radio label="Don't know"/>
-</cml:radios>
-<cml:radios label="Science and technology are making our lives healthier, easier and more comfortable" class="" id="" validates="required">
-  <cml:radio label="Strongly disagree"/>
-  <cml:radio label="Disagree"/>
-  <cml:radio label="Neither disagree nor agree"/>
-  <cml:radio label="Agree"/>
-  <cml:radio label="Strongly agree"/>
-  <cml:radio label="Don't know"/>
-</cml:radios>
-<cml:radios label="I enjoy making use of the latest technological products and services when I have the opportunity" class="" id="" validates="required">
-  <cml:radio label="Strongly disagree"/>
-  <cml:radio label="Disagree"/>
-  <cml:radio label="Neither disagree nor agree"/>
-  <cml:radio label="Agree"/>
-  <cml:radio label="Strongly agree"/>
-  <cml:radio label="Don't know"/>
-</cml:radios>
-<cml:radios label="New technologies are all about making profits rather than making people's lives better" class="" id="" validates="required">
-  <cml:radio label="Strongly disagree"/>
-  <cml:radio label="Disagree"/>
-  <cml:radio label="Neither disagree nor agree"/>
-  <cml:radio label="Agree"/>
-  <cml:radio label="Strongly agree"/>
-  <cml:radio label="Don't know"/>
-</cml:radios>
-<cml:radios label="I am worried about where all this technology is leading" class="" id="" validates="required">
-  <cml:radio label="Strongly disagree"/>
-  <cml:radio label="Disagree"/>
-  <cml:radio label="Neither disagree nor agree"/>
-  <cml:radio label="Agree"/>
-  <cml:radio label="Strongly agree"/>
-  <cml:radio label="Don't know"/>
-</cml:radios>
-<cml:radios label="Machines are taking over some of the roles that humans should have" class="" id="" validates="required">
-  <cml:radio label="Strongly disagree"/>
-  <cml:radio label="Disagree"/>
-  <cml:radio label="Neither disagree nor agree"/>
-  <cml:radio label="Agree"/>
-  <cml:radio label="Strongly agree"/>
-  <cml:radio label="Don't know"/>
-</cml:radios>
-<cml:ratings label="When the automated cars are put into use, I will feel comfortable about driving on roads alongside automated cars." class="" id="" validates="required">
-  <cml:rating label="Strongly disagree"/>
-  <cml:rating label="Disagree"/>
-  <cml:rating label="Neither disagree nor agree"/>
-  <cml:rating label="Agree"/>
-  <cml:rating label="Strongly agree"/>
-</cml:ratings>
-<cml:ratings label="When the automated cars are put into use, I will feel more comfortable about using an automated car instead of driving a manually driven car." class="" id="" validates="required">
-  <cml:rating label="Strongly disagree"/>
-  <cml:rating label="Disagree"/>
-  <cml:rating label="Neither disagree nor agree"/>
-  <cml:rating label="Agree"/>
-  <cml:rating label="Strongly agree"/>
-</cml:ratings>
+<cml:text label="How do you feel about sharing the road with cyclists? Do you think there should be more infrastructure dedicated to cyclists, such as bike lanes?" class="" validates="required positiveInteger"/>
+<cml:checkboxes label="To what extent have your experiences as a driver (or cyclist) influenced your views on how road space should be allocated between vehicles and bicycles?" class="" id="" validates="required">
+    <cml:checkbox label="1: Not at all influenced" value="not_at_all_influenced"/>
+    <cml:checkbox label="2: Slightly influenced" value="slightly_influenced"/>
+    <cml:checkbox label="3: Moderately influenced" value="moderately_influenced"/>
+    <cml:checkbox label="4: Strongly influenced" value="strongly_influenced"/>
+    <cml:checkbox label="5: Very strongly influenced" value="very_strongly_influenced"/>
+</cml:checkboxes>
+<cml:checkboxes label="If influenced, what changes do you believe are necessary?" class="" id="" validates="required">
+    <cml:checkbox label="More space for cyclists" value="more_space_for_cyclists"/>
+    <cml:checkbox label="More space for vehicles" value="more_space_for_vehicles"/>
+    <cml:checkbox label="Better shared lanes" value="better_shared_lanes"/>
+    <cml:checkbox label="Other" value="other"/>
+</cml:checkboxes>
+  <cml:text label="If you selected 'Other' in the previous question, please specify your suggestion below."/>
+<p class="header2">
+ <strong>Behavioural Change</strong>
+</p>
+<cml:text label="What, if anything, would encourage you to consistently maintain a safe distance when overtaking cyclists? (e.g., stricter laws, better infrastructure, personal experiences)" class="" validates="required positiveInteger"/>
 <p class="header">
-  <strong>Experiment to investigate factors that play a role in interaction between manually driven and automated vehicles</strong>
+  <strong>Experiment to investigate factors that play a role in understtanding the distance between manually driven and cyclist</strong>
   <br/>
   <br/>
-  In this experiment, you will see multiple videos and are asked to answer questions based on your feelings about the content of videos.   During the experiment, the videos will contain manually driven cars as well as automated cars. Automated cars are displayed with a blue overlay on the windows. 
+  In this experiment, you will watch several videos and imagine yourself as the driver of the vehicle. You will be asked to answer questions based on your feelings about the interactions and the distance from the cyclist. All videos feature manually driven cars. Please focus on your perspective as the driver when assessing the proximity and interactions between the vehicle and the cyclist
   <br/>
   <br/>
   <strong>Important:</strong> You will be asked to leave Appen to participate in the experiment. You will need to open the link below. Do not close this tab. At the end of the experiment, you will be given a code to input in the next question on this tab. Please take a note of the code. Without the code, you will not be able to receive money for your participation. All videos will be downloaded before the start of the experiment. It may take a few minutes. Please do not close your browser during that time.
@@ -259,5 +153,5 @@
   </strong> to start the experiment.
 </p>
 <cml:text label="Type the code that you received at the end of the experiment." class="" validates="required regex" data-validates-regex="^G5\d+\s?BG\d+\s?5M\s?$" data-validates-regex-message="Please enter the correct code to receive your money."/>
-<cml:text label="In which year do you think that most cars will be able to drive fully automatically in your country of residence?" class="" validates="required"/>
-<cml:textarea label="Please provide any suggestions that could help engineers to build safe and enjoyable automated cars." class=""/>
+<cml:text label="Which of the scenarios you experienced was the most impactful in helping you, and can you elaborate on why the methods used in that scenario were particularly effective?" class="" validates="required"/>
+<cml:textarea label="Please provide any suggestions that could help engineers to build safe and enjoyable interaction between all road user. " class=""/>
