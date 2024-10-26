@@ -4,21 +4,20 @@ import os
 import pandas as pd
 import trust as tr
 
-print(os.path.join(tr.common.get_configs('path_stimuli'), "out.mp4"))
-
+#print(os.path.join(tr.common.get_configs("path_stimuli"), "out.mp4"))
+path_stimuli = "path_stimuli"  # replace with actual path
+path_source = "path_source"
 # Read mapping csv
-df = pd.read_csv('process_videos_info.csv')
+df = pd.read_csv("process_videos_info.csv")
 # black file to be added in the beginning of the stimuli
-black_file = 'black_video.mp4'
+black_file = "black_video.mp4"
 # Go over all stimuli
 for index, row in df.iterrows():
-    in_file = os.path.join(tr.common.get_configs('path_source'), row['in'])
-    out_file = os.path.join(tr.common.get_configs('path_stimuli'),
-                            'noblack_' + row['out'])
-    merged_file = os.path.join(tr.common.get_configs('path_stimuli'),
-                               row['out'])
+    in_file = os.path.join(path_source, row['in'])
+    out_file = os.path.join(path_stimuli,'noblack_' + row['out'])
+    merged_file = os.path.join(path_stimuli, row['out'])
     # Using FFmpeg command to process video and compress audio
-    os.system("ffmpeg -r 60" +
+    os.system("ffmpeg -r 30" +
               " -ss " + str(row['start']) +
               " -to " + str(row['end']) +
               " -i " + in_file +
