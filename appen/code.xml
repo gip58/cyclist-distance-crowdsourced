@@ -45,12 +45,12 @@
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
 <cml:text label="If you answered 'Other' in the previous question, please describe your input device below."/>
-<cml:text label="At which age did you obtain your first license for driving a car?" class="" validates="positiveInteger"/>
+<cml:text label="At which age did you obtain your first license for driving a car?" />
 <cml:radios label="Do you hold a valid driver's license?" class="" validates="required">
   <cml:radio label="Yes" id="" value="yes"/>
   <cml:radio label="No" id="" value="no"/>
 </cml:radios>
-<cml:text label="From which country is the driving license issued?" class="" validates="required positiveInteger"/>
+<cml:text label="From which country is the driving license issued?" validates="required"/>
 <cml:text label="How many years have you been driving? " class="" validates="required positiveInteger"/>
 <cml:radios label="On average, how often did you drive a car in the last 12 months?" class="" validates="required">
   <cml:radio label="Every day" value="every_day"/>
@@ -74,74 +74,80 @@
   <cml:radio label="More than 100,000 km (more than 62,137 mi)" id="" value="more_than_100000_km_more_than_62137_mi"/>
   <cml:radio label="I prefer not to respond" id="" value="i_prefer_not_to_respond"/>
 </cml:radios>
+<cml:text label="In which country do you often drive? " validates="required"/>
 <p class="header">
   <strong>Driving and Cyclist Interaction</strong>
 </p>
-<cml:checkboxes label="While driving  have you ever encountered a cyclist that required you to overtake them? " class="" id="" validates="required">
-    <cml:checkbox label="I have never encountered cyclists" value="i_have_never_used_or_been_in_automated_cars"/>
-    <cml:checkbox label="I have encountered cyclists but I refrain from overtaking"/>
-    <cml:checkbox label="I have encountered multiple cyclists."/>
-    <cml:checkbox label="Other" id="" value="other"/>
-    <cml:checkbox label="I prefer not to respond." id="" value="i_prefer_not_to_respond"/>
-  </cml:checkboxes>
-<cml:text label="If you answered 'Other' in the previous question, please describe your experience(s) below." class="" validates="required positiveInteger"/>
-<cml:text label="When overtaking a cyclist, how do you determine a safe distance?" class="" validates="required positiveInteger"/>
-<cml:text label="What factors influence your decision on how much space to leave when overtaking a cyclist (e.g., road width, speed, traffic conditions)?"/>
-<cml:checkboxes label="Are you aware of any laws or guidelines in your country or within the EU that specify the minimum distance a car should maintain when overtaking a cyclist?" class="" id="" validates="required">
-    <cml:checkbox label="I have never heard of laws or guidelines" value="i_have_never_used_or_been_in_automated_cars"/>
-    <cml:checkbox label="I have heard laws or guidelines"/>
-    <cml:checkbox label="I am fully aware of laws or guidelines"/>
-    <cml:checkbox label="Other" id="" value="other"/>
-    <cml:text label="If you answered 'Other' in the previous question, please describe your experience(s) below."/>
-<cml:text label="Do you think the current laws or guidelines are sufficient to ensure cyclists' safety? Why or why not?" class="" validates="required positiveInteger"/>
-<cml:text label="What challenges have you encountered when trying to maintain a safe distance from cyclists while driving?" class="" validates="required positiveInteger"/>
-<cml:text label="Have you ever felt pressured by other drivers or traffic conditions to overtake a cyclist more closely than you would prefer?"/>
-  <cml:radios label="Do you cycle or use bikes as a means of transport? " class="" validates="required">
+<cml:radios label="While driving  have you ever encountered a cyclist that required you to overtake them? " class="" id="" validates="required">
+  <cml:radio label="I have never encountered cyclists" value="i_have_never_used_or_been_in_automated_cars"/>
+  <cml:radio label="I have encountered cyclists but I refrain from overtaking"/>
+  <cml:radio label="I have encountered multiple cyclists."/>
+  <cml:radio label="Other" id="" value="other"/>
+  <cml:radio label="I prefer not to respond." id="" value="i_prefer_not_to_respond"/>
+</cml:radios>
+<cml:text label="If you answered 'Other' in the previous question, please describe your experience(s) below."/>
+<cml:text label="When overtaking a cyclist, how do you determine a safe distance?" validates="required"/>
+<cml:text label="What factors influence your decision on how much space to leave when overtaking a cyclist (e.g., road width, speed, traffic conditions)?" validates="required"/>
+<cml:radios label="Are you aware of any laws or guidelines in your country or within the EU that specify the minimum distance a car should maintain when overtaking a cyclist?" class="" id="" validates="required">
+  <cml:radio label="I have never heard of laws or guidelines" value="never_heard"/>
+  <cml:radio label="I have heard laws or guidelines" value="heard"/>
+  <cml:radio label="I am fully aware of laws or guidelines" value="fully_aware"/>
+  <cml:radio label="Other" value="other"/>
+</cml:radios>
+<cml:text label="If you answered 'Other' in the previous question, please describe your experience(s) below."/>
+<cml:text label="If you are aware of any law specifying the minimum distance for overtaking a cyclist, please indicate it in meters. If you are not aware of such a law, could you provide an estimate of what you believe the minimum distance should be (in meters)?" class="" validates="required numeric"/>
+<cml:text label="Do you think the current laws or guidelines are sufficient to ensure cyclists' safety? Why or why not?" validates="required"/>
+<cml:text label="What challenges have you encountered when trying to maintain a safe distance from cyclists while driving?" validates="required"/>
+<cml:text label="Have you ever felt pressured by other drivers or traffic conditions to overtake a cyclist more closely than you would prefer?" validates="required"/>
+<cml:radios label="Do you cycle or use bikes as a means of transport?" class="" validates="required">
   <cml:radio label="Yes" value="Yes"/>
   <cml:radio label="No" value="No"/>
   <cml:radio label="Sometimes" value="Sometimes"/>
+</cml:radios>
 <cml:radios label="Do you cycle or use bicycles as a means of transport? " class="" validates="required">
   <cml:radio label="Yes" value="Yes"/>
   <cml:radio label="No" value="No"/>
   <cml:radio label="To some extend " value="Sometimes"/>
   <cml:text label="If so, how?"/>
+</cml:radios>
 <p class="header2">
- <strong>Cycling Experience (If Applicable)</strong>
+  <strong>Cycling Experience (If Applicable)</strong>
 </p>
-<cml:text label="As a cyclist, what are your biggest concerns when vehicles overtake you on the road? " />
+<cml:text label="As a cyclist, what are your biggest concerns when vehicles overtake you on the road? "/>
 <cml:text label="Have you ever had a near incident or an incident due to a car overtaking you too close? How did that experience impact your sense of safety while cycling?"/>
 <p class="header2">
   <strong>Behavioural Adjustments </strong>
 </p>
-<cml:text label="Do you change your behaviour when driving in areas with high cycling traffic? If so, how? " class="" validates="required positiveInteger"/>
+<cml:text label="Do you change your behaviour when driving in areas with high cycling traffic? If so, how?" validates="required" />
+
 <cml:text label="If you cycle, do you alter your route or timing to avoid areas where drivers tend to pass too closely?"/>
 <p class="header2">
   <strong>Attitude Toward Cyclists </strong>
 </p>
-<cml:text label="How do you feel about sharing the road with cyclists? Do you think there should be more infrastructure dedicated to cyclists, such as bike lanes?" class="" validates="required positiveInteger"/>
-<cml:checkboxes label="To what extent have your experiences as a driver (or cyclist) influenced your views on how road space should be allocated between vehicles and bicycles?" class="" id="" validates="required">
-    <cml:checkbox label="1: Not at all influenced" value="not_at_all_influenced"/>
-    <cml:checkbox label="2: Slightly influenced" value="slightly_influenced"/>
-    <cml:checkbox label="3: Moderately influenced" value="moderately_influenced"/>
-    <cml:checkbox label="4: Strongly influenced" value="strongly_influenced"/>
-    <cml:checkbox label="5: Very strongly influenced" value="very_strongly_influenced"/>
-</cml:checkboxes>
-<cml:checkboxes label="If influenced, what changes do you believe are necessary?" class="" id="" validates="required">
-    <cml:checkbox label="More space for cyclists" value="more_space_for_cyclists"/>
-    <cml:checkbox label="More space for vehicles" value="more_space_for_vehicles"/>
-    <cml:checkbox label="Better shared lanes" value="better_shared_lanes"/>
-    <cml:checkbox label="Other" value="other"/>
-</cml:checkboxes>
-  <cml:text label="If you selected 'Other' in the previous question, please specify your suggestion below."/>
+<cml:text label="How do you feel about sharing the road with cyclists? Do you think there should be more infrastructure dedicated to cyclists, such as bike lanes?" validates="required"/>
+<cml:radios label="To what extent have your experiences as a driver (or cyclist) influenced your views on how road space should be allocated between vehicles and bicycles?" class="" id="" validates="required">
+  <cml:radio label="1: Not at all influenced" value="not_at_all_influenced"/>
+  <cml:radio label="2: Slightly influenced" value="slightly_influenced"/>
+  <cml:radio label="3: Moderately influenced" value="moderately_influenced"/>
+  <cml:radio label="4: Strongly influenced" value="strongly_influenced"/>
+  <cml:radio label="5: Very strongly influenced" value="very_strongly_influenced"/>
+</cml:radios>
+<cml:radios label="If influenced, what changes do you believe are necessary?" class="" id="" validates="required">
+  <cml:radio label="More space for cyclists" value="more_space_for_cyclists"/>
+  <cml:radio label="More space for vehicles" value="more_space_for_vehicles"/>
+  <cml:radio label="Better shared lanes" value="better_shared_lanes"/>
+  <cml:radio label="Other" value="other"/>
+</cml:radios>
+<cml:text label="If you selected 'Other' in the previous question, please specify your suggestion below."/>
 <p class="header2">
- <strong>Behavioural Change</strong>
+  <strong>Behavioural Change</strong>
 </p>
-<cml:text label="What, if anything, would encourage you to consistently maintain a safe distance when overtaking cyclists? (e.g., stricter laws, better infrastructure, personal experiences)" class="" validates="required positiveInteger"/>
+<cml:text label="What, if anything, would encourage you to consistently maintain a safe distance when overtaking cyclists? (e.g., stricter laws, better infrastructure, personal experiences)" validates="required"/>
 <p class="header">
   <strong>Experiment to investigate factors that play a role in understtanding the distance between manually driven and cyclist</strong>
   <br/>
   <br/>
-  In this experiment, you will watch several videos and imagine yourself as the driver of the vehicle. You will be asked to answer questions based on your feelings about the interactions and the distance from the cyclist. All videos feature manually driven cars. Please focus on your perspective as the driver when assessing the proximity and interactions between the vehicle and the cyclist
+    In this experiment, you will watch several videos and imagine yourself as the driver of the vehicle. You will be asked to answer questions based on your feelings about the interactions and the distance from the cyclist. All videos feature manually driven cars. Please focus on your perspective as the driver when assessing the proximity and interactions between the vehicle and the cyclist
   <br/>
   <br/>
   <strong>Important:</strong> You will be asked to leave Appen to participate in the experiment. You will need to open the link below. Do not close this tab. At the end of the experiment, you will be given a code to input in the next question on this tab. Please take a note of the code. Without the code, you will not be able to receive money for your participation. All videos will be downloaded before the start of the experiment. It may take a few minutes. Please do not close your browser during that time.
@@ -149,9 +155,9 @@
 </p>
 <p class="header2">Open 
   <strong>
-    <a target="_blank" href="https://cyclist-distance-crowdsourced-4376413ab266.herokuapp.com">this link</a>
+    <a target="_blank" href="https://cyclist-distance-crowdsourced.herokuapp.com">this link</a>
   </strong> to start the experiment.
 </p>
 <cml:text label="Type the code that you received at the end of the experiment." class="" validates="required regex" data-validates-regex="^G5\d+\s?BG\d+\s?5M\s?$" data-validates-regex-message="Please enter the correct code to receive your money."/>
 <cml:text label="Which of the scenarios you experienced was the most impactful in helping you, and can you elaborate on why the methods used in that scenario were particularly effective?" class="" validates="required"/>
-<cml:textarea label="Please provide any suggestions that could help engineers to build safe and enjoyable interaction between all road user. " class=""/>
+<cml:textarea label="Please provide any suggestions that could help engineers to build safe and enjoyable interaction between all road user. "/>
