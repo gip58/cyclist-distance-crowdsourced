@@ -210,7 +210,7 @@ dcycl/*.p
 
 
 # Recording files
-dcycl-unity/Recordings
+dcycl-unity/Recordings/
 
 # lightning
 **/LightingData.asset
