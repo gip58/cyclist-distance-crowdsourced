@@ -1,5 +1,7 @@
-# analysis code
+# python code
 /dcycl
+.requirements.txt
+setup.py
 
 # unity project
 /dcycl-unity
