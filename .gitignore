@@ -208,6 +208,10 @@ secret
 dcycl/analysis/*.p
 dcycl/*.p
 
+
+# Recording files
+dcycl-unity/Recordings
+
 # lightning
 **/LightingData.asset
 **/Lightmap-*_comp_light.exr
