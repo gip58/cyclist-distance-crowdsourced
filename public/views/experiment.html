@@ -346,10 +346,9 @@ var instructions_block = {
     type: jsPsychInstructions,
     pages: [
         // Instruction Page 1
-        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Welcome to the Driver Experience Study</h1><p class="lead">In this study, you will experience various driving scenarios from the perspective of the driver. In each scenario, your car will overtake a cyclist on the road. We aim to understand your perception of the overtaking distance and your comfort level during these maneuvers.</p><p class="lead">How It Works:</p><ul><li>You will watch <strong>21 videos</strong>, organized into <strong>7 different scenarios</strong>, each showing your car overtaking a cyclist three times. The speed will remain the same across all scenarios, but the overtaking distance will vary.</li><li>As the driver, focus on the overall driving environment.</li></ul><p class="lead">What the Scenarios Will Look Like:</p><p>Below is an example of how a scenario will appear during the experiment:</p><div class="container"><div class="row"><div class="col"><img src='<img src="https://raw.githubusercontent.com/gip58/cyclist-distance-crowdsourced/main/public/img/image_001_0000.jpg" style="width: 60%; margin: auto; display: block;">' style="width: 60%; margin: auto; display: block;"></div></div><div class="row"><div class="col"><p class="text-center">Driver\'s perspective.</p></div></div></div><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
-
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">Introduction</h1><p class="lead">In this study, you will experience various driving scenarios from the perspective of the driver. In each scenario, your car will overtake a cyclist on the road. We aim to understand your perception of the overtaking distance and your comfort level during these manoeuvrers.</p><p class="lead">How it works:</p><ul><li>You will watch <strong>21 videos</strong>, organised into <strong>7 different scenarios</strong>, each showing your car overtaking a cyclist three times. The speed will remain the same across all scenarios, but the overtaking distance will vary.</li><li>As the driver, focus on the overall driving environment.</li></ul><p class="lead">What the scenarios will look like:</p><p>Below is an example of how a scenario will appear during the experiment:</p><div class="container"><div class="row"><div class="col"><img src=\'' + image_pfefix + 'drivers-perspective.jpg\'/ style="width: 60%; margin: auto; display: block;"></div></div><div class="row"><div class="col"><p class="text-center">Driver\'s perspective.</p></div></div></div><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>',
         // Instruction Page 2
-        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">What to Expect and How to Respond</h1><p class="lead">What to Expect:</p><ul><li>The car’s speed and the overtaking point will remain consistent throughout all scenarios, but the road environment may vary.</li><li>Focus on driving as if you were behind the wheel.</li></ul><p class="lead">Test Procedure:</p><ol><li>Each video will play automatically, and you should imagine you are driving the car.</li><li>If you feel any discomfort or stress during the overtaking maneuver, press and hold the <strong>‘F’ key</strong>. Release it once you feel comfortable again. You may press and release as needed.</li></ol><p class="lead">Questions After Each Video:</p><ul><li><strong>Question 1:</strong> “Imagine that you were the driver of the car and you just overtook the cyclist. Please rate the following statement: ‘The space between the car and the bicycle during the overtaking maneuver was adequate.’”<br>You will use a slider ranging from ‘Completely disagree’ to ‘Completely agree’ to indicate your perception.</li><li><strong>Question 2:</strong> “Estimate the lateral distance between the car and the bicycle during the overtaking maneuver.”<br>You will select a value using a slider ranging from 0.5 meters to 2.5 meters.</li></ul><p>Make sure to move all sliders before proceeding. Your answers should reflect your perception as if you were the driver in the scenario.</p><hr><p>Press \'Next\' to proceed to the next page of instructions.</p></div></div>'
+        '<div class="jumbotron jumbotron-fluid" style="text-align: left;"><div class="container"><h1 class="display-4">What to expect and how to respond</h1><p class="lead">What to expect:</p><ul><li>The car’s speed and the overtaking point will remain consistent throughout all scenarios, but the road environment may vary.</li><li>Focus on driving as if you were behind the wheel.</li></ul><p class="lead">Test procedure:</p><ol><li>Each video will play automatically, and you should imagine you are driving the car.</li><li>If you feel any discomfort or stress during the overtaking manoeuvrer, press and hold the <strong>‘F’ key</strong>. Release it once you feel comfortable again. You may press and release as needed.</li><li>After each video you will be asked to respond to 2 questions.</li></ol><hr><p>Press \'C\' to continue to the next page where the experiment will start.</p></div></div>'
     ],
     show_clickable_nav: true,
     data: {
@@ -518,20 +517,7 @@ var preload = {
   auto_preload: true,
   max_load_time: 3000000,
   images: [image_pfefix + 'black_frame.png', 
-           image_pfefix + 'brightness_adjustment.jpg',
-           image_pfefix + 'drivers_view.jpg',
-           image_pfefix + 'ego_av_8500ms.jpg',
-           image_pfefix + 'ego_car_av.jpg',
-           image_pfefix + 'ego_mv_8500ms.jpg',
-           image_pfefix + 'red_cars.jpg',
-           image_pfefix + 'red_ego_av_8500ms.jpg',
-           image_pfefix + 'red_ego_mv_8500ms.jpg',
-           image_pfefix + 'white_av_ego_av_8500ms.jpg',
-           image_pfefix + 'white_av_ego_mv_8500ms.jpg',
-           image_pfefix + 'white_car_av.jpg',
-           image_pfefix + 'white_car.jpg',
-           image_pfefix + 'white_mv_ego_av_8500ms.jpg',
-           image_pfefix + 'white_mv_ego_mv_8500ms.jpg'
+           image_pfefix + 'drivers-perspective.jpg'
           ],
   video: video_preload,
 };
