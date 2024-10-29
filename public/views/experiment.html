@@ -539,6 +539,7 @@ if (eye_tracking) {  // toggle for using eye tracking
     timeline.push(calibration_done);
     timeline.push(save_data_block);  // save data
 }
+timeline.push(qs_end);  // questions in the end
 timeline.push(instructions_block);  // instructions
 // iterate over blocks
 for (var i = 0; i < n_videos_per_participant * n_videos_repeat; i++) {
