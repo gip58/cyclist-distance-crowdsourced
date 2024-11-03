@@ -211,6 +211,8 @@ dcycl/*.p
 
 # Recording files
 dcycl-unity/Recordings/
+dcycl-unity/videos/
+dcycl-unity/Assets/videos/
 
 # lightning
 **/LightingData.asset
