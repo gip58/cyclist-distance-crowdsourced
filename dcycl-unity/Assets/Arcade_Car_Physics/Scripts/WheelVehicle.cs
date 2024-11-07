@@ -12,11 +12,7 @@ using UnityEngine;
     using MOSC;
 #endif
 
-public interface IVehicle
-{
-    bool Handbrake { get; }
-    float Speed { get; }
-}
+
 
 namespace VehicleBehaviour {
     [RequireComponent(typeof(Rigidbody))]
