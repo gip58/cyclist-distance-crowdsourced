@@ -127,7 +127,7 @@
 </p>
 <p class="header2">Open 
   <strong>
-    <a target="_blank" href="https://cyclist-distance-crowdsourced-4376413ab266.herokuapp.com/">this link</a>
+    <a target="_blank" href="https://cyclist-distance-crowdsourced-63b5056a134c.herokuapp.com/">this link</a>
   </strong> to start the experiment.
 </p>
 <cml:text label="Type the code that you received at the end of the experiment." class="" validates="required regex" data-validates-regex="^G5\d+\s?BG\d+\s?5M\s?$" data-validates-regex-message="Please enter the correct code to receive your money."/>
