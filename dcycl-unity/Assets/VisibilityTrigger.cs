@@ -9,6 +9,8 @@ public class VisibilityTrigger : MonoBehaviour
     [SerializeField] private float delayBeforeShow = 5.0f;
     [SerializeField] private float displayDuration = 3.0f;
 
+    private bool isTriggered = false; // To ensure the coroutine is only triggered once
+
     void Start()
     {
         // Get the Mesh Renderer from the child object
@@ -23,9 +25,10 @@ public class VisibilityTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Check if the object entering the trigger is the car
-        if (other.CompareTag("ManualCar")) // replace "Car" with the tag of your car object
+        // Check if the object entering the trigger is the car and if it hasn't already been triggered
+        if (other.CompareTag("ManualCar") && !isTriggered)
         {
+            isTriggered = true; // Mark as triggered
             // Start the coroutine to handle visibility
             StartCoroutine(ToggleVisibility());
         }

@@ -11,9 +11,35 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/_Scenes/MainScene.unity
     guid: eaa2ea2e932de40d09680937963cede9
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Car Simulator.unity
     guid: 7cb6fed41dfcb88408356bc7bc7a44eb
+  - enabled: 1
+    path: Assets/_Scenes/Scenario/0.unity
+    guid: 0e18797eedc4f8144b672958c5a0a0c7
+  - enabled: 1
+    path: Assets/_Scenes/Scenario/1.unity
+    guid: 394ee26b535ba9345a8f079b98677dd2
+  - enabled: 1
+    path: Assets/_Scenes/Scenario/2.unity
+    guid: 61c7f3b84ff4349488d6c287bc157b1a
+  - enabled: 1
+    path: Assets/_Scenes/Scenario/3.unity
+    guid: 92394f17fb1694c478c6d94224024f7f
+  - enabled: 1
+    path: Assets/_Scenes/Scenario/4.unity
+    guid: 2c01a510eace63749aa7bc6af01fe978
+  - enabled: 1
+    path: Assets/_Scenes/Scenario/5.unity
+    guid: 6275132cd7bcfe342be427be9be344f9
+  - enabled: 1
+    path: Assets/_Scenes/Scenario/6.1.unity
+    guid: 7b5cf971d3a29034eb0c899e8aeeec9f
+  - enabled: 1
+    path: Assets/_Scenes/Scenario/7.unity
+    guid: 222286be0727eb546b9b7925708b2a7a
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 2ad2aca0f5aec9845885339a62629243,
       type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000,
+      guid: e46cc2da89c7973448f7e562ff177a38, type: 2}
