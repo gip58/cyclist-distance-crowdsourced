@@ -18,7 +18,7 @@ SAVE_CSV = True  # load csv files with data
 FILTER_DATA = True  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
 REJECT_CHEATERS = False  # reject cheaters on Appen
-CALC_COORDS = False  # extract points from heroku data
+CALC_COORDS = True  # extract points from heroku data
 UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
@@ -77,12 +77,9 @@ if __name__ == '__main__':
     all_data = heroku_data.merge(appen_data,
                                  left_on='worker_code',
                                  right_on='worker_code')
-    logger.info('Data from {} participants included in analysis.',
-                all_data.shape[0])
-    # update original data files
-    if dc.common.get_configs('only_lab') == 0:
-        heroku_data = all_data[all_data.columns.intersection(heroku_data_keys)]
-        appen_data = all_data[all_data.columns.intersection(appen_data_keys)]
+    logger.info('Data from {} participants included in analysis.', all_data.shape[0])
+    heroku_data = all_data[all_data.columns.intersection(heroku_data_keys)]
+    appen_data = all_data[all_data.columns.intersection(appen_data_keys)]
     heroku_data = heroku_data.set_index('worker_code')
     heroku.set_data(heroku_data)  # update object with filtered data
     appen_data = appen_data.set_index('worker_code')
@@ -93,12 +90,9 @@ if __name__ == '__main__':
     # create arrays with coordinates for stimuli
     if CALC_COORDS:
         points, _, points_duration = heroku.points(heroku_data)
-        dc.common.save_to_p(file_coords,
-                            [points, points_duration],
-                            'points data')
+        dc.common.save_to_p(file_coords, [points, points_duration], 'points data')
     else:
-        points, points_duration = dc.common.load_from_p(file_coords,
-                                                        'points data')
+        points, points_duration = dc.common.load_from_p(file_coords, 'points data')
     # update mapping with keypress data
     if UPDATE_MAPPING:
         # read in mapping of stimuli
