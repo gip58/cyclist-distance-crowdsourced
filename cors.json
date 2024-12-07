@@ -1,6 +1,6 @@
 [
     {
-      "origin": ["https://trust-crowdsourced.herokuapp.com"],
+      "origin": ["https://cyclist-distance-crowdsourced-63b5056a134c.herokuapp.com/"],
       "method": ["GET"],
       "responseHeader": ["Content-Type"],
       "maxAgeSeconds": 3600

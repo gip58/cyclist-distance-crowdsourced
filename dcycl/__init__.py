@@ -5,7 +5,7 @@ class CustomLogger:
     """Logger that handles string formatting.
 
     Contains a logging.Logger object. Copies the various logging.Logger
-    methods. The purpose is to accept str.format() style formatting.
+    methods. The purpose is to accept sdc.format() style formatting.
     With this custom class, messages may contain '{}' where the next
     arguments will be placed. Doesn't work with keyword arguments for the
     formatting.

@@ -1,22 +1,22 @@
-id,video_id,interation,distance
-0,video_0,Bike_Laser_Projection ,0.8
-1,video_1,Bike_Laser_Projection ,1.6
-2,video_2,Bike_Laser_Projection ,2.4
-3,video_3,Veritcal_sign,0.8
-4,video_4,Veritcal_sign,1.6
-5,video_5,Veritcal_sign,2.4
-6,video_6,Danish_sign,0.8
-7,video_7,Danish_sign,1.6
-8,video_8,Danish_sign,2.4
-9,video_9,Car_Laser_projection,0.8
-10,video_10,Car_Laser_projection,1.6
-11,video_11,Car_Laser_projection,2.4
-12,video_12,Controol,0.8
-13,video_13,Controol,1.6
-14,video_14,Controol,2.4
-15,video_15,Unprotechted_cycling_path,0.8
-16,video_16,Unprotechted_cycling_path,1.6
-17,video_17,Unprotechted_cycling_path,2.4
-18,video_18,No_road_markings,0.8
-19,video_19,No_road_markings,1.6
-20,video_20,No_road_markings,2.4
+id,video_id,interaction,distance,video_length,min_dur,max_dur
+0,video_0,Bike_Laser_Projection,0.8,19366,18366,20366
+1,video_1,Bike_Laser_Projection,1.6,19366,18366,20366
+2,video_2,Bike_Laser_Projection,2.4,19366,18366,20366
+3,video_3,Veritcal_sign,0.8,19366,18366,20366
+4,video_4,Veritcal_sign,1.6,19366,18366,20366
+5,video_5,Veritcal_sign,2.4,19366,18366,20366
+6,video_6,Danish_sign,0.8,19366,18366,20366
+7,video_7,Danish_sign,1.6,19366,18366,20366
+8,video_8,Danish_sign,2.4,19366,18366,20366
+9,video_9,Car_Laser_projection,0.8,19366,18366,20366
+10,video_10,Car_Laser_projection,1.6,19366,18366,20366
+11,video_11,Car_Laser_projection,2.4,19366,18366,20366
+12,video_12,Control,0.8,19366,18366,20366
+13,video_13,Control,1.6,19366,18366,20366
+14,video_14,Control,2.4,19366,18366,20366
+15,video_15,Unprotechted_cycling_path,0.8,19366,18366,20366
+16,video_16,Unprotechted_cycling_path,1.6,19366,18366,20366
+17,video_17,Unprotechted_cycling_path,2.4,19366,18366,20366
+18,video_18,No_road_markings,0.8,19366,18366,20366
+19,video_19,No_road_markings,1.6,19366,18366,20366
+20,video_20,No_road_markings,2.4,19366,18366,20366

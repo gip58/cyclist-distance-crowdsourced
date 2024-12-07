@@ -2,32 +2,30 @@
 
 import os
 import pandas as pd
-import trust as tr
+import dcycl as dc
 
-#print(os.path.join(tr.common.get_configs("path_stimuli"), "out.mp4"))
-path_stimuli = "path_stimuli"  # replace with actual path
-path_source = "path_source"
+
 # Read mapping csv
-df = pd.read_csv("process_videos_info.csv")
+df = pd.read_csv('process_videos_info.csv')
 # black file to be added in the beginning of the stimuli
-black_file = "black_video.mp4"
+black_file = 'black_video.mp4'
 # Go over all stimuli
 for index, row in df.iterrows():
-    in_file = os.path.join(path_source, row['in'])
-    out_file = os.path.join(path_stimuli,'noblack_' + row['out'])
-    merged_file = os.path.join(path_stimuli, row['out'])
+    in_file = os.path.join(dc.common.get_configs('path_source'), row['in'])
+    out_file = os.path.join(dc.common.get_configs('path_stimuli'), 'noblack_' + row['out'])
+    merged_file = os.path.join(dc.common.get_configs('path_stimuli'), row['out'])
     # Using FFmpeg command to process video and compress audio
-    os.system("ffmpeg -r 30" +
+    os.system("ffmpeg -r 60" +
               " -ss " + str(row['start']) +
               " -to " + str(row['end']) +
               " -i " + in_file +
-              " -c:v libx264 -profile:v baseline -level 3.0 -pix_fmt yuv420p" +  # noqa: E501
+              " -c:v libx264 -profile:v baseline -level 3.0 -pix_fmt yuv420p" +
               " -c:a aac -b:a 32k" +
-              " -vf scale=1920:1080" +
+              " -vf scale=1280:720" +
               " -movflags faststart" +
-              " -crf 18 " +
+              " -crf 23 " +
               out_file)
-    # Using FFmpeg command to add 1 sec of black in the beginning20
+    # Using FFmpeg command to add 1 sec of black in the beginning
     # based on https://stackoverflow.com/a/22688066/46687
     os.system("ffmpeg -i " + black_file +
               " -i " + out_file +

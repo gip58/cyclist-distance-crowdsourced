@@ -4,12 +4,12 @@ import numpy as np
 import os
 import datetime as dt
 from collections import Counter
-from pycountry_convert import country_alpha2_to_country_name, country_name_to_country_alpha3  # noqa: E501
+from pycountry_convert import country_alpha2_to_country_name, country_name_to_country_alpha3
 
 
-import trust as tr
+import dcycl as dc
 
-logger = tr.CustomLogger(__name__)  # use custom logger
+logger = dc.CustomLogger(__name__)  # use custom logger
 
 
 class Appen:
@@ -28,50 +28,49 @@ class Appen:
     # mapping between appen column names and readable names
     columns_mapping = {'_started_at': 'start',
                        '_created_at': 'end',
-                       'about_how_many_kilometers_miles_did_you_drive_in_the_last_12_months': 'milage',  # noqa: E501
-                       'at_which_age_did_you_obtain_your_first_license_for_driving_a_car': 'year_license',  # noqa: E501
-                       'have_you_read_and_understood_the_above_instructions': 'instructions',  # noqa: E501
+                       'about_how_many_kilometers_miles_did_you_drive_in_the_last_12_months': 'milage',
+                       'at_which_age_did_you_obtain_your_first_license_for_driving_a_car': 'year_license',
+                       'have_you_read_and_understood_the_above_instructions': 'instructions',
                        'do_you_consent_to_participate_in_this_study_in_the_way_that_is_described_in_the_information_shown_above': 'consent',  # noqa: E501
                        'how_many_accidents_were_you_involved_in_when_driving_a_car_in_the_last_3_years_please_include_all_accidents_regardless_of_how_they_were_caused_how_slight_they_were_or_where_they_happened': 'accidents',  # noqa: E501
                        'becoming_angered_by_a_particular_type_of_driver_and_indicate_your_hostility_by_whatever_means_you_can': 'dbq1_anger',  # noqa: E501
-                       'disregarding_the_speed_limit_on_a_motorway': 'dbq2_speed_motorway',  # noqa: E501
-                       'disregarding_the_speed_limit_on_a_residential_road': 'dbq3_speed_residential',  # noqa: E501
+                       'disregarding_the_speed_limit_on_a_motorway': 'dbq2_speed_motorway',
+                       'disregarding_the_speed_limit_on_a_residential_road': 'dbq3_speed_residential',
                        'driving_so_close_to_the_car_in_front_that_it_would_be_difficult_to_stop_in_an_emergency': 'dbq4_headway',  # noqa: E501
                        'racing_away_from_traffic_lights_with_the_intention_of_beating_the_driver_next_to_you': 'dbq5_traffic_lights',  # noqa: E501
-                       'sounding_your_horn_to_indicate_your_annoyance_with_another_road_user': 'dbq6_horn',  # noqa: E501
-                       'using_a_phone_in_your_hands_while_driving': 'dbq7_mobile',  # noqa: E501
-                       'doing_my_best_not_to_be_obstacle_for_other_drivers': 'dbq8_others',  # noqa: E501
+                       'sounding_your_horn_to_indicate_your_annoyance_with_another_road_user': 'dbq6_horn',
+                       'using_a_phone_in_your_hands_while_driving': 'dbq7_mobile',
+                       'doing_my_best_not_to_be_obstacle_for_other_drivers': 'dbq8_others',
                        'if_you_answered_other_in_the_previous_question_please_describe_your_experiences_below': 'experiences_other',  # noqa: E501
                        'if_you_answered_other_in_the_previous_question_please_describe_your_input_device_below': 'device_other',  # noqa: E501
                        'in_which_type_of_place_are_you_located_now': 'place',
                        'if_you_answered_other_in_the_previous_question_please_describe_the_place_where_you_are_located_now_below': 'place_other',  # noqa: E501
-                       'in_which_year_do_you_think_that_most_cars_will_be_able_to_drive_fully_automatically_in_your_country_of_residence': 'year_ad',  # noqa: E501
-                       'on_average_how_often_did_you_drive_a_car_in_the_last_12_months': 'driving_freq',  # noqa: E501
+                       'on_average_how_often_did_you_drive_a_car_in_the_last_12_months': 'driving_freq',
                        'please_provide_any_suggestions_that_could_help_engineers_to_build_safe_and_enjoyable_automated_cars': 'suggestions_ad',  # noqa: E501
-                       'type_the_code_that_you_received_at_the_end_of_the_experiment': 'worker_code',  # noqa: E501
+                       'type_the_code_that_you_received_at_the_end_of_the_experiment': 'worker_code',
                        'what_is_your_age': 'age',
                        'what_is_your_gender': 'gender',
-                       'what_is_the_highest_level_of_education_you_have_completed': 'education',  # noqa: E501
-                       'what_is_your_primary_mode_of_transportation': 'mode_transportation',  # noqa: E501
+                       'what_is_the_highest_level_of_education_you_have_completed': 'education',
+                       'what_is_your_primary_mode_of_transportation': 'mode_transportation',
                        'which_input_device_are_you_using_now': 'device',
                        'if_you_answered_other_in_the_previous_question_please_describe_your_input_device_below': 'device_other',  # noqa: E501
                        'as_a_driver_what_does_it_mean_to_you_when_a_pedestrian_makes_eye_contact_with_you': 'ec_driver',  # noqa: E501
                        'as_a_pedestrian_what_does_it_mean_to_you_when_a_driver_makes_eye_contact_with_you': 'ec_pedestrian',  # noqa: E501
                        'how_do_you_feel_about_the_following_communication_between_driver_and_pedestrian_is_important_for_road_safety': 'communication_importance',  # noqa: E501
                        'i_would_like_to_communicate_with_other_road_users_while_driving_for_instance_using_eye_contact_gestures_verbal_communication_etc': 'communcation_others',  # noqa: E501
-                       'i_am_worried_about_where_all_this_technology_is_leading': 'technology_worried',  # noqa: E501
+                       'i_am_worried_about_where_all_this_technology_is_leading': 'technology_worried',
                        'i_enjoy_making_use_of_the_latest_technological_products_and_services_when_i_have_the_opportunity': 'technology_enjoyment',  # noqa: E501
                        'science_and_technology_are_making_our_lives_healthier_easier_and_more_comfortable': 'technology_lives_easier',  # noqa: E501
-                       'science_and_technology_make_our_way_of_life_change_too_fast': 'technology_lives_change',  # noqa: E501
-                       'im_not_interested_in_new_technologies': 'technology_not_interested',  # noqa: E501
-                       'machines_are_taking_over_some_of_the_roles_that_humans_should_have': 'machines_roles',  # noqa: E501
+                       'science_and_technology_make_our_way_of_life_change_too_fast': 'technology_lives_change',
+                       'im_not_interested_in_new_technologies': 'technology_not_interested',
+                       'machines_are_taking_over_some_of_the_roles_that_humans_should_have': 'machines_roles',
                        'new_technologies_are_all_about_making_profits_rather_than_making_peoples_lives_better': 'machines_profit',  # noqa: E501
-                       'please_indicate_your_general_attitude_towards_automated_cars': 'attitude_ad',  # noqa: E501
+                       'please_indicate_your_general_attitude_towards_automated_cars': 'attitude_ad',
                        'when_the_automated_cars_are_put_into_use_i_will_feel_comfortable_about_driving_on_roads_alongside_automated_cars': 'driving_alongside_ad',  # noqa: E501
                        'when_the_automated_cars_are_put_into_use_i_will_feel_more_comfortable_about_using_an_automated_car_instead_of_driving_a_manually_driven_car': 'driving_in_ad',  # noqa: E501
-                       'who_do_you_think_is_more_capable_of_conducting_drivingrelated_tasks': 'capability_ad',  # noqa: E501
-                       'which_options_best_describes_your_experience_with_automated_cars': 'experience_ad',  # noqa: E501
-                       'if_yes_please_provide_your_email_address': 'email'}  # noqa: E501
+                       'who_do_you_think_is_more_capable_of_conducting_drivingrelated_tasks': 'capability_ad',
+                       'which_options_best_describes_your_experience_with_automated_cars': 'experience_ad',
+                       'if_yes_please_provide_your_email_address': 'email'}
 
     def __init__(self,
                  file_data: list,
@@ -108,18 +107,14 @@ class Appen:
         """
         # load data
         if self.load_p:
-            df = tr.common.load_from_p(self.file_p,
-                                       'appen data')
+            df = dc.common.load_from_p(self.file_p, 'appen data')
         # process data
         else:
             logger.info('Reading appen data from {}.', self.file_data)
             # load from csv
             df = pd.read_csv(self.file_data)
-            # drop legacy worker code column
-            df = df.drop('inoutstartend', axis=1)
             # drop _gold columns
-            df = df.drop((x for x in df.columns.tolist() if '_gold' in x),
-                         axis=1)
+            df = df.drop((x for x in df.columns.tolist() if '_gold' in x), axis=1)
             # replace linebreaks
             df = df.replace('\n', '', regex=True)
             # rename columns to readable names
@@ -144,10 +139,10 @@ class Appen:
             df.insert(0, 'worker_code', worker_code_col)
         # save to pickle
         if self.save_p:
-            tr.common.save_to_p(self.file_p, df, 'appen data')
+            dc.common.save_to_p(self.file_p, df, 'appen data')
         # save to csv
         if self.save_csv:
-            df.to_csv(os.path.join(tr.settings.output_dir, self.file_csv))
+            df.to_csv(os.path.join(dc.settings.output_dir, self.file_csv))
             logger.info('Saved appen data to csv file {}', self.file_csv)
         # assign to attribute
         self.appen_data = df
@@ -168,45 +163,37 @@ class Appen:
         logger.info('Filtering appen data.')
         # people that did not read instructions
         df_1 = df.loc[df['instructions'] == 'no']
-        logger.info('Filter-a1. People who did not read instructions: {}',
-                    df_1.shape[0])
+        logger.info('Filter-a1. People who did not read instructions: {}', df_1.shape[0])
         # people that did not give consent
         df_2 = df.loc[df['consent'] == 'no']
-        logger.info('Filter-a2. People who did not give consent: {}',
-                    df_2.shape[0])
+        logger.info('Filter-a2. People who did not give consent: {}', df_2.shape[0])
         # people that are underages
         df_3 = df.loc[df['age'] < 18]
-        logger.info('Filter-a3. People that are under 18 years of age: {}',
-                    df_3.shape[0])
-        # People that took less than tr.common.get_configs('allowed_min_time')
+        logger.info('Filter-a3. People that are under 18 years of age: {}', df_3.shape[0])
+        # People that took less than dc.common.get_configs('allowed_min_time')
         # minutes to complete the study
-        df_4 = df.loc[df['time'] < tr.common.get_configs('allowed_min_time')]
+        df_4 = df.loc[df['time'] < dc.common.get_configs('allowed_min_time')]
         logger.info('Filter-a4. People who completed the study in under ' +
-                    str(tr.common.get_configs('allowed_min_time')) +
+                    str(dc.common.get_configs('allowed_min_time')) +
                     ' sec: {}',
                     df_4.shape[0])
         # people that completed the study from the same IP address
         df_5 = df[df['ip'].duplicated(keep='first')]
-        logger.info('Filter-a5. People who completed the study from the ' +
-                    'same IP: {}',
-                    df_5.shape[0])
+        logger.info('Filter-a5. People who completed the study from the same IP: {}', df_5.shape[0])
         # people that entered the same worker_code more than once
         df_6 = df[df['worker_code'].duplicated(keep='first')]
-        logger.info('Filter-a6. People who used the same worker_code: {}',
-                    df_6.shape[0])
+        logger.info('Filter-a6. People who used the same worker_code: {}', df_6.shape[0])
         # save to csv
         if self.save_csv:
             df_6 = df_6.reset_index()
-            df_6.to_csv(os.path.join(tr.settings.output_dir,
-                                     self.file_cheaters_csv))
-            logger.info('Filter-a6. Saved list of cheaters to csv file {}',
-                        self.file_cheaters_csv)
+            df_6.to_csv(os.path.join(dc.settings.output_dir, self.file_cheaters_csv))
+            logger.info('Filter-a6. Saved list of cheaters to csv file {}', self.file_cheaters_csv)
         # people with nan for worker_id
         df_7 = df[df['worker_id'].isnull()]
-        logger.info('Filter-a7. People who have not valid worker_id: {}',
-                    df_7.shape[0])
+        logger.info('Filter-a7. People who had not valid worker_id: {}', df_7.shape[0])
         # concatenate dfs with filtered data
         old_size = df.shape[0]
+        print(df_1.head)
         df_filtered = pd.concat([df_1, df_2, df_3, df_4, df_5, df_6, df_7])
         # check if there are people to filter
         if not df_filtered.empty:
@@ -215,8 +202,7 @@ class Appen:
             df = df[~df['worker_code'].isin(unique_worker_codes)]
             # reset index in dataframe
             df = df.reset_index()
-        logger.info('Filtered in total in appen data: {}',
-                    old_size - df.shape[0])
+        logger.info('Filtered in total in appen data: {}', old_size - df.shape[0])
         # assign to attribute
         self.appen_data = df
         # return df with data
@@ -237,44 +223,28 @@ class Appen:
         if clean_years:
             # get current number of nans
             nans_before = np.zeros(3, dtype=np.int8)
-            nans_before[0] = df['year_ad'].isnull().sum()
-            nans_before[1] = df['year_license'].isnull().sum()
-            nans_before[2] = df['age'].isnull().sum()
-            # replace all non-numeric values to nan for questions involving
-            # years
-            df['year_ad'] = df['year_ad'].apply(
-                lambda x: pd.to_numeric(x, errors='coerce'))
+            nans_before[0] = df['year_license'].isnull().sum()
+            nans_before[1] = df['age'].isnull().sum()
+            # replace all non-numeric values to nan for questions involving years
             df['year_license'] = df['year_license'].apply(
                 lambda x: pd.to_numeric(x, errors='coerce'))
             df['age'] = df['age'].apply(
                 lambda x: pd.to_numeric(x, errors='coerce'))
             logger.info('Clean-a1. Replaced {} non-numeric values in columns'
-                        + ' year_ad, {} non-numeric values in column'
                         + ' year_license, {} non-numeric values in column'
                         + ' age.',
-                        df['year_ad'].isnull().sum() - nans_before[0],
                         df['year_license'].isnull().sum() - nans_before[1],
                         df['age'].isnull().sum() - nans_before[2])
             # replace number of nans
-            nans_before[0] = df['year_ad'].isnull().sum()
-            nans_before[1] = df['year_license'].isnull().sum()
-            nans_before[2] = df['age'].isnull().sum()
-            # get current year
-            now = dt.datetime.now()
-            # year of introduction of automated driving cannot be in the past
-            # and unrealistically large values are removed
-            df.loc[df['year_ad'] < now.year, 'year_ad'] = np.nan
-            df.loc[df['year_ad'] > 2300,  'year_ad'] = np.nan
+            nans_before[0] = df['year_license'].isnull().sum()
+            nans_before[1] = df['age'].isnull().sum()
             # year of obtaining driver's license is assumed to be always < 70
             df.loc[df['year_license'] >= 70] = np.nan
             # age is assumed to be always < 100
             df.loc[df['age'] >= 100] = np.nan
-            logger.info('Clean-a2. Cleaned {} values of years in column'
-                        + ' year_ad, {} values of years in column year_license'
-                        + ' , {} values in column age.',
-                        df['year_ad'].isnull().sum() - nans_before[0],
-                        df['year_license'].isnull().sum() - nans_before[1],
-                        df['age'].isnull().sum() - nans_before[2])
+            logger.info('Clean-a2. Cleaned {} values of years in column year_license, {} values in column age.',
+                        df['year_license'].isnull().sum() - nans_before[0],
+                        df['age'].isnull().sum() - nans_before[1])
         # assign to attribute
         self.appen_data = df
         # return df with data
@@ -282,7 +252,7 @@ class Appen:
 
     def mask_ips_ids(self, df, mask_ip=True, mask_id=True):
         """Anonymyse IPs and IDs. IDs are anonymised by subtracting the
-        given ID from tr.common.get_configs('mask_id').
+        given ID from dc.common.get_configs('mask_id').
         """
         # loop through rows of the file
         if mask_ip:
@@ -323,7 +293,7 @@ class Appen:
                 # new worker ID
                 if not any(d['o'] == df['worker_id'][i] for d in proc_ids):
                     # mask in format random_int - worker_id
-                    masked_id = (str(tr.common.get_configs('mask_id') -
+                    masked_id = (str(dc.common.get_configs('mask_id') -
                                      df['worker_id'][i]))
                     # record IP as already replaced
                     proc_ids.append({'o': df['worker_id'][i],
@@ -390,7 +360,7 @@ class Appen:
         self.countries_data = df_country
         # save to csv
         if self.save_csv:
-            df_country.to_csv(os.path.join(tr.settings.output_dir,
+            df_country.to_csv(os.path.join(dc.settings.output_dir,
                                            self.file_country_csv))
             logger.info('Saved country data to csv file {}', self.file_csv)
         # return df with data

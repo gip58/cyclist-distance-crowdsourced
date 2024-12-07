@@ -3,51 +3,51 @@ import matplotlib.pyplot as plt
 import matplotlib._pylab_helpers
 from tqdm import tqdm
 import os
-import trust as tr
+import dcycl as dc
 # from statistics import mean
 # import pandas as pd
 import re
 from statistics import mean
-tr.logs(show_level='info', show_color=True)
-logger = tr.CustomLogger(__name__)  # use custom logger
+dc.logs(show_level='info', show_color=True)
+logger = dc.CustomLogger(__name__)  # use custom logger
 
 # const
-# SAVE_P = True  # save pickle files with data
-# LOAD_P = False  # load pickle files with data
-# SAVE_CSV = True  # load csv files with data
-# FILTER_DATA = True  # filter Appen and heroku data
-# CLEAN_DATA = True  # clean Appen data
-# REJECT_CHEATERS = False  # reject cheaters on Appen
-# CALC_COORDS = False  # extract points from heroku data
-# UPDATE_MAPPING = True  # update mapping with keypress data
-# SHOW_OUTPUT = True  # should figures be plotted
-# SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
-# SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
-# SHOW_OUTPUT_PP = True  # should figures with info about participants
-# SHOW_OUTPUT_ET = False  # should figures for eye tracking
-
-# for debugging, skip processing
-SAVE_P = False  # save pickle files with data
-LOAD_P = True  # load pickle files with data
+SAVE_P = True  # save pickle files with data
+LOAD_P = False  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
 FILTER_DATA = True  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
-REJECT_CHEATERS = True  # reject cheaters on Appen
+REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = False  # extract points from heroku data
 UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
-SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
-SHOW_OUTPUT_ST = False  # should figures with stimulus data be plotted
-SHOW_OUTPUT_PP = False  # should figures with info about participants be plotted
-SHOW_OUTPUT_ET = True  # should figures for eye tracking be plotted
+SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
+SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
+SHOW_OUTPUT_PP = True  # should figures with info about participants
+SHOW_OUTPUT_ET = False  # should figures for eye tracking
+
+# for debugging, skip processing
+# SAVE_P = False  # save pickle files with data
+# LOAD_P = True  # load pickle files with data
+# SAVE_CSV = True  # load csv files with data
+# FILTER_DATA = True  # filter Appen and heroku data
+# CLEAN_DATA = True  # clean Appen data
+# REJECT_CHEATERS = True  # reject cheaters on Appen
+# CALC_COORDS = False  # extract points from heroku data
+# UPDATE_MAPPING = True  # update mapping with keypress data
+# SHOW_OUTPUT = True  # should figures be plotted
+# SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted
+# SHOW_OUTPUT_ST = False  # should figures with stimulus data be plotted
+# SHOW_OUTPUT_PP = False  # should figures with info about participants be plotted
+# SHOW_OUTPUT_ET = True  # should figures for eye tracking be plotted
 
 file_mapping = 'mapping.p'  # file to save updated mapping
 file_coords = 'coords.p'  # file to save lists with coordinates
 
 if __name__ == '__main__':
     # create object for working with heroku data
-    files_heroku = tr.common.get_configs('files_heroku')
-    heroku = tr.analysis.Heroku(files_data=files_heroku,
+    files_heroku = dc.common.get_configs('files_heroku')
+    heroku = dc.analysis.Heroku(files_data=files_heroku,
                                 save_p=SAVE_P,
                                 load_p=LOAD_P,
                                 save_csv=SAVE_CSV)
@@ -55,8 +55,8 @@ if __name__ == '__main__':
     heroku_data = heroku.read_data(filter_data=FILTER_DATA)
 
     # create object for working with appen data
-    file_appen = tr.common.get_configs('file_appen')
-    appen = tr.analysis.Appen(file_data=file_appen,
+    file_appen = dc.common.get_configs('file_appen')
+    appen = dc.analysis.Appen(file_data=file_appen,
                               save_p=SAVE_P,
                               load_p=LOAD_P,
                               save_csv=SAVE_CSV)
@@ -69,8 +69,8 @@ if __name__ == '__main__':
     appen_data_keys = appen_data.keys()
     # flag and reject cheaters
     if REJECT_CHEATERS:
-        qa = tr.analysis.QA(file_cheaters=tr.common.get_configs('file_cheaters'),
-                            job_id=tr.common.get_configs('appen_job'))
+        qa = dc.analysis.QA(file_cheaters=dc.common.get_configs('file_cheaters'),
+                            job_id=dc.common.get_configs('appen_job'))
         qa.reject_users()
         qa.ban_users()
     # merge heroku and appen dataframes into one
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     logger.info('Data from {} participants included in analysis.',
                 all_data.shape[0])
     # update original data files
-    if tr.common.get_configs('only_lab') == 0:
+    if dc.common.get_configs('only_lab') == 0:
         heroku_data = all_data[all_data.columns.intersection(heroku_data_keys)]
         appen_data = all_data[all_data.columns.intersection(appen_data_keys)]
     heroku_data = heroku_data.set_index('worker_code')
@@ -93,11 +93,11 @@ if __name__ == '__main__':
     # create arrays with coordinates for stimuli
     if CALC_COORDS:
         points, _, points_duration = heroku.points(heroku_data)
-        tr.common.save_to_p(file_coords,
+        dc.common.save_to_p(file_coords,
                             [points, points_duration],
                             'points data')
     else:
-        points, points_duration = tr.common.load_from_p(file_coords,
+        points, points_duration = dc.common.load_from_p(file_coords,
                                                         'points data')
     # update mapping with keypress data
     if UPDATE_MAPPING:
@@ -115,15 +115,13 @@ if __name__ == '__main__':
         # process post-trial questions and update mapping
         mapping = heroku.process_stimulus_questions(questions)
         # export to pickle
-        tr.common.save_to_p(file_mapping,
-                            mapping,
-                            'mapping of stimuli')
+        dc.common.save_to_p(file_mapping, mapping, 'mapping of stimuli')
     else:
-        mapping = tr.common.load_from_p(file_mapping, 'mapping of stimuli')
+        mapping = dc.common.load_from_p(file_mapping, 'mapping of stimuli')
     # Output
     if SHOW_OUTPUT:
-        analysis = tr.analysis.Analysis()
-        num_stimuli = tr.common.get_configs('num_stimuli')
+        analysis = dc.analysis.Analysis()
+        num_stimuli = dc.common.get_configs('num_stimuli')
         logger.info('Creating figures.')
         # Visualisation of keypress data
         if SHOW_OUTPUT_KP:
@@ -333,12 +331,12 @@ if __name__ == '__main__':
         if SHOW_OUTPUT_ET:
             # create eye gaze visualisations for all videos
             logger.info('Producing visualisations of eye gaze data for {} stimuli.',
-                        tr.common.get_configs('num_stimuli'))
-            if tr.common.get_configs('Combined_animation') == 1:
+                        dc.common.get_configs('num_stimuli'))
+            if dc.common.get_configs('Combined_animation') == 1:
                 num_anim = 21
                 logger.info('Animation is set to combined animations of all for scenarios in one figure')  # noqa: E501
             else:
-                num_anim = tr.common.get_configs('num_stimuli')
+                num_anim = dc.common.get_configs('num_stimuli')
                 logger.info('Animation is set to single stimuli animations in one figure')  # noqa: E501
 
             # source video/stimulus for a given individual.
@@ -346,7 +344,7 @@ if __name__ == '__main__':
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
                             id_video)
                 # Deconstruct the source video into its individual frames.
-                stim_path = os.path.join(tr.settings.output_dir, 'frames')
+                stim_path = os.path.join(dc.settings.output_dir, 'frames')
                 # To allow for overlaying the heatmap for each frame later on.
                 analysis.save_all_frames(heroku_data,
                                          mapping,
@@ -379,14 +377,14 @@ if __name__ == '__main__':
                 points_process3 = {}
                 # determin amount of points in duration for video_id
                 dur = mapping.iloc[id_video]['video_length']
-                hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))  # noqa: E501
+                hm_resolution_range = int(50000/dc.common.get_configs('hm_resolution'))  # noqa: E501
                 # To create animation for scenario 1,2,3 & 4 in the
                 # same animation extract for all senarios.
                 # for individual animations or scenario
                 dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
                 dur = [x for x in dur if str(x) != 'nan']
                 dur = int(round(mean(dur)/1000)*1000)
-                hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))
+                hm_resolution_range = int(50000/dc.common.get_configs('hm_resolution'))
                 # for individual stim
                 for points_dur in range(0, hm_resolution_range, 1):
                     try:
@@ -394,7 +392,7 @@ if __name__ == '__main__':
                     except KeyError:
                         break
                 # check if animations is set for combined
-                if tr.common.get_configs('Combined_animation') == 1:
+                if dc.common.get_configs('Combined_animation') == 1:
                     # Scenario 2
                     for points_dur in range(0, hm_resolution_range, 1):
                         try:
@@ -448,7 +446,7 @@ if __name__ == '__main__':
                 #                           save_anim=True,
                 #                           save_frames=True)
                 # # remove temp folder with frames
-                # shutil.rmtree(os.path.join(tr.settings.output_dir, 'frames'))
+                # shutil.rmtree(os.path.join(dc.settings.output_dir, 'frames'))
                 # Creating a for loop that makes an eye gazes/heatmap for every
                 # create animation for stimulus
                 # analysis.scatter_mult(mapping[mapping['avg_person'] != ''],

@@ -3,9 +3,9 @@ import requests
 import pandas as pd
 from tqdm import tqdm
 
-import trust as tr
+import dcycl as dc
 
-logger = tr.CustomLogger(__name__)  # use custom logger
+logger = dc.CustomLogger(__name__)  # use custom logger
 
 
 class QA:
@@ -57,8 +57,8 @@ class QA:
                             + 'internally was inputted (html regex ' \
                             + 'validator was bypassed).'
             params = {'reason': reason_text,
-                      'key': tr.common.get_secrets('appen_api_key')}
-            headers = {'Authorization': 'Token token=' + tr.common.get_secrets('appen_api_key')}  # noqa: E501
+                      'key': dc.common.get_secrets('appen_api_key')}
+            headers = {'Authorization': 'Token token=' + dc.common.get_secrets('appen_api_key')}  # noqa: E501
             # send PUT request
             try:
                 # TODO: This API call seems to be broken and it returns 401.
@@ -124,8 +124,8 @@ class QA:
                             + 'bypassed).'
             params = {'reason': reason_text,
                       'manual': 'true',
-                      'key': tr.common.get_secrets('appen_api_key')}
-            headers = {'Authorization': 'Token token=' + tr.common.get_secrets('appen_api_key')}  # noqa: E501
+                      'key': dc.common.get_secrets('appen_api_key')}
+            headers = {'Authorization': 'Token token=' + dc.common.get_secrets('appen_api_key')}  # noqa: E501
 
             # send PUT request
             try:

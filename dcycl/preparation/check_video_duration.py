@@ -2,17 +2,17 @@
 
 import os
 import pandas as pd
-import trust as tr
+import dcycl as dc
 from ffprobe import FFProbe
 
-path_source = "path_source"
+
 # read mapping csv
-df = pd.read_csv("process_videos_info.csv")
+df = pd.read_csv('process_videos_info.csv')
 
 for index, row in df.iterrows():
     # adapt path for python
-    folder = (path_source)
+    folder = dc.common.get_configs('path_stimuli')
     folder = folder.replace('\\\u0020', ' ')
-    in_file = os.path.join(folder, row['out'])  # noqa: E501
+    in_file = os.path.join(folder, row['out'])
     # https://stackoverflow.com/a/3844467/46687
     print(row['out'], int(float(FFProbe(in_file).video[0].duration) * 1000))

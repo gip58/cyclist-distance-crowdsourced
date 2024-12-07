@@ -22,20 +22,20 @@ import ast
 from scipy.signal import savgol_filter
 from scipy.stats.kde import gaussian_kde
 import cv2
-import trust as tr
+import dcycl as dc
 
 
 matplotlib.use('TkAgg')
-logger = tr.CustomLogger(__name__)  # use custom logger
+logger = dc.CustomLogger(__name__)  # use custom logger
 
 
 class Analysis:
     # set template for plotly output
-    template = tr.common.get_configs('plotly_template')
+    template = dc.common.get_configs('plotly_template')
     # store resolution for keypress data
-    res = tr.common.get_configs('kp_resolution')
+    res = dc.common.get_configs('kp_resolution')
     # number of stimuli
-    num_stimuli = tr.common.get_configs('num_stimuli')
+    num_stimuli = dc.common.get_configs('num_stimuli')
     # folder for output
     fig = None
     g = None
@@ -61,17 +61,17 @@ class Analysis:
         """
         logger.info('Creating frames')
         # path for temp folder to store images with frames
-        path = os.path.join(tr.settings.output_dir, 'frames')
+        path = os.path.join(dc.settings.output_dir, 'frames')
         # create temp folder
         if not os.path.exists(path):
             os.makedirs(path)
         # video file in the folder with stimuli
-        cap = cv2.VideoCapture(os.path.join(tr.common.get_configs('path_stimuli'), 'video_' + str(id_video) + '.mp4'))
+        cap = cv2.VideoCapture(os.path.join(dc.common.get_configs('path_stimuli'), 'video_' + str(id_video) + '.mp4'))
         # timestamp
         t = mapping.loc['video_' + str(id_video)][t]
         self.time = int(t)
-        self.hm_resolution = tr.common.get_configs('hm_resolution')
-        hm_resolution_int = int(tr.common.get_configs('hm_resolution'))
+        self.hm_resolution = dc.common.get_configs('hm_resolution')
+        hm_resolution_int = int(dc.common.get_configs('hm_resolution'))
         # check if file is already open
         if not cap.isOpened():
             logger.error('File with frame already open.')
@@ -97,8 +97,8 @@ class Analysis:
             logger.error('Not enough data. Histogram was not created for {}.', image)
             return
         # get dimensions of stimulus
-        width = tr.common.get_configs('stimulus_width')
-        height = tr.common.get_configs('stimulus_height')
+        width = dc.common.get_configs('stimulus_width')
+        height = dc.common.get_configs('stimulus_height')
         # convert points into np array
         xy = np.array(points)
         # split coordinates list for readability
@@ -133,8 +133,8 @@ class Analysis:
             logger.error('Not enough data. Heatmap was not created for {}.', image)
             return
         # get dimensions of base image
-        width = tr.common.get_configs('stimulus_width')
-        height = tr.common.get_configs('stimulus_height')
+        width = dc.common.get_configs('stimulus_width')
+        height = dc.common.get_configs('stimulus_height')
         # add datapoints to corners for maximised heatmaps
         if add_corners:
             if [0, 0] not in points:
@@ -223,7 +223,7 @@ class Analysis:
         self.kp_data = keypress data for given stimulus video
         """
         self.image = image
-        self.hm_resolution_range = int(50000/tr.common.get_configs('hm_resolution'))
+        self.hm_resolution_range = int(50000/dc.common.get_configs('hm_resolution'))
         self.id_video = id_video
         # calc amounts of steps from duration
         # dur = mapping.iloc[id_video]['video_length']
@@ -248,10 +248,10 @@ class Analysis:
         self.kp_data = mapping.loc['video_' + str(id_video)]['kp']
         self.event = mapping.loc['video_' + str(id_video)]['events']
         self.event = re.findall(r'\w+', self.event)
-        aoi = pd.read_csv(tr.common.get_configs('aoi'))
+        aoi = pd.read_csv(dc.common.get_configs('aoi'))
         aoi.set_index('video_id', inplace=True)
         self.number_in = []
-        if tr.common.get_configs('Combined_animation') == 1:
+        if dc.common.get_configs('Combined_animation') == 1:
             self.number_in1 = []
             self.number_in2 = []
             self.number_in3 = []
@@ -291,7 +291,7 @@ class Analysis:
         """
         logger.info('Creating long video with all animations for {} stimuli.', num_stimuli)
         # create path
-        path = tr.settings.output_dir + self.folder
+        path = dc.settings.output_dir + self.folder
         if not os.path.exists(path):
             os.makedirs(path)
         # file with list of animations
@@ -338,7 +338,7 @@ class Analysis:
                        label='Video_' + str(self.id_video),
                        color='r')
         # If animations are combined scenarios
-        if tr.common.get_configs('Combined_animation') == 1:
+        if dc.common.get_configs('Combined_animation') == 1:
             self.g[0].plot(np.array(self.times[:it]),
                            np.array(self.kp_data1[:it]),
                            lw=1,
@@ -381,7 +381,7 @@ class Analysis:
         self.g[1].set_title('Number of eye gazes in area of interest', fontsize=25)
         self.g[1].set_xlabel('Time (s)', fontsize=10)
         self.g[1].set_ylabel('Number of gazes in Area of Interest', fontsize=15)  # noqa: E501
-        if tr.common.get_configs('only_lab') == 1:
+        if dc.common.get_configs('only_lab') == 1:
             self.g[1].set_ylim(0, 35)
             self.g[0].set_ylim(0, 80)
         else:
@@ -401,7 +401,7 @@ class Analysis:
         # stim 0 - 20 or all stim when not combined
         x = [item[0] for item in self.points[i]]
         y = [item[1] for item in self.points[i]]
-        if tr.common.get_configs('Combined_animation') == 1:
+        if dc.common.get_configs('Combined_animation') == 1:
             # stim 21 - 41
             x1 = [item[0] for item in self.points1[i]]
             y1 = [item[1] for item in self.points1[i]]
@@ -499,7 +499,7 @@ class Analysis:
         self.g[2].invert_yaxis()
         self.g[2].plot([min_x, max_x, max_x, min_x, min_x], [min_y, min_y, max_y, max_y, min_y], color="red")  # noqa: E501
 
-        if tr.common.get_configs('plotlyplot') == 1:
+        if dc.common.get_configs('plotlyplot') == 1:
             if i == self.framess-1:
                 fig = go.Figure()
                 print(np.array(self.kp_data[it]))
@@ -591,7 +591,7 @@ class Analysis:
         # remove extension
         file_no_path = os.path.splitext(file_no_path)[0]
         # create path
-        path = tr.settings.output_dir + output_subdir
+        path = dc.settings.output_dir + output_subdir
         if not os.path.exists(path):
             os.makedirs(path)
         # save file
@@ -1012,8 +1012,8 @@ class Analysis:
         """
         logger.info('Creating scatter_map for x={} and y={}.', x, y)
         # extracting x and y values for given ID participant
-        width = tr.common.get_configs('stimulus_width')
-        height = tr.common.get_configs('stimulus_height')
+        width = dc.common.get_configs('stimulus_width')
+        height = dc.common.get_configs('stimulus_height')
         x = df.loc[pp][x]
         y = df.loc[pp][y]
         # normalise screen size
@@ -1070,8 +1070,8 @@ class Analysis:
             save_file (bool, optional): flag for saving an html file with plot.
         """
         logger.info('Creating heatmap for x={} and t={}.', x, y)
-        width = tr.common.get_configs('stimulus_width')
-        height = tr.common.get_configs('stimulus_height')
+        width = dc.common.get_configs('stimulus_width')
+        height = dc.common.get_configs('stimulus_height')
         x = df.loc[pp][x]
         y = df.loc[pp][y]
         # Normalize screen size
@@ -2134,7 +2134,7 @@ class Analysis:
             height (int, optional): height of figures to be saved.
         """
         # build path
-        path = tr.settings.output_dir + output_subdir
+        path = dc.settings.output_dir + output_subdir
         if not os.path.exists(path):
             os.makedirs(path)
         # limit name to 255 char
@@ -2168,7 +2168,7 @@ class Analysis:
         # turn name into valid file name
         file_no_path = self.slugify(file_no_path)
         # create path
-        path = tr.settings.output_dir + output_subdir
+        path = dc.settings.output_dir + output_subdir
         if not os.path.exists(path):
             os.makedirs(path)
         # save file

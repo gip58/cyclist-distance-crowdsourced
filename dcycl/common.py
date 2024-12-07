@@ -5,45 +5,43 @@ import json
 import pickle
 import sys
 
-import trust as tr
+import dcycl as dc
 
-logger = tr.CustomLogger(__name__)  # use custom logger
+logger = dc.CustomLogger(__name__)  # use custom logger
 
 
-def get_secrets(entry_name: str, secret_file_name: str = 'secret') -> Dict[str, str]:  # noqa: E501
+def get_secrets(entry_name: str, secret_file_name: str = 'secret') -> Dict[str, str]:
     """
     Open the secrets file and return the requested entry.
     """
-    with open(os.path.join(tr.settings.root_dir, secret_file_name)) as f:
+    with open(os.path.join(dc.settings.root_dir, secret_file_name)) as f:
         return json.load(f)[entry_name]
 
 
-def get_configs(entry_name: str, config_file_name: str = 'config',
-                config_default_file_name: str = 'default.config'):
+def get_configs(entry_name: str, config_file_name: str = 'config', config_default_file_name: str = 'default.config'):
     """
     Open the config file and return the requested entry.
     If no config file is found, open default.config.
     """
     # check if config file is updated
-    if not tr.common.check_config():
+    if not dc.common.check_config():
         sys.exit()
     try:
-        with open(os.path.join(tr.settings.root_dir, config_file_name)) as f:
+        with open(os.path.join(dc.settings.root_dir, config_file_name)) as f:
             content = json.load(f)
     except FileNotFoundError:
-        with open(os.path.join(tr.settings.root_dir, config_default_file_name)) as f:  # noqa: E501
+        with open(os.path.join(dc.settings.root_dir, config_default_file_name)) as f:
             content = json.load(f)
     return content[entry_name]
 
 
-def check_config(config_file_name: str = 'config',
-                 config_default_file_name: str = 'default.config'):
+def check_config(config_file_name: str = 'config', config_default_file_name: str = 'default.config'):
     """
     Check if config file has at least as many rows as default.config.
     """
     # load config file
     try:
-        with open(os.path.join(tr.settings.root_dir, config_file_name)) as f:
+        with open(os.path.join(dc.settings.root_dir, config_file_name)) as f:
             config = json.load(f)
     except FileNotFoundError:
         logger.error('Config file {} not found.', config_file_name)
@@ -54,20 +52,19 @@ def check_config(config_file_name: str = 'config',
         return False
     # load default.config file
     try:
-        with open(os.path.join(tr.settings.root_dir,
+        with open(os.path.join(dc.settings.root_dir,
                                config_default_file_name)) as f:
             default = json.load(f)
     except FileNotFoundError:
         logger.error('Default config file {} not found.', config_file_name)
         return False
     except json.decoder.JSONDecodeError:
-        logger.error('Config file badly formatted. Please update based on' +
-                     ' default.config.', config_file_name)
+        logger.error('Config file badly formatted. Please update based on default.config.', config_file_name)
         return False
     # check length of each file
     if len(config) < len(default):
-        logger.error('Config file has {} variables, which is fewer than {}'
-                     + ' variables in default.config. Please update.',
+        logger.error('Config file has {} variables, which is fewer than {} variables in default.config. Please'
+                     + ' update.',
                      len(config),
                      len(default))
         return False
@@ -99,7 +96,7 @@ def save_to_p(file, data, desription_data='data'):
     """
     Save data to a pickle file.
     """
-    path = os.path.join(os.path.join(tr.settings.root_dir, 'trust'), file)
+    path = os.path.join(os.path.join(dc.settings.root_dir, 'dcycl'), file)
     with open(path, 'wb') as f:
         pickle.dump(data, f)
     logger.info('Saved ' + desription_data + ' to pickle file {}.', file)
@@ -109,7 +106,7 @@ def load_from_p(file, desription_data='data'):
     """
     Load data from a pickle file.
     """
-    path = os.path.join(os.path.join(tr.settings.root_dir, 'trust'), file)
+    path = os.path.join(os.path.join(dc.settings.root_dir, 'dcycl'), file)
     with open(path, 'rb') as f:
         data = pickle.load(f)
     logger.info('Loaded ' + desription_data + ' from pickle file {}.',
