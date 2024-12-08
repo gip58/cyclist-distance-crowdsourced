@@ -146,46 +146,13 @@ if __name__ == '__main__':
             logger.info('Creating bar plots of keypress data for groups of stimuli.')
             for stim in tqdm(range(int(num_stimuli/4))):  # tqdm adds progress bar
                 # ids of stimuli that belong to the same group
-                ids = [stim, stim + int(num_stimuli/4), stim + int(num_stimuli/4*2), stim + int(num_stimuli/4*3)]
+                ids = [stim, stim + 1, stim + 2, stim + 3]
+                print(ids)
                 df = mapping[mapping['id'].isin(ids)]
-                # extract timestamps of events
-                vert_lines = list(map(int, re.findall(r'\d+', df.loc['video_' + str(stim), 'events'])))
-                # convert to s
-                vert_lines = [x / 1000 for x in vert_lines]  # type: ignore
-                # extract annotations
-                vert_line_annotations = df.loc['video_' + str(stim), 'events_description'].split(',')
-                # remove [
-                vert_line_annotations[0] = vert_line_annotations[0][1:]
-                # remove ]
-                vert_line_annotations[-1] = vert_line_annotations[-1][:-1]
-                # create list with ids of labels for outputting just numbers
-                vert_line_annotations_num = []
-                for x in range(1, len(vert_line_annotations) + 1):
-                    vert_line_annotations_num.append(x)
-                # # plot keypresses for each video€
-                # analysis.plot_kp_videos(df,
-                #                         vert_lines=vert_lines,
-                #                         vert_lines_width=1,
-                #                         vert_lines_dash='solid',
-                #                         vert_lines_colour='red',
-                #                         vert_lines_annotations=vert_line_annotations,
-                #                         vert_lines_annotations_position='top right',
-                #                         vert_lines_annotations_font_size=12,
-                #                         vert_lines_annotations_colour='red',
-                #                         name_file='kp_videos_'+','.join([str(i) for i in ids]))
-                # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(df,
-                                               y=['slider-0', 'slider-1', 'slider-2'],
-                                               xaxis_kp_range=[0, 43],  # hardcode based on the longest stimulus
-                                               yaxis_kp_range=[0, 60],  # hardcode based on the highest recorded value
-                                               vert_lines=vert_lines,
-                                               vert_lines_width=1,
-                                               vert_lines_dash='solid',
-                                               vert_lines_colour='black',
-                                               vert_lines_annotations=vert_line_annotations_num,
-                                               vert_lines_annotations_position='top right',
-                                               vert_lines_annotations_font_size=12,
-                                               vert_lines_annotations_colour='black',
+                                               y=['slider-0', 'slider-1'],
+                                               xaxis_kp_range=[0, 20],  # hardcode based on the longest stimulus
+                                               yaxis_kp_range=[0, 100],  # hardcode based on the highest recorded value
                                                yaxis_slider_title=None,
                                                show_text_labels=True,
                                                stacked=True,
@@ -215,7 +182,7 @@ if __name__ == '__main__':
         if SHOW_OUTPUT_ST:
             # post stimulus questions for all stimuli
             analysis.bar(mapping,
-                         y=['slider-0', 'slider-1', 'slider-2'],
+                         y=['slider-0', 'slider-1'],
                          stacked=True,
                          show_text_labels=True,
                          pretty_text=True,
