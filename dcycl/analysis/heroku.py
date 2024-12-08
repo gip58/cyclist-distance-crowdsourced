@@ -361,7 +361,7 @@ class Heroku:
             df = df.transpose()
             # report people that attempted study
             unique_worker_codes = df['worker_code'].drop_duplicates()
-            logger.info('People who attempted to participate: {}', unique_worker_codes.shape[0])
+            logger.info('People who attempted to participate: {}.', unique_worker_codes.shape[0])
             # filter data
             if filter_data:
                 df = self.filter_data(df)
@@ -376,10 +376,8 @@ class Heroku:
             dc.common.save_to_p(self.file_p, df, 'heroku data')
         # save to csv
         if self.save_csv:
-            df.to_csv(os.path.join(dc.settings.output_dir, self.file_data_csv),
-                      index=False)
-            logger.info('Saved heroku data to csv file {}',
-                        self.file_data_csv + '.csv')
+            df.to_csv(os.path.join(dc.settings.output_dir, self.file_data_csv), index=False)
+            logger.info('Saved heroku data to csv file {}.', self.file_data_csv + '.csv')
         # update attribute
         self.heroku_data = df
         # return df with data
@@ -732,8 +730,7 @@ class Heroku:
             centre bais
         """
         logger.info('Filtering heroku data.')
-        # 1. People who made mistakes in injected questions
-        # TODO: check for large lengths of videos.
+        # 1. People who had too many stimuli of unexpected length
         logger.info('Filter-h1. People who had too many stimuli of unexpected length.')
         # df to store data to filter out
         df_1 = pd.DataFrame()
@@ -770,10 +767,8 @@ class Heroku:
                 if counter_filtered / data_count > self.allowed_length:
                     # if threshold reached, append data of this participant to
                     # df_1
-                    df_1 = pd.concat([df_1, pd.DataFrame([row])],
-                                     ignore_index=True)
-        logger.info('Filter-h1. People who had more than {} share of stimuli'
-                    + ' of unexpected length: {}.',
+                    df_1 = pd.concat([df_1, pd.DataFrame([row])], ignore_index=True)
+        logger.info('Filter-h1. People who had more than {} share of stimuli of unexpected length: {}.',
                     self.allowed_length,
                     df_1.shape[0])
         old_size = df.shape[0]

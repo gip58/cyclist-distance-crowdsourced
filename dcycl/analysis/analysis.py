@@ -502,7 +502,6 @@ class Analysis:
         if dc.common.get_configs('plotlyplot') == 1:
             if i == self.framess-1:
                 fig = go.Figure()
-                print(np.array(self.kp_data[it]))
                 fig.add_trace(go.Scatter(x=np.array(self.times[:it]),
                                          y=np.array(self.kp_data[:it]),
                                          mode='lines',

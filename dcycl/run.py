@@ -4,9 +4,7 @@ import matplotlib._pylab_helpers
 from tqdm import tqdm
 import os
 import dcycl as dc
-# from statistics import mean
-# import pandas as pd
-import re
+import numpy as np
 from statistics import mean
 dc.logs(show_level='info', show_color=True)
 logger = dc.CustomLogger(__name__)  # use custom logger
@@ -32,7 +30,7 @@ LOAD_P = True  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
 FILTER_DATA = True  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
-REJECT_CHEATERS = True  # reject cheaters on Appen
+REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = False  # extract points from heroku data
 UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
@@ -147,7 +145,6 @@ if __name__ == '__main__':
             for stim in tqdm(range(int(num_stimuli/3))):  # tqdm adds progress bar
                 # ids of stimuli that belong to the same group
                 ids = [stim*3, stim*3 + 1, stim*3 + 2]
-                print(ids)
                 df = mapping[mapping['id'].isin(ids)]
                 analysis.plot_kp_slider_videos(df,
                                                y=['slider-0', 'slider-1'],
@@ -167,17 +164,9 @@ if __name__ == '__main__':
             # keypresses of all videos individually
             analysis.plot_kp_videos(mapping, show_menu=False)
             # keypress based on the type of ego car
-            analysis.plot_kp_variable(mapping, 'ego_car', show_menu=False)
+            analysis.plot_kp_variable(mapping, 'distance', show_menu=False)
             # keypress based on the type of ego car
-            analysis.plot_kp_variable(mapping, 'target_car', show_menu=False)
-            # keypress based on the pp group
-            analysis.plot_kp_variable(mapping, 'group', show_menu=False)
-            # TODO: make plot_video_data work
-            # plot of multiple combined AND variables
-            # analysis.plot_video_data(mapping, 'video_5',
-            #                          ['group', 'criticality'],
-            #                          yaxis_title='Type of ego car and number of pedestrians',
-            #                          conf_interval=0.95)
+            analysis.plot_kp_variable(mapping, 'interaction', show_menu=False)
         # Visualisation of stimulus data
         if SHOW_OUTPUT_ST:
             # post stimulus questions for all stimuli
@@ -189,18 +178,18 @@ if __name__ == '__main__':
                          save_file=True)
             # post-trial questions of all individual stimuli
             logger.info('Creating bar plots of post-trial questions for groups of stimuli.')
-            for stim in tqdm(range(int(num_stimuli/4))):  # tqdm adds progress bar
+            for stim in tqdm(range(int(num_stimuli/3))):  # tqdm adds progress bar
                 # get ids of stimuli that belong to the same group
-                ids = [stim, stim + int(num_stimuli/4), stim + int(num_stimuli/4*2), stim + int(num_stimuli/4*3)]
+                ids = [stim*3, stim*3 + 1, stim*3 + 2]
                 df = mapping[mapping['id'].isin(ids)]
                 analysis.bar(df,
-                             y=['slider-0', 'slider-1', 'slider-2'],
+                             y=['slider-0', 'slider-1'],
                              stacked=True,
                              show_text_labels=True,
                              pretty_text=True,
                              save_file=True)
             # columns to drop in correlation matrix and scatter matrix
-            columns_drop = ['events_description', 'description', 'video_length', 'min_dur', 'max_dur', 'kp', 'events']
+            columns_drop = ['video_length', 'min_dur', 'max_dur', 'kp', 'interaction']
             # set nan to -1
             df = mapping.fillna(-1)
             # create correlation matrix
@@ -210,17 +199,47 @@ if __name__ == '__main__':
             # create correlation matrix
             analysis.scatter_matrix(df,
                                     columns_drop=columns_drop,
-                                    color='group',
-                                    symbol='group',
                                     diagonal_visible=False,
                                     save_file=True)
-            # participant group - end question
-            analysis.scatter(heroku_data,
-                             x='participant_group',
-                             y='end-slider-0-0',
-                             color='end-slider-1-0',
-                             pretty_text=True,
-                             save_file=True)
+            # end questions - sliders
+            df = heroku_data
+            # drop na values
+            df = df.dropna()
+            # convert end slider to int
+            df[['end-slider-0-0',
+                'end-slider-1-0',
+                'end-slider-2-0',
+                'end2-slider-0-0',
+                'end2-scenario_number-0']] = df[['end-slider-0-0',
+                                                 'end-slider-1-0',
+                                                 'end-slider-2-0',
+                                                 'end2-slider-0-0',
+                                                 'end2-scenario_number-0']].astype(int)
+            # print means
+            logger.info('Mean for slider-0 on page 1 in end questions: {}.', df.loc[:, 'end-slider-0-0'].mean())
+            logger.info('Mean for slider-1 on page 1 in end questions: {}.', df.loc[:, 'end-slider-1-0'].mean())
+            logger.info('Mean for slider-2 on page 1 in end questions: {}.', df.loc[:, 'end-slider-2-0'].mean())
+            logger.info('Mean for slider-0 on page 2 in end questions: {}.', df.loc[:, 'end2-slider-0-0'].mean())
+            # histogram for 3 slider questions
+            analysis.hist(df,
+                          x=df.columns[df.columns.to_series().str.contains('end-slider-')],
+                          nbins=5,
+                          pretty_text=True,
+                          save_file=True)
+            # histogram for the amount of stress
+            analysis.hist(df,
+                          x=df.columns[df.columns.to_series().str.contains('end2-slider-0-0')],
+                          nbins=5,
+                          pretty_text=True,
+                          xaxis_title='I experienced a high level of stress during all scenarios.',
+                          save_file=True)
+            # histogram for the number of scenario
+            analysis.hist(df,
+                          x=df.columns[df.columns.to_series().str.contains('end2-scenario_number-0')],
+                          nbins=7,
+                          pretty_text=True,
+                          xaxis_title='Which scenario was most helpful in choosing the overtaking distance from cyclists?',  # noqa: E501
+                          save_file=True)
             # stimulus duration
             analysis.hist(heroku_data,
                           x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-dur')],
@@ -233,24 +252,24 @@ if __name__ == '__main__':
                               'Neither disagree nor agree': 3,
                               'Agree': 4,
                               'Strongly agree': 5}
-            # questions before and after
-            df = all_data
-            df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)
-            df['driving_in_ad'] = df['driving_in_ad'].map(likert_mapping)
-            analysis.scatter(df,
-                             x='driving_alongside_ad',
-                             y='end-slider-0-0',
-                             xaxis_title='Before',
-                             yaxis_title='After',
-                             pretty_text=True,
-                             save_file=True)
-            analysis.scatter(df,
-                             x='driving_in_ad',
-                             y='end-slider-1-0',
-                             xaxis_title='Before',
-                             yaxis_title='After',
-                             pretty_text=True,
-                             save_file=True)
+            # # questions before and after
+            # df = all_data
+            # df['driving_alongside_ad'] = df['driving_alongside_ad'].map(likert_mapping)
+            # df['driving_in_ad'] = df['driving_in_ad'].map(likert_mapping)
+            # analysis.scatter(df,
+            #                  x='driving_alongside_ad',
+            #                  y='end-slider-0-0',
+            #                  xaxis_title='Before',
+            #                  yaxis_title='After',
+            #                  pretty_text=True,
+            #                  save_file=True)
+            # analysis.scatter(df,
+            #                  x='driving_in_ad',
+            #                  y='end-slider-1-0',
+            #                  xaxis_title='Before',
+            #                  yaxis_title='After',
+            #                  pretty_text=True,
+            #                  save_file=True)
         # Visualisation of data about participants
         if SHOW_OUTPUT_PP:
             # time of participation
@@ -262,16 +281,14 @@ if __name__ == '__main__':
                           color='country',
                           pretty_text=True,
                           save_file=True)
-            # driving with AVs
-            analysis.scatter(appen_data,
-                             x='driving_in_ad',
-                             y='driving_alongside_ad',
-                             color='year_license',
-                             pretty_text=True,
-                             save_file=True)
             # histogram for driving frequency
             analysis.hist(appen_data,
                           x=['driving_freq'],
+                          pretty_text=True,
+                          save_file=True)
+            # histogram for cycling frequency
+            analysis.hist(appen_data,
+                          x=['cycling_freq'],
                           pretty_text=True,
                           save_file=True)
             # map of participants
@@ -282,8 +299,6 @@ if __name__ == '__main__':
             analysis.map(countries_data, color='gender', save_file=True)
             # map of year of obtaining license per country
             analysis.map(countries_data, color='year_license', save_file=True)
-            # map of year of automated driving per country
-            analysis.map(countries_data, color='year_ad', save_file=True)
         # Visualisation of eye tracking data
         if SHOW_OUTPUT_ET:
             # create eye gaze visualisations for all videos
@@ -291,15 +306,14 @@ if __name__ == '__main__':
                         dc.common.get_configs('num_stimuli'))
             if dc.common.get_configs('Combined_animation') == 1:
                 num_anim = 21
-                logger.info('Animation is set to combined animations of all for scenarios in one figure')  # noqa: E501
+                logger.info('Animation is set to combined animations of all for scenarios in one figure')
             else:
                 num_anim = dc.common.get_configs('num_stimuli')
-                logger.info('Animation is set to single stimuli animations in one figure')  # noqa: E501
+                logger.info('Animation is set to single stimuli animations in one figure')
 
             # source video/stimulus for a given individual.
             for id_video in tqdm(range(0, num_anim)):
-                logger.info('Producing visualisations of eye gaze data for stimulus {}.',  # noqa: E501
-                            id_video)
+                logger.info('Producing visualisations of eye gaze data for stimulus {}.', id_video)
                 # Deconstruct the source video into its individual frames.
                 stim_path = os.path.join(dc.settings.output_dir, 'frames')
                 # To allow for overlaying the heatmap for each frame later on.
@@ -334,7 +348,7 @@ if __name__ == '__main__':
                 points_process3 = {}
                 # determin amount of points in duration for video_id
                 dur = mapping.iloc[id_video]['video_length']
-                hm_resolution_range = int(50000/dc.common.get_configs('hm_resolution'))  # noqa: E501
+                hm_resolution_range = int(50000/dc.common.get_configs('hm_resolution'))
                 # To create animation for scenario 1,2,3 & 4 in the
                 # same animation extract for all senarios.
                 # for individual animations or scenario
@@ -353,19 +367,19 @@ if __name__ == '__main__':
                     # Scenario 2
                     for points_dur in range(0, hm_resolution_range, 1):
                         try:
-                            points_process1[points_dur] = points_duration[points_dur][id_video+21]  # noqa: E501
+                            points_process1[points_dur] = points_duration[points_dur][id_video+21]
                         except KeyError:
                             break
                     # Scenario 3
                     for points_dur in range(0, hm_resolution_range, 1):
                         try:
-                            points_process2[points_dur] = points_duration[points_dur][id_video+42]  # noqa: E501
+                            points_process2[points_dur] = points_duration[points_dur][id_video+42]
                         except KeyError:
                             break
                     # Scenario 4
                     for points_dur in range(0, hm_resolution_range, 1):
                         try:
-                            points_process3[points_dur] = points_duration[points_dur][id_video+63]  # noqa: E501
+                            points_process3[points_dur] = points_duration[points_dur][id_video+63]
                         except KeyError:
                             break
                 analysis.create_animation(heroku_data,

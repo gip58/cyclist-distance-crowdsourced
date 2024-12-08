@@ -198,13 +198,6 @@ class Appen:
         logger.info('Filter-a7. People who had not valid worker_id: {}', df_7.shape[0])
         # concatenate dfs with filtered data
         old_size = df.shape[0]
-        # print(df_1.head)
-        # print(df_2.head)
-        # print(df_3.head)
-        # print(df_4.head)
-        # print(df_5.head)
-        # print(df_6.head)
-        # print(df_7.head)
         df_filtered = pd.concat([df_1, df_2, df_3, df_4, df_5, df_6, df_7])
         # check if there are people to filter
         if not df_filtered.empty:
@@ -375,15 +368,13 @@ class Appen:
         """Output info for data in object.
         """
         # info on age
-        logger.info('Age: mean={:,.2f}, std={:,.2f}',
-                    self.appen_data['age'].mean(),
-                    self.appen_data['age'].std())
+        logger.info('Age: mean={:,.2f}, std={:,.2f}.', self.appen_data['age'].mean(), self.appen_data['age'].std())
         # info on gender
         count = Counter(self.appen_data['gender'])
-        logger.info('Gender: {}', count.most_common())
+        logger.info('Gender: {}.', count.most_common())
         # info on most represted countries in minutes
         count = Counter(self.appen_data['country'])
-        logger.info('Countires: {}', count.most_common())
+        logger.info('Countires: {}.', count.most_common())
         # info on duration in minutes
         logger.info('Time of participation: mean={:,.2f} min, '
                     + 'median={:,.2f} min, std={:,.2f} min.',
