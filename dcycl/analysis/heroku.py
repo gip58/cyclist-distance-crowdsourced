@@ -648,12 +648,10 @@ class Heroku:
                 elif q['type'] == 'str':
                     length = length + len(q['options'])
                 else:
-                    logger.error('Wrong type of data {} in question {}' +
-                                 'provided.', q['type'], q['question'])
+                    logger.error('Wrong type of data {} in question {} provided.', q['type'], q['question'])
                     return -1
             # array in which data of a single stimulus is stored
-            answers = [[[] for i in range(self.heroku_data.shape[0])]
-                       for i in range(len(questions))]
+            answers = [[[] for i in range(self.heroku_data.shape[0])] for i in range(len(questions))]
             # for number of repetitions in survey, add extra number
             for rep in range(self.num_repeat):
                 # add suffix with repetition ID
@@ -683,14 +681,11 @@ class Heroku:
             for i, q in enumerate(questions):
                 if q['type'] == 'num' and answers[i]:
                     # convert to float
-                    answers[i] = [list(map(float, sublist))
-                                  for sublist in answers[i]]
+                    answers[i] = [list(map(float, sublist)) for sublist in answers[i]]
                     # calculate mean of mean of responses of each participant
                     with warnings.catch_warnings():
-                        warnings.simplefilter('ignore',
-                                              category=RuntimeWarning)
-                        answers[i] = np.nanmean([np.nanmean(j)
-                                                 for j in answers[i]])
+                        warnings.simplefilter('ignore',  category=RuntimeWarning)
+                        answers[i] = np.nanmean([np.nanmean(j) for j in answers[i]])
             # save question data in array
             mapping_as.append(answers)
         # add column with data to current mapping file
@@ -702,8 +697,7 @@ class Heroku:
                 self.mapping[q['question']] = q_ans
             # for textual question, add columns with counts of each value
             else:
-                # go over options and count answers with the option for each
-                # stimulus
+                # go over options and count answers with the option for each stimulus
                 for option in q['options']:
                     # store counts in list
                     count_option = []
