@@ -144,15 +144,15 @@ if __name__ == '__main__':
             #                            conf_interval=0.95)
             # keypresses of groups of stimuli
             logger.info('Creating bar plots of keypress data for groups of stimuli.')
-            for stim in tqdm(range(int(num_stimuli/4))):  # tqdm adds progress bar
+            for stim in tqdm(range(int(num_stimuli/3))):  # tqdm adds progress bar
                 # ids of stimuli that belong to the same group
-                ids = [stim, stim + 1, stim + 2, stim + 3]
+                ids = [stim*3, stim*3 + 1, stim*3 + 2]
                 print(ids)
                 df = mapping[mapping['id'].isin(ids)]
                 analysis.plot_kp_slider_videos(df,
                                                y=['slider-0', 'slider-1'],
                                                xaxis_kp_range=[0, 20],  # hardcode based on the longest stimulus
-                                               yaxis_kp_range=[0, 100],  # hardcode based on the highest recorded value
+                                               yaxis_kp_range=[0, 35],  # hardcode based on the highest recorded value
                                                yaxis_slider_title=None,
                                                show_text_labels=True,
                                                stacked=True,
