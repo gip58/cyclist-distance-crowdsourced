@@ -1,4 +1,5 @@
 """Contains various function used throughout this project."""
+# by Pavlo Bazilinskyy <pavlo.bazilinskyy@gmail.com>
 from typing import Dict
 import os
 import json

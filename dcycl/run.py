@@ -4,7 +4,6 @@ import matplotlib._pylab_helpers
 from tqdm import tqdm
 import os
 import dcycl as dc
-import numpy as np
 from statistics import mean
 dc.logs(show_level='info', show_color=True)
 logger = dc.CustomLogger(__name__)  # use custom logger
@@ -113,8 +112,8 @@ if __name__ == '__main__':
         logger.info('Creating figures.')
         # Visualisation of keypress data
         if SHOW_OUTPUT_KP:
-            # # all keypresses with confidence interval
-            # analysis.plot_kp(mapping, conf_interval=0.95)
+            # all keypresses with confidence interval
+            analysis.plot_kp(mapping, conf_interval=0.95)
             # # keypresses of all individual stimuli
             # logger.info('Creating figures for keypress data of individual stimuli.')
             # for stim in tqdm(range(num_stimuli)):  # tqdm adds progress bar
@@ -205,7 +204,7 @@ if __name__ == '__main__':
             df = heroku_data
             # drop na values
             df = df.dropna()
-            # convert end slider to int
+            # convert data from the end post-experiment slider questions to int
             df[['end-slider-0-0',
                 'end-slider-1-0',
                 'end-slider-2-0',
@@ -216,10 +215,22 @@ if __name__ == '__main__':
                                                  'end2-slider-0-0',
                                                  'end2-scenario_number-0']].astype(int)
             # print means
-            logger.info('Mean for slider-0 on page 1 in end questions: {}.', df.loc[:, 'end-slider-0-0'].mean())
-            logger.info('Mean for slider-1 on page 1 in end questions: {}.', df.loc[:, 'end-slider-1-0'].mean())
-            logger.info('Mean for slider-2 on page 1 in end questions: {}.', df.loc[:, 'end-slider-2-0'].mean())
-            logger.info('Mean for slider-0 on page 2 in end questions: {}.', df.loc[:, 'end2-slider-0-0'].mean())
+            logger.info('Post-experiment question "After experiencing the videos in the experiment, I will change ' +
+                        'my attitude towards maintaining a safe overtaking distance from cyclists.": M={}, SD={}.',
+                        df.loc[:, 'end-slider-0-0'].mean(),
+                        df.loc[:, 'end-slider-0-0'].std())
+            logger.info('Post-experiment question "I felt safe while overtaking the cyclist in the videos.": M={}, ' +
+                        'SD={}.',
+                        df.loc[:, 'end-slider-1-0'].mean(),
+                        df.loc[:, 'end-slider-1-0'].std())
+            logger.info('Post-experiment question "Based on my experience, I support the introduction of the ' +
+                        'technology used in the scenarios on real roads.": M={}, SD={}.',
+                        df.loc[:, 'end-slider-2-0'].mean(),
+                        df.loc[:, 'end-slider-2-0'].std())
+            logger.info('Post-experiment question "I experienced a high level of stress during all scenarios.": ' +
+                        'M={}, SD={}.',
+                        df.loc[:, 'end2-slider-0-0'].mean(),
+                        df.loc[:, 'end2-slider-0-0'].std())
             # histogram for 3 slider questions
             analysis.hist(df,
                           x=df.columns[df.columns.to_series().str.contains('end-slider-')],
@@ -238,7 +249,8 @@ if __name__ == '__main__':
                           x=df.columns[df.columns.to_series().str.contains('end2-scenario_number-0')],
                           nbins=7,
                           pretty_text=True,
-                          xaxis_title='Which scenario was most helpful in choosing the overtaking distance from cyclists?',  # noqa: E501
+                          xaxis_title='Which scenario was most helpful in choosing the overtaking distance from ' +
+                                      'cyclists?',
                           save_file=True)
             # stimulus duration
             analysis.hist(heroku_data,
@@ -310,18 +322,13 @@ if __name__ == '__main__':
             else:
                 num_anim = dc.common.get_configs('num_stimuli')
                 logger.info('Animation is set to single stimuli animations in one figure')
-
             # source video/stimulus for a given individual.
             for id_video in tqdm(range(0, num_anim)):
                 logger.info('Producing visualisations of eye gaze data for stimulus {}.', id_video)
                 # Deconstruct the source video into its individual frames.
                 stim_path = os.path.join(dc.settings.output_dir, 'frames')
                 # To allow for overlaying the heatmap for each frame later on.
-                analysis.save_all_frames(heroku_data,
-                                         mapping,
-                                         id_video=id_video,
-                                         t='video_length'
-                                         )
+                analysis.save_all_frames(heroku_data, mapping, id_video=id_video, t='video_length')
                 # construct the gazes lines just as an example for how
                 # that looks compared to the heatmap.
 
@@ -348,14 +355,14 @@ if __name__ == '__main__':
                 points_process3 = {}
                 # determin amount of points in duration for video_id
                 dur = mapping.iloc[id_video]['video_length']
-                hm_resolution_range = int(50000/dc.common.get_configs('hm_resolution'))
+                hm_resolution_range = int(50000 / dc.common.get_configs('hm_resolution'))
                 # To create animation for scenario 1,2,3 & 4 in the
                 # same animation extract for all senarios.
                 # for individual animations or scenario
                 dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
                 dur = [x for x in dur if str(x) != 'nan']
-                dur = int(round(mean(dur)/1000)*1000)
-                hm_resolution_range = int(50000/dc.common.get_configs('hm_resolution'))
+                dur = int(round(mean(dur) / 1000) * 1000)
+                hm_resolution_range = int(50000 / dc.common.get_configs('hm_resolution'))
                 # for individual stim
                 for points_dur in range(0, hm_resolution_range, 1):
                     try:
@@ -367,19 +374,19 @@ if __name__ == '__main__':
                     # Scenario 2
                     for points_dur in range(0, hm_resolution_range, 1):
                         try:
-                            points_process1[points_dur] = points_duration[points_dur][id_video+21]
+                            points_process1[points_dur] = points_duration[points_dur][id_video + 21]
                         except KeyError:
                             break
                     # Scenario 3
                     for points_dur in range(0, hm_resolution_range, 1):
                         try:
-                            points_process2[points_dur] = points_duration[points_dur][id_video+42]
+                            points_process2[points_dur] = points_duration[points_dur][id_video + 42]
                         except KeyError:
                             break
                     # Scenario 4
                     for points_dur in range(0, hm_resolution_range, 1):
                         try:
-                            points_process3[points_dur] = points_duration[points_dur][id_video+63]
+                            points_process3[points_dur] = points_duration[points_dur][id_video + 63]
                         except KeyError:
                             break
                 analysis.create_animation(heroku_data,
@@ -437,14 +444,14 @@ if __name__ == '__main__':
                                       pretty_text=True,
                                       save_file=True)
                 # Create individual scatter plot for given video and participant.
-                analysis.scatter_et(heroku_data,
-                                    x='video_0-x-0',
-                                    y='video_0-y-0',
-                                    t='video_0-t-0',
-                                    pp='R51701252541887JF46247X',
-                                    id_video='video_0',
-                                    pretty_text=True,
-                                    save_file=True)
+                # analysis.scatter_et(heroku_data,
+                #                     x='video_0-x-0',
+                #                     y='video_0-y-0',
+                #                     t='video_0-t-0',
+                #                     pp='R51701252541887JF46247X',
+                #                     id_video='video_0',
+                #                     pretty_text=True,
+                #                     save_file=True)
                 # Create individual heatmap for given video and participant.
                 # analysis.heatmap(heroku_data,
                 #                     x='video_0-x-0',
@@ -456,7 +463,7 @@ if __name__ == '__main__':
                 #                     save_file=True)
         # stitch animations into 1 long videos
         analysis.create_animation_all_stimuli(num_stimuli)
-
+        # collect figure objects
         figures = [manager.canvas.figure
                    for manager in
                    matplotlib._pylab_helpers.Gcf.get_all_fig_managers()]
