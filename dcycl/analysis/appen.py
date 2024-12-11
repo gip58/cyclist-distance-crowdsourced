@@ -119,7 +119,6 @@ class Appen:
             # rename columns to readable names
             df.rename(columns=self.columns_mapping, inplace=True)
             # convert to time
-            print(df['start'])
             df['start'] = pd.to_datetime(df['start'])
             df['end'] = pd.to_datetime(df['end'])
             df['time'] = (df['end'] - df['start']) / pd.Timedelta(seconds=1)
