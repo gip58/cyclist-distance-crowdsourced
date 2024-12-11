@@ -210,8 +210,7 @@ class Heroku:
                     if 'webgazer_data' in data_cell.keys() and stim_name != '':
                         # record given keypresses
                         et_data = data_cell['webgazer_data']
-                        logger.debug('Found {} points in eye tracking data.',
-                                     len(et_data))
+                        logger.debug('Found {} points in eye tracking data.', len(et_data))
                         # extract x,y,t values
                         x = [point['x'] for point in et_data]
                         y = [point['y'] for point in et_data]
@@ -237,11 +236,11 @@ class Heroku:
                         else:
                             # previous values found
                             dict_row[stim_name + '-t'].extend(t)
-                    # stimulus questions after stimulus
+                    # slider questions after stimulus
                     if ('response' in data_cell.keys() and stim_name != '' and
                        data_cell['response'] is not None):
                         # check if it is not dictionary
-                        if 'slider-0' not in data_cell['response']:
+                        if 'slider-0' not in data_cell['response'] or 'scenario_number' in data_cell['response']:
                             continue
                         # record given answers
                         responses = data_cell['response']
