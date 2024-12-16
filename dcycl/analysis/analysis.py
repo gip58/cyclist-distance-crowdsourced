@@ -2158,7 +2158,7 @@ class Analysis:
         if remove_margins:
             fig.update_layout(margin=dict(l=2, r=2, t=20, b=12))
         # save as eps
-        fig.write_image(os.path.join(path, name + '.eps'), width=width, height=height)
+        #fig.write_image(os.path.join(path, name + '.eps'), width=width, height=height)
         # save as png
         fig.write_image(os.path.join(path, name + '.png'), width=width, height=height)
 
@@ -2299,3 +2299,22 @@ class Analysis:
         else:
             logger.error('Specified filter {} not implemented.', type_flter)
             return -1
+    def ttest(self, signal_1, signal_2):
+        # Perform t-test
+        t_stat, p_value = ttest_ind(signal_1, signal_2, equal_var=False)
+        
+        # Create result dictionary
+        result = {"t_statistic": t_stat, "p_value": p_value}
+        logger.info(f"T-test results: {result}")
+        
+        # Generate a visualization
+        plt.figure(figsize=(8, 6))
+        sns.boxplot(data=[signal_1, signal_2], notch=True)
+        plt.xticks([0, 1], labels)
+        plt.title(f"T-Test Results\nT-statistic={t_stat:.2f}, P-value={p_value:.3f}")
+        plt.ylabel("Values")
+        
+        # Show the graph
+        plt.show()
+    
+        return
