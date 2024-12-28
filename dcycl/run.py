@@ -156,9 +156,27 @@ if __name__ == '__main__':
             # keypresses of all videos individually
             analysis.plot_kp_videos(mapping, show_menu=False)
             # keypress based on the type of ego car
-            analysis.plot_kp_variable(mapping, 'distance', show_menu=False)
+            # todo: check if legend labels are in correct order
+            analysis.plot_kp_variable(mapping,
+                                      'distance',
+                                      # custom labels for slider questions in the legend
+                                      y_legend=['0.8 m', '1.6 m', '2.4 m'],
+                                      show_menu=False,
+                                      show_title=False)
             # keypress based on the type of ego car
-            analysis.plot_kp_variable(mapping, 'interaction', show_menu=False)
+            # todo: check if legend labels are in correct order
+            analysis.plot_kp_variable(mapping,
+                                      'interaction',
+                                      # custom labels for slider questions in the legend
+                                      y_legend=['Bike laser projection',
+                                                'Vertical sign',
+                                                'Danish sign',
+                                                'Car laser projection',
+                                                'Control',
+                                                'Unprotected cycling path',
+                                                'No road markings'],
+                                      show_menu=False,
+                                      show_title=False)
         # Visualisation of stimulus data
         if SHOW_OUTPUT_ST:
             # post stimulus questions for all stimuli

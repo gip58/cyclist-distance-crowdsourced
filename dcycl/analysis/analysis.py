@@ -1925,25 +1925,28 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_kp_variable(self, df, variable, values=None, xaxis_title='Time (s)',
+    def plot_kp_variable(self, df, variable, y_legend=None, values=None, xaxis_title='Time (s)',
                          yaxis_title='Percentage of trials with response key pressed', xaxis_range=None,
-                         yaxis_range=None, show_menu=False, save_file=True, fig_save_width=1320, fig_save_height=680):
+                         yaxis_range=None, show_menu=False, show_title=True, save_file=True, fig_save_width=1320,
+                         fig_save_height=680):
         """Plot figures of values of a certain variable.
 
         Args:
             df (dataframe): dataframe with keypress data.
             variable (str): variable to plot.
+            y_legend (list, optional): names for variables to be shown in the legend.
             values (list, optional): values of variable to plot. If None, all values are plotted.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
             xaxis_range (list, optional): range of x axis in format [min, max].
             yaxis_range (list, optional): range of y axis in format [min, max].
             show_menu (bool, optional): show menu on top left with variables to select for plotting.
+            show_title (bool, optional): show title on top of figure.
             save_file (bool, optional): flag for saving an html file with plot.
             fig_save_width (int, optional): width of figures to be saved.
             fig_save_height (int, optional): height of figures to be saved.
         """
-        logger.info('Creating visualisation of keypresses based on values {} of variable {} .', values, variable)
+        logger.info('Creating visualisation of keypresses based on values {} of variable {}.', values, variable)
         # calculate times
         times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000
         # if no values specified, plot value
@@ -1975,11 +1978,16 @@ class Analysis:
         # plotly figure
         fig = subplots.make_subplots(rows=1, cols=1, shared_xaxes=True)
         # plot each variable in data
-        for data in extracted_data:
-            fig.add_trace(go.Scatter(y=data['data'],
+        for data in range(len(extracted_data)):
+            # custom labels for legend
+            if y_legend:
+                name = y_legend[data]
+            else:
+                name = str(extracted_data[data]['value'])
+            fig.add_trace(go.Scatter(y=extracted_data[data]['data'],
                                      mode='lines',
                                      x=times,
-                                     name=str(data['value'])),
+                                     name=name),
                           row=1,
                           col=1)
         # create tabs
@@ -2002,7 +2010,8 @@ class Analysis:
             updatemenus = [dict(x=-0.15, buttons=buttons, showactive=True)]
             fig['layout']['updatemenus'] = updatemenus
         # update layout
-        fig['layout']['title'] = 'Keypresses for ' + variable
+        if show_title:
+            fig['layout']['title'] = 'Keypresses for ' + variable
         # update layout
         fig.update_layout(template=self.template,
                           xaxis_title=xaxis_title,

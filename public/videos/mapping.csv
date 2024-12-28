@@ -2,9 +2,9 @@ id,video_id,interaction,interaction_type,distance,overtake,video_length,min_dur,
 0,video_0,bike_laser_projection,0,0.8,15000,19366,18366,20366
 1,video_1,bike_laser_projection,0,1.6,15000,19366,18366,20366
 2,video_2,bike_laser_projection,0,2.4,15000,19366,18366,20366
-3,video_3,veritcal_sign,1,0.8,15000,19366,18366,20366
-4,video_4,veritcal_sign,1,1.6,15000,19366,18366,20366
-5,video_5,veritcal_sign,1,2.4,15000,19366,18366,20366
+3,video_3,vertical_sign,1,0.8,15000,19366,18366,20366
+4,video_4,vertical_sign,1,1.6,15000,19366,18366,20366
+5,video_5,vertical_sign,1,2.4,15000,19366,18366,20366
 6,video_6,danish_sign,2,0.8,15000,19366,18366,20366
 7,video_7,danish_sign,2,1.6,15000,19366,18366,20366
 8,video_8,danish_sign,2,2.4,15000,19366,18366,20366
