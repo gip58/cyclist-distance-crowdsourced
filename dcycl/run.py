@@ -4,7 +4,6 @@ import matplotlib._pylab_helpers
 from tqdm import tqdm
 import os
 import dcycl as dc
-import re
 from statistics import mean
 dc.logs(show_level='info', show_color=True)
 logger = dc.CustomLogger(__name__)  # use custom logger
