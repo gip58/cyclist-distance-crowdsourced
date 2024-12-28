@@ -1,6 +1,5 @@
 import numpy as np
 import statsmodels.stats.power as smp
-import matplotlib.pyplot as plt
 
 # Set the parameters
 effect_size = 0.3  # The effect size you expect (Cohen's d)
@@ -16,6 +15,7 @@ adjusted_effect_size = effect_size * np.sqrt(1 - corr)
 power_analysis = smp.FTestAnovaPower()
 
 # Calculate the required sample size
-sample_size = power_analysis.solve_power(effect_size=adjusted_effect_size, power=power, alpha=alpha, k_groups=n_conditions)
+sample_size = power_analysis.solve_power(effect_size=adjusted_effect_size, power=power, alpha=alpha,
+                                         k_groups=n_conditions)
 
 print(f"Required sample size for repeated measures: {np.ceil(sample_size)} participants")

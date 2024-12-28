@@ -133,6 +133,8 @@ if __name__ == '__main__':
                 # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(df,
                                                y=['slider-0', 'slider-1'],
+                                               # custom labels for slider questions in the legend
+                                               y_legend=['distance', 'estimate'],
                                                xaxis_kp_range=[0, 20],  # hardcode based on the longest stimulus
                                                yaxis_kp_range=[0, 35],  # hardcode based on the highest recorded value
                                                events=events,
