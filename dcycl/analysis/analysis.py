@@ -1672,8 +1672,7 @@ class Analysis:
                               y1=yaxis_range[1] - counter_lines * 1.8 - 1,
                               line=dict(color=events_colour,
                                         dash='dot',
-                                        width=events_width),
-                              )
+                                        width=events_width))
                 # draw finish
                 fig.add_shape(type='line',
                               x0=event['end'],
@@ -1682,8 +1681,7 @@ class Analysis:
                               y1=yaxis_range[1] - counter_lines * 1.8 - 1,
                               line=dict(color=events_colour,
                                         dash=events_dash,
-                                        width=events_width),
-                              )
+                                        width=events_width))
                 # draw horizontal line
                 fig.add_annotation(ax=event['start'],
                                    axref='x',
@@ -1705,8 +1703,7 @@ class Analysis:
                                    y=yaxis_range[1] - counter_lines * 1.8,  # use ylim value and draw lower
                                    showarrow=False,
                                    font=dict(size=events_annotations_font_size,
-                                             color=events_annotations_colour)
-                                   )
+                                             color=events_annotations_colour))
                 # increase counter of lines drawn
                 counter_lines = counter_lines + 1
         # buttons with the names of stimuli
@@ -1821,8 +1818,7 @@ class Analysis:
                               y1=yaxis_kp_range[1] - counter_lines * 1.8 - 1,
                               line=dict(color=events_colour,
                                         dash='dot',
-                                        width=events_width),
-                              )
+                                        width=events_width))
                 # draw finish
                 fig.add_shape(type='line',
                               x0=event['end'],
@@ -1831,8 +1827,7 @@ class Analysis:
                               y1=yaxis_kp_range[1] - counter_lines * 1.8 - 1,
                               line=dict(color=events_colour,
                                         dash=events_dash,
-                                        width=events_width),
-                              )
+                                        width=events_width))
                 # draw horizontal line
                 fig.add_annotation(ax=event['start'],
                                    axref='x',
@@ -1854,8 +1849,7 @@ class Analysis:
                                    y=yaxis_kp_range[1] - counter_lines * 1.8,  # use ylim value and draw lower
                                    showarrow=False,
                                    font=dict(size=events_annotations_font_size,
-                                             color=events_annotations_colour)
-                                   )
+                                             color=events_annotations_colour))
                 # increase counter of lines drawn
                 counter_lines = counter_lines + 1
         # update axis
