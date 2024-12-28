@@ -148,6 +148,8 @@ if __name__ == '__main__':
                                                yaxis_slider_show=False,
                                                font_family='Times New Roman',
                                                font_size=16,
+                                               legend_x=0.7,
+                                               legend_y=1.0,
                                                fig_save_width=1600,   # preserve ratio 225x152
                                                fig_save_height=1080,  # preserve ratio 225x152
                                                name_file='kp_videos_sliders_'+','.join([str(i) for i in ids]))
@@ -167,6 +169,8 @@ if __name__ == '__main__':
                                       y_legend=['0.8 m', '1.6 m', '2.4 m'],
                                       font_family='Times New Roman',
                                       font_size=16,
+                                      legend_x=0.9,
+                                      legend_y=1.0,
                                       show_menu=False,
                                       show_title=False)
             # keypress based on the type of ego car
@@ -183,6 +187,8 @@ if __name__ == '__main__':
                                                 'No road markings'],
                                       font_family='Times New Roman',
                                       font_size=16,
+                                      legend_x=0.9,
+                                      legend_y=1.0,
                                       show_menu=False,
                                       show_title=False)
         # Visualisation of stimulus data
