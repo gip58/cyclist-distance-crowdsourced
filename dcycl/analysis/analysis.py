@@ -1617,7 +1617,8 @@ class Analysis:
                        events_annotations_colour='black', xaxis_title='Time (s)',
                        yaxis_title='Percentage of trials with response key pressed',
                        xaxis_range=None, yaxis_range=None, save_file=True, fig_save_width=1320, fig_save_height=680,
-                       show_menu=False, name_file=None):
+                       show_menu=False, show_title=True, name_file=None,
+                       font_family='Open Sans", verdana, arial, sans-serif', font_size=12,):
         """Plot keypresses with multiple variables as a filter.
 
         Args:
@@ -1636,7 +1637,10 @@ class Analysis:
             fig_save_width (int, optional): width of figures to be saved.
             fig_save_height (int, optional): height of figures to be saved.
             show_menu (bool, optional): show menu on top left with variables to select for plotting.
+            show_title (bool, optional): show title on top of figure.
             name_file (str, optional): name of file to save.
+            font_family (str, optional): font family to be used across the figure.
+            font_size (int, optional): font size to be used across the figure.
 
         Deleted Parameters:
             vert_lines (list, optional): list of events to draw formatted as values on x axis.
@@ -1728,13 +1732,16 @@ class Analysis:
             updatemenus = [dict(x=-0.15, buttons=buttons, showactive=True)]
             fig['layout']['updatemenus'] = updatemenus
         # update layout
-        fig['layout']['title'] = 'Keypresses for individual stimuli'
+        if show_title:
+            fig['layout']['title'] = 'Keypresses for individual stimuli'
         # update layout
         fig.update_layout(template=self.template,
                           xaxis_title=xaxis_title,
                           yaxis_title=yaxis_title,
                           xaxis_range=xaxis_range,
                           yaxis_range=yaxis_range)
+        # update font
+        fig.update_layout(font=dict(family=font_family, size=font_size))
         # save file
         if save_file:
             if not name_file:
@@ -1752,7 +1759,8 @@ class Analysis:
                               xaxis_kp_range=None, yaxis_kp_range=None, stacked=False, pretty_text=False,
                               orientation='v', xaxis_slider_title='Stimulus', yaxis_slider_show=False,
                               yaxis_slider_title=None, show_text_labels=False, name_file=None, save_file=True,
-                              fig_save_width=1320, fig_save_height=680):
+                              font_family='Open Sans", verdana, arial, sans-serif', font_size=12, fig_save_width=1320,
+                              fig_save_height=680):
         """Plot keypresses with multiple variables as a filter and slider questions for the stimuli.
 
         Args:
@@ -1779,6 +1787,8 @@ class Analysis:
             show_text_labels (bool, optional): output automatically positioned text labels.
             name_file (str, optional): name of file to save.
             save_file (bool, optional): flag for saving an html file with plot.
+            font_family (str, optional): font family to be used across the figure.
+            font_size (int, optional): font size to be used across the figure.
             fig_save_width (int, optional): width of figures to be saved.
             fig_save_height (int, optional): height of figures to be saved.
         """
@@ -1810,7 +1820,6 @@ class Analysis:
         counter_lines = 0
         # draw lines with annotations for events
         if events:
-            print(events)
             for event in events:
                 # draw start
                 fig.add_shape(type='line',
@@ -1913,6 +1922,8 @@ class Analysis:
             fig.update_layout(barmode='stack')
         # legend
         fig.update_layout(legend=dict(x=0.7, y=0.95))
+        # update font
+        fig.update_layout(font=dict(family=font_family, size=font_size))
         # save file
         if save_file:
             if not name_file:
@@ -1927,7 +1938,8 @@ class Analysis:
 
     def plot_kp_variable(self, df, variable, y_legend=None, values=None, xaxis_title='Time (s)',
                          yaxis_title='Percentage of trials with response key pressed', xaxis_range=None,
-                         yaxis_range=None, show_menu=False, show_title=True, save_file=True, fig_save_width=1320,
+                         yaxis_range=None, show_menu=False, show_title=True, save_file=True,
+                         font_family='Open Sans", verdana, arial, sans-serif', font_size=12, fig_save_width=1320,
                          fig_save_height=680):
         """Plot figures of values of a certain variable.
 
@@ -1943,6 +1955,8 @@ class Analysis:
             show_menu (bool, optional): show menu on top left with variables to select for plotting.
             show_title (bool, optional): show title on top of figure.
             save_file (bool, optional): flag for saving an html file with plot.
+            font_family (str, optional): font family to be used across the figure.
+            font_size (int, optional): font size to be used across the figure.
             fig_save_width (int, optional): width of figures to be saved.
             fig_save_height (int, optional): height of figures to be saved.
         """
@@ -2018,6 +2032,8 @@ class Analysis:
                           yaxis_title=yaxis_title,
                           xaxis_range=xaxis_range,
                           yaxis_range=yaxis_range)
+        # update font
+        fig.update_layout(font=dict(family=font_family, size=font_size))
         # save file
         if save_file:
             self.save_plotly(fig,
