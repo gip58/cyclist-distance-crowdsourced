@@ -4,6 +4,7 @@ import matplotlib._pylab_helpers
 from tqdm import tqdm
 import os
 import dcycl as dc
+import re
 from statistics import mean
 dc.logs(show_level='info', show_color=True)
 logger = dc.CustomLogger(__name__)  # use custom logger
@@ -114,68 +115,21 @@ if __name__ == '__main__':
         if SHOW_OUTPUT_KP:
             # all keypresses with confidence interval
             analysis.plot_kp(mapping, conf_interval=0.95)
-            # # keypresses of all individual stimuli
-            # logger.info('Creating figures for keypress data of individual stimuli.')
-            # for stim in tqdm(range(num_stimuli)):  # tqdm adds progress bar
-            #     # extract timestamps of events
-            #     vert_lines = list(map(int, re.findall(r'\d+', mapping.loc['video_' + str(stim), 'events'])))
-            #     # convert to s
-            #     vert_lines = [x / 1000 for x in vert_lines]  # type: ignore
-            #     # extract annotations
-            #     vert_line_annotations = mapping.loc['video_' + str(stim), 'events_description'].split(',')
-            #     # remove [
-            #     vert_line_annotations[0] = vert_line_annotations[0][1:]
-            #     # remove ]
-            #     vert_line_annotations[-1] = vert_line_annotations[-1][:-1]
-            #     # plot
-            #     analysis.plot_kp_video(mapping,
-            #                            'video_' + str(stim),
-            #                            vert_lines=vert_lines,
-            #                            vert_lines_width=1,
-            #                            vert_lines_dash='solid',
-            #                            vert_lines_colour='red',
-            #                            vert_lines_annotations=vert_line_annotations,
-            #                            vert_lines_annotations_position='top right',
-            #                            vert_lines_annotations_font_size=12,
-            #                            vert_lines_annotations_colour='red',
-            #                            conf_interval=0.95)
             # keypresses of groups of stimuli
             logger.info('Creating bar plots of keypress data for groups of stimuli.')
-            for stim in tqdm(range(int(num_stimuli/4))):  # tqdm adds progress bar
+            for stim in tqdm(range(int(num_stimuli/3))):  # tqdm adds progress bar
                 # ids of stimuli that belong to the same group
-                ids = [stim*4, stim*4 + 1, stim*4 + 2]
+                ids = [stim*3, stim*3 + 1, stim*3 + 2]
                 df = mapping[mapping['id'].isin(ids)]
-                 # extract timestamps of events
+                # extract timestamps of events
                 events = []
-                vert_lines = list(map(int, re.findall(r'\d+', df.loc['video_' + str(stim), 'events'])))
-                vert_lines_ids = list(map(int, re.findall(r'\d+', df.loc['video_' + str(stim), 'events_id'])))
-                # convert to s
-                vert_lines = [x / 1000 for x in vert_lines]  # type: ignore
-                # extract annotations
-                vert_line_annotations = df.loc['video_' + str(stim), 'events_name'].split(',')
-                # remove [
-                vert_line_annotations[0] = vert_line_annotations[0][1:]
-                # remove ]
-                vert_line_annotations[-1] = vert_line_annotations[-1][:-1]
-                for x in range(0, len(vert_line_annotations)):
-                    # search for start and end values
-                    start_found = False  # toggle for finding the start x coordinate
-                    start = 0  # x coordinate of starting location of event
-                    end = 0  # x coordinate of ending location of event
-                    # search for start and end x coordinates of event
-                    for y in range(0, len(vert_lines_ids)):
-                        # check if start is at the same location
-                        if vert_lines_ids[y] == x + 1 and not start_found:
-                            start = vert_lines[y]
-                            start_found = True
-                        # check if end is at the same location
-                        elif vert_lines_ids[y] == x + 1 and start_found:
-                            end = vert_lines[y]
+                # add info to dictionary of events to be passed for plotting
+                for x in ids:
                     # add to dictionary of events
                     events.append({'id': x + 1,
-                                   'start': start,
-                                   'end': end,
-                                   'annotation': vert_line_annotations[x]})
+                                   'start': df.loc['video_' + str(x), 'overtake'] / 1000,  # type: ignore
+                                   'end': df.loc['video_' + str(x), 'overtake'] / 1000,  # type: ignore
+                                   'annotation': None})
                 # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(df,
                                                y=['slider-0', 'slider-1'],
@@ -184,9 +138,9 @@ if __name__ == '__main__':
                                                events=events,
                                                events_width=1,
                                                events_dash='dot',
-                                               events_colour='black',
+                                               events_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
                                                events_annotations_font_size=12,
-                                               events_annotations_colour='black'
+                                               events_annotations_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
                                                yaxis_slider_title=None,
                                                show_text_labels=True,
                                                stacked=True,
@@ -204,8 +158,6 @@ if __name__ == '__main__':
             analysis.plot_kp_variable(mapping, 'distance', show_menu=False)
             # keypress based on the type of ego car
             analysis.plot_kp_variable(mapping, 'interaction', show_menu=False)
-            # keypress based on the pp group
-            analysis.plot_kp_variable(mapping, 'group', show_menu=False)
         # Visualisation of stimulus data
         if SHOW_OUTPUT_ST:
             # post stimulus questions for all stimuli
