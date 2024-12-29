@@ -101,6 +101,9 @@ if __name__ == '__main__':
                      {'question': 'slider-1', 'type': 'num'}]
         # process post-trial questions and update mapping
         mapping = heroku.process_stimulus_questions(questions)
+        # rename columns with responses to post-stimulus questions to meaningful names
+        mapping = mapping.rename(columns={'slider-0': 'space',
+                                          'slider-1': 'estimate'})
         # export to pickle
         dc.common.save_to_p(file_mapping, mapping, 'mapping of stimuli')
     else:
@@ -131,9 +134,7 @@ if __name__ == '__main__':
                                    'annotation': None})
                 # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(df,
-                                               y=['slider-0', 'slider-1'],
-                                               # custom labels for slider questions in the legend
-                                               y_legend=['distance', 'estimate'],
+                                               y=['space', 'estimate'],
                                                xaxis_kp_range=[0, 20],  # hardcode based on the longest stimulus
                                                yaxis_kp_range=[0, 35],  # hardcode based on the highest recorded value
                                                events=events,
@@ -146,7 +147,6 @@ if __name__ == '__main__':
                                                show_text_labels=True,
                                                stacked=True,
                                                yaxis_slider_show=False,
-                                               font_family='Times New Roman',
                                                font_size=16,
                                                legend_x=0.7,
                                                legend_y=1.0,
@@ -167,7 +167,6 @@ if __name__ == '__main__':
                                       'distance',
                                       # custom labels for slider questions in the legend
                                       y_legend=['0.8 m', '1.6 m', '2.4 m'],
-                                      font_family='Times New Roman',
                                       font_size=16,
                                       legend_x=0.9,
                                       legend_y=1.0,
@@ -185,7 +184,6 @@ if __name__ == '__main__':
                                                 'Control',
                                                 'Unprotected cycling path',
                                                 'No road markings'],
-                                      font_family='Times New Roman',
                                       font_size=16,
                                       legend_x=0.9,
                                       legend_y=1.0,
@@ -195,7 +193,7 @@ if __name__ == '__main__':
         if SHOW_OUTPUT_ST:
             # post stimulus questions for all stimuli
             analysis.bar(mapping,
-                         y=['slider-0', 'slider-1'],
+                         y=['space', 'estimate'],
                          stacked=True,
                          show_text_labels=True,
                          pretty_text=True,
@@ -207,7 +205,7 @@ if __name__ == '__main__':
                 ids = [stim*3, stim*3 + 1, stim*3 + 2]
                 df = mapping[mapping['id'].isin(ids)]
                 analysis.bar(df,
-                             y=['slider-0', 'slider-1'],
+                             y=['space', 'estimate'],
                              stacked=True,
                              show_text_labels=True,
                              pretty_text=True,
@@ -219,13 +217,13 @@ if __name__ == '__main__':
                 ids = [dist*3, dist*3 + 1, dist*3 + 2]
                 df = mapping[mapping['id'].isin(ids)]
                 analysis.bar(df,
-                             y=['slider-0', 'slider-1'],
+                             y=['space', 'estimate'],
                              stacked=True,
                              show_text_labels=True,
                              pretty_text=True,
                              save_file=True)
             # columns to drop in correlation matrix and scatter matrix
-            columns_drop = ['video_length', 'min_dur', 'max_dur', 'kp', 'interaction']
+            columns_drop = ['id', 'video_length', 'min_dur', 'max_dur', 'kp', 'interaction']
             # set nan to -1
             df = mapping.fillna(-1)
             # create correlation matrix
