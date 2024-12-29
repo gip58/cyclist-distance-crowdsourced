@@ -96,7 +96,7 @@ def save_to_p(file, data, desription_data='data'):
     """
     Save data to a pickle file.
     """
-    path = os.path.join(os.path.join(dc.settings.root_dir, 'trust'), file)
+    path = os.path.join(os.path.join(dc.settings.root_dir, 'dcycl'), file)
     with open(path, 'wb') as f:
         pickle.dump(data, f)
     logger.info('Saved ' + desription_data + ' to pickle file {}.', file)
@@ -106,7 +106,7 @@ def load_from_p(file, desription_data='data'):
     """
     Load data from a pickle file.
     """
-    path = os.path.join(os.path.join(dc.settings.root_dir, 'trust'), file)
+    path = os.path.join(os.path.join(dc.settings.root_dir, 'dcycl'), file)
     with open(path, 'rb') as f:
         data = pickle.load(f)
     logger.info('Loaded ' + desription_data + ' from pickle file {}.', file)

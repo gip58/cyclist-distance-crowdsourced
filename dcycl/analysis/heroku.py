@@ -378,8 +378,8 @@ class Heroku:
         # save to csv
         if self.save_csv:
             # create folder if not present
-            if not os.path.exists(df.settings.output_dir):
-                os.makedirs(df.settings.output_dir)
+            if not os.path.exists(dc.settings.output_dir):
+                os.makedirs(dc.settings.output_dir)
             # save to file
             df.to_csv(os.path.join(dc.settings.output_dir, self.file_data_csv), index=False)
             logger.info('Saved heroku data to csv file {}.', self.file_data_csv + '.csv')

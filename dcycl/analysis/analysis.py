@@ -2316,7 +2316,7 @@ class Analysis:
             pad_inches (int, optional): padding.
         """
         # build path
-        path = os.path.join(tr.settings.output_dir, output_subdir)
+        path = os.path.join(dc.settings.output_dir, output_subdir)
         if not os.path.exists(path):
             os.makedirs(path)
         # limit name to 255 char
