@@ -30,6 +30,9 @@ Configuration of the project needs to be defined in `cyclist-distance-crowdsourc
 ## Preparation of stimuli
 The source files of the video stimuli are outputted from Unity to `config.path_source`. To prepare them for the crowdsourced setup `python cyclist-distance-crowdsourced/preparation/process_videos.py`. Videos will be outputted to `config.path_stimuli`.
 
+## Analysis
+Analysis can be started by running python `cyclist-distance-crowdsourced/dcycl/run.py`. A number of CSV files used for data processing are saved in `cyclist-distance-crowdsourced/_output`. Visualisations of all data are saved in `cyclist-distance-crowdsourced/_output/figures/`.
+
 ## Troubleshooting
 ### Troubleshooting setup
 #### ERROR: cyclist-distance-crowdsourced is not a valid editable requirement
