@@ -1,5 +1,4 @@
 """Contains various function used throughout this project."""
-# by Pavlo Bazilinskyy <pavlo.bazilinskyy@gmail.com>
 from typing import Dict
 import os
 import json
@@ -48,8 +47,7 @@ def check_config(config_file_name: str = 'config', config_default_file_name: str
         logger.error('Config file {} not found.', config_file_name)
         return False
     except json.decoder.JSONDecodeError:
-        logger.error('Config file badly formatted. Please update based on' +
-                     ' default.config.', config_file_name)
+        logger.error('Config file badly formatted. Please update based on default.config.', config_file_name)
         return False
     # load default.config file
     try:
@@ -60,12 +58,13 @@ def check_config(config_file_name: str = 'config', config_default_file_name: str
         logger.error('Default config file {} not found.', config_file_name)
         return False
     except json.decoder.JSONDecodeError:
-        logger.error('Config file badly formatted. Please update based on default.config.', config_file_name)
+        logger.error('Config file badly formatted. Please update based on' +
+                     ' default.config.', config_file_name)
         return False
     # check length of each file
     if len(config) < len(default):
-        logger.error('Config file has {} variables, which is fewer than {} variables in default.config. Please'
-                     + ' update.',
+        logger.error('Config file has {} variables, which is fewer than {}'
+                     + ' variables in default.config. Please update.',
                      len(config),
                      len(default))
         return False
@@ -97,7 +96,7 @@ def save_to_p(file, data, desription_data='data'):
     """
     Save data to a pickle file.
     """
-    path = os.path.join(os.path.join(dc.settings.root_dir, 'dcycl'), file)
+    path = os.path.join(os.path.join(dc.settings.root_dir, 'trust'), file)
     with open(path, 'wb') as f:
         pickle.dump(data, f)
     logger.info('Saved ' + desription_data + ' to pickle file {}.', file)
@@ -107,9 +106,8 @@ def load_from_p(file, desription_data='data'):
     """
     Load data from a pickle file.
     """
-    path = os.path.join(os.path.join(dc.settings.root_dir, 'dcycl'), file)
+    path = os.path.join(os.path.join(dc.settings.root_dir, 'trust'), file)
     with open(path, 'rb') as f:
         data = pickle.load(f)
-    logger.info('Loaded ' + desription_data + ' from pickle file {}.',
-                file)
+    logger.info('Loaded ' + desription_data + ' from pickle file {}.', file)
     return data

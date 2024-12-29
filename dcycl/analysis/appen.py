@@ -4,8 +4,6 @@ import numpy as np
 import os
 from collections import Counter
 from pycountry_convert import country_alpha2_to_country_name, country_name_to_country_alpha3
-
-
 import dcycl as dc
 
 logger = dc.CustomLogger(__name__)  # use custom logger
