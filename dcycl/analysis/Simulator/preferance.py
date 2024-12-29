@@ -61,7 +61,7 @@ fig.add_trace(go.Scatter(
     y=average_distances,
     name="Average Distance (m)",
     mode='lines+markers',
-    line=dict(color="red", width=2),
+    line=dict(color="black", width=2),
     legendgroup="Average Distance",  # Group legend for consistency
     showlegend=True
 ))
@@ -113,7 +113,14 @@ fig.update_layout(
         font=dict(
             family="Times New Roman",
             size=12
-        )
+        ),
+                orientation="v",  # Vertical alignment of legend items
+        x=1.05,  # Positioning on the right side
+        y=1,     # Align top
+        xanchor="left",
+        yanchor="top",
+        tracegroupgap=5,  # Adjust gap between groups in the legend
+        itemwidth=50      # Adjust spacing between legend items
     ),
     template="plotly_white",
     width=1000,  # Set figure width for PNG

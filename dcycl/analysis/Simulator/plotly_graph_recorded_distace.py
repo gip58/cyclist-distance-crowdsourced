@@ -49,7 +49,7 @@ fig.add_trace(go.Scatter(
     x=[None], y=[None],  # Invisible trace for legend
     mode='lines',  # Line with marker for mean
     line=dict(color='black'),
-    name='Mean'
+    name='Mean (m)'
 ))
 
 # Update layout with font settings
@@ -99,7 +99,14 @@ fig.update_layout(
         font=dict(
             family="Times New Roman",
             size=12
-        )
+        ),
+        orientation="v",  # Vertical alignment of legend items
+        x=1.05,  # Positioning on the right side
+        y=1,     # Align top
+        xanchor="left",
+        yanchor="top",
+        tracegroupgap=5,  # Adjust gap between groups in the legend
+        itemwidth=50      # Adjust spacing between legend items
     ),
     template="plotly_white",
     width=1000,  # Set figure width for PNG
