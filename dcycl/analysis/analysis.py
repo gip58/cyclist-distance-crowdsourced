@@ -23,8 +23,10 @@ from tqdm import tqdm
 import ast
 from scipy.signal import savgol_filter
 from scipy.stats.kde import gaussian_kde
+from scipy.stats import ttest_rel, ttest_ind, f_oneway
 import cv2
 import dcycl as dc
+import random
 
 
 matplotlib.use('TkAgg')
@@ -1486,7 +1488,16 @@ class Analysis:
             fig.update_layout(font=dict(size=dc.common.get_configs('font_size')))
         # save file
         if save_file:
-            self.save_plotly(fig, 'kp', self.folder, width=fig_save_width, height=fig_save_height)
+            # to "_output/figures"
+            self.save_plotly(fig, 'kp',
+                             os.path.join(dc.settings.output_dir, self.folder),
+                             remove_margins=True, width=fig_save_width,
+                             height=fig_save_height)
+            # to "figures" (as it is a "good" final figure)
+            self.save_plotly(fig, 'kp',
+                             os.path.join(dc.settings.root_dir, self.folder),
+                             remove_margins=True, width=fig_save_width,
+                             height=fig_save_height, open_browser=False)
         # open it in localhost instead
         else:
             fig.show()
@@ -1991,7 +2002,11 @@ class Analysis:
                               orientation='v', xaxis_slider_title='Stimulus', yaxis_slider_show=False,
                               yaxis_slider_title=None, show_text_labels=False, name_file=None, save_file=True,
                               fig_save_width=1320, legend_x=0.7, legend_y=0.95, fig_save_height=680, font_family=None,
-                              font_size=None):
+                              font_size=None, ttest_signals=None, ttest_marker='circle', ttest_marker_size=3,
+                              ttest_marker_colour='black', ttest_annotations_font_size=10,
+                              ttest_annotations_colour='black', anova_signals=None, anova_marker='cross',
+                              anova_marker_size=3, anova_marker_colour='black', anova_annotations_font_size=10,
+                              anova_annotations_colour='black'):
         """Plot keypresses with multiple variables as a filter and slider questions for the stimuli.
 
         Args:
@@ -2018,15 +2033,26 @@ class Analysis:
             show_text_labels (bool, optional): output automatically positioned text labels.
             name_file (str, optional): name of file to save.
             save_file (bool, optional): flag for saving an html file with plot.
-            font_size (int, optional): font size to be used across the figure.
             fig_save_width (int, optional): width of figures to be saved.
             legend_x (float, optional): location of legend, percentage of x axis.
             legend_y (float, optional): location of legend, percentage of y axis.
             fig_save_height (int, optional): height of figures to be saved.
             font_family (str, optional): font family to be used across the figure. None = use config value.
             font_size (int, optional): font size to be used across the figure. None = use config value.
+            ttest_signals (list, optional): signals to compare with ttest. None = do not compare.
+            ttest_marker (str, optional): symbol of markers for the ttest.
+            ttest_marker_size (int, optional): size of markers for the ttest.
+            ttest_marker_colour (str, optional): colour of markers for the ttest.
+            ttest_annotations_font_size (int, optional): font size of annotations for ttest.
+            ttest_annotations_colour (str, optional): colour of annotations for ttest.
+            anova_signals (dict, optional): signals to compare with ANOVA. None = do not compare.
+            anova_marker (str, optional): symbol of markers for the ANOVA.
+            anova_marker_size (int, optional): size of markers for the ANOVA.
+            anova_marker_colour (str, optional): colour of markers for the ANOVA.
+            anova_annotations_font_size (int, optional): font size of annotations for ANOVA.
+            anova_annotations_colour (str, optional): colour of annotations for ANOVA.
         """
-        logger.info('Creating figure keypress+slider for {}.', df.index.tolist())
+        logger.info('Creating figure keypress and slider data for {}.', df.index.tolist())
         # calculate times
         times = np.array(range(self.res, df['video_length'].max() + self.res, self.res)) / 1000
         # plotly
@@ -2037,6 +2063,14 @@ class Analysis:
                                      specs=[[{}, {}]],
                                      horizontal_spacing=0.00,
                                      shared_xaxes=False)
+        # adjust ylim, if ttest results need to be plotted
+        if ttest_signals:
+            # yaxis_kp_range[0] = yaxis_kp_range[0] - len(ttest_signals) * 1 - 1  # assume one row takes 1 on y axis
+            yaxis_kp_range[0] = yaxis_kp_range[0] - 5  # assume one row takes 1 on y axis
+        # adjust ylim, if anova results need to be plotted
+        if anova_signals:
+            # yaxis_kp_range[0] = yaxis_kp_range[0] - len(anova_signals) * 1  # assume one row takes 1 on y axis
+            yaxis_kp_range[0] = yaxis_kp_range[0] - 5  # assume one row takes 1 on y axis
         # plot keypress data
         for index, row in df.iterrows():
             values = row['kp']  # keypress data
@@ -2091,12 +2125,10 @@ class Analysis:
                                        arrowhead=2)
                     # draw text label
                     fig.add_annotation(text=event['annotation'],
-                                       # xref='paper', yref='paper',
                                        x=(event['end'] + event['start']) / 2,
                                        y=yaxis_kp_range[1] - counter_lines * 1.8 - 1,  # use ylim value and draw lower
                                        showarrow=False,
-                                       font=dict(size=events_annotations_font_size,
-                                                 color=events_annotations_colour))
+                                       font=dict(size=events_annotations_font_size, color=events_annotations_colour))
                 # increase counter of lines drawn
                 counter_lines = counter_lines + 1
         # update axis
@@ -2133,15 +2165,127 @@ class Analysis:
                                  name=name,
                                  orientation=orientation,
                                  text=text,
-                                 textposition='auto'),
-                          row=1,
-                          col=2)
-        # # output ttest
-        # for variable in y:
-        #     self.ttest(variable, variable-1)
-        # output anova
-        # self.anova(y)
-        # output anova
+                                 textposition='auto'), row=1, col=2)
+        # count lines to calculate increase in coordinates of drawing
+        counter_ttest = 0
+        # count lines to calculate increase in coordinates of drawing
+        counter_anova = 0
+        # output ttest
+        if ttest_signals:
+            for signals in ttest_signals:
+                # # smoothen signal
+                # if self.smoothen_signal:
+                #     signal_1 = self.smoothen_filter(signals['signal_1'])
+                #     signal_2 = self.smoothen_filter(signals['signal_2'])
+                # receive significance values
+                [p_values, significance] = self.ttest(signal_1=signals['signal_1'],
+                                                      signal_2=signals['signal_2'],
+                                                      paired=signals['paired'])
+                # add to the plot
+                signal_length = len(signals['signal_1'])  # get the length of 'signal_1'
+                # significance = [random.randint(0, 1) for _ in range(signal_length)]  # generate random list
+                # plot stars based on random lists
+                marker_x = []  # x-coordinates for stars
+                marker_y = []  # y-coordinates for stars
+                # assuming `times` and `signals['signal_1']` correspond to x and y data points
+                for i in range(len(significance)):
+                    if significance[i] == 1:  # if value indicates a star
+                        marker_x.append(times[i])  # use the corresponding x-coordinate
+                        # dynamically set y-coordinate, slightly offset for each signal_index
+                        marker_y.append(-1 - counter_ttest * 1)
+                # filter out NaN values in marker_x and marker_y
+                # filtered_marker_x = []
+                # filtered_marker_y = []
+                # # filter out nans in s
+                # for x, y in zip(marker_x, marker_y):
+                #     if not np.isnan(x) and not np.isnan(y):  # ensure x and y are valid
+                #         filtered_marker_x.append(x)
+                #         filtered_marker_y.append(y)
+                # add scatter plot trace with cleaned data
+                fig.add_trace(go.Scatter(x=marker_x,
+                                         y=marker_y,
+                                         # list of possible values: https://plotly.com/python/marker-style
+                                         mode='markers',
+                                         marker=dict(symbol=ttest_marker,  # marker
+                                                     size=ttest_marker_size,  # adjust size
+                                                     color=ttest_marker_colour),  # adjust colour
+                                         text=p_values,
+                                         showlegend=False,
+                                         hovertemplate='time=%{x}, p_value=%{text}'),
+                              row=1,
+                              col=1)
+                # add label with signals that are compared
+                fig.add_annotation(text=signals['label'],
+                                   # put labels at the start of the x axis, as they are likely no significant effects
+                                   # in the start of the trial
+                                   x=1,
+                                   y=-1 - counter_ttest * 1,  # draw in the nagative range of y axis
+                                   showarrow=False,
+                                   font=dict(size=ttest_annotations_font_size, color=ttest_annotations_colour))
+                # increase counter of lines drawn
+                counter_ttest = counter_ttest + 1
+        # output ANOVA
+        if anova_signals:
+            # if ttest was plotted, take into account for y of the first row or marker
+            if counter_ttest > 0:
+                counter_anova = counter_ttest
+            # calculate for given signals one by one
+            for signals in anova_signals:
+                # # smoothen signal
+                # if self.smoothen_signal:
+                #     signal_1 = self.smoothen_filter(signals['signal_1'])
+                #     signal_2 = self.smoothen_filter(signals['signal_2'])
+                # receive significance values
+                [p_values, significance] = self.anova(signal_1=signals['signal_1'],
+                                                      signal_2=signals['signal_2'],
+                                                      signal_3=signals['signal_3'])
+                # add to the plot
+                signal_length = len(signals['signal_1'])  # get the length of 'signal_1'
+                significance = [random.randint(0, 1) for _ in range(signal_length)]  # generate random list
+                # plot stars based on random lists
+                marker_x = []  # x-coordinates for stars
+                marker_y = []  # y-coordinates for stars
+                # assuming `times` and `signals['signal_1']` correspond to x and y data points
+                for i in range(len(significance)):
+                    if significance[i] == 1:  # if value indicates a star
+                        marker_x.append(times[i])  # use the corresponding x-coordinate
+                        # dynamically set y-coordinate, slightly offset for each signal_index
+                        marker_y.append(-1 - counter_anova * 1)
+                # filter out NaN values in marker_x and marker_y
+                # filtered_marker_x = []
+                # filtered_marker_y = []
+                # # filter out nans in s
+                # for x, y in zip(marker_x, marker_y):
+                #     if not np.isnan(x) and not np.isnan(y):  # ensure x and y are valid
+                #         filtered_marker_x.append(x)
+                #         filtered_marker_y.append(y)
+                # add scatter plot trace with cleaned data
+                fig.add_trace(go.Scatter(x=marker_x,
+                                         y=marker_y,
+                                         # list of possible values: https://plotly.com/python/marker-style
+                                         mode='markers',
+                                         marker=dict(symbol=anova_marker,  # marker
+                                                     size=anova_marker_size,  # adjust size
+                                                     color=anova_marker_colour),  # adjust colour
+                                         text=p_values,
+                                         showlegend=False,
+                                         hovertemplate='time=%{x}, p_value=%{text}'),
+                              row=1,
+                              col=1)
+                # add label with signals that are compared
+                fig.add_annotation(text=signals['label'],
+                                   # put labels at the start of the x axis, as they are likely no significant effects
+                                   # in the start of the trial
+                                   x=1,
+                                   y=-1 - counter_anova * 1,  # draw in the nagative range of y axis
+                                   showarrow=False,
+                                   font=dict(size=anova_annotations_font_size, color=anova_annotations_colour))
+                # increase counter of lines drawn
+                counter_anova = counter_anova + 1
+        # hide ticks of negative values on y axis
+        # assuming that ticks are at step of 10
+        r = range(fig.layout['yaxis']['range'][0], fig.layout['yaxis']['range'][1], 10)
+        fig.update_layout(yaxis={'tickvals': list(r), 'ticktext': [t if t >= 0 else '' for t in r]})
         # update axis
         fig.update_xaxes(title_text=xaxis_slider_title, row=1, col=2)
         fig.update_yaxes(title_text=yaxis_slider_title, row=1, col=2)
@@ -2173,11 +2317,27 @@ class Analysis:
         # save file
         if save_file:
             if not name_file:
-                self.save_plotly(fig, 'kp_videos_sliders', self.folder, remove_margins=True, width=fig_save_width,
+                # to "_output/figures"
+                self.save_plotly(fig, 'kp_videos_sliders',
+                                 os.path.join(dc.settings.output_dir, self.folder),
+                                 remove_margins=True, width=fig_save_width,
                                  height=fig_save_height)
+                # to "figures" (as it is a "good" final figure)
+                self.save_plotly(fig, 'kp_videos_sliders',
+                                 os.path.join(dc.settings.root_dir, self.folder),
+                                 remove_margins=True, width=fig_save_width,
+                                 height=fig_save_height, open_browser=False)
             else:
-                self.save_plotly(fig, name_file, self.folder, remove_margins=True, width=fig_save_width,
+                # to "_output/figures"
+                self.save_plotly(fig, name_file,
+                                 os.path.join(dc.settings.output_dir, self.folder),
+                                 remove_margins=True, width=fig_save_width,
                                  height=fig_save_height)
+                # to "figures" (as it is a "good" final figure)
+                self.save_plotly(fig, name_file,
+                                 os.path.join(dc.settings.root_dir, self.folder),
+                                 remove_margins=True, width=fig_save_width,
+                                 height=fig_save_height, open_browser=False)
         # open it in localhost instead
         else:
             fig.show()
@@ -2186,7 +2346,7 @@ class Analysis:
                          yaxis_title='Percentage of trials with response key pressed', xaxis_range=None,
                          yaxis_range=None, show_menu=False, show_title=True, save_file=True,
                          legend_x=0, legend_y=0, fig_save_width=1320, fig_save_height=680, font_family=None,
-                         font_size=None):
+                         font_size=None, name_file=None):
         """Plot figures of values of a certain variable.
 
         Args:
@@ -2208,6 +2368,7 @@ class Analysis:
             fig_save_height (int, optional): height of figures to be saved.
             font_family (str, optional): font family to be used across the figure. None = use config value.
             font_size (int, optional): font size to be used across the figure. None = use config value.
+            name_file (str, optional): name of file to save.
         """
         logger.info('Creating visualisation of keypresses based on values {} of variable {}.', values, variable)
         # calculate times
@@ -2300,13 +2461,28 @@ class Analysis:
             fig.update_layout(legend=dict(x=legend_x, y=legend_y))
         # save file
         if save_file:
-            self.save_plotly(fig,
-                             'kp_' + variable + '-' +
-                             '-'.join(str(val) for val in values),
-                             self.folder,
-                             remove_margins=True,
-                             width=fig_save_width,
-                             height=fig_save_height)
+            if not name_file:
+                # to "_output/figures"
+                self.save_plotly(fig, 'kp_' + variable + '-' + '-'.join(str(val) for val in values),
+                                 os.path.join(dc.settings.output_dir, self.folder),
+                                 remove_margins=True, width=fig_save_width,
+                                 height=fig_save_height)
+                # to "figures" (as it is a "good" final figure)
+                self.save_plotly(fig, 'kp_' + variable + '-' + '-'.join(str(val) for val in values),
+                                 os.path.join(dc.settings.root_dir, self.folder),
+                                 remove_margins=True, width=fig_save_width,
+                                 height=fig_save_height, open_browser=False)
+            else:
+                # to "_output/figures"
+                self.save_plotly(fig, name_file,
+                                 os.path.join(dc.settings.output_dir, self.folder),
+                                 remove_margins=True, width=fig_save_width,
+                                 height=fig_save_height)
+                # to "figures" (as it is a "good" final figure)
+                self.save_plotly(fig, name_file,
+                                 os.path.join(dc.settings.root_dir, self.folder),
+                                 remove_margins=True, width=fig_save_width,
+                                 height=fig_save_height, open_browser=False)
         # open it in localhost instead
         else:
             fig.show()
@@ -2574,31 +2750,42 @@ class Analysis:
         # save file
         if save_file:
             self.save_plotly(fig, 'map_' + color, self.folder)
+        # save file
+        if save_file:
+            # to "_output/figures"
+            self.save_plotly(fig, 'map_' + color, os.path.join(dc.settings.output_dir, self.folder))
+            # to "figures" (as it is a "good" final figure)
+            self.save_plotly(fig, 'map_' + color, os.path.join(dc.settings.root_dir, self.folder), open_browser=False)
         # open it in localhost instead
         else:
             fig.show()
 
-    def save_plotly(self, fig, name, output_subdir, remove_margins=False, width=1320, height=680):
+    def save_plotly(self, fig, name, path, remove_margins=False, width=1320, height=680, open_browser=True):
         """
         Helper function to save figure as html file.
 
         Args:
             fig (plotly figure): figure object.
             name (str): name of html file.
-            output_subdir (str): folder for saving file.
+            path (str): folder for saving file.
             remove_margins (bool, optional): remove white margins around EPS figure.
             width (int, optional): width of figures to be saved.
             height (int, optional): height of figures to be saved.
+            open_browser (bool, optional): open figure in the browse.
         """
         # build path
-        path = os.path.join(dc.settings.output_dir, output_subdir)
         if not os.path.exists(path):
             os.makedirs(path)
         # limit name to 255 char
         if len(path) + len(name) > 250:
             name = name[:255 - len(path) - 5]
         # save as html
-        py.offline.plot(fig, filename=os.path.join(path, name + '.html'))
+        if open_browser:
+            # open in browser
+            py.offline.plot(fig, filename=os.path.join(path, name + '.html'))
+        else:
+            # do not open in browser
+            py.offline.plot(fig, filename=os.path.join(path, name + '.html'), auto_open=False)
         # remove white margins
         if remove_margins:
             fig.update_layout(margin=dict(l=2, r=2, t=20, b=12))
@@ -2629,7 +2816,6 @@ class Analysis:
         if remove_margins:
             fig.update_layout(margin=dict(l=2, r=2, t=20, b=12))
         # save file
-        print(os.path.join(path, name))
         plt.savefig(os.path.join(path, name), bbox_inches='tight', pad_inches=pad_inches)
         # clear figure from memory
         plt.close(fig)
@@ -2731,11 +2917,11 @@ class Analysis:
     def smoothen_filter(self, signal, type_flter='OneEuroFilter'):
         """Smoothen list with a filter.
 
-    Args:
+        Args:
             signal (list): input signal to smoothen
             type_flter (str, optional): type_flter of filter to use.
 
-    Returns:
+        Returns:
             list: list with smoothened data.
         """
         if type_flter == 'OneEuroFilter':
@@ -2747,19 +2933,79 @@ class Analysis:
             logger.error('Specified filter {} not implemented.', type_flter)
             return -1
 
-    def ttest(self, signal_1, signal_2, type):
-        # return [0,0,0,0,1,0,0]
-        # 0 and 1 = within (paired): https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_rel.html
-        # 0 and 2 = between: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html
-        # 0 and 3 = between
-        # 1 and 2 = between
-        # 2 and 3 = within
-        # 1 and 3 = between
-        return
+    def ttest(self, signal_1, signal_2, type='two-sided', paired=True):
+        """
+        Perform a t-test on two signals, computing p-values and significance.
 
-    def anova(self, signal_type, signal_ego, signal_kp):
-        # signal_type = list of int, eg: [1,1,0,0]
-        # signal_ego = list of int, eg: [1,1,0,0]
-        # signal_kp = list of lists, eg: [[1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1]]
-        # return [0,0,0,0,1,0,0]
-        return
+        Args:
+            signal_1 (list): First signal, a list of numeric values.
+            signal_2 (list): Second signal, a list of numeric values.
+            type (str, optional): Type of t-test to perform. Options are "two-sided",
+                                  "greater", or "less". Defaults to "two-sided".
+            paired (bool, optional): Indicates whether to perform a paired t-test
+                                     (`ttest_rel`) or an independent t-test (`ttest_ind`).
+                                     Defaults to True (paired).
+
+        Returns:
+            list: A list containing two elements:
+                  - p_values (list): Raw p-values for each bin.
+                  - significance (list): Binary flags (0 or 1) indicating whether
+                    the p-value for each bin is below the threshold configured in
+                    `dc.common.get_configs('p_value')`.
+        """
+        # Check if the lengths of the two signals are the same
+        if len(signal_1) != len(signal_2):
+            logger.error('The lengths of signal_1 and signal_2 must be the same.')
+
+        # convert to numpy arrays if signal_1 and signal_2 are lists
+        signal_1 = np.asarray(signal_1)
+        signal_2 = np.asarray(signal_2)
+        p_values = []  # record raw p value for each bin
+        significance = []  # record binary flag (0 or 1) if p value < dc.common.get_configs('p_value'))
+        # perform t-test for each value (treated as an independent bin)
+        for i in range(len(signal_1)):
+            if paired:
+                t_stat, p_value = ttest_rel([signal_1[i]], [signal_2[i]], axis=-1, alternative=type)
+            else:
+                t_stat, p_value = ttest_ind([signal_1[i]], [signal_2[i]], axis=-1, alternative=type, equal_var=False)
+            # record raw p value
+            p_values.append(p_value)
+            # determine significance for this value
+            significance.append(int(p_value < dc.common.get_configs('p_value')))
+        # return raw p values and binary flags for significance for output
+        return [p_values, significance]
+
+    def anova(self, signal_1, signal_2, signal_3):
+        """
+        Perform an ANOVA test on three signals, computing p-values and significance.
+
+        Args:
+            signal_1 (list): First signal, a list of numeric values.
+            signal_2 (list): Second signal, a list of numeric values.
+            signal_3 (list): Third signal, a list of numeric values.
+
+        Returns:
+            list: A list containing two elements:
+                  - p_values (list): Raw p-values for each bin.
+                  - significance (list): Binary flags (0 or 1) indicating whether
+                    the p-value for each bin is below the threshold configured in
+                    `dc.common.get_configs('p_value')`.
+        """
+        # check if the lengths of the three signals are the same
+        if not (len(signal_1) == len(signal_2) == len(signal_3)):
+            logger.error('The lengths of signal_1, signal_2, and signal_3 must be the same.')
+        # convert signals to numpy arrays if they are lists
+        signal_1 = np.asarray(signal_1)
+        signal_2 = np.asarray(signal_2)
+        signal_3 = np.asarray(signal_3)
+        p_values = []  # record raw p-values for each bin
+        significance = []  # record binary flags (0 or 1) if p-value < dc.common.get_configs('p_value')
+        # perform ANOVA test for each value (treated as an independent bin)
+        for i in range(len(signal_1)):
+            f_stat, p_value = f_oneway([signal_1[i]], [signal_2[i]], [signal_3[i]])
+            # record raw p-value
+            p_values.append(p_value)
+            # determine significance for this value
+            significance.append(int(p_value < dc.common.get_configs('p_value')))
+        # return raw p-values and binary flags for significance for output
+        return [p_values, significance]
