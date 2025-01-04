@@ -155,9 +155,8 @@ if __name__ == '__main__':
                                   'signal_3': df.loc['video_' + str(ids[0])]['kp'],
                                   'label': 'anova(1, 2, 3)'}]
                 # plot keypress data and slider questions
-                analysis.plot_kp_slider_videos(df=mapping,
-                                               y=['space'],
-                                               color=df['estimate'],
+                analysis.plot_kp_slider_videos(df,
+                                               y=['space','estimate'],
                                                # hardcode based on the longest stimulus
                                                xaxis_kp_range=[0, 20],
                                                # hardcode based on the highest recorded value with space for ttest and
@@ -235,8 +234,7 @@ if __name__ == '__main__':
         if SHOW_OUTPUT_ST:
             # post stimulus questions for all stimuli
             analysis.bar(mapping,
-                         y=['space'],
-                         color=mapping['estimate'],
+                         y=['space', 'estimate'],
                          stacked=False,
                          show_text_labels=True,
                          pretty_text=True,
@@ -249,9 +247,8 @@ if __name__ == '__main__':
                 ids = [stim*3, stim*3 + 1, stim*3 + 2]
                 df = mapping[mapping['id'].isin(ids)]
                 analysis.bar(
-                    df=df,
-                    y=['space'],
-                    color=df['estimate'],
+                    df,
+                    y=['space', 'estimate'],
                     stacked=False,
                     show_text_labels=True,
                     pretty_text=True,
@@ -263,9 +260,8 @@ if __name__ == '__main__':
                 ids = [dist*3, dist*3 + 1, dist*3 + 2]
                 df = mapping[mapping['id'].isin(ids)]
                 analysis.bar(
-                    df=df,
-                    y=['space'],
-                    color=df['estimate'],
+                    df,
+                    y=['space','estimate'],
                     stacked=False,
                     show_text_labels=True,
                     pretty_text=True,

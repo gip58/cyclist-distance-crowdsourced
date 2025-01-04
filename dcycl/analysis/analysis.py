@@ -783,8 +783,8 @@ class Analysis:
 
     def bar(self, df, y: list, y_legend=None, x=None, stacked=False, pretty_text=False, orientation='v',
             xaxis_title=None, yaxis_title=None, show_all_xticks=False, show_all_yticks=False, show_text_labels=False,
-            save_file=False, save_final=False, font_family=None, font_size=None, color=None, name_file=None,
-            fig_save_width=800, fig_save_height=600):
+            font_family=None, font_size=None, name_file=None, save_file=False, save_final=False, fig_save_width=1320,
+            fig_save_height=680):
         """
         Barplot for questionnaire data. Passing a list with one variable will output a simple barplot; passing a list
         of variables will output a grouped barplot.
@@ -837,41 +837,14 @@ class Analysis:
                 name = y_legend[variable]
             else:
                 name = y[variable]
-
-            if 'estimate' in df.columns and variable == 0:  # Only apply coloring for the first variable (e.g., adequacy)
-                color = color.clip(lower=0.4, upper=1.6)
-                norm_color = (color - 0.4) / (1.6 - 0.4)
-                colorscale = 'Viridis'  # Choose your desired colorscale    
             # plot variable
-            if color is not None and len(y) == 1:
-                fig.add_trace(go.Bar(
-                    x=x,
-                    y=df[y[variable]],
-                    name=name,
-                    orientation=orientation,
-                    text=text,
-                    textposition='auto',
-                    marker=dict(
-                        color=norm_color,  # Normalized color values
-                        colorscale='Viridis',  # Apply colorscale
-                        cmin=0.5,  # Minimum value for the color scale
-                        cmax=2.5,  # Maximum value for the color scale
-                        showscale=True,
-                        colorbar=dict(
-                            title='Distance (m)')
-                        )
-            ))
-            else:
-                # Add traces for standard bar plot
-                for variable in range(len(y)):
-                    fig.add_trace(go.Bar(
-                     x=x,
-                     y=df[y[variable]],
-                    name=y[variable],
-                    orientation=orientation,
-                    text=df[y[variable]] if show_text_labels else None,
-                    textposition='auto'
-            ))        
+            fig.add_trace(go.Bar(
+                x=x,
+                y=df[y[variable]],
+                name=name,
+                orientation=orientation,
+                text=text,
+                textposition='auto'))   
         # add tabs if multiple variables are plotted
         if len(y) > 1:
             fig.update_layout(barmode='group')
@@ -1333,8 +1306,6 @@ class Analysis:
             # use given value
             fig.update_layout(font=dict(family=font_family))
         else:
-            pass
-            pass
             # use value from config file
             fig.update_layout(font=dict(family=dc.common.get_configs('font_family')))
         # update font size
@@ -2456,7 +2427,7 @@ class Analysis:
                                  height=fig_save_height,
                                  open_browser=False)
 
-    def plot_kp_slider_videos(self, df, y: list, color=None, y_legend=None, x=None, events=None, events_width=1, events_dash='dot',
+    def plot_kp_slider_videos(self, df, y: list, y_legend=None, x=None, events=None, events_width=1, events_dash='dot',
                               events_colour='black', events_annotations_font_size=20,
                               events_annotations_colour='black', xaxis_kp_title='Time (s)',
                               yaxis_kp_title='Percentage of trials with response key pressed',
@@ -2623,9 +2594,6 @@ class Analysis:
             else:
                 name = y[variable]
             # plot variable
-
-        if 'estimate' in df.columns and variable == 0:  # Check if color exists
-            norm_color = (df['estimate'] - 0.4) / (1.6 - 0.4)  
             fig.add_trace(go.Bar(
                                 x=x,
                                 y=df[y[variable]],
@@ -2633,26 +2601,7 @@ class Analysis:
                                 orientation=orientation,
                                 text=text,
                                 textposition='auto',
-                                marker=dict(
-                                    color=norm_color,  # Normalized color values
-                                    colorscale='Viridis',  # Choose the desired colorscale
-                                    showscale=True,  # Display the colorbar
-                                    cmin=0.4,  # Minimum value for the color scale
-                                    cmax=1.6,  # Maximum value for the color scale
-                                    colorbar=dict(
-                                        title='Distance (m)')
-                                )
             ), row=1, col=2)
-        else:
-                # Default behavior without coloring
-                fig.add_trace(go.Bar(
-                    x=x,
-                    y=df[y[variable]],
-                    name=name,
-                    orientation=orientation,
-                    text=text,
-                    textposition='auto'
-                ), row=1, col=2)
         # count lines to calculate increase in coordinates of drawing
         counter_ttest = 0
         # count lines to calculate increase in coordinates of drawing
