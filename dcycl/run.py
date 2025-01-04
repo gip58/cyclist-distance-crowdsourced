@@ -256,6 +256,34 @@ if __name__ == '__main__':
                                       save_file=True,
                                       save_final=dc.common.get_configs('save_figures'))
             # keypress based on the type of interaction
+            # prepare pairs of signals to compare with ttest
+            # todo: @Giovanni, make this list
+            ttest_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 1 = between
+                              'signal_2': df.loc['video_' + str(ids[1])]['kp_raw'][0],
+                              'label': 'ttest(' + 'video_' + str(ids[0]) + ',' + 'video_' + str(ids[1]) + ')',
+                              'paired': True},
+                             {'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 2 = between
+                              'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
+                              'label': 'ttest(' + 'video_' + str(ids[0]) + ',' + 'video_' + str(ids[2]) + ')',
+                              'paired': True},
+                             {'signal_1': df.loc['video_' + str(ids[1])]['kp_raw'][0],  # 1 and 2 = between
+                              'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
+                              'label': 'ttest(' + 'video_' + str(ids[1]) + ',' + 'video_' + str(ids[2]) + ')',
+                              'paired': True}]
+            # prepare signals to compare with ANOVA
+            # todo: signals for ANOVA
+            anova_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp'],
+                              'signal_2': df.loc['video_' + str(ids[0])]['kp'],
+                              'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+                              'label': 'anova(0, 1, 2)'},
+                             {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
+                              'signal_2': df.loc['video_' + str(ids[0])]['kp'],
+                              'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+                              'label': 'anova(0, 2, 3)'},
+                             {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
+                              'signal_2': df.loc['video_' + str(ids[0])]['kp'],
+                              'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+                              'label': 'anova(1, 2, 3)'}]
             # todo: check if legend labels are in correct order
             analysis.plot_kp_variable(mapping,
                                       'interaction',
@@ -282,6 +310,18 @@ if __name__ == '__main__':
                                       events_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       events_annotations_font_size=12,
                                       events_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                      ttest_signals=ttest_signals,
+                                      ttest_marker='circle',
+                                      ttest_marker_size=3,
+                                      ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                      ttest_annotations_font_size=10,
+                                      ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                      anova_signals=anova_signals,
+                                      anova_marker='cross',
+                                      anova_marker_size=3,
+                                      anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                      anova_annotations_font_size=10,
+                                      anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       save_file=True,
                                       save_final=dc.common.get_configs('save_figures'))
         # Visualisation of stimulus data
