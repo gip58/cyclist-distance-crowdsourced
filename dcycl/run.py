@@ -31,7 +31,7 @@ FILTER_DATA = True  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
 REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = False  # extract points from heroku data
-UPDATE_MAPPING = True  # update mapping with keypress data
+UPDATE_MAPPING = False  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
 SHOW_OUTPUT_ST = True  # should figures with stimulus data be plotted
@@ -156,11 +156,10 @@ if __name__ == '__main__':
                                   'label': 'anova(1, 2, 3)'}]
                 # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(df,
-                                               y=['space','estimate'],
+                                               y=['space', 'estimate'],
                                                # hardcode based on the longest stimulus
                                                xaxis_kp_range=[0, 20],
-                                               # hardcode based on the highest recorded value with space for ttest and
-                                               # anova markers
+                                               # hardcode based on the highest recorded value
                                                yaxis_kp_range=[0, 35],
                                                events=events,
                                                events_width=1,
@@ -258,13 +257,12 @@ if __name__ == '__main__':
                 # get ids of distuli that belong to the same group
                 ids = [dist*3, dist*3 + 1, dist*3 + 2]
                 df = mapping[mapping['id'].isin(ids)]
-                analysis.bar(
-                    df,
-                    y=['space','estimate'],
-                    stacked=False,
-                    show_text_labels=True,
-                    pretty_text=True,
-                    save_file=True)
+                analysis.bar(df,
+                             y=['space', 'estimate'],
+                             stacked=False,
+                             show_text_labels=True,
+                             pretty_text=True,
+                             save_file=True)
             # columns to drop in correlation matrix and scatter matrix
             columns_drop = ['id', 'video_length', 'min_dur', 'max_dur', 'kp', 'kp_raw', 'interaction']
             # set nan to -1

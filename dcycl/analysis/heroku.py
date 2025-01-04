@@ -3,7 +3,6 @@ import json
 import os
 import pandas as pd
 import numpy as np
-import re
 from tqdm import tqdm
 from statistics import mean
 import warnings
@@ -471,20 +470,19 @@ class Heroku:
                                 # convert to point object
                                 point = Point(given_x[val]*norm_x,
                                               given_y[val]*norm_y)
-
-                                # check if point is within a polygon in the middle 
+                                # check if point is within a polygon in the middle
                                 if polygon.contains(point):
                                     # point in the middle detected
                                     detected += 1
                                 # Check if for the worker there were more than
                                 # allowed limit of points in the middle
-                                if detected / length_points > allowed_percentage:   
+                                if detected / length_points > allowed_percentage:
                                     break
-                            if detected / length_points < allowed_percentage:   
-                                for value in range(length_points):              
+                            if detected / length_points < allowed_percentage:
+                                for value in range(length_points):
                                     t_step = round(given_t[value]/hm_resolution)
                                     if duration == t_step:
-                                        if id_video not in points_duration[duration]:                    
+                                        if id_video not in points_duration[duration]:
                                             points_duration[duration][id_video] = [[given_x[value]*norm_x,
                                                                                     given_y[value]*norm_y]]
                                         else:
@@ -590,7 +588,7 @@ class Heroku:
                                     if row[0] <= 540:  # If the first button press is 'exactly' at 0.5 seconds
                                         row = np.concatenate((np.arange(40, row[0] + 40, 40), row[1:]))
                                     # find indexes with a gap of 'exactly' 0.5 seconds
-                                    gap_indexes = 1 + np.where((np.diff(row) >= 420) & (np.diff(row) <= 540))[0]  
+                                    gap_indexes = 1 + np.where((np.diff(row) >= 420) & (np.diff(row) <= 540))[0]
                                     # loop over all gaps in backward order
                                     for k in reversed(range(len(gap_indexes))):
                                         index = gap_indexes[k]
