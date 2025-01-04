@@ -673,14 +673,21 @@ class Analysis:
             item.set_rotation(55)
         # save file to "_output/figures"
         if save_file:
+            # check whether figure needs to be cleared from memory
+            if save_final:
+                clear_figure = False
+            else:
+                clear_figure = True
             self.save_fig(fig, filename,
                           os.path.join(dc.settings.output_dir, self.folder),
-                          pad_inches=0.05)
+                          pad_inches=0.05,
+                          clear_figure=clear_figure)
         # save file to "figures" (as it is a "good" final figure)
         if save_final:
             self.save_fig(fig, filename,
                           os.path.join(dc.settings.root_dir, self.folder),
-                          pad_inches=0.05)
+                          pad_inches=0.05,
+                          clear_figure=True)
         # revert font
         self.reset_font()
 
@@ -3348,7 +3355,7 @@ class Analysis:
         if save_mp4:
             fig.write_image(os.path.join(path, name + '.mp4'), width=width, height=height)
 
-    def save_fig(self, fig, name, path, remove_margins=False, pad_inches=0):
+    def save_fig(self, fig, name, path, remove_margins=False, pad_inches=0, clear_figure=True):
         """
         Helper function to save figure as file.
 
@@ -3358,20 +3365,23 @@ class Analysis:
             path (str): folder for saving file.
             remove_margins (bool, optional): remove white margins around EPS figure.
             pad_inches (int, optional): padding.
+            clear_figure (bool, optional): whether to clear figure from memory (for last time the object needs to be
+                                           used).
         """
         # build path
         if not os.path.exists(path):
             os.makedirs(path)
-        # limit name to 255 char
-        if len(path) + len(name) > 250:
-            name = name[:255 - len(path) - 5]
+        # limit name to max 200 char (for Windows)
+        if len(path) + len(name) > 195:
+            name = name[:200 - len(path) - 5]
         # remove white margins
         if remove_margins:
             fig.update_layout(margin=dict(l=2, r=2, t=20, b=12))
         # save file
         plt.savefig(os.path.join(path, name), bbox_inches='tight', pad_inches=pad_inches)
         # clear figure from memory
-        plt.close(fig)
+        if clear_figure:
+            plt.close(fig)
 
     def autolabel(self, ax, on_top=False, decimal=True):
         """

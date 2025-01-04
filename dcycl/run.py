@@ -71,9 +71,7 @@ if __name__ == '__main__':
         qa.reject_users()
         qa.ban_users()
     # merge heroku and appen dataframes into one
-    all_data = heroku_data.merge(appen_data,
-                                 left_on='worker_code',
-                                 right_on='worker_code')
+    all_data = heroku_data.merge(appen_data, left_on='worker_code', right_on='worker_code')
     logger.info('Data from {} participants included in analysis.', all_data.shape[0])
     heroku_data = all_data[all_data.columns.intersection(heroku_data_keys)]
     appen_data = all_data[all_data.columns.intersection(appen_data_keys)]
