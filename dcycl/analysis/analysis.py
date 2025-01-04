@@ -783,7 +783,8 @@ class Analysis:
 
     def bar(self, df, y: list, y_legend=None, x=None, stacked=False, pretty_text=False, orientation='v',
             xaxis_title=None, yaxis_title=None, show_all_xticks=False, show_all_yticks=False, show_text_labels=False,
-            save_file=False, font_family=None, font_size=None, color=None):
+            save_file=False, save_final=False, font_family=None, font_size=None, color=None, name_file=None,
+            fig_save_width=800, fig_save_height=600):
         """
         Barplot for questionnaire data. Passing a list with one variable will output a simple barplot; passing a list
         of variables will output a grouped barplot.
@@ -946,7 +947,7 @@ class Analysis:
             if not name_file:
                 name_file = 'bar_' + '-'.join(str(val) for val in y) + '_' + '-'.join(str(val) for val in x)
                 self.save_plotly(fig, name_file,
-                                 os.path.join(dc.settings.root_dir, self.folder),
+                                 os.path.join(dc.settings.root_dir, 'save_figures'),
                                  remove_margins=True,
                                  width=fig_save_width,
                                  height=fig_save_height,
@@ -954,7 +955,7 @@ class Analysis:
             # custom file name provided
             else:
                 self.save_plotly(fig, name_file,
-                                 os.path.join(dc.settings.root_dir, self.folder),
+                                 os.path.join(dc.settings.root_dir, 'save_figures'),
                                  remove_margins=True,
                                  width=fig_save_width,
                                  height=fig_save_height,
@@ -3399,8 +3400,8 @@ class Analysis:
         if remove_margins:
             fig.update_layout(margin=dict(l=2, r=2, t=20, b=12))
         # save as eps
-        if save_eps:
-            fig.write_image(os.path.join(path, name + '.eps'), width=width, height=height)
+        #if save_eps:
+         #   fig.write_image(os.path.join(path, name + '.eps'), width=width, height=height)
         # save as png
         if save_png:
             fig.write_image(os.path.join(path, name + '.png'), width=width, height=height)
