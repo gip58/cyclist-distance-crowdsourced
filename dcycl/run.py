@@ -34,8 +34,8 @@ CALC_COORDS = False  # extract points from heroku data
 UPDATE_MAPPING = False  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
-SHOW_OUTPUT_ST = True  # should figures with stimulus data be plotted
-SHOW_OUTPUT_PP = True  # should figures with info about participants be plotted
+SHOW_OUTPUT_ST = False  # should figures with stimulus data be plotted
+SHOW_OUTPUT_PP = False  # should figures with info about participants be plotted
 SHOW_OUTPUT_ET = False  # should figures for eye tracking be plotted
 
 file_mapping = 'mapping.p'  # file to save updated mapping
@@ -120,24 +120,22 @@ if __name__ == '__main__':
                 # extract timestamps of events
                 events = []
                 # add info to dictionary of events to be passed for plotting
-                for x in ids:
-                    # add to dictionary of events
-                    events.append({'id': x + 1,
-                                   'start': df.loc['video_' + str(x), 'overtake'] / 1000,  # type: ignore
-                                   'end': df.loc['video_' + str(x), 'overtake'] / 1000,  # type: ignore
-                                   'annotation': None})
+                events.append({'id': 1,
+                               'start': df.loc['video_' + str(ids[0]), 'overtake'] / 1000,  # type: ignore
+                               'end': df.loc['video_' + str(ids[0]), 'overtake'] / 1000,  # type: ignore
+                               'annotation': None})
                 # prepare pairs of signals to compare with ttest
                 ttest_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 1 = between
                                   'signal_2': df.loc['video_' + str(ids[1])]['kp_raw'][0],
-                                  'label': 'ttest(0, 1)',
+                                  'label': 'ttest(' + 'video_' + str(ids[0]) + ',' + 'video_' + str(ids[1]) + ')',
                                   'paired': True},
                                  {'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 2 = between
                                   'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
-                                  'label': 'ttest(0, 2)',
+                                  'label': 'ttest(' + 'video_' + str(ids[0]) + ',' + 'video_' + str(ids[2]) + ')',
                                   'paired': True},
                                  {'signal_1': df.loc['video_' + str(ids[1])]['kp_raw'][0],  # 1 and 2 = between
                                   'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
-                                  'label': 'ttest(1, 2)',
+                                  'label': 'ttest(' + 'video_' + str(ids[1]) + ',' + 'video_' + str(ids[2]) + ')',
                                   'paired': True}]
                 # prepare signals to compare with ANOVA
                 # todo: signals for ANOVA
@@ -159,35 +157,35 @@ if __name__ == '__main__':
                                                # hardcode based on the longest stimulus
                                                xaxis_kp_range=[0, 20],
                                                # hardcode based on the highest recorded value
-                                               yaxis_kp_range=[0, 35],
+                                               yaxis_kp_range=[0, 20],
                                                events=events,
                                                events_width=1,
                                                events_dash='dot',
-                                               events_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
+                                               events_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                events_annotations_font_size=12,
-                                               events_annotations_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
+                                               events_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                yaxis_slider_title=None,
                                                show_text_labels=True,
                                                stacked=False,
                                                yaxis_slider_show=False,
                                                font_size=16,
-                                               legend_x=0.68,
+                                               legend_x=0.71,
                                                legend_y=1.0,
-                                               fig_save_width=1600,   # preserve ratio 225x152
-                                               fig_save_height=1080,  # preserve ratio 225x152
-                                               name_file='kp_videos_sliders_'+','.join([str(i) for i in ids]),
                                                ttest_signals=ttest_signals,
                                                ttest_marker='circle',
                                                ttest_marker_size=3,
-                                               ttest_marker_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
+                                               ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                ttest_annotations_font_size=10,
-                                               ttest_annotations_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
+                                               ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                anova_signals=anova_signals,
                                                anova_marker='cross',
                                                anova_marker_size=3,
-                                               anova_marker_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
+                                               anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                anova_annotations_font_size=10,
-                                               anova_annotations_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
+                                               anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                               name_file='kp_videos_sliders_'+','.join([str(i) for i in ids]),
+                                               fig_save_width=1600,   # preserve ratio 225x152
+                                               fig_save_height=1080,  # preserve ratio 225x152
                                                save_file=True,
                                                save_final=dc.common.get_configs('save_figures'))
             # keypresses of all videos individually
@@ -196,7 +194,34 @@ if __name__ == '__main__':
                                     save_file=True,
                                     save_final=dc.common.get_configs('save_figures'))
             # keypress based on the type of distance
-            # todo: check if legend labels are in correct order
+            # prepare pairs of signals to compare with ttest
+            # todo: @Giovanni, make this list
+            ttest_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 1 = between
+                              'signal_2': df.loc['video_' + str(ids[1])]['kp_raw'][0],
+                              'label': 'ttest(' + 'video_' + str(ids[0]) + ',' + 'video_' + str(ids[1]) + ')',
+                              'paired': True},
+                             {'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 2 = between
+                              'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
+                              'label': 'ttest(' + 'video_' + str(ids[0]) + ',' + 'video_' + str(ids[2]) + ')',
+                              'paired': True},
+                             {'signal_1': df.loc['video_' + str(ids[1])]['kp_raw'][0],  # 1 and 2 = between
+                              'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
+                              'label': 'ttest(' + 'video_' + str(ids[1]) + ',' + 'video_' + str(ids[2]) + ')',
+                              'paired': True}]
+            # prepare signals to compare with ANOVA
+            # todo: signals for ANOVA
+            anova_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp'],
+                              'signal_2': df.loc['video_' + str(ids[0])]['kp'],
+                              'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+                              'label': 'anova(0, 1, 2)'},
+                             {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
+                              'signal_2': df.loc['video_' + str(ids[0])]['kp'],
+                              'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+                              'label': 'anova(0, 2, 3)'},
+                             {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
+                              'signal_2': df.loc['video_' + str(ids[0])]['kp'],
+                              'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+                              'label': 'anova(1, 2, 3)'}]
             analysis.plot_kp_variable(mapping,
                                       'distance',
                                       # custom labels for slider questions in the legend
@@ -206,6 +231,28 @@ if __name__ == '__main__':
                                       legend_y=1.0,
                                       show_menu=False,
                                       show_title=False,
+                                      # hardcode based on the longest stimulus
+                                      xaxis_range=[0, 20],
+                                      # hardcode based on the highest recorded value
+                                      yaxis_range=[0, 20],
+                                      events=events,
+                                      events_width=1,
+                                      events_dash='dot',
+                                      events_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                      events_annotations_font_size=12,
+                                      events_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                      ttest_signals=ttest_signals,
+                                      ttest_marker='circle',
+                                      ttest_marker_size=3,
+                                      ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                      ttest_annotations_font_size=10,
+                                      ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                      anova_signals=anova_signals,
+                                      anova_marker='cross',
+                                      anova_marker_size=3,
+                                      anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                      anova_annotations_font_size=10,
+                                      anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       save_file=True,
                                       save_final=dc.common.get_configs('save_figures'))
             # keypress based on the type of interaction
@@ -225,6 +272,16 @@ if __name__ == '__main__':
                                       legend_y=1.0,
                                       show_menu=False,
                                       show_title=False,
+                                      # hardcode based on the longest stimulus
+                                      xaxis_range=[0, 20],
+                                      # hardcode based on the highest recorded value
+                                      yaxis_range=[0, 20],
+                                      events=events,
+                                      events_width=1,
+                                      events_dash='dot',
+                                      events_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                      events_annotations_font_size=12,
+                                      events_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       save_file=True,
                                       save_final=dc.common.get_configs('save_figures'))
         # Visualisation of stimulus data
@@ -237,30 +294,29 @@ if __name__ == '__main__':
                          pretty_text=True,
                          save_file=True,
                          save_final=dc.common.get_configs('save_figures'))
-            # post-trial questions of all individual stimuli
-            logger.info('Creating bar plots of post-trial questions for groups of stimuli.')
-            for stim in tqdm(range(int(num_stimuli/3))):  # tqdm adds progress bar
-                # get ids of stimuli that belong to the same group
-                ids = [stim*3, stim*3 + 1, stim*3 + 2]
-                df = mapping[mapping['id'].isin(ids)]
-                analysis.bar(
-                    df,
-                    y=['space', 'estimate'],
-                    stacked=False,
-                    show_text_labels=True,
-                    pretty_text=True,
-                    save_file=True)
-            logger.info('Creating bar plots of post-trial questions for groups of distance.')
-            for dist in tqdm(range(int(3))):  # tqdm adds progress bar
-                # get ids of stimuli that belong to the same group
-                ids = [dist*3, dist*3 + 1, dist*3 + 2]
-                df = mapping[mapping['id'].isin(ids)]
-                analysis.bar(df,
-                             y=['space', 'estimate'],
-                             stacked=False,
-                             show_text_labels=True,
-                             pretty_text=True,
-                             save_file=True)
+            # # post-trial questions of all individual stimuli
+            # logger.info('Creating bar plots of post-trial questions for groups of stimuli.')
+            # for stim in tqdm(range(int(num_stimuli/3))):  # tqdm adds progress bar
+            #     # get ids of stimuli that belong to the same group
+            #     ids = [stim*3, stim*3 + 1, stim*3 + 2]
+            #     df = mapping[mapping['id'].isin(ids)]
+            #     analysis.bar(df,
+            #                  y=['space', 'estimate'],
+            #                  stacked=False,
+            #                  show_text_labels=True,
+            #                  pretty_text=True,
+            #                  save_file=True)
+            # logger.info('Creating bar plots of post-trial questions for groups of distance.')
+            # for dist in tqdm(range(int(3))):  # tqdm adds progress bar
+            #     # get ids of stimuli that belong to the same group
+            #     ids = [dist*3, dist*3 + 1, dist*3 + 2]
+            #     df = mapping[mapping['id'].isin(ids)]
+            #     analysis.bar(df,
+            #                  y=['space', 'estimate'],
+            #                  stacked=False,
+            #                  show_text_labels=True,
+            #                  pretty_text=True,
+            #                  save_file=True)
             # columns to drop in correlation matrix and scatter matrix
             columns_drop = ['id', 'video_length', 'min_dur', 'max_dur', 'kp', 'kp_raw', 'interaction']
             # set nan to -1
