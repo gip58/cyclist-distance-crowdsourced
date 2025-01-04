@@ -1760,7 +1760,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height,
                                  open_browser=False)
-
+    
     def plot_kp_video(self, df, stimulus, extension='mp4', conf_interval=None, vert_lines=None, events_width=3,
                       events_dash='solid', events_colour='green', events_annotations=None,
                       events_annotations_position='top right', events_annotations_font_size=20,

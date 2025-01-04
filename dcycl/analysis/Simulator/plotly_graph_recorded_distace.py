@@ -109,9 +109,11 @@ fig.update_layout(
         itemwidth=50      # Adjust spacing between legend items
     ),
     template="plotly_white",
-    width=1000,  # Set figure width for PNG
-    height=600   # Set figure height for PNG
+    width=1600,  # Set figure width for PNG
+    height=1080  
+     # Set figure height for PNG
 )
 # Save the figure as PNG and HTML
 fig.write_image("plotly_graph_recorded_distace.png")
 fig.write_html("plotly_graph_recorded_distace.html")
+

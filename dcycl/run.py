@@ -131,15 +131,15 @@ if __name__ == '__main__':
                 ttest_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 1 = between
                                   'signal_2': df.loc['video_' + str(ids[1])]['kp_raw'][0],
                                   'label': 'ttest(0, 1)',
-                                  'paired': False},
+                                  'paired': True},
                                  {'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 2 = between
                                   'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
                                   'label': 'ttest(0, 2)',
-                                  'paired': False},
+                                  'paired': True},
                                  {'signal_1': df.loc['video_' + str(ids[1])]['kp_raw'][0],  # 1 and 2 = between
                                   'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
                                   'label': 'ttest(1, 2)',
-                                  'paired': False}]
+                                  'paired': True}]
                 # prepare signals to compare with ANOVA
                 # todo: signals for ANOVA
                 anova_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp'],

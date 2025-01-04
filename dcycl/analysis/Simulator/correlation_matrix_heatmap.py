@@ -40,8 +40,8 @@ fig.update_layout(
     xaxis=dict(title="Variables", tickangle=-45),
     yaxis=dict(title="Variables"),
     font=dict(size=12, family="Times New Roman"),  # Times New Roman font
-    width=800,
-    height=700,
+    width=1600,
+    height=1080,
     template="plotly_white"  # Use white background template
 )
 
