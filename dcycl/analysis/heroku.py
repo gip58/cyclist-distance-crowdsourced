@@ -78,7 +78,7 @@ class Heroku:
         self.load_p = load_p
         # save data as csv file
         self.save_csv = save_csv
-        # read in durarions of stimuli from a config file
+        # read in durations of stimuli from a config file
         self.hm_resolution_range = int(50000/dc.common.get_configs('hm_resolution'))
         self.num_stimuli = dc.common.get_configs('num_stimuli')
 
