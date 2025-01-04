@@ -24,14 +24,14 @@ logger = dc.CustomLogger(__name__)  # use custom logger
 # SHOW_OUTPUT_ET = False  # should figures for eye tracking
 
 # for debugging, skip processing
-SAVE_P = False  # save pickle files with data
-LOAD_P = True  # load pickle files with data
+SAVE_P = True  # save pickle files with data
+LOAD_P = False  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
 FILTER_DATA = True  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
 REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = False  # extract points from heroku data
-UPDATE_MAPPING = False  # update mapping with keypress data
+UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
 SHOW_OUTPUT_ST = True  # should figures with stimulus data be plotted
@@ -155,8 +155,9 @@ if __name__ == '__main__':
                                   'signal_3': df.loc['video_' + str(ids[0])]['kp'],
                                   'label': 'anova(1, 2, 3)'}]
                 # plot keypress data and slider questions
-                analysis.plot_kp_slider_videos(df,
-                                               y=['space', 'estimate'],
+                analysis.plot_kp_slider_videos(df=mapping,
+                                               y=['space'],
+                                               color=df['estimate'],
                                                # hardcode based on the longest stimulus
                                                xaxis_kp_range=[0, 20],
                                                # hardcode based on the highest recorded value with space for ttest and
@@ -170,7 +171,7 @@ if __name__ == '__main__':
                                                events_annotations_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
                                                yaxis_slider_title=None,
                                                show_text_labels=True,
-                                               stacked=True,
+                                               stacked=False,
                                                yaxis_slider_show=False,
                                                font_size=16,
                                                legend_x=0.68,
@@ -191,7 +192,8 @@ if __name__ == '__main__':
                                                anova_annotations_font_size=10,
                                                anova_annotations_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
                                                save_file=True,
-                                               save_final=dc.common.get_configs('save_figures'))
+                                               save_final=dc.common.get_configs('save_figures')
+                                             )
             # keypresses of all videos individually
             analysis.plot_kp_videos(mapping,
                                     show_menu=False,
@@ -233,8 +235,9 @@ if __name__ == '__main__':
         if SHOW_OUTPUT_ST:
             # post stimulus questions for all stimuli
             analysis.bar(mapping,
-                         y=['space', 'estimate'],
-                         stacked=True,
+                         y=['space'],
+                         color=mapping['estimate'],
+                         stacked=False,
                          show_text_labels=True,
                          pretty_text=True,
                          save_file=True,
@@ -245,24 +248,28 @@ if __name__ == '__main__':
                 # get ids of stimuli that belong to the same group
                 ids = [stim*3, stim*3 + 1, stim*3 + 2]
                 df = mapping[mapping['id'].isin(ids)]
-                analysis.bar(df,
-                             y=['space', 'estimate'],
-                             stacked=True,
-                             show_text_labels=True,
-                             pretty_text=True,
-                             save_file=True)
+                analysis.bar(
+                    df=df,
+                    y=['space'],
+                    color=df['estimate'],
+                    stacked=False,
+                    show_text_labels=True,
+                    pretty_text=True,
+                    save_file=True)
             # todo: @Giovanni, finish this
             logger.info('Creating bar plots of post-trial questions for groups of distance.')
             for dist in tqdm(range(int(3))):  # tqdm adds progress bar
                 # get ids of distuli that belong to the same group
                 ids = [dist*3, dist*3 + 1, dist*3 + 2]
                 df = mapping[mapping['id'].isin(ids)]
-                analysis.bar(df,
-                             y=['space', 'estimate'],
-                             stacked=True,
-                             show_text_labels=True,
-                             pretty_text=True,
-                             save_file=True)
+                analysis.bar(
+                    df=df,
+                    y=['space'],
+                    color=df['estimate'],
+                    stacked=False,
+                    show_text_labels=True,
+                    pretty_text=True,
+                    save_file=True)
             # columns to drop in correlation matrix and scatter matrix
             columns_drop = ['id', 'video_length', 'min_dur', 'max_dur', 'kp', 'kp_raw', 'interaction']
             # set nan to -1
