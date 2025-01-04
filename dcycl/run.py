@@ -114,7 +114,7 @@ if __name__ == '__main__':
         # Visualisation of keypress data
         if SHOW_OUTPUT_KP:
             # all keypresses with confidence interval
-            analysis.plot_kp(mapping, conf_interval=0.95, save_file=True, save_final=True)
+            analysis.plot_kp(mapping, conf_interval=0.95, save_file=True, save_final=dc.common.get_configs('save_figures'))
             # keypresses of groups of stimuli
             logger.info('Creating bar plots of keypress data for groups of stimuli.')
             for stim in tqdm(range(int(num_stimuli/3))):  # tqdm adds progress bar
@@ -185,17 +185,17 @@ if __name__ == '__main__':
                                                ttest_signals=ttest_signals,
                                                ttest_marker='circle',
                                                ttest_marker_size=3,
-                                               ttest_marker_colour='black',
+                                               ttest_marker_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
                                                ttest_annotations_font_size=10,
-                                               ttest_annotations_colour='black',
+                                               ttest_annotations_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
                                                anova_signals=anova_signals,
                                                anova_marker='cross',
                                                anova_marker_size=3,
-                                               anova_marker_colour='black',
+                                               anova_marker_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
                                                anova_annotations_font_size=10,
-                                               anova_annotations_colour='black',
+                                               anova_annotations_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
                                                save_file=True,
-                                               save_final=True)
+                                               save_final=dc.common.get_configs('save_figures'))
             # keypresses of all videos individually
             analysis.plot_kp_videos(mapping, show_menu=False)
             # keypress based on the type of ego car
@@ -210,7 +210,7 @@ if __name__ == '__main__':
                                       show_menu=False,
                                       show_title=False,
                                       save_file=True,
-                                      save_final=True)
+                                      save_final=dc.common.get_configs('save_figures'))
             # keypress based on the type of ego car
             # todo: check if legend labels are in correct order
             analysis.plot_kp_variable(mapping,
@@ -229,7 +229,7 @@ if __name__ == '__main__':
                                       show_menu=False,
                                       show_title=False,
                                       save_file=True,
-                                      save_final=True)
+                                      save_final=dc.common.get_configs('save_figures'))
         # Visualisation of stimulus data
         if SHOW_OUTPUT_ST:
             # post stimulus questions for all stimuli
@@ -239,7 +239,7 @@ if __name__ == '__main__':
                          show_text_labels=True,
                          pretty_text=True,
                          save_file=True,
-                         save_final=True)
+                         save_final=dc.common.get_configs('save_figures'))
             # post-trial questions of all individual stimuli
             logger.info('Creating bar plots of post-trial questions for groups of stimuli.')
             for stim in tqdm(range(int(num_stimuli/3))):  # tqdm adds progress bar
@@ -269,10 +269,10 @@ if __name__ == '__main__':
             # set nan to -1
             df = mapping.fillna(-1)
             # create correlation matrix
-            analysis.corr_matrix(df, columns_drop=columns_drop, save_file=True, save_final=True)
+            analysis.corr_matrix(df, columns_drop=columns_drop, save_file=True, save_final=dc.common.get_configs('save_figures'))
             # create correlation matrix
             analysis.scatter_matrix(df, columns_drop=columns_drop, diagonal_visible=False, save_file=True,
-                                    save_final=True)
+                                    save_final=dc.common.get_configs('save_figures'))
             # end questions - sliders
             df = heroku_data
             # drop na values
@@ -310,7 +310,7 @@ if __name__ == '__main__':
                           nbins=5,
                           pretty_text=True,
                           save_file=True,
-                          save_final=True)
+                          save_final=dc.common.get_configs('save_figures'))
             # histogram for the amount of stress
             analysis.hist(df,
                           x=df.columns[df.columns.to_series().str.contains('end2-slider-0-0')],
@@ -318,7 +318,7 @@ if __name__ == '__main__':
                           pretty_text=True,
                           xaxis_title='I experienced a high level of stress during all scenarios.',
                           save_file=True,
-                          save_final=True)
+                          save_final=dc.common.get_configs('save_figures'))
             # histogram for the number of scenario
             analysis.hist(df,
                           x=df.columns[df.columns.to_series().str.contains('end2-scenario_number-0')],
@@ -327,14 +327,14 @@ if __name__ == '__main__':
                           xaxis_title='Which scenario was most helpful in choosing the overtaking distance from ' +
                                       'cyclists?',
                           save_file=True,
-                          save_final=True)
+                          save_final=dc.common.get_configs('save_figures'))
             # stimulus duration
             analysis.hist(heroku_data,
                           x=heroku_data.columns[heroku_data.columns.to_series().str.contains('-dur')],
                           nbins=100,
                           pretty_text=True,
                           save_file=True,
-                          save_final=True)
+                          save_final=dc.common.get_configs('save_figures'))
             # mapping to convert likert values to numeric
             likert_mapping = {'Strongly disagree': 1,
                               'Disagree': 2,
@@ -370,27 +370,27 @@ if __name__ == '__main__':
                           color='country',
                           pretty_text=True,
                           save_file=True,
-                          save_final=True)
+                          save_final=dc.common.get_configs('save_figures'))
             # histogram for driving frequency
             analysis.hist(appen_data,
                           x=['driving_freq'],
                           pretty_text=True,
                           save_file=True,
-                          save_final=True)
+                          save_final=dc.common.get_configs('save_figures'))
             # histogram for cycling frequency
             analysis.hist(appen_data,
                           x=['cycling_freq'],
                           pretty_text=True,
                           save_file=True,
-                          save_final=True)
+                          save_final=dc.common.get_configs('save_figures'))
             # map of participants
-            analysis.map(countries_data, color='counts', save_file=True, save_final=True)
+            analysis.map(countries_data, color='counts', save_file=True, save_final=dc.common.get_configs('save_figures'))
             # map of mean age per country
-            analysis.map(countries_data, color='age', save_file=True, save_final=True)
+            analysis.map(countries_data, color='age', save_file=True, save_final=dc.common.get_configs('save_figures'))
             # map of gender per country
-            analysis.map(countries_data, color='gender', save_file=True, save_final=True)
+            analysis.map(countries_data, color='gender', save_file=True, save_final=dc.common.get_configs('save_figures'))
             # map of year of obtaining license per country
-            analysis.map(countries_data, color='year_license', save_file=True, save_final=True)
+            analysis.map(countries_data, color='year_license', save_file=True, save_final=dc.common.get_configs('save_figures'))
         # Visualisation of eye tracking data
         if SHOW_OUTPUT_ET:
             # create eye gaze visualisations for all videos
