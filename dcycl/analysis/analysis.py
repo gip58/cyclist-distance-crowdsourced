@@ -746,7 +746,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -897,7 +897,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -1046,7 +1046,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -1204,7 +1204,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -1317,7 +1317,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -1346,8 +1346,8 @@ class Analysis:
                                  open_browser=False)
 
     def heatmap(self, df, x, y, t, id_video, pp, pretty_text=False, marginal_x='violin', marginal_y='violin',
-                xaxis_title=None, xaxis_range=True, yaxis_title=None, yaxis_range=True, save_file=False, save_final=False,
-                font_family=None, font_size=None):
+                xaxis_title=None, xaxis_range=True, yaxis_title=None, yaxis_range=True, save_file=False,
+                save_final=False, font_family=None, font_size=None):
         """
         Output heatmap plot of variables x and y.
 
@@ -1539,7 +1539,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -1567,7 +1567,8 @@ class Analysis:
                                  height=fig_save_height,
                                  open_browser=False)
 
-    def hist_stim_duration_time(self, df, time_ranges, nbins=0, save_file=False, save_final=False, font_family=None, font_size=None):
+    def hist_stim_duration_time(self, df, time_ranges, nbins=0, save_file=False, save_final=False, font_family=None,
+                                font_size=None):
         """
         Output distribution of stimulus durations for time ranges.
 
@@ -1724,7 +1725,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -1863,7 +1864,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -1964,7 +1965,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -2103,7 +2104,7 @@ class Analysis:
                                  save_html=False,
                                  save_mp4=True)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -2247,8 +2248,8 @@ class Analysis:
     def plot_kp_videos(self, df, events=None, events_width=1, events_dash='dot', events_colour='black',
                        events_annotations_font_size=20, events_annotations_colour='black', xaxis_title='Time (s)',
                        yaxis_title='Percentage of trials with response key pressed', xaxis_range=None,
-                       yaxis_range=None, save_file=False, save_final=False, fig_save_width=1320, fig_save_height=680, show_menu=False,
-                       show_title=True, name_file=None, font_family=None, font_size=None):
+                       yaxis_range=None, save_file=False, save_final=False, fig_save_width=1320, fig_save_height=680,
+                       show_menu=False, show_title=True, name_file=None, font_family=None, font_size=None):
         """Plot keypresses with multiple variables as a filter.
 
         Args:
@@ -2380,39 +2381,43 @@ class Analysis:
         else:
             # use value from config file
             fig.update_layout(font=dict(size=dc.common.get_configs('font_size')))
-        # save file
+        # save file to local output folder
         if save_file:
+            # custom file name not provided
             if not name_file:
-                # to "_output/figures"
                 self.save_plotly(fig, 'kp_videos',
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
                                  width=fig_save_width,
                                  height=fig_save_height)
-                # to "figures" (as it is a "good" final figure)
-                self.save_plotly(fig, 'kp_videos',
-                                 os.path.join(dc.settings.root_dir, self.folder),
-                                 remove_margins=True,
-                                 width=fig_save_width,
-                                 height=fig_save_height,
-                                 open_browser=False)
+            # custom file name provided
             else:
-                # to "_output/figures"
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
                                  width=fig_save_width,
                                  height=fig_save_height)
-                # to "figures" (as it is a "good" final figure)
-                self.save_plotly(fig, name_file,
-                                 os.path.join(dc.settings.root_dir, self.folder),
-                                 remove_margins=True,
-                                 width=fig_save_width,
-                                 height=fig_save_height,
-                                 open_browser=False)
         # open it in localhost instead
         else:
             fig.show()
+        # save file to "figures" (as it is a "good" final figure)
+        if save_final:
+            # custom file name not provided
+            if not name_file:
+                self.save_plotly(fig, 'kp_videos',
+                                 os.path.join(dc.settings.root_dir, self.folder),
+                                 remove_margins=True,
+                                 width=fig_save_width,
+                                 height=fig_save_height,
+                                 open_browser=False)
+            # custom file name provided
+            else:
+                self.save_plotly(fig, name_file,
+                                 os.path.join(dc.settings.root_dir, self.folder),
+                                 remove_margins=True,
+                                 width=fig_save_width,
+                                 height=fig_save_height,
+                                 open_browser=False)
 
     def plot_kp_slider_videos(self, df, y: list, y_legend=None, x=None, events=None, events_width=1, events_dash='dot',
                               events_colour='black', events_annotations_font_size=20,
@@ -2745,7 +2750,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -2901,7 +2906,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -2932,7 +2937,8 @@ class Analysis:
     def plot_kp_variables_or(self, df, variables, xaxis_title='Time (s)',
                              yaxis_title='Percentage of trials with response key pressed', xaxis_range=None,
                              yaxis_range=None, show_menu=False, name_file=None, save_file=False,
-                             save_final=False, fig_save_width=1320, fig_save_height=680, font_family=None, font_size=None):
+                             save_final=False, fig_save_width=1320, fig_save_height=680, font_family=None,
+                             font_size=None):
         """Separate plots of keypresses with multiple variables as a filter.
 
         Args:
@@ -3042,7 +3048,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -3194,7 +3200,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -3269,7 +3275,7 @@ class Analysis:
                                  width=fig_save_width,
                                  height=fig_save_height)
             # custom file name provided
-            else: 
+            else:
                 self.save_plotly(fig, name_file,
                                  os.path.join(dc.settings.output_dir, self.folder),
                                  remove_margins=True,
@@ -3318,9 +3324,9 @@ class Analysis:
         # build path
         if not os.path.exists(path):
             os.makedirs(path)
-        # limit name to 255 char
-        if len(path) + len(name) > 250:
-            name = name[:255 - len(path) - 5]
+        # limit name to max 200 char (for Windows)
+        if len(path) + len(name) > 195:
+            name = name[:200 - len(path) - 5]
         # save as html
         if save_html:
             if open_browser:
