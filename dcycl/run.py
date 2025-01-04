@@ -114,7 +114,10 @@ if __name__ == '__main__':
         # Visualisation of keypress data
         if SHOW_OUTPUT_KP:
             # all keypresses with confidence interval
-            analysis.plot_kp(mapping, conf_interval=0.95, save_file=True, save_final=dc.common.get_configs('save_figures'))
+            analysis.plot_kp(mapping,
+                             conf_interval=0.95,
+                             save_file=True,
+                             save_final=dc.common.get_configs('save_figures'))
             # keypresses of groups of stimuli
             logger.info('Creating bar plots of keypress data for groups of stimuli.')
             for stim in tqdm(range(int(num_stimuli/3))):  # tqdm adds progress bar
@@ -269,7 +272,10 @@ if __name__ == '__main__':
             # set nan to -1
             df = mapping.fillna(-1)
             # create correlation matrix
-            analysis.corr_matrix(df, columns_drop=columns_drop, save_file=True, save_final=dc.common.get_configs('save_figures'))
+            analysis.corr_matrix(df,
+                                 columns_drop=columns_drop,
+                                 save_file=True,
+                                 save_final=dc.common.get_configs('save_figures'))
             # create correlation matrix
             analysis.scatter_matrix(df, columns_drop=columns_drop, diagonal_visible=False, save_file=True,
                                     save_final=dc.common.get_configs('save_figures'))
@@ -384,13 +390,25 @@ if __name__ == '__main__':
                           save_file=True,
                           save_final=dc.common.get_configs('save_figures'))
             # map of participants
-            analysis.map(countries_data, color='counts', save_file=True, save_final=dc.common.get_configs('save_figures'))
+            analysis.map(countries_data,
+                         color='counts',
+                         save_file=True,
+                         save_final=dc.common.get_configs('save_figures'))
             # map of mean age per country
-            analysis.map(countries_data, color='age', save_file=True, save_final=dc.common.get_configs('save_figures'))
+            analysis.map(countries_data,
+                         color='age',
+                         save_file=True,
+                         save_final=dc.common.get_configs('save_figures'))
             # map of gender per country
-            analysis.map(countries_data, color='gender', save_file=True, save_final=dc.common.get_configs('save_figures'))
+            analysis.map(countries_data,
+                         color='gender',
+                         save_file=True,
+                         save_final=dc.common.get_configs('save_figures'))
             # map of year of obtaining license per country
-            analysis.map(countries_data, color='year_license', save_file=True, save_final=dc.common.get_configs('save_figures'))
+            analysis.map(countries_data,
+                         color='year_license',
+                         save_file=True,
+                         save_final=dc.common.get_configs('save_figures'))
         # Visualisation of eye tracking data
         if SHOW_OUTPUT_ET:
             # create eye gaze visualisations for all videos
