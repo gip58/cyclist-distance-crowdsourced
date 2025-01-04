@@ -250,10 +250,9 @@ if __name__ == '__main__':
                     show_text_labels=True,
                     pretty_text=True,
                     save_file=True)
-            # todo: @Giovanni, finish this
             logger.info('Creating bar plots of post-trial questions for groups of distance.')
             for dist in tqdm(range(int(3))):  # tqdm adds progress bar
-                # get ids of distuli that belong to the same group
+                # get ids of stimuli that belong to the same group
                 ids = [dist*3, dist*3 + 1, dist*3 + 2]
                 df = mapping[mapping['id'].isin(ids)]
                 analysis.bar(df,
