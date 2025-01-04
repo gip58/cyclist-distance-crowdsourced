@@ -44,22 +44,15 @@ file_coords = 'coords.p'  # file to save lists with coordinates
 if __name__ == '__main__':
     # create object for working with heroku data
     files_heroku = dc.common.get_configs('files_heroku')
-    heroku = dc.analysis.Heroku(files_data=files_heroku,
-                                save_p=SAVE_P,
-                                load_p=LOAD_P,
-                                save_csv=SAVE_CSV)
+    heroku = dc.analysis.Heroku(files_data=files_heroku, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV)
     # read heroku data
     heroku_data = heroku.read_data(filter_data=FILTER_DATA)
 
     # create object for working with appen data
     file_appen = dc.common.get_configs('file_appen')
-    appen = dc.analysis.Appen(file_data=file_appen,
-                              save_p=SAVE_P,
-                              load_p=LOAD_P,
-                              save_csv=SAVE_CSV)
+    appen = dc.analysis.Appen(file_data=file_appen, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV)
     # read appen data
-    appen_data = appen.read_data(filter_data=FILTER_DATA,
-                                 clean_data=CLEAN_DATA)
+    appen_data = appen.read_data(filter_data=FILTER_DATA, clean_data=CLEAN_DATA)
     # read frames
     # get keys in data files
     heroku_data_keys = heroku_data.keys()
@@ -200,8 +193,11 @@ if __name__ == '__main__':
                                                save_file=True,
                                                save_final=dc.common.get_configs('save_figures'))
             # keypresses of all videos individually
-            analysis.plot_kp_videos(mapping, show_menu=False)
-            # keypress based on the type of ego car
+            analysis.plot_kp_videos(mapping,
+                                    show_menu=False,
+                                    save_file=True,
+                                    save_final=dc.common.get_configs('save_figures'))
+            # keypress based on the type of distance
             # todo: check if legend labels are in correct order
             analysis.plot_kp_variable(mapping,
                                       'distance',
@@ -214,7 +210,7 @@ if __name__ == '__main__':
                                       show_title=False,
                                       save_file=True,
                                       save_final=dc.common.get_configs('save_figures'))
-            # keypress based on the type of ego car
+            # keypress based on the type of interaction
             # todo: check if legend labels are in correct order
             analysis.plot_kp_variable(mapping,
                                       'interaction',
