@@ -3307,7 +3307,7 @@ class Analysis:
                     save_html=True, open_browser=True, save_mp4=False):
         """
         Helper function to save figure as html file.
-        
+
         Args:
             fig (plotly figure): figure object.
             name (str): name of html file.
