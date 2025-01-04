@@ -191,8 +191,7 @@ if __name__ == '__main__':
                                                anova_annotations_font_size=10,
                                                anova_annotations_colour='black' if dc.common.get_configs('plotly_template') == 'plotly_white' else 'white',  # noqa: E501
                                                save_file=True,
-                                               save_final=dc.common.get_configs('save_figures')
-                                             )
+                                               save_final=dc.common.get_configs('save_figures'))
             # keypresses of all videos individually
             analysis.plot_kp_videos(mapping,
                                     show_menu=False,
