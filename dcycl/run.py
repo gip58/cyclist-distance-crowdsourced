@@ -127,7 +127,6 @@ if __name__ == '__main__':
                                    'end': df.loc['video_' + str(x), 'overtake'] / 1000,  # type: ignore
                                    'annotation': None})
                 # prepare pairs of signals to compare with ttest
-                # todo: @Giovanni, check for between/within
                 ttest_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 1 = between
                                   'signal_2': df.loc['video_' + str(ids[1])]['kp_raw'][0],
                                   'label': 'ttest(0, 1)',
