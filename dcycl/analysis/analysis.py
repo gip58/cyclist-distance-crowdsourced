@@ -2320,6 +2320,11 @@ class Analysis:
                 [p_values, significance] = self.ttest(signal_1=signals['signal_1'],
                                                       signal_2=signals['signal_2'],
                                                       paired=signals['paired'])
+                # save results to csv
+                df_ttest = pd.DataFrame(columns=['t', 'p-value'])  # dataframe to save to csv
+                df_ttest['t'] = list(range(len(signals['signal_1'])))
+                df_ttest['p-value'] = p_values
+                df_ttest.to_csv(os.path.join(dc.settings.output_dir, signals['label'] + '_' + name_file + '.csv'))
                 # add to the plot
                 signal_length = len(signals['signal_1'])  # get the length of 'signal_1'
                 # significance = [random.randint(0, 1) for _ in range(signal_length)]  # generate random list
@@ -2350,7 +2355,7 @@ class Analysis:
                                                      color=ttest_marker_colour),  # adjust colour
                                          text=p_values,
                                          showlegend=False,
-                                         hovertemplate='time=%{x}, p_value=%{text}'),
+                                         hovertemplate=signals['label'] + ': time=%{x}, p_value=%{text}'),
                               row=1,
                               col=1)
                 # add label with signals that are compared
@@ -2378,6 +2383,11 @@ class Analysis:
                 [p_values, significance] = self.anova(signal_1=signals['signal_1'],
                                                       signal_2=signals['signal_2'],
                                                       signal_3=signals['signal_3'])
+                # save results to csv
+                df_anova = pd.DataFrame(columns=['t', 'p-value'])  # dataframe to save to csv
+                df_anova['t'] = list(range(len(signals['signal_1'])))
+                df_anova['p-value'] = p_values
+                df_anova.to_csv(os.path.join(dc.settings.output_dir, signals['label'] + '_' + name_file + '.csv'))
                 # add to the plot
                 signal_length = len(signals['signal_1'])  # get the length of 'signal_1'
                 significance = [random.randint(0, 1) for _ in range(signal_length)]  # generate random list
@@ -3136,7 +3146,7 @@ class Analysis:
 
     def ttest(self, signal_1, signal_2, type='two-sided', paired=True):
         """
-        Perform a t-test on two signals, computing p-values and significance.
+        Perform a ttest on two signals, computing p-values and significance.
 
         Args:
             signal_1 (list): First signal, a list of numeric values.
