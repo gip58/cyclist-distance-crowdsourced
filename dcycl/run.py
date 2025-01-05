@@ -177,7 +177,7 @@ if __name__ == '__main__':
                                                ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                ttest_annotations_font_size=10,
                                                ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                               anova_signals=anova_signals,
+                                               anova_signals=None,
                                                anova_marker='cross',
                                                anova_marker_size=3,
                                                anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
@@ -195,18 +195,17 @@ if __name__ == '__main__':
                                     save_final=dc.common.get_configs('save_figures'))
             # keypress based on the type of distance
             # prepare pairs of signals to compare with ttest
-            # todo: @Giovanni, check
-            ttest_signals = [{'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == '0.8 m']['kp_raw'][0]),  # 0.8 m vs B1.6 m # noqa: E501
-                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == '1.6 m']['kp_raw'][0]),  # noqa: E501
-                              'label': 'ttest(Control, Bike laser projection)',
+            ttest_signals = [{'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 0.8]['kp_raw'][0]),  # 0.8 m vs 1.6 m # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 1.6]['kp_raw'][0]),  # noqa: E501
+                              'label': 'ttest(0.8, 1.6)',
                               'paired': True},
-                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == '0.8 m']['kp_raw'][0]),  # 0.8 m vs 2.4 m  # noqa: E501
-                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == '2.4 m']['kp_raw'][0]),  # noqa: E501
-                              'label': 'ttest(Control, Vertical sign)',
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 0.8]['kp_raw'][0]),  # 0.8 m vs 2.4 m  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 2.4]['kp_raw'][0]),  # noqa: E501
+                              'label': 'ttest(0.8, 2.4)',
                               'paired': True},
-                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == '1.6 m']['kp_raw'][0]),  # 1.6 m vs 2.4 m  # noqa: E501
-                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == '2.4 m']['kp_raw'][0]),  # noqa: E501
-                              'label': 'ttest(Control, Vertical sign)',
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 1.6]['kp_raw'][0]),  # 1.6 m vs 2.4 m  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 2.4]['kp_raw'][0]),  # noqa: E501
+                              'label': 'ttest(1.6, 2.4)',
                               'paired': True}]
             # prepare signals to compare with ANOVA
             # todo: signals for ANOVA
@@ -247,7 +246,7 @@ if __name__ == '__main__':
                                       ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_annotations_font_size=10,
                                       ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      anova_signals=anova_signals,
+                                      anova_signals=None,
                                       anova_marker='cross',
                                       anova_marker_size=3,
                                       anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
@@ -283,18 +282,18 @@ if __name__ == '__main__':
                               'paired': True}]
             # prepare signals to compare with ANOVA
             # todo: signals for ANOVA
-            anova_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp'],
-                              'signal_2': df.loc['video_' + str(ids[0])]['kp'],
-                              'signal_3': df.loc['video_' + str(ids[0])]['kp'],
-                              'label': 'anova(0, 1, 2)'},
-                             {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
-                              'signal_2': df.loc['video_' + str(ids[0])]['kp'],
-                              'signal_3': df.loc['video_' + str(ids[0])]['kp'],
-                              'label': 'anova(0, 2, 3)'},
-                             {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
-                              'signal_2': df.loc['video_' + str(ids[0])]['kp'],
-                              'signal_3': df.loc['video_' + str(ids[0])]['kp'],
-                              'label': 'anova(1, 2, 3)'}]
+            # anova_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp'],
+            #                   'signal_2': df.loc['video_' + str(ids[0])]['kp'],
+            #                   'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+            #                   'label': 'anova(0, 1, 2)'},
+            #                  {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
+            #                   'signal_2': df.loc['video_' + str(ids[0])]['kp'],
+            #                   'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+            #                   'label': 'anova(0, 2, 3)'},
+            #                  {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
+            #                   'signal_2': df.loc['video_' + str(ids[0])]['kp'],
+            #                   'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+            #                   'label': 'anova(1, 2, 3)'}]
             # todo: check if legend labels are in correct order
             analysis.plot_kp_variable(mapping,
                                       'interaction',
@@ -327,7 +326,7 @@ if __name__ == '__main__':
                                       ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_annotations_font_size=10,
                                       ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      anova_signals=anova_signals,
+                                      anova_signals=None,
                                       anova_marker='cross',
                                       anova_marker_size=3,
                                       anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
