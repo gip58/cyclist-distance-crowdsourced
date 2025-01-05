@@ -8,7 +8,6 @@ from statistics import mean
 import warnings
 from shapely.geometry.polygon import Polygon
 from shapely.geometry import Point
-# import math
 import dcycl as dc
 
 # warning about partial assignment

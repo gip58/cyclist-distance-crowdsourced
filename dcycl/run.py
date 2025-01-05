@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import matplotlib._pylab_helpers
 from tqdm import tqdm
 import os
-import dcycl as dc
 from statistics import mean
+import dcycl as dc
 dc.logs(show_level='info', show_color=True)
 logger = dc.CustomLogger(__name__)  # use custom logger
 
@@ -195,18 +195,18 @@ if __name__ == '__main__':
                                     save_final=dc.common.get_configs('save_figures'))
             # keypress based on the type of distance
             # prepare pairs of signals to compare with ttest
-            # todo: @Giovanni, make this list
-            ttest_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 1 = between
-                              'signal_2': df.loc['video_' + str(ids[1])]['kp_raw'][0],
-                              'label': 'ttest(' + 'video_' + str(ids[0]) + ',' + 'video_' + str(ids[1]) + ')',
+            # todo: @Giovanni, check
+            ttest_signals = [{'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == '0.8 m']['kp_raw'][0]),  # 0.8 m vs B1.6 m # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == '1.6 m']['kp_raw'][0]),  # noqa: E501
+                              'label': 'ttest(Control, Bike laser projection)',
                               'paired': True},
-                             {'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 2 = between
-                              'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
-                              'label': 'ttest(' + 'video_' + str(ids[0]) + ',' + 'video_' + str(ids[2]) + ')',
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == '0.8 m']['kp_raw'][0]),  # 0.8 m vs 2.4 m  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == '2.4 m']['kp_raw'][0]),  # noqa: E501
+                              'label': 'ttest(Control, Vertical sign)',
                               'paired': True},
-                             {'signal_1': df.loc['video_' + str(ids[1])]['kp_raw'][0],  # 1 and 2 = between
-                              'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
-                              'label': 'ttest(' + 'video_' + str(ids[1]) + ',' + 'video_' + str(ids[2]) + ')',
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == '1.6 m']['kp_raw'][0]),  # 1.6 m vs 2.4 m  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == '2.4 m']['kp_raw'][0]),  # noqa: E501
+                              'label': 'ttest(Control, Vertical sign)',
                               'paired': True}]
             # prepare signals to compare with ANOVA
             # todo: signals for ANOVA
@@ -257,18 +257,29 @@ if __name__ == '__main__':
                                       save_final=dc.common.get_configs('save_figures'))
             # keypress based on the type of interaction
             # prepare pairs of signals to compare with ttest
-            # todo: @Giovanni, make this list
-            ttest_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 1 = between
-                              'signal_2': df.loc['video_' + str(ids[1])]['kp_raw'][0],
-                              'label': 'ttest(' + 'video_' + str(ids[0]) + ',' + 'video_' + str(ids[1]) + ')',
+            ttest_signals = [{'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'][0]),  # Control vs Bike laser projection  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'bike_laser_projection']['kp_raw'][0]),  # noqa: E501
+                              'label': 'ttest(Control, Bike laser projection)',
                               'paired': True},
-                             {'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 2 = between
-                              'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
-                              'label': 'ttest(' + 'video_' + str(ids[0]) + ',' + 'video_' + str(ids[2]) + ')',
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'][0]),  # Control vs Vertical sign  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'vertical_sign']['kp_raw'][0]),  # noqa: E501
+                              'label': 'ttest(Control, Vertical sign)',
                               'paired': True},
-                             {'signal_1': df.loc['video_' + str(ids[1])]['kp_raw'][0],  # 1 and 2 = between
-                              'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
-                              'label': 'ttest(' + 'video_' + str(ids[1]) + ',' + 'video_' + str(ids[2]) + ')',
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'][0]),  # Control vs Danish sign  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'danish_sign']['kp_raw'][0]),  # noqa: E501
+                              'label': 'ttest(Control, Danish sign)',
+                              'paired': True},
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'][0]),  # Control vs Car laser projection  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'car_laser_projection']['kp_raw'][0]),  # noqa: E501
+                              'label': 'ttest(Control, Car laser projection)',
+                              'paired': True},
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'][0]),  # Control vs Unprotected cycling path  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'unprotected_cycling_path']['kp_raw'][0]),  # noqa: E501
+                              'label': 'ttest(Control, Unprotected cycling path)',
+                              'paired': True},
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'][0]),  # Control vs No road markings  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'no_road_markings']['kp_raw'][0]),  # noqa: E501
+                              'label': 'ttest(Control, No road markings)',
                               'paired': True}]
             # prepare signals to compare with ANOVA
             # todo: signals for ANOVA
@@ -658,3 +669,5 @@ if __name__ == '__main__':
         # show figures, if any
         if figures:
             plt.show()
+
+
