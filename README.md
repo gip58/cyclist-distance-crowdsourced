@@ -91,21 +91,38 @@ Scatter matrix.
 
 ## Area of Interest (AOI)
 ### For all participants
-[![end-slider](figures/hist_end2-scenario_number-0.png?raw=true)](https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_end2-scenario_number-0.html)
-Participans end slider respones to wich scenario was most helfull
+[![end-slider](figures/hist_end2-scenario_number-0.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_end2-scenario_number-0.html)
+Participants end slider respones to wich scenario was most helfull
 
-[![end-slider 2](figures/hist_end2-slider-0-0.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_end2-slider-0-0.html)
-Participans end slider respones expirianced to stress
+[![end-slider 2](figures/hist_end2-slider-0-0.png?raw=true)](https://htmlpreview.github.io/?https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_end2-slider-0-0.html)
+Participants end slider respones experienced to stress
 
-[![end-slider 2](figures/hist_driving_freq.png?raw=true)](https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_driving_freq.html)
-Participans driving experiences
+#### Information on participants
 
-[![end-slider 2](figures/hist_cycling_freq.png?raw=true)](https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_cycling_freq.html)
-Participans cycling experiences
+[![end-slider 3](figures/hist_driving_freq.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_driving_freq.html)
+Participants driving experiences
 
+[![year of license](figures/map_year_license.png)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/map_year_license.html)  
+Year of obtaining driver's license.
 
+[![map of counts of participants](figures/map_counts.png)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/map_counts.html)  
+Map of counts of participants.
+
+[![map of age](figures/map_age.png)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/map_age.html)  
+Map of age of participants.
+
+[![map of gender](figures/map_gender.png)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/map_gender.html)  
+Map of distribution of gender.
+
+[![end-slider 4](figures/hist_cycling_freq.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_cycling_freq.html)
+Participants cycling experiences
 
 ### For only lab participants
+[![lab-results](figures/plotly_graph_recorded_distace.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/plotly_graph_recorded_distace.html)
+Participants distance record per scenario
+
+[![lab-results](figures/preferences_distances.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/preferences_distances.htmll)
+Participants preferences and avrage distance of the overtake
 
 ## Troubleshooting
 ### Troubleshooting setup
