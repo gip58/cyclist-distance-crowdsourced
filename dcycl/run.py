@@ -158,6 +158,7 @@ if __name__ == '__main__':
                                                xaxis_kp_range=[0, 20],
                                                # hardcode based on the highest recorded value
                                                yaxis_kp_range=[0, 20],
+                                               yaxis_step=5,
                                                events=events,
                                                events_width=1,
                                                events_dash='dot',
@@ -171,6 +172,8 @@ if __name__ == '__main__':
                                                font_size=16,
                                                legend_x=0.71,
                                                legend_y=1.0,
+                                               fig_save_width=1600,   # preserve ratio 225x152
+                                               fig_save_height=1080,  # preserve ratio 225x152
                                                ttest_signals=ttest_signals,
                                                ttest_marker='circle',
                                                ttest_marker_size=3,
@@ -183,9 +186,8 @@ if __name__ == '__main__':
                                                anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                anova_annotations_font_size=10,
                                                anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                               ttest_anova_row_height=0.5,
                                                name_file='kp_videos_sliders_'+','.join([str(i) for i in ids]),
-                                               fig_save_width=1600,   # preserve ratio 225x152
-                                               fig_save_height=1080,  # preserve ratio 225x152
                                                save_file=True,
                                                save_final=dc.common.get_configs('save_figures'))
             # keypresses of all videos individually
@@ -197,15 +199,15 @@ if __name__ == '__main__':
             # prepare pairs of signals to compare with ttest
             ttest_signals = [{'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 0.8]['kp_raw'].iloc[0]),  # 0.8 m vs 1.6 m # noqa: E501
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 1.6]['kp_raw'].iloc[0]),  # noqa: E501
-                              'label': 'ttest(0.8, 1.6)',
+                              'label': 'ttest(0.8 m, 1.6 m)',
                               'paired': True},
                              {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 0.8]['kp_raw'].iloc[0]),  # 0.8 m vs 2.4 m  # noqa: E501
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 2.4]['kp_raw'].iloc[0]),  # noqa: E501
-                              'label': 'ttest(0.8, 2.4)',
+                              'label': 'ttest(0.8 m, 2.4 m)',
                               'paired': True},
                              {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 1.6]['kp_raw'].iloc[0]),  # 1.6 m vs 2.4 m  # noqa: E501
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 2.4]['kp_raw'].iloc[0]),  # noqa: E501
-                              'label': 'ttest(1.6, 2.4)',
+                              'label': 'ttest(1.6 m, 2.4 m)',
                               'paired': True}]
             # prepare signals to compare with ANOVA
             # todo: signals for ANOVA
@@ -234,6 +236,7 @@ if __name__ == '__main__':
                                       xaxis_range=[0, 20],
                                       # hardcode based on the highest recorded value
                                       yaxis_range=[0, 20],
+                                      yaxis_step=5,
                                       events=events,
                                       events_width=1,
                                       events_dash='dot',
@@ -252,6 +255,7 @@ if __name__ == '__main__':
                                       anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       anova_annotations_font_size=10,
                                       anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                      ttest_anova_row_height=0.5,
                                       save_file=True,
                                       save_final=dc.common.get_configs('save_figures'))
             # keypress based on the type of interaction
@@ -314,6 +318,7 @@ if __name__ == '__main__':
                                       xaxis_range=[0, 20],
                                       # hardcode based on the highest recorded value
                                       yaxis_range=[0, 20],
+                                      yaxis_step=5,
                                       events=events,
                                       events_width=1,
                                       events_dash='dot',
@@ -332,6 +337,7 @@ if __name__ == '__main__':
                                       anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       anova_annotations_font_size=10,
                                       anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
+                                      ttest_anova_row_height=0.5,
                                       save_file=True,
                                       save_final=dc.common.get_configs('save_figures'))
         # Visualisation of stimulus data
@@ -668,5 +674,3 @@ if __name__ == '__main__':
         # show figures, if any
         if figures:
             plt.show()
-
-
