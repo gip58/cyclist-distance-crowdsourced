@@ -3078,7 +3078,7 @@ class Analysis:
         else:
             fig.show()
 
-    def save_plotly(self, fig, name, remove_margins=False, width=1320, height=680, save_eps=True, save_png=True,
+    def save_plotly(self, fig, name, remove_margins=False, width=1320, height=680, save_eps=False, save_png=True,
                     save_html=True, open_browser=True, save_mp4=False, save_final=False):
         """
         Helper function to save figure as html file.
