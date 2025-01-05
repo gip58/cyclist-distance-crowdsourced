@@ -719,7 +719,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -846,7 +846,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -971,7 +971,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -1106,7 +1106,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -1196,7 +1196,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -1394,7 +1394,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -1468,7 +1468,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -1563,7 +1563,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -1679,7 +1679,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -1757,7 +1757,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -1869,7 +1869,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -1955,7 +1955,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -2103,7 +2103,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -2475,7 +2475,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -2773,7 +2773,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -2892,7 +2892,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -3021,7 +3021,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -3073,7 +3073,7 @@ class Analysis:
                              remove_margins=True,
                              width=fig_save_width,
                              height=fig_save_height,
-                             save_final=True)  # also save as "final" figure
+                             save_final=save_final)  # also save as "final" figure
         # open it in localhost instead
         else:
             fig.show()
@@ -3102,7 +3102,8 @@ class Analysis:
         if not os.path.exists(path):
             os.makedirs(path)
         # build path for final figure
-        path_final = os.path.join(dc.settings.output_dir, self.folder_figures)
+        path_final = os.path.join(dc.settings.root_dir, self.folder_figures)
+        print(path_final)
         if save_final and not os.path.exists(path_final):
             os.makedirs(path_final)
         # limit name to max 200 char (for Windows)
