@@ -48,10 +48,64 @@ Analysis can be started by running python `cyclist-distance-crowdsourced/dcycl/r
 
 ## Keypress data
 ### All participants
-[![plot_all_all_videos](figures/kp_videos.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/figures/kp_videos.html)
+[![plot_all_all_videos 1](figures/kp_videos.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos.html)
 Percentage of participants pressing the response key as a function of elapsed video time for all stimuli for all participants.
 
+[![plot_all_all_videos 2](figures/kp_distance-0.8-1.6-2.4.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_distance-0.8-1.6-2.4)
+Percentage of participants pressing the response key as a function of elapsed video time for all stimuli grouped by distance.
 
+[![plot_all_all_videos 3](figures/kp_interaction-bike_laser_projection-vertical_sign-danish_sign-car_laser_projection-control-unprotected_c.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_interaction-bike_laser_projection-vertical_sign-danish_sign-car_laser_projection-control-unprotected_c.html)
+Percentage of participants pressing the response key as a function of elapsed video time for grouped scenarios.
+
+
+### Keypress Percentage by Scenario
+
+
+[![plot_keypress_by_scenario 1](figures/kp_videos_sliders_0,1,2.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_0%2C1%2C2.html)
+ Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 1
+
+[![plot_keypress_by_scenario 2](figures/kp_videos_sliders_3,4,5.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_3%2C4%2C5.html)
+Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 2
+
+[![plot_keypress_by_scenario 3](figures/kp_videos_sliders_6,7,8.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_6%2C7%2C8.html)
+Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 3
+
+[![plot_keypress_by_scenario 4](figures/kp_videos_sliders_9,10,11.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_9%2C10%2C11.html)
+Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 4
+
+[![plot_keypress_by_scenario 5](figures/kp_videos_sliders_12,13,14.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_12%2C13%2C14.htmll)
+Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 5
+
+[![plot_keypress_by_scenario 6](figures/kp_videos_sliders_15,16,17.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_15%2C16%2C17.html)
+Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 6
+
+[![plot_keypress_by_scenario 7](figures/kp_videos_sliders_18,19,20.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_18%2C19%2C20.html)
+Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 7
+
+#### Correlation and scatter matrices
+![correlation matrix](https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/corr_matrix.jpg)  
+Correlation matrix.
+
+[![scatter matrix](figures/scatter_matrix.png)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/scatter_matrix.html)  
+Scatter matrix.
+
+## Area of Interest (AOI)
+### For all participants
+[![end-slider](figures/hist_end2-scenario_number-0.png?raw=true)](https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_end2-scenario_number-0.html)
+Participans end slider respones to wich scenario was most helfull
+
+[![end-slider 2](figures/hist_end2-slider-0-0.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_end2-slider-0-0.html)
+Participans end slider respones expirianced to stress
+
+[![end-slider 2](figures/hist_driving_freq.png?raw=true)](https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_driving_freq.html)
+Participans driving experiences
+
+[![end-slider 2](figures/hist_cycling_freq.png?raw=true)](https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_cycling_freq.html)
+Participans cycling experiences
+
+
+
+### For only lab participants
 
 ## Troubleshooting
 ### Troubleshooting setup
