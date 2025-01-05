@@ -3268,7 +3268,7 @@ class Analysis:
 
     def save_stats_csv(self, t, p_values, name_file):
         """Save results of statistical test in csv.
-        
+
         Args:
             t (list): list of time slices.
             p_values (list): list of p values.
