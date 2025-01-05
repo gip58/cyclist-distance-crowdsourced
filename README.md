@@ -46,6 +46,13 @@ The source files of the video stimuli are outputted from Unity to `config.path_s
 ## Analysis
 Analysis can be started by running python `cyclist-distance-crowdsourced/dcycl/run.py`. A number of CSV files used for data processing are saved in `cyclist-distance-crowdsourced/_output`. Visualisations of all data are saved in `cyclist-distance-crowdsourced/_output/figures/`.
 
+## Keypress data
+### All participants
+[![plot_all_all_videos](figures/kp_videos.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/figures/kp_videos.html)
+Percentage of participants pressing the response key as a function of elapsed video time for all stimuli for all participants.
+
+
+
 ## Troubleshooting
 ### Troubleshooting setup
 #### ERROR: cyclist-distance-crowdsourced is not a valid editable requirement
