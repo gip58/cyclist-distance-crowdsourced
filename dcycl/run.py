@@ -36,7 +36,7 @@ SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
 SHOW_OUTPUT_ST = True  # should figures with stimulus data be plotted
 SHOW_OUTPUT_PP = True  # should figures with info about participants be plotted
-SHOW_OUTPUT_ET = True  # should figures for eye tracking be plotted
+SHOW_OUTPUT_ET = False  # should figures for eye tracking be plotted
 
 file_mapping = 'mapping.p'  # file to save updated mapping
 file_coords = 'coords.p'  # file to save lists with coordinates
@@ -200,20 +200,12 @@ if __name__ == '__main__':
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 2.4]['kp_raw'].iloc[0]),  # noqa: E501
                               'label': 'ttest(1.6 m, 2.4 m)',
                               'paired': True}]
-            # prepare signals to compare with ANOVA
-            # todo: signals for ANOVA
-            anova_signals = [{'signal_1': df.loc['V' + str(ids[0])]['kp'],
-                              'signal_2': df.loc['V' + str(ids[0])]['kp'],
-                              'signal_3': df.loc['V' + str(ids[0])]['kp'],
-                              'label': 'anova(0, 1, 2)'},
-                             {'signal_1': df.loc['V' + str(ids[0])]['kp'],
-                              'signal_2': df.loc['V' + str(ids[0])]['kp'],
-                              'signal_3': df.loc['V' + str(ids[0])]['kp'],
-                              'label': 'anova(0, 2, 3)'},
-                             {'signal_1': df.loc['V' + str(ids[0])]['kp'],
-                              'signal_2': df.loc['V' + str(ids[0])]['kp'],
-                              'signal_3': df.loc['V' + str(ids[0])]['kp'],
-                              'label': 'anova(1, 2, 3)'}]
+            # prepare signals to compare with oneway ANOVA on the res level
+            anova_signals = [{'signals': [dc.common.vertical_sum(mapping.loc[mapping['distance'] == 0.8]['kp_raw'].iloc[0]),   # keypress data  # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['distance'] == 1.6]['kp_raw'].iloc[0]),   # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['distance'] == 2.4]['kp_raw'].iloc[0])],  # noqa: E501
+                              'label': 'anova'}]
+            # plot keypress data
             analysis.plot_kp_variable(mapping,
                                       'distance',
                                       # custom labels for slider questions in the legend
@@ -240,7 +232,7 @@ if __name__ == '__main__':
                                       ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_annotations_font_size=10,
                                       ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      anova_signals=None,
+                                      anova_signals=anova_signals,
                                       anova_marker='cross',
                                       anova_marker_size=3,
                                       anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
@@ -275,21 +267,16 @@ if __name__ == '__main__':
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'no_road_markings']['kp_raw'].iloc[0]),  # noqa: E501
                               'label': 'ttest(Control, No road markings)',
                               'paired': True}]
-            # prepare signals to compare with ANOVA
-            # todo: signals for ANOVA
-            # anova_signals = [{'signal_1': df.loc['V' + str(ids[0])]['kp'],
-            #                   'signal_2': df.loc['V' + str(ids[0])]['kp'],
-            #                   'signal_3': df.loc['V' + str(ids[0])]['kp'],
-            #                   'label': 'anova(0, 1, 2)'},
-            #                  {'signal_1': df.loc['V' + str(ids[0])]['kp'],
-            #                   'signal_2': df.loc['V' + str(ids[0])]['kp'],
-            #                   'signal_3': df.loc['V' + str(ids[0])]['kp'],
-            #                   'label': 'anova(0, 2, 3)'},
-            #                  {'signal_1': df.loc['V' + str(ids[0])]['kp'],
-            #                   'signal_2': df.loc['V' + str(ids[0])]['kp'],
-            #                   'signal_3': df.loc['V' + str(ids[0])]['kp'],
-            #                   'label': 'anova(1, 2, 3)'}]
-            # todo: check if legend labels are in correct order
+            # prepare signals to compare with oneway ANOVA on the res level
+            anova_signals = [{'signals': [dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),                   # keypress data  # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'bike_laser_projection']['kp_raw'].iloc[0]),     # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'vertical_sign']['kp_raw'].iloc[0]),             # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'danish_sign']['kp_raw'].iloc[0]),               # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'car_laser_projection']['kp_raw'].iloc[0]),      # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'unprotected_cycling_path']['kp_raw'].iloc[0]),  # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'no_road_markings']['kp_raw'].iloc[0])],         # noqa: E501
+                              'label': 'anova'}]
+            # plot keypress data
             analysis.plot_kp_variable(mapping,
                                       'interaction',
                                       # custom labels for slider questions in the legend
@@ -322,7 +309,7 @@ if __name__ == '__main__':
                                       ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_annotations_font_size=10,
                                       ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      anova_signals=None,
+                                      anova_signals=anova_signals,
                                       anova_marker='cross',
                                       anova_marker_size=3,
                                       anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
