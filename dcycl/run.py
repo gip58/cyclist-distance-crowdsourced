@@ -31,12 +31,12 @@ FILTER_DATA = True  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
 REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = False  # extract points from heroku data
-UPDATE_MAPPING = True  # update mapping with keypress data
+UPDATE_MAPPING = False  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
 SHOW_OUTPUT_ST = True  # should figures with stimulus data be plotted
 SHOW_OUTPUT_PP = True  # should figures with info about participants be plotted
-SHOW_OUTPUT_ET = False  # should figures for eye tracking be plotted
+SHOW_OUTPUT_ET = True  # should figures for eye tracking be plotted
 
 file_mapping = 'mapping.p'  # file to save updated mapping
 file_coords = 'coords.p'  # file to save lists with coordinates
@@ -121,36 +121,27 @@ if __name__ == '__main__':
                 events = []
                 # add info to dictionary of events to be passed for plotting
                 events.append({'id': 1,
-                               'start': df.loc['video_' + str(ids[0]), 'overtake'] / 1000,  # type: ignore
-                               'end': df.loc['video_' + str(ids[0]), 'overtake'] / 1000,  # type: ignore
+                               'start': df.loc['V' + str(ids[0]), 'overtake'] / 1000,  # type: ignore
+                               'end': df.loc['V' + str(ids[0]), 'overtake'] / 1000,  # type: ignore
                                'annotation': None})
                 # prepare pairs of signals to compare with ttest
-                ttest_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 1 = between
-                                  'signal_2': df.loc['video_' + str(ids[1])]['kp_raw'][0],
-                                  'label': 'ttest(' + 'video_' + str(ids[0]) + ',' + 'video_' + str(ids[1]) + ')',
+                ttest_signals = [{'signal_1': df.loc['V' + str(ids[0])]['kp_raw'][0],  # 0 and 1 = between
+                                  'signal_2': df.loc['V' + str(ids[1])]['kp_raw'][0],
+                                  'label': 'ttest(' + 'V' + str(ids[0]) + ',' + 'V' + str(ids[1]) + ')',
                                   'paired': True},
-                                 {'signal_1': df.loc['video_' + str(ids[0])]['kp_raw'][0],  # 0 and 2 = between
-                                  'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
-                                  'label': 'ttest(' + 'video_' + str(ids[0]) + ',' + 'video_' + str(ids[2]) + ')',
+                                 {'signal_1': df.loc['V' + str(ids[0])]['kp_raw'][0],  # 0 and 2 = between
+                                  'signal_2': df.loc['V' + str(ids[2])]['kp_raw'][0],
+                                  'label': 'ttest(' + 'V' + str(ids[0]) + ',' + 'V' + str(ids[2]) + ')',
                                   'paired': True},
-                                 {'signal_1': df.loc['video_' + str(ids[1])]['kp_raw'][0],  # 1 and 2 = between
-                                  'signal_2': df.loc['video_' + str(ids[2])]['kp_raw'][0],
-                                  'label': 'ttest(' + 'video_' + str(ids[1]) + ',' + 'video_' + str(ids[2]) + ')',
+                                 {'signal_1': df.loc['V' + str(ids[1])]['kp_raw'][0],  # 1 and 2 = between
+                                  'signal_2': df.loc['V' + str(ids[2])]['kp_raw'][0],
+                                  'label': 'ttest(' + 'V' + str(ids[1]) + ',' + 'V' + str(ids[2]) + ')',
                                   'paired': True}]
-                # prepare signals to compare with ANOVA
-                # todo: signals for ANOVA
-                anova_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp'],
-                                  'signal_2': df.loc['video_' + str(ids[0])]['kp'],
-                                  'signal_3': df.loc['video_' + str(ids[0])]['kp'],
-                                  'label': 'anova(0, 1, 2)'},
-                                 {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
-                                  'signal_2': df.loc['video_' + str(ids[0])]['kp'],
-                                  'signal_3': df.loc['video_' + str(ids[0])]['kp'],
-                                  'label': 'anova(0, 2, 3)'},
-                                 {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
-                                  'signal_2': df.loc['video_' + str(ids[0])]['kp'],
-                                  'signal_3': df.loc['video_' + str(ids[0])]['kp'],
-                                  'label': 'anova(1, 2, 3)'}]
+                # prepare signals to compare with oneway ANOVA on the res level
+                anova_signals = [{'signals': [df.loc['V' + str(ids[0])]['kp_raw'][0],  # keypress data
+                                              df.loc['V' + str(ids[1])]['kp_raw'][0],  
+                                              df.loc['V' + str(ids[2])]['kp_raw'][0]],  
+                                  'label': 'anova'}]
                 # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(df,
                                                y=['space', 'estimate'],
@@ -180,7 +171,7 @@ if __name__ == '__main__':
                                                ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                ttest_annotations_font_size=10,
                                                ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                               anova_signals=None,
+                                               anova_signals=anova_signals,
                                                anova_marker='cross',
                                                anova_marker_size=3,
                                                anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
@@ -211,17 +202,17 @@ if __name__ == '__main__':
                               'paired': True}]
             # prepare signals to compare with ANOVA
             # todo: signals for ANOVA
-            anova_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp'],
-                              'signal_2': df.loc['video_' + str(ids[0])]['kp'],
-                              'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+            anova_signals = [{'signal_1': df.loc['V' + str(ids[0])]['kp'],
+                              'signal_2': df.loc['V' + str(ids[0])]['kp'],
+                              'signal_3': df.loc['V' + str(ids[0])]['kp'],
                               'label': 'anova(0, 1, 2)'},
-                             {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
-                              'signal_2': df.loc['video_' + str(ids[0])]['kp'],
-                              'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+                             {'signal_1': df.loc['V' + str(ids[0])]['kp'],
+                              'signal_2': df.loc['V' + str(ids[0])]['kp'],
+                              'signal_3': df.loc['V' + str(ids[0])]['kp'],
                               'label': 'anova(0, 2, 3)'},
-                             {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
-                              'signal_2': df.loc['video_' + str(ids[0])]['kp'],
-                              'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+                             {'signal_1': df.loc['V' + str(ids[0])]['kp'],
+                              'signal_2': df.loc['V' + str(ids[0])]['kp'],
+                              'signal_3': df.loc['V' + str(ids[0])]['kp'],
                               'label': 'anova(1, 2, 3)'}]
             analysis.plot_kp_variable(mapping,
                                       'distance',
@@ -286,17 +277,17 @@ if __name__ == '__main__':
                               'paired': True}]
             # prepare signals to compare with ANOVA
             # todo: signals for ANOVA
-            # anova_signals = [{'signal_1': df.loc['video_' + str(ids[0])]['kp'],
-            #                   'signal_2': df.loc['video_' + str(ids[0])]['kp'],
-            #                   'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+            # anova_signals = [{'signal_1': df.loc['V' + str(ids[0])]['kp'],
+            #                   'signal_2': df.loc['V' + str(ids[0])]['kp'],
+            #                   'signal_3': df.loc['V' + str(ids[0])]['kp'],
             #                   'label': 'anova(0, 1, 2)'},
-            #                  {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
-            #                   'signal_2': df.loc['video_' + str(ids[0])]['kp'],
-            #                   'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+            #                  {'signal_1': df.loc['V' + str(ids[0])]['kp'],
+            #                   'signal_2': df.loc['V' + str(ids[0])]['kp'],
+            #                   'signal_3': df.loc['V' + str(ids[0])]['kp'],
             #                   'label': 'anova(0, 2, 3)'},
-            #                  {'signal_1': df.loc['video_' + str(ids[0])]['kp'],
-            #                   'signal_2': df.loc['video_' + str(ids[0])]['kp'],
-            #                   'signal_3': df.loc['video_' + str(ids[0])]['kp'],
+            #                  {'signal_1': df.loc['V' + str(ids[0])]['kp'],
+            #                   'signal_2': df.loc['V' + str(ids[0])]['kp'],
+            #                   'signal_3': df.loc['V' + str(ids[0])]['kp'],
             #                   'label': 'anova(1, 2, 3)'}]
             # todo: check if legend labels are in correct order
             analysis.plot_kp_variable(mapping,
@@ -537,8 +528,8 @@ if __name__ == '__main__':
                 # that looks compared to the heatmap.
 
                 # analysis.create_gazes(heroku_data,
-                #                       x='video_'+str(id_video)+'-x-0',
-                #                       y='video_'+str(id_video)+'-y-0',
+                #                       x='V'+str(id_video)+'-x-0',
+                #                       y='V'+str(id_video)+'-y-0',
 
                 #                       # pp='R51701252541887JF46247X',
                 #                       id_video=id_video,
@@ -563,7 +554,7 @@ if __name__ == '__main__':
                 # To create animation for scenario 1,2,3 & 4 in the
                 # same animation extract for all senarios.
                 # for individual animations or scenario
-                dur = heroku_data['video_'+str(id_video)+'-dur-0'].tolist()
+                dur = heroku_data['V'+str(id_video)+'-dur-0'].tolist()
                 dur = [x for x in dur if str(x) != 'nan']
                 dur = int(round(mean(dur) / 1000) * 1000)
                 hm_resolution_range = int(50000 / dc.common.get_configs('hm_resolution'))
@@ -605,8 +596,8 @@ if __name__ == '__main__':
                                           save_anim=True,
                                           save_frames=True)
                 # analysis.create_heatmap(heroku_data,
-                #                         x='video_'+str(id_video)+'-x-0',
-                #                         y='video_'+str(id_video)+'-y-0',
+                #                         x='V'+str(id_video)+'-x-0',
+                #                         y='V'+str(id_video)+'-y-0',
                 #                         pp='R51701252541887JF46247X',
                 #                         id_video=id_video,
                 #                         type_heatmap='contourf',
@@ -614,15 +605,15 @@ if __name__ == '__main__':
                 #                         save_file=True)
                 # # Animate the kp for given source video.
                 # analysis.plot_kp_animate(mapping,
-                #                          'video_'+str(id_video),
+                #                          'V'+str(id_video),
                 #                          conf_interval=0.95)
                 #
                 # # Create an animation from individual frames
                 # #
                 # analysis.create_animation(heroku_data,
-                #                           x='video_'+str(id_video)+'-x-0',
-                #                           y='video_'+str(id_video)+'-y-0',
-                #                           t='video_'+str(id_video)+'-t-0',
+                #                           x='V'+str(id_video)+'-x-0',
+                #                           y='V'+str(id_video)+'-y-0',
+                #                           t='V'+str(id_video)+'-t-0',
                 #                           pp='R51701252541887JF46247X',
                 #                           id_video=id_video,
                 #                           save_anim=True,
