@@ -25,8 +25,8 @@ from scipy.signal import savgol_filter
 from scipy.stats.kde import gaussian_kde
 from scipy.stats import ttest_rel, ttest_ind, f_oneway
 import cv2
+
 import dcycl as dc
-import random
 
 
 matplotlib.use('TkAgg')
