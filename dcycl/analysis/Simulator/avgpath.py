@@ -4,22 +4,38 @@ import numpy as np
 import plotly.graph_objects as go
 from OneEuroFilter import OneEuroFilter
 
+from scipy.interpolate import interp1d
+
 def calculate_traveled_distance(x, y):
     """
-    Calculate the traveled distance based on X and Y positions, accounting for curvature.
+    Calculate the cumulative traveled distance along a path given X and Y coordinates.
     """
-    distances = np.sqrt(np.diff(x)**2 + np.diff(y)**2)
-    return np.insert(np.cumsum(distances), 0, 0)
+    # Calculate the differences between consecutive points
+    dx = np.diff(x)
+    dy = np.diff(y)
+    # Calculate the distance for each segment and sum it up
+    distances = np.sqrt(dx**2 + dy**2)
+    traveled_distance = np.cumsum(distances)
+    # Add a starting point of zero
+    return np.insert(traveled_distance, 0, 0)
 
-def calculate_lateral_deviation(car_x, car_y, cyclist_x, cyclist_y):
+def calculate_lateral_deviation(car_y, cyclist_y):
     """
-    Calculate the lateral deviation between car and cyclist positions.
+    Calculate the lateral deviation as the absolute Y difference between the car and cyclist.
     """
-    # Ensure both arrays have the same length by interpolating cyclist data
-    cyclist_x_resampled = np.interp(np.linspace(0, len(cyclist_x)-1, len(car_x)), np.arange(len(cyclist_x)), cyclist_x)
-    cyclist_y_resampled = np.interp(np.linspace(0, len(cyclist_y)-1, len(car_y)), np.arange(len(cyclist_y)), cyclist_y)
+    return np.abs(car_y - cyclist_y)
 
-    return np.sqrt((car_x - cyclist_x_resampled)**2 + (car_y - cyclist_y_resampled)**2)
+def align_cyclist_to_car(car_x, car_y, cyclist_x, cyclist_y):
+    """
+    Interpolate cyclist data to align its length with car data.
+    """
+    # Create interpolation functions for cyclist Y based on cyclist X
+    interp_func_y = interp1d(cyclist_x, cyclist_y, kind='linear', fill_value="extrapolate")
+
+    # Interpolate cyclist Y to match car X positions
+    aligned_cyclist_y = interp_func_y(car_x)
+
+    return aligned_cyclist_y
 
 # Define the main folder path containing all scenario CSV files
 main_folder = "Avrage_path"  # Replace with the path to your main folder
@@ -32,7 +48,9 @@ scenario_files = [os.path.join(main_folder, file) for file in os.listdir(main_fo
 cyclist_data = pd.read_csv(cyclist_file)
 cyclist_x = cyclist_data["cyclist_dataX"].values
 cyclist_y = cyclist_data["cyclist_dataY"].values
-cyclist_traveled_distance = calculate_traveled_distance(cyclist_x, cyclist_y)
+
+# Flip cyclist X-axis
+cyclist_x = -cyclist_x
 
 # Placeholder for storing paths across scenarios
 all_paths = []
@@ -49,11 +67,17 @@ for i, file_path in enumerate(scenario_files):
     car_x = scenario_data["X"].values
     car_y = scenario_data["Y"].values
 
+    # Flip car X-axis
+    car_x = -car_x
+
+    # Align cyclist data to match car data
+    aligned_cyclist_y = align_cyclist_to_car(car_x, car_y, cyclist_x, cyclist_y)
+
     # Calculate traveled distance for the car
     car_traveled_distance = calculate_traveled_distance(car_x, car_y)
 
-    # Calculate lateral deviation between car and cyclist
-    lateral_deviation = calculate_lateral_deviation(car_x, car_y, cyclist_x, cyclist_y)
+    # Calculate lateral deviation (absolute difference in Y)
+    lateral_deviation = calculate_lateral_deviation(car_y, aligned_cyclist_y)
 
     # Smooth the data using OneEuroFilter
     smoothed_distance = []
@@ -72,11 +96,11 @@ for i, (smoothed_distance, smoothed_deviation) in enumerate(all_paths):
         y=smoothed_deviation,
         mode='lines',
         line=dict(width=3),
-        name=f'Scenario {i+1} Smoothed Path'
+        name=f'Scenario {i+1} Smoothed Deviation'
     ))
 
 fig_filtered.update_layout(
-    title="Smoothed Overtaking Paths Across Scenarios",
+    title="Lateral Deviation from Cyclist During Overtaking",
     xaxis_title="Traveled Distance (m)",
     yaxis_title="Lateral Deviation (m)",
     legend_title="Legend",
@@ -84,6 +108,6 @@ fig_filtered.update_layout(
 )
 
 # Save the plot for OneEuroFilter smoothed paths
-filtered_html_path = "OneEuroFilter_Smoothed_Overtaking_Paths.html"
+filtered_html_path = "OneEuroFilter_Smoothed_Lateral_Deviation.html"
 fig_filtered.write_html(filtered_html_path)
-print(f"Smoothed paths plot saved: {filtered_html_path}")
+print(f"Smoothed lateral deviation plot saved: {filtered_html_path}")
