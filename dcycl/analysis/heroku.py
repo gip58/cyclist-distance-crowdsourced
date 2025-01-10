@@ -85,9 +85,7 @@ class Heroku:
         """
         old_shape = self.heroku_data.shape  # store old shape for logging
         self.heroku_data = heroku_data
-        logger.info('Updated heroku_data. Old shape: {}. New shape: {}.',
-                    old_shape,
-                    self.heroku_data.shape)
+        logger.info('Updated heroku_data. Old shape: {}. New shape: {}.', old_shape, self.heroku_data.shape)
 
     def read_data(self, filter_data=True):
         """Read data into an attribute.
@@ -113,8 +111,7 @@ class Heroku:
                 data_list += f.readlines()
                 f.close()
             # hold info on previous row for worker
-            prev_row_info = pd.DataFrame(columns=['worker_code',
-                                                  'time_elapsed'])
+            prev_row_info = pd.DataFrame(columns=['worker_code', 'time_elapsed'])
             prev_row_info.set_index('worker_code', inplace=True)
             # read rows in data
             for row in tqdm(data_list):  # tqdm adds progress bar
@@ -129,8 +126,7 @@ class Heroku:
                 # last time_elapsed for logging duration of trial and stimulus
                 elapsed_l = 0
                 elapsed_l_stim = 0
-                # record worker_code in the row. assuming that each row has at
-                # least one worker_code
+                # record worker_code in the row. assuming that each row has at least one worker_code
                 worker_code = [d['worker_code'] for d in list_row['data'] if 'worker_code' in d][0]
                 # go over cells in the row with data
                 for data_cell in list_row['data']:
@@ -140,8 +136,7 @@ class Heroku:
                             # piece of meta data found, update dictionary
                             dict_row[key] = data_cell[key]
                             if key == 'worker_code':
-                                logger.debug('{}: working with row with data.',
-                                             data_cell['worker_code'])
+                                logger.debug('{}: working with row with data.', data_cell['worker_code'])
                     # check if stimulus data is present
                     if 'stimulus' in data_cell.keys():
                         # record last timestamp before video
@@ -150,7 +145,8 @@ class Heroku:
                             # the length of the stimulus
                             if 'time_elapsed' in data_cell.keys():
                                 elapsed_l_stim = float(data_cell['time_elapsed'])
-                        # extract name of stimulus after last slash list of stimuli. use 1st
+                        # extract name of stimulus after last slash
+                        # list of stimuli. use 1st
                         if isinstance(data_cell['stimulus'], list):
                             stim_no_path = data_cell['stimulus'][0].rsplit('/', 1)[-1]
                         # single stimulus
@@ -158,13 +154,18 @@ class Heroku:
                             stim_no_path = data_cell['stimulus'].rsplit('/', 1)[-1]
                         # remove extension
                         stim_no_path = os.path.splitext(stim_no_path)[0]
-                        # check if it is a block with stimulus and not an instructions block
+                        # skip is videos from instructions
+                        if 'video_test_' in stim_no_path:
+                            continue
+                        # Check if it is a block with stimulus and not an
+                        # instructions block
                         if (dc.common.search_dict(self.prefixes, stim_no_path)
                                 is not None):
                             # stimulus is found
                             logger.debug('Found stimulus {}.', stim_no_path)
                             if self.prefixes['stimulus'] in stim_no_path:
-                                # record that stimulus was detected for the cells to follow
+                                # Record that stimulus was detected for the
+                                # cells to follow
                                 stim_name = stim_no_path
                                 # record trial of stimulus
                                 stim_trial = data_cell['trial_index']
@@ -206,7 +207,7 @@ class Heroku:
                             dict_row[stim_name + '-rt'].extend(rt)
                     # eye tracking data
                     if 'webgazer_data' in data_cell.keys() and stim_name != '':
-                        # record given keypresses
+                        # record eye tracking data
                         et_data = data_cell['webgazer_data']
                         logger.debug('Found {} points in eye tracking data.', len(et_data))
                         # extract x,y,t values
@@ -234,11 +235,11 @@ class Heroku:
                         else:
                             # previous values found
                             dict_row[stim_name + '-t'].extend(t)
-                    # slider questions after stimulus
+                    # questions after stimulus
                     if ('response' in data_cell.keys() and stim_name != '' and
                        data_cell['response'] is not None):
                         # check if it is not dictionary
-                        if 'slider-0' not in data_cell['response'] or 'scenario_number' in data_cell['response']:
+                        if 'slider-0' not in data_cell['response']:
                             continue
                         # record given answers
                         responses = data_cell['response']
@@ -247,9 +248,6 @@ class Heroku:
                         questions = []
                         answers = []
                         for key, value in responses.items():
-                            if key == 'slider-1':
-                                # Modify slider-1 data (scale from 0-100 to 0.5-2.5 meters)
-                                value = 0.5 + (int(value) / 100) * 2
                             questions.append(key)
                             answers.append(int(value))
                         # check if values were recorded previously
@@ -292,34 +290,24 @@ class Heroku:
                         else:
                             # previous values found
                             dict_row[stim_name + '-time'].extend(time)
-                    # questions after experiment
-                    if ('response' in data_cell.keys() and stim_name == '' and data_cell['response'] is not None):
+                    # sliders after experiment
+                    if ('response' in data_cell.keys() and stim_name == '' and
+                       data_cell['response'] is not None):
                         # check if it is not post-trial data
-                        if 'slider-2' not in data_cell['response'] and 'scenario_number' not in data_cell['response']:
+                        if 'slider-5' not in data_cell['response']:
                             continue
-                        # record given responses
+                        # record given keypresses
                         responses_end = data_cell['response']
-                        logger.debug('Found responses to the slider questions in the end {}.', responses_end)
-                        # slider questions
-                        if 'slider-2' in data_cell['response']:
-                            for key, value in responses_end.items():
-                                # check if values not already recorded
-                                if stim_name + 'end-' + key not in dict_row.keys():
-                                    # first value
-                                    dict_row['end-' + key] = value
-                                else:
-                                    # previous values found
-                                    dict_row['end-' + key].extend(value)
-                        # free form
-                        else:
-                            for key, value in responses_end.items():
-                                # check if values not already recorded
-                                if stim_name + 'end2-' + key not in dict_row.keys():
-                                    # first value
-                                    dict_row['end2-' + key] = value
-                                else:
-                                    # previous values found
-                                    dict_row['end2-' + key].extend(value)
+                        logger.debug('Found responses to the questions in ' +
+                                     'the end {}.', responses_end)
+                        for key, value in responses_end.items():
+                            # check if values not already recorded
+                            if stim_name + 'end-' + key not in dict_row.keys():
+                                # first value
+                                dict_row['end-' + key] = value
+                            else:
+                                # previous values found
+                                dict_row['end-' + key].extend(value)
                     # record last time_elapsed
                     if 'time_elapsed' in data_cell.keys():
                         elapsed_l = float(data_cell['time_elapsed'])
@@ -361,7 +349,7 @@ class Heroku:
             df = df.transpose()
             # report people that attempted study
             unique_worker_codes = df['worker_code'].drop_duplicates()
-            logger.info('People who attempted to participate: {}.', unique_worker_codes.shape[0])
+            logger.info('People who attempted to participate: {}', unique_worker_codes.shape[0])
             # filter data
             if filter_data:
                 df = self.filter_data(df)
@@ -376,8 +364,12 @@ class Heroku:
             dc.common.save_to_p(self.file_p, df, 'heroku data')
         # save to csv
         if self.save_csv:
+            # build path
+            if not os.path.exists(dc.settings.output_dir):
+                os.makedirs(dc.settings.output_dir)
+            # save to file
             df.to_csv(os.path.join(dc.settings.output_dir, self.file_data_csv), index=False)
-            logger.info('Saved heroku data to csv file {}.', self.file_data_csv + '.csv')
+            logger.info('Saved heroku data to csv file {}', self.file_data_csv + '.csv')
         # update attribute
         self.heroku_data = df
         # return df with data
@@ -469,6 +461,7 @@ class Heroku:
                                 # convert to point object
                                 point = Point(given_x[val]*norm_x,
                                               given_y[val]*norm_y)
+
                                 # check if point is within a polygon in the middle
                                 if polygon.contains(point):
                                     # point in the middle detected
@@ -489,8 +482,44 @@ class Heroku:
                                                                                         given_y[value]*norm_y])
                                     if duration < t_step:
                                         break
+                                    # start adding points to the points_duration list
+                                # iterate over all values given by the participand
+                                # for val in range(len(given_y)-1):
+                                #     # add coordinates
+                                #     if id_video not in points:
+                                #         points[id_video] = [[(coords[0]),
+                                #                             (coords[1])]]
+                                #     else:
+                                #         points[id_video].append([(coords[0]),
+                                #                                 (coords[1])])
+                                    # if stim_from_df.index[pp] not in points_worker:
+                                    #     points_worker[stim_from_df.index[pp]] = [[(coords[0]),
+                                    #                                              (coords[1])]]
+                                    # else:
+                                    #     points_worker[stim_from_df.index[pp]].append([(coords[0]),
+                                    #                                                   (coords[1])])
         # save to csv
         if save_csv:
+            # # all points for each image
+            # # create a dataframe to save to csv
+            # df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points.items()]))
+            # df_csv = df_csv.transpose()
+            # # save to csv
+            # df_csv.to_csv(dc.settings.output_dir + '/' +
+            #               self.file_points_csv + '.csv')
+            # logger.info('Saved dictionary of points to csv file {}.csv',
+            #             self.file_points_csv)
+            # all points for each worker
+            # create a dataframe to save to csv
+            # df_csv = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in points_worker.items()]))
+            # df_csv = df_csv.transpose()
+            # # save to csv
+            # df_csv.to_csv(dc.settings.output_dir + '/' +
+            #               self.file_points_worker_csv + '.csv')
+            # logger.info('Saved dictionary of points for each worker to csv ' +
+            #             'file {}.csv',
+            #             self.file_points_worker_csv)
+            # points for each image for each stimulus duration
             # create a dataframe to save to csv
             for duration in range(0, self.hm_resolution_range):
                 try:
@@ -513,12 +542,15 @@ class Heroku:
         # return points
         return points, points_worker, points_duration
 
-    def process_kp(self, filter_length=True):
+    def process_kp(self, df, filter_length=True, kp_col='kp', kp_raw_col='kp_raw'):
         """Process keypresses for resolution self.res.
+
+        Args:
+            df (dataframe): dataframe with data.
+            filter_length (bool, optional): filter out stimuli with unexpected length.
+
         Returns:
             mapping: updated mapping df.
-        Args:
-            filter_length (bool, optional): filter out stimuli with unexpected length.
         """
         logger.info('Processing keypress data with res={} ms.', self.res)
         # array to store all binned rt data
@@ -539,11 +571,11 @@ class Heroku:
             video_kp_raw = []
             # df to store keypresses in bins per pp for this individual stimulus with array of zeros to be able to
             # store counters for multiple repetitions
-            cols = len(self.heroku_data.index)
+            cols = len(df.index)
             rows = len(list(range(self.res, video_len + self.res, self.res)))
             pp_kp = pd.DataFrame([[np.zeros(self.num_repeat) * self.num_repeat for _ in range(cols)] for _ in range(rows)],  # noqa: E501
                                  index=list(range(self.res, video_len + self.res, self.res)),
-                                 columns=self.heroku_data.index)
+                                 columns=df.index)
             # go over repetitions
             for rep in range(self.num_repeat):
                 # add suffix with repetition ID
@@ -551,22 +583,22 @@ class Heroku:
                 video_dur = 'video_' + str(num) + '-dur-' + str(rep)
                 rt_data = []
                 counter_data = 0
-                for (col_name, col_data) in self.heroku_data.items():
+                for (col_name, col_data) in df.items():
                     # find the right column to loop through
                     if video_rt == col_name:
                         # loop through rows in column
                         for row_index, row in enumerate(col_data):
                             # consider only videos of allowed length
-                            if video_dur in self.heroku_data.keys() and filter_length:
+                            if video_dur in df.keys() and filter_length:
                                 # extract recorded duration
-                                dur = self.heroku_data.iloc[row_index][video_dur]
+                                dur = df.iloc[row_index][video_dur]
                                 # check if duration is within limits
                                 if dur < self.mapping['min_dur'][video_id] or dur > self.mapping['max_dur'][video_id]:
                                     # increase counter of filtered videos
                                     logger.debug('Filtered keypress data from video {} of detected duration of {} for '
                                                  + 'worker {}.',
                                                  video_id, dur,
-                                                 self.heroku_data.index[row_index])
+                                                 df.index[row_index])
                                     # increase counter of filtered videos
                                     counter_filtered = counter_filtered + 1
                                     continue
@@ -580,7 +612,7 @@ class Heroku:
                                     # record raw value for pp
                                     for rt_bin in range(self.res, video_len + self.res, self.res):
                                         if rt_bin - self.res < row[0] <= rt_bin:
-                                            pp_kp.at[rt_bin, self.heroku_data.index[row_index]][rep] = 1
+                                            pp_kp.at[rt_bin, df.index[row_index]][rep] = 1
                                 # if list contains more then one value, go  through list to remove keyholds
                                 elif len(row) > 1:
                                     # fill data gap for the first half a second (0.5 s) of holding the key
@@ -605,7 +637,7 @@ class Heroku:
                                         # record raw value for pp
                                         for rt_bin in range(self.res, video_len + self.res, self.res):
                                             if rt_bin - self.res < row[j] <= rt_bin:
-                                                pp_kp.at[rt_bin, self.heroku_data.index[row_index]][rep] = 1
+                                                pp_kp.at[rt_bin, df.index[row_index]][rep] = 1
                                 # if list contains more then one value, go  through list to remove keyholds
                         # print(self.heroku_data.index[row_index], video_id, pp_kp.sum())
                         # print(len(pp_kp.index))
@@ -655,11 +687,10 @@ class Heroku:
         if filter_length:
             logger.info('Filtered out keypress data from {} videos with unexpected length.', counter_filtered)
         # update own mapping to include keypress data
-        self.mapping['kp'] = mapping_rt
-        self.mapping['kp_raw'] = mapping_rt_raw
+        self.mapping[kp_col] = mapping_rt
+        self.mapping[kp_raw_col] = mapping_rt_raw
         # save to csv
         if self.save_csv:
-            # save to csv
             self.mapping.to_csv(os.path.join(dc.settings.output_dir, self.file_mapping_csv))
         # return new mapping
         return self.mapping
@@ -668,8 +699,7 @@ class Heroku:
         """Process questions that follow each stimulus.
 
         Args:
-            questions (list): list of questions with types of possible values
-                              as int or sdc.
+            questions (list): list of questions with types of possible values as int or str.
 
         Returns:
             dataframe: updated mapping dataframe.
@@ -723,10 +753,11 @@ class Heroku:
             for i, q in enumerate(questions):
                 if q['type'] == 'num' and answers[i]:
                     # convert to float
-                    answers[i] = [list(map(float, sublist)) for sublist in answers[i]]
+                    answers[i] = [list(map(float, sublist))
+                                  for sublist in answers[i]]
                     # calculate mean of mean of responses of each participant
                     with warnings.catch_warnings():
-                        warnings.simplefilter('ignore',  category=RuntimeWarning)
+                        warnings.simplefilter('ignore', category=RuntimeWarning)
                         answers[i] = np.nanmean([np.nanmean(j) for j in answers[i]])
             # save question data in array
             mapping_as.append(answers)
@@ -739,7 +770,8 @@ class Heroku:
                 self.mapping[q['question']] = q_ans
             # for textual question, add columns with counts of each value
             else:
-                # go over options and count answers with the option for each stimulus
+                # go over options and count answers with the option for each
+                # stimulus
                 for option in q['options']:
                     # store counts in list
                     count_option = []
@@ -757,8 +789,7 @@ class Heroku:
         # save to csv
         if self.save_csv:
             # save to csv
-            self.mapping.to_csv(os.path.join(dc.settings.output_dir,
-                                             self.file_mapping_csv))
+            self.mapping.to_csv(os.path.join(dc.settings.output_dir, self.file_mapping_csv))
         # return new mapping
         return self.mapping
 
@@ -774,7 +805,8 @@ class Heroku:
             centre bais
         """
         logger.info('Filtering heroku data.')
-        # 1. People who had too many stimuli of unexpected length
+        # 1. People who made mistakes in injected questions
+        # TODO: check for large lengths of videos.
         logger.info('Filter-h1. People who had too many stimuli of unexpected length.')
         # df to store data to filter out
         df_1 = pd.DataFrame()
@@ -811,7 +843,8 @@ class Heroku:
                 if counter_filtered / data_count > self.allowed_length:
                     # if threshold reached, append data of this participant to
                     # df_1
-                    df_1 = pd.concat([df_1, pd.DataFrame([row])], ignore_index=True)
+                    df_1 = pd.concat([df_1, pd.DataFrame([row])],
+                                     ignore_index=True)
         logger.info('Filter-h1. People who had more than {} share of stimuli of unexpected length: {}.',
                     self.allowed_length,
                     df_1.shape[0])

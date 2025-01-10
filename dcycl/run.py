@@ -31,15 +31,13 @@ FILTER_DATA = True  # filter Appen and heroku data
 CLEAN_DATA = True  # clean Appen data
 REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = False  # extract points from heroku data
-UPDATE_MAPPING = False  # update mapping with keypress data
+UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
 SHOW_OUTPUT_ST = True  # should figures with stimulus data be plotted
 SHOW_OUTPUT_PP = True  # should figures with info about participants be plotted
 SHOW_OUTPUT_ET = False  # should figures for eye tracking be plotted
 
-file_mapping = 'mapping.p'  # file to save updated mapping
-file_coords = 'coords.p'  # file to save lists with coordinates
 
 if __name__ == '__main__':
     # create object for working with heroku data
@@ -49,8 +47,8 @@ if __name__ == '__main__':
     heroku_data = heroku.read_data(filter_data=FILTER_DATA)
 
     # create object for working with appen data
-    file_appen = dc.common.get_configs('file_appen')
-    appen = dc.analysis.Appen(file_data=file_appen, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV)
+    files_appen = dc.common.get_configs('files_appen')
+    appen = dc.analysis.Appen(files_data=files_appen, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV)
     # read appen data
     appen_data = appen.read_data(filter_data=FILTER_DATA, clean_data=CLEAN_DATA)
     # read frames
@@ -72,21 +70,21 @@ if __name__ == '__main__':
     heroku.set_data(heroku_data)  # update object with filtered data
     appen_data = appen_data.set_index('worker_code')
     appen.set_data(appen_data)  # update object with filtered data
-    appen.show_info()  # show info for filtered data
+    appen.show_info(appen_data)  # show info for filtered data
     # generate country-specific data
-    countries_data = appen.process_countries()
+    countries_data = appen.process_countries(appen_data)
     # create arrays with coordinates for stimuli
     if CALC_COORDS:
         points, _, points_duration = heroku.points(heroku_data)
-        dc.common.save_to_p(file_coords, [points, points_duration], 'points data')
+        dc.common.save_to_p('coords.p', [points, points_duration], 'points data')
     else:
-        points, points_duration = dc.common.load_from_p(file_coords, 'points data')
+        points, points_duration = dc.common.load_from_p('coords.p', 'points data')
     # update mapping with keypress data
     if UPDATE_MAPPING:
         # read in mapping of stimuli
         mapping = heroku.read_mapping()
         # process keypresses and update mapping
-        mapping = heroku.process_kp(filter_length=False)
+        mapping = heroku.process_kp(heroku_data, filter_length=False)
         # post-trial questions to process
         questions = [{'question': 'slider-0', 'type': 'num'},
                      {'question': 'slider-1', 'type': 'num'}]
@@ -96,9 +94,9 @@ if __name__ == '__main__':
         mapping = mapping.rename(columns={'slider-0': 'space',
                                           'slider-1': 'estimate'})
         # export to pickle
-        dc.common.save_to_p(file_mapping, mapping, 'mapping of stimuli')
+        dc.common.save_to_p('mapping.p', mapping, 'mapping of stimuli')
     else:
-        mapping = dc.common.load_from_p(file_mapping, 'mapping of stimuli')
+        mapping = dc.common.load_from_p('mapping.p', 'mapping of stimuli')
     # Output
     if SHOW_OUTPUT:
         analysis = dc.analysis.Analysis()
