@@ -181,6 +181,13 @@ if __name__ == '__main__':
                                                name_file='kp_videos_sliders_'+','.join([str(i) for i in ids]),
                                                save_file=True,
                                                save_final=dc.common.get_configs('save_figures'))
+                # two-way ANOVA
+                # prepare signals to compare with two-way ANOVA
+                signal1 = mapping.loc[mapping['id'].isin(ids)]['interaction'].tolist()
+                signal2 = mapping.loc[mapping['id'].isin(ids)]['distance'].tolist()
+                signal3 = dc.common.vertical_sum(mapping.loc[mapping['id'].isin(ids)]['kp_raw'].iloc[0])
+                # perform test
+                analysis.twoway_anova_kp(signal1, signal2, signal3, output_console=True)
             # keypresses of all videos individually
             analysis.plot_kp_videos(mapping,
                                     show_menu=False,
