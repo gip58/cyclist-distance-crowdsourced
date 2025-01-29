@@ -22,6 +22,7 @@ logger = dc.CustomLogger(__name__)  # use custom logger
 # SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
 # SHOW_OUTPUT_PP = True  # should figures with info about participants
 # SHOW_OUTPUT_ET = False  # should figures for eye tracking
+# SHOW_OUTPUT_SM = True  # should figures for eye tracking be plotted
 
 # for debugging, skip processing
 SAVE_P = True  # save pickle files with data
@@ -37,6 +38,7 @@ SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
 SHOW_OUTPUT_ST = True  # should figures with stimulus data be plotted
 SHOW_OUTPUT_PP = True  # should figures with info about participants be plotted
 SHOW_OUTPUT_ET = False  # should figures for eye tracking be plotted
+SHOW_OUTPUT_SM = True  # should figures for eye tracking be plotted
 
 
 if __name__ == '__main__':
@@ -45,12 +47,16 @@ if __name__ == '__main__':
     heroku = dc.analysis.Heroku(files_data=files_heroku, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV)
     # read heroku data
     heroku_data = heroku.read_data(filter_data=FILTER_DATA)
-
     # create object for working with appen data
     files_appen = dc.common.get_configs('files_appen')
     appen = dc.analysis.Appen(files_data=files_appen, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV)
     # read appen data
     appen_data = appen.read_data(filter_data=FILTER_DATA, clean_data=CLEAN_DATA)
+    # create object for working with appen data
+    files_simualtor = dc.common.get_configs('files_simualtor')
+    simulator = dc.analysis.Simualtor(files_data=files_simualtor, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV)
+    # read simulator data
+    simulator_data = simulator.read_data(filter_data=FILTER_DATA)
     # read frames
     # get keys in data files
     heroku_data_keys = heroku_data.keys()
@@ -650,6 +656,9 @@ if __name__ == '__main__':
                 #                     save_file=True)
                 # stitch animations into 1 long videos
                 analysis.create_animation_all_stimuli(num_stimuli)
+        # Visualisation of eye tracking data
+        if SHOW_OUTPUT_SM:
+            logger.info("Giovanni, put yout stuff here.")
         # collect figure objects
         figures = [manager.canvas.figure
                    for manager in
