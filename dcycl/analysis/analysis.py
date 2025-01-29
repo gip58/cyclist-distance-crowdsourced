@@ -1475,14 +1475,15 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_kp(self, df, conf_interval=None, xaxis_title='Time (s)',
+    def plot_kp(self, df, col='kp', conf_interval=None, xaxis_title='Time (s)',
                 yaxis_title='Percentage of trials with response key pressed', xaxis_range=None,
                 yaxis_range=None, name_file='kp', save_file=False, save_final=False, fig_save_width=1320,
                 fig_save_height=680, font_family=None, font_size=None):
-        """Plot keypress data.
+        """Plot keypress or distance data.
 
         Args:
             df (dataframe): dataframe with keypress data.
+            col (str): column to plot
             conf_interval (float, optional): show confidence interval defined by argument.
             xaxis_title (str, optional): title for x axis.
             yaxis_title (str, optional): title for y axis.
@@ -1501,7 +1502,7 @@ class Analysis:
         times = np.array(range(self.res,  df['video_length'].max() + self.res, self.res)) / 1000
         # add all data together. Must be converted to np array to add together
         kp_data = np.array([0.0] * len(times))
-        for i, data in enumerate(df['kp']):
+        for i, data in enumerate(df[col]):
             # append zeros to match longest duration
             data = np.pad(data, (0, len(times) - len(data)), 'constant')
             # add data

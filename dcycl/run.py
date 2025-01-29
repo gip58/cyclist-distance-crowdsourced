@@ -659,6 +659,11 @@ if __name__ == '__main__':
         # Visualisation of eye tracking data
         if SHOW_OUTPUT_SM:
             logger.info("Giovanni, put yout stuff here.")
+            # all keypresses with confidence interval
+            analysis.plot_kp(mapping, 'dist',
+                             conf_interval=0.95,
+                             save_file=True,
+                             save_final=dc.common.get_configs('save_figures'))
         # collect figure objects
         figures = [manager.canvas.figure
                    for manager in
