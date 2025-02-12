@@ -40,27 +40,36 @@ SHOW_OUTPUT_PP = True  # should figures with info about participants be plotted
 SHOW_OUTPUT_ET = False  # should figures for eye tracking be plotted
 SHOW_OUTPUT_SM = True  # should figures for eye tracking be plotted
 
+RUN_HEROKU = False
+RUN_APPEN = False
+RUN_SIMULATOR = True
+
 
 if __name__ == '__main__':
     # create object for working with heroku data
-    files_heroku = dc.common.get_configs('files_heroku')
-    heroku = dc.analysis.Heroku(files_data=files_heroku, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV)
+    if RUN_HEROKU:
+        files_heroku = dc.common.get_configs('files_heroku')
+        heroku = dc.analysis.Heroku(files_data=files_heroku, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV)
     # read heroku data
-    heroku_data = heroku.read_data(filter_data=FILTER_DATA)
+        heroku_data = heroku.read_data(filter_data=FILTER_DATA)
     # create object for working with appen data
-    files_appen = dc.common.get_configs('files_appen')
-    appen = dc.analysis.Appen(files_data=files_appen, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV)
+    if RUN_APPEN:
+        files_appen = dc.common.get_configs('files_appen')
+        appen = dc.analysis.Appen(files_data=files_appen, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV)
     # read appen data
-    appen_data = appen.read_data(filter_data=FILTER_DATA, clean_data=CLEAN_DATA)
+        appen_data = appen.read_data(filter_data=FILTER_DATA, clean_data=CLEAN_DATA)
+    if RUN_SIMULATOR:
     # create object for working with appen data
-    files_simualtor = dc.common.get_configs('files_simualtor')
-    simulator = dc.analysis.Simualtor(files_data=files_simualtor, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV)
+        files_simualtor = dc.common.get_configs('files_simualtor')
+        simulator = dc.analysis.Simualtor(files_data=files_simualtor, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV)
     # read simulator data
-    simulator_data = simulator.read_data(filter_data=FILTER_DATA)
+        simulator_data = simulator.read_data(filter_data=FILTER_DATA)
     # read frames
     # get keys in data files
-    heroku_data_keys = heroku_data.keys()
-    appen_data_keys = appen_data.keys()
+    if RUN_HEROKU:
+        heroku_data_keys = heroku_data.keys()
+    if RUN_APPEN:
+        appen_data_keys = appen_data.keys()
     # flag and reject cheaters
     if REJECT_CHEATERS:
         qa = dc.analysis.QA(file_cheaters=dc.common.get_configs('file_cheaters'),
@@ -68,17 +77,18 @@ if __name__ == '__main__':
         qa.reject_users()
         qa.ban_users()
     # merge heroku and appen dataframes into one
-    all_data = heroku_data.merge(appen_data, left_on='worker_code', right_on='worker_code')
-    logger.info('Data from {} participants included in analysis.', all_data.shape[0])
-    heroku_data = all_data[all_data.columns.intersection(heroku_data_keys)]
-    appen_data = all_data[all_data.columns.intersection(appen_data_keys)]
-    heroku_data = heroku_data.set_index('worker_code')
-    heroku.set_data(heroku_data)  # update object with filtered data
-    appen_data = appen_data.set_index('worker_code')
-    appen.set_data(appen_data)  # update object with filtered data
-    appen.show_info(appen_data)  # show info for filtered data
+    if RUN_HEROKU and RUN_APPEN:
+        all_data = heroku_data.merge(appen_data, left_on='worker_code', right_on='worker_code')
+        logger.info('Data from {} participants included in analysis.', all_data.shape[0])
+        heroku_data = all_data[all_data.columns.intersection(heroku_data_keys)]
+        appen_data = all_data[all_data.columns.intersection(appen_data_keys)]
+        heroku_data = heroku_data.set_index('worker_code')
+        heroku.set_data(heroku_data)  # update object with filtered data
+        appen_data = appen_data.set_index('worker_code')
+        appen.set_data(appen_data)  # update object with filtered data
+        appen.show_info(appen_data)  # show info for filtered data
     # generate country-specific data
-    countries_data = appen.process_countries(appen_data)
+        countries_data = appen.process_countries(appen_data)
     # create arrays with coordinates for stimuli
     if CALC_COORDS:
         points, _, points_duration = heroku.points(heroku_data)
