@@ -1,21 +1,78 @@
 # by Giovanni Sapienza () and Pavlo Bazilinskyy <pavlo.bazilinskyy@gmail.com>
 
 
-import dcycl as dc
+import json
+import os
 
-logger = dc.CustomLogger(__name__)  # use custom logger
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+
+# import dcycl as dc
+
+# from analysis import Analysis
+
+# logger = dc.CustomLogger(__name__)  # use custom logger
 
 
 class Simulator(object):
-    """Working with data from simulator.
-    """
-    def __init__(self,
-                 files_data: list,
-                 save_p: bool,
-                 load_p: bool,
-                 save_csv: bool):
+    """Working with data from simulator."""
+
+    df = pd.DataFrame()
+
+    scenario_names = {
+        1: "Laser Projection",
+        2: "Vertical Signage",
+        3: "Road Markings",
+        4: "Car Projection System",
+        5: "Center Line and Side-Line Markings",
+        6: "Unprotected Cycling Path",
+        7: "No Road Markings",
+        "Scenario_1": "Laser Projection",
+        "Scenario_2": "Vertical Signage",
+        "Scenario_3": "Road Markings",
+        "Scenario_4": "Car Projection System",
+        "Scenario_5": "Center Line and Side-Line Markings",
+        "Scenario_6": "Unprotected Cycling Path",
+        "Scenario_7": "No Road Markings",
+    }
+
+    # set template for plotly output
+    template = ""
+
+    @staticmethod
+    def get_configs(
+        entry_name: str,
+        config_file_name: str = "config",
+        config_default_file_name: str = "default.config",
+    ):
+        """
+        Open the config file and return the requested entry.
+        If no config file is found, open default.config.
+        """
+        # check if config file is updated
+        try:
+            with open(
+                os.path.join(
+                    os.path.normpath(os.path.join(os.path.dirname(__file__), "../..")),
+                    config_file_name,
+                )
+            ) as f:
+                content = json.load(f)
+        except FileNotFoundError:
+            with open(
+                os.path.join(
+                    os.path.normpath(os.path.join(os.path.dirname(__file__), "../..")),
+                    config_default_file_name,
+                )
+            ) as f:
+                content = json.load(f)
+        return content[entry_name]
+
+    def __init__(self, files_data: list, save_p: bool, load_p: bool, save_csv: bool):
         # files with raw data
-        self.files_data = files_data # Simulator/path
+        self.files_data = files_data  # Simulator/path
         # save data as pickle file
         self.save_p = save_p
         # load data as pickle file
@@ -23,13 +80,107 @@ class Simulator(object):
         # save data as csv file
         self.save_csv = save_csv
 
+        self.template = Simulator.get_configs("plotly_template")
+
     def analysis():
         """
-        average speed per scenario 
+        average speed per scenario
         average distance per scenario - averaged minimum distance
         bar chart for preferences
         average overtaking distance over time + t-test
+        + use plotly template from config
         """
+
+    def plot_preferences(self):
+        preferences_df = pd.read_csv(
+            "/home/chachi/code/geo/cyclist-distance-crowdsourced/dcycl/analysis/Simulator/distance Preference grapth/prefernces.csv"
+        )
+
+        fig = px.bar(
+            preferences_df,
+            x="Scenarios",
+            y="Preference",
+            title="Preferred Scenario",
+            color="Scenarios",
+            template=self.template,
+        )
+        fig.show()
+
+    def plot_mean_speed(self):
+        # Getting average speed per scenario
+        averaged_df = (
+            self.df.groupby(["ScenarioID", "Scenario", "Participant"])
+            .mean()
+            .reset_index()
+        )
+        filtered_df = averaged_df[averaged_df["Speed"] > 1]
+        fig = px.box(
+            filtered_df,
+            x="Scenario",
+            y="Speed",
+            title="Mean distance per scenario",
+            color="Scenario",
+            template=self.template,
+        )
+        fig.update_layout(legend=dict(x=0.3, y=1.1))  # TODO: Play around with location)
+        fig.show()
+
+    def plot_min_distance(self):
+        # Getting Minimum distance per scenario
+        min_df = self.df.groupby(["ScenarioID", "Participant"]).min().reset_index()
+        filtered_df = min_df[10 > min_df["Distance"]]
+        # print(df_scenario_1.keys())
+        # print(min_distances)
+
+        # fig = go.Figure()
+        # for scenario in filtered_df.columns:
+        #     values = filtered_df[filtered_df["Scenario"] == scenario][" Distance"]
+        #     fig.add_trace(go.Box(values, name=scenario))
+        fig = px.box(
+            filtered_df,
+            x="Scenario",
+            y="Distance",
+            title="Minimum distance per scenario",
+            color="Scenario",
+            template=self.template,
+        )
+        fig.update_layout(legend=dict(x=0.3, y=1.1))  # TODO: Play around with location
+
+        fig.show()
+
+    def plot_overtaking_distance(self):
+        # Bin time into 0.5s intervals
+        time_bins_filtered = np.arange(4, self.df["Time"].max(), 0.5)
+        self.df["TimeBin"] = pd.cut(
+            self.df["Time"], bins=time_bins_filtered, labels=time_bins_filtered[:-1]
+        )
+
+        # Compute the average overtaking distance for each time bin within each scenario
+        df_binned_filtered = (
+            self.df.groupby(["TimeBin", "Scenario"])["Distance"].mean().reset_index()
+        )
+        df_binned_filtered["TimeBin"] = df_binned_filtered["TimeBin"].astype(
+            float
+        )  # Convert to numeric
+
+        # -----------------------------
+        # Create Line Plot (Overtaking Distance Over Time)
+        # -----------------------------
+        fig_line = px.line(
+            df_binned_filtered,
+            x="TimeBin",
+            y="Distance",
+            color="Scenario",
+            title="Average Overtaking Distance Over Time for Different Scenarios",
+            labels={
+                "TimeBin": "Time (s)",
+                "Distance": "Average Overtaking Distance (m)",
+                "Scenario": "Scenario",
+            },
+            template=self.template,
+        )
+
+        fig_line.show()
 
     def read_data(self, filter_data=True, clean_data=True):
         """Read data into an attribute.
@@ -40,284 +191,86 @@ class Simulator(object):
         Returns:
             dataframe: updated dataframe.
         """
-        # load data
-        if self.load_p:
-            df = dc.common.load_from_p(self.file_p, 'simulaor data')
-        # process data
-        else:
-            # read files with heroku data one by one
-            data_list = []
-            data_dict = {}  # dictionary with data
-            for file in self.files_data:
-                logger.info('Reading heroku data from {}.', file)
-                f = open(file, 'r')
-                # add data from the file to the dictionary
-                data_list += f.readlines()
-                f.close()
-            # hold info on previous row for worker
-            prev_row_info = pd.DataFrame(columns=['worker_code', 'time_elapsed'])
-            prev_row_info.set_index('worker_code', inplace=True)
-            # read rows in data
-            for row in tqdm(data_list):  # tqdm adds progress bar
-                # use dict to store data
-                dict_row = {}
-                # load data from a single row into a list
-                list_row = json.loads(row)
-                # last found stimulus
-                stim_name = ''
-                # trial last found stimulus
-                stim_trial = -1
-                # last time_elapsed for logging duration of trial and stimulus
-                elapsed_l = 0
-                elapsed_l_stim = 0
-                # record worker_code in the row. assuming that each row has at least one worker_code
-                worker_code = [d['worker_code'] for d in list_row['data'] if 'worker_code' in d][0]
-                # go over cells in the row with data
-                for data_cell in list_row['data']:
-                    # extract meta info form the call
-                    for key in self.meta_keys:
-                        if key in data_cell.keys():
-                            # piece of meta data found, update dictionary
-                            dict_row[key] = data_cell[key]
-                            if key == 'worker_code':
-                                logger.debug('{}: working with row with data.', data_cell['worker_code'])
-                    # check if stimulus data is present
-                    if 'stimulus' in data_cell.keys():
-                        # record last timestamp before video
-                        if 'black_frame.png' in data_cell['stimulus']:
-                            # record timestamp at the black frame to compute
-                            # the length of the stimulus
-                            if 'time_elapsed' in data_cell.keys():
-                                elapsed_l_stim = float(data_cell['time_elapsed'])
-                        # extract name of stimulus after last slash
-                        # list of stimuli. use 1st
-                        if isinstance(data_cell['stimulus'], list):
-                            stim_no_path = data_cell['stimulus'][0].rsplit('/', 1)[-1]
-                        # single stimulus
-                        else:
-                            stim_no_path = data_cell['stimulus'].rsplit('/', 1)[-1]
-                        # remove extension
-                        stim_no_path = os.path.splitext(stim_no_path)[0]
-                        # skip is videos from instructions
-                        if 'video_test_' in stim_no_path:
-                            continue
-                        # Check if it is a block with stimulus and not an
-                        # instructions block
-                        if (dc.common.search_dict(self.prefixes, stim_no_path)
-                                is not None):
-                            # stimulus is found
-                            logger.debug('Found stimulus {}.', stim_no_path)
-                            if self.prefixes['stimulus'] in stim_no_path:
-                                # Record that stimulus was detected for the
-                                # cells to follow
-                                stim_name = stim_no_path
-                                # record trial of stimulus
-                                stim_trial = data_cell['trial_index']
-                                # add trial duration
-                                if 'time_elapsed' in data_cell.keys():
-                                    # positive time elapsed from last cell
-                                    if elapsed_l_stim:
-                                        time = elapsed_l_stim
-                                    # non-positive time elapsed. use value from
-                                    # the known cell for worker
-                                    else:
-                                        time = prev_row_info.loc[worker_code, 'time_elapsed']
-                                    # calculate duration
-                                    dur = float(data_cell['time_elapsed']) - time
-                                    if stim_name + '-dur' not in dict_row.keys() and dur > 0:
-                                        # first value
-                                        dict_row[stim_name + '-dur'] = dur
-                    # keypresses
-                    if 'rts' in data_cell.keys() and stim_name != '':
-                        # record given keypresses
-                        responses = data_cell['rts']
-                        logger.debug('Found {} points in keypress data.', len(responses))
-                        # extract pressed keys and rt values
-                        key = [point['key'] for point in responses]
-                        rt = [point['rt'] for point in responses]
-                        # check if values were recorded previously
-                        if stim_name + '-key' not in dict_row.keys():
-                            # first value
-                            dict_row[stim_name + '-key'] = key
-                        else:
-                            # previous values found
-                            dict_row[stim_name + '-key'].extend(key)
-                        # check if values were recorded previously
-                        if stim_name + '-rt' not in dict_row.keys():
-                            # first value
-                            dict_row[stim_name + '-rt'] = rt
-                        else:
-                            # previous values found
-                            dict_row[stim_name + '-rt'].extend(rt)
-                    # eye tracking data
-                    if 'webgazer_data' in data_cell.keys() and stim_name != '':
-                        # record eye tracking data
-                        et_data = data_cell['webgazer_data']
-                        logger.debug('Found {} points in eye tracking data.', len(et_data))
-                        # extract x,y,t values
-                        x = [point['x'] for point in et_data]
-                        y = [point['y'] for point in et_data]
-                        t = [point['t'] for point in et_data]
-                        # check if values not already recorded
-                        if stim_name + '-x' not in dict_row.keys():
-                            # first value
-                            dict_row[stim_name + '-x'] = x
-                        else:
-                            # previous values found
-                            dict_row[stim_name + '-x'].extend(x)
-                        # check if values not already recorded
-                        if stim_name + '-y' not in dict_row.keys():
-                            # first value
-                            dict_row[stim_name + '-y'] = y
-                        else:
-                            # previous values found
-                            dict_row[stim_name + '-y'].extend(y)
-                        # check if values not already recorded
-                        if stim_name + '-t' not in dict_row.keys():
-                            # first value
-                            dict_row[stim_name + '-t'] = t
-                        else:
-                            # previous values found
-                            dict_row[stim_name + '-t'].extend(t)
-                    # questions after stimulus
-                    if ('response' in data_cell.keys() and stim_name != '' and
-                       data_cell['response'] is not None):
-                        # check if it is not dictionary
-                        if 'slider-0' not in data_cell['response']:
-                            continue
-                        # record given answers
-                        responses = data_cell['response']
-                        logger.debug('Found responses to questions {}.', responses)
-                        # unpack questions and answers
-                        questions = []
-                        answers = []
-                        for key, value in responses.items():
-                            questions.append(key)
-                            answers.append(int(value))
-                        # check if values were recorded previously
-                        if stim_name + '-qs' not in dict_row.keys():
-                            # first value
-                            dict_row[stim_name + '-qs'] = questions
-                        else:
-                            # previous values found
-                            dict_row[stim_name + '-qs'].extend(questions)
-                        # Check if time spent values were recorded
-                        # previously
-                        if stim_name + '-as' not in dict_row.keys():
-                            # first value
-                            dict_row[stim_name + '-as'] = answers
-                        else:
-                            # previous values found
-                            dict_row[stim_name + '-as'].extend(answers)
-                    # browser interaction events
-                    if 'interactions' in data_cell.keys() and stim_name != '':
-                        interactions = data_cell['interactions']
-                        logger.debug('Found {} browser interactions.', len(interactions))
-                        # extract events and timestamps
-                        event = []
-                        time = []
-                        for interation in interactions:
-                            if interation['trial'] == stim_trial:
-                                event.append(interation['event'])
-                                time.append(interation['time'])
-                        # Check if inputted values were recorded previously
-                        if stim_name + '-event' not in dict_row.keys():
-                            # first value
-                            dict_row[stim_name + '-event'] = event
-                        else:
-                            # previous values found
-                            dict_row[stim_name + '-event'].extend(event)
-                        # check if values were recorded previously
-                        if stim_name + '-time' not in dict_row.keys():
-                            # first value
-                            dict_row[stim_name + '-time'] = time
-                        else:
-                            # previous values found
-                            dict_row[stim_name + '-time'].extend(time)
-                    # sliders after experiment
-                    if ('response' in data_cell.keys() and stim_name == '' and
-                       data_cell['response'] is not None):
-                        # check if it is not post-trial data
-                        if 'slider-5' not in data_cell['response']:
-                            continue
-                        # record given keypresses
-                        responses_end = data_cell['response']
-                        logger.debug('Found responses to the questions in ' +
-                                     'the end {}.', responses_end)
-                        for key, value in responses_end.items():
-                            # check if values not already recorded
-                            if stim_name + 'end-' + key not in dict_row.keys():
-                                # first value
-                                dict_row['end-' + key] = value
-                            else:
-                                # previous values found
-                                dict_row['end-' + key].extend(value)
-                    # record last time_elapsed
-                    if 'time_elapsed' in data_cell.keys():
-                        elapsed_l = float(data_cell['time_elapsed'])
-                # update last time_elapsed for worker
-                prev_row_info.loc[dict_row['worker_code'], 'time_elapsed'] = elapsed_l
-                # worker_code was encountered before
-                if dict_row['worker_code'] in data_dict.keys():
-                    # iterate over items in the data dictionary
-                    for key, value in dict_row.items():
-                        # worker_code does not need to be added
-                        if key in self.meta_keys:
-                            data_dict[dict_row['worker_code']][key] = value
-                            continue
-                        # new value
-                        if key + '-0' not in data_dict[dict_row['worker_code']].keys():
-                            data_dict[dict_row['worker_code']][key + '-0'] = value
-                        # update old value
-                        else:
-                            # traverse repetition ids until get new repetition
-                            for rep in range(0, self.num_repeat):
-                                # build new key with id of repetition
-                                new_key = key + '-' + str(rep)
-                                if new_key not in data_dict[dict_row['worker_code']].keys():
-                                    data_dict[dict_row['worker_code']][new_key] = value
-                                    break
-                # worker_code is encountered for the first time
-                else:
-                    # iterate over items in the data dictionary and add -0
-                    for key, value in list(dict_row.items()):
-                        # worker_code does not need to be added
-                        if key in self.meta_keys:
-                            continue
-                        # new value
-                        dict_row[key + '-0'] = dict_row.pop(key)
-                    # add row of data
-                    data_dict[dict_row['worker_code']] = dict_row
-            # turn into pandas dataframe
-            df = pd.DataFrame(data_dict)
-            df = df.transpose()
-            # report people that attempted study
-            unique_worker_codes = df['worker_code'].drop_duplicates()
-            logger.info('People who attempted to participate: {}', unique_worker_codes.shape[0])
-            # filter data
-            if filter_data:
-                df = self.filter_data(df)
-            # sort columns alphabetically
-            df = df.reindex(sorted(df.columns), axis=1)
-            # move worker_code to the front
-            worker_code_col = df['worker_code']
-            df.drop(labels=['worker_code'], axis=1, inplace=True)
-            df.insert(0, 'worker_code', worker_code_col)
-        # save to pickle
-        if self.save_p:
-            dc.common.save_to_p(self.file_p, df, 'heroku data')
-        # save to csv
-        if self.save_csv:
-            # build path
-            if not os.path.exists(dc.settings.output_dir):
-                os.makedirs(dc.settings.output_dir)
-            # save to file
-            df.to_csv(os.path.join(dc.settings.output_dir, self.file_data_csv), index=False)
-            logger.info('Saved heroku data to csv file {}', self.file_data_csv + '.csv')
-        # update attribute
-        self.heroku_data = df
-        # return df with data
-        return df
+
+        scenario_folder_path = "/home/chachi/code/geo/cyclist-distance-crowdsourced/dcycl/analysis/Simulator/path"
+        scenario_files = os.listdir(scenario_folder_path)
+
+        for scenario in scenario_files:
+            scenario_path = os.path.join(scenario_folder_path, scenario)
+            csv_files = [f for f in os.listdir(scenario_path) if f.endswith(".csv")]
+
+            for participant_id, csv_file in enumerate(csv_files):
+                file_path = os.path.join(scenario_path, csv_file)
+                df_scenario = pd.read_csv(file_path)
+                df_scenario["ScenarioID"] = int(scenario[-1])  # Add scenario label
+                df_scenario["Scenario"] = self.scenario_names[scenario]
+                df_scenario["Participant"] = participant_id
+                self.df = pd.concat([self.df, df_scenario])
+
+        self.df.columns = self.df.columns.str.strip()
+
+        # Remove the first 4 seconds (due to countdown)
+        self.df = self.df[self.df["Time"] >= 4]
+
+        return self.df
+
+        # print(self.df)
+        # self.df = pd.DataFrame()
+        # # load csv
+        # print("Reading data")
+        # for scenario in self.files_data:
+        #     # print(scenario)
+        #     for dirpath, dirnames, filenames in os.walk(scenario):
+        #         # print(dirpath, dirnames, filenames)
+        #         scenario_id = dirpath.split("/")[-1].split("_")[-1]
+        #         # print(scenario_id)
+        #         for particiapant_id, file in enumerate(filenames):
+        #             df_temp = pd.read_csv(os.path.join(dirpath, file))
+        #             df_temp["ScenarioID"] = int(scenario_id)
+        #             df_temp["Scenario"] = self.scenario_names[int(scenario_id)]
+        #             df_temp["Participant"] = particiapant_id
+        #             # print(file)
+        #             self.df = pd.concat([self.df, df_temp])
+        # self.df.columns = self.df.columns.str.strip()
+        # print(self.df)
+
+        # print(df.head())
+        # print(df.info())
+
+        # s_1_df = df[df["Scenario"] == 1 and df["Participant"] == 0]
+        # fig = px.line(s_1_df, x="Time", y="Distance")
+        # fig.show()
+
+        # df_test = pd.read_csv(
+        #     "/home/chachi/code/geo/cyclist-distance-crowdsourced/dcycl/analysis/Simulator/path/Scenario_1/CarCyclistDistanceData.csv"
+        # )
+        # print(df_test)
+        # ax = sns.boxplot(x="Scenario", y="Distance", data=min_distances)
+        # print(df.where(df["Scenario"] == 1))
+        # print(df_scenario1.groupby("participant").min())
+        # for dirpath, dirnames, filenames in os.walk(data):
+        #     print(dirpath, dirnames, filenames)
+        # df = pd.read_csv(self.files_data[0])
 
     def filter_data(self, df):
         pass
+
+
+if __name__ == "__main__":
+    # analysis = Analysis()
+    scenarios_path = Simulator.get_configs("files_simulator_scenario_path")
+    sim = Simulator(
+        scenarios_path,
+        False,
+        False,
+        False,
+    )
+    sim.read_data(False, False)
+
+    sim.plot_min_distance()
+
+    sim.plot_mean_speed()
+
+    sim.plot_preferences()
+
+    sim.plot_overtaking_distance()
