@@ -1002,10 +1002,10 @@ if __name__ == "__main__":
             plt.show()
 
     if SHOW_SIMULATION:
-        simulator.plot_min_distance()
+        simulator.plot_min_distance(save_fig = True)
 
-        simulator.plot_mean_speed()
+        simulator.plot_mean_speed(save_fig = True)
 
-        simulator.plot_preferences()
+        simulator.plot_preferences(save_fig = True)
 
-        simulator.plot_overtaking_distance()
+        simulator.plot_overtaking_distance(save_fig = True)

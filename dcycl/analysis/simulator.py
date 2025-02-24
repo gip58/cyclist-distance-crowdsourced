@@ -6,6 +6,7 @@ import os
 
 import numpy as np
 import pandas as pd
+import plotly as py
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -79,10 +80,12 @@ class Simulator(object):
         self.load_p = load_p
         # save data as csv file
         self.save_csv = save_csv
+        # folder for saving figures
+        self.folder_figures = Simulator.get_configs("simulator_folder_figures")
 
         self.template = Simulator.get_configs("plotly_template")
 
-    def plot_preferences(self):
+    def plot_preferences(self, save_fig=False):
         preferences_file = Simulator.get_configs("simulator_preferences_file")
         preferences_df = pd.read_csv(preferences_file)
 
@@ -96,7 +99,10 @@ class Simulator(object):
         )
         fig.show()
 
-    def plot_mean_speed(self):
+        if save_fig:
+            self.save_plotly(fig, "preferences")
+
+    def plot_mean_speed(self, save_fig=False):
         # Getting average speed per scenario
         averaged_df = (
             self.df.groupby(["ScenarioID", "Scenario", "Participant"])
@@ -115,7 +121,10 @@ class Simulator(object):
         fig.update_layout(legend=dict(x=0.3, y=1.1))  # TODO: Play around with location)
         fig.show()
 
-    def plot_min_distance(self):
+        if save_fig:
+            self.save_plotly(fig, "mean_speed")
+
+    def plot_min_distance(self, save_fig=False):
         # Getting Minimum distance per scenario
         min_df = self.df.groupby(["ScenarioID", "Participant"]).min().reset_index()
         filtered_df = min_df[10 > min_df["Distance"]]
@@ -138,7 +147,10 @@ class Simulator(object):
 
         fig.show()
 
-    def plot_overtaking_distance(self):
+        if save_fig:
+            self.save_plotly(fig, "min_distance")
+
+    def plot_overtaking_distance(self, save_fig=False):
         # Bin time into 0.5s intervals
         time_bins_filtered = np.arange(4, self.df["Time"].max(), 0.5)
         self.df["TimeBin"] = pd.cut(
@@ -171,6 +183,9 @@ class Simulator(object):
         )
 
         fig_line.show()
+
+        if save_fig:
+            self.save_plotly(fig_line, "overtaking_distance")
 
     def read_data(self, filter_data=True, clean_data=True):
         """Read data into an attribute.
@@ -240,6 +255,50 @@ class Simulator(object):
         # for dirpath, dirnames, filenames in os.walk(data):
         #     print(dirpath, dirnames, filenames)
         # df = pd.read_csv(self.files_data[0])
+
+    def save_plotly(
+        self,
+        fig,
+        name,
+        width=1320,
+        height=680,
+        save_eps=False,
+        save_png=True,
+        save_html=True,
+    ):
+        """
+        Helper function to save figure as html file.
+
+        Args:
+            fig (plotly figure): figure object.
+            name (str): name of html file.
+            width (int, optional): width of figures to be saved.
+            height (int, optional): height of figures to be saved.
+            save_png (bool, optional): save image as PNG file.
+            save_html (bool, optional): save image as html file.
+        """
+        # # build path
+        # path = os.path.join(dc.settings.output_dir, self.folder_figures)
+        # if not os.path.exists(path):
+        #     os.makedirs(path)
+        # # build path for final figure
+        # path_final = os.path.join(dc.settings.root_dir, self.folder_figures)
+        # print(path_final)
+        # save as html
+        if save_html:
+            py.offline.plot(
+                fig,
+                filename=os.path.join(self.folder_figures, name + ".html"),
+                auto_open=False,
+            )
+        # save as png
+        if save_png:
+            fig.write_image(
+                os.path.join(self.folder_figures, name + ".png"),
+                width=width,
+                height=height,
+            )
+            # also save the final figure
 
     def filter_data(self, df):
         pass
