@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import plotly as py
 import plotly.express as px
+from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
 # import dcycl as dc
@@ -95,6 +96,23 @@ class Simulator(object):
             y="Preference",
             title="Preferred Scenario",
             color="Scenarios",
+            template=self.template,
+        )
+        fig.show()
+
+        import plotly.graph_objects as go
+        fig = go.Figure()
+        fig.add_trace(
+            go.Bar(
+                x=preferences_df["Scenarios"],
+                y=preferences_df["Preference"],
+                name="Preference",
+            )
+        )
+        fig.update_layout(
+            title="Preferred Scenario",
+            xaxis_title="Scenarios",
+            yaxis_title="Preference",
             template=self.template,
         )
         fig.show()
@@ -303,6 +321,75 @@ class Simulator(object):
     def filter_data(self, df):
         pass
 
+    def plot_combined_figure(self, save_fig=False):
+            # Load preferences data
+        preferences_file = Simulator.get_configs("simulator_preferences_file")
+        preferences_df = pd.read_csv(preferences_file)
+
+        # Load overtaking distance data
+        time_bins_filtered = np.arange(4, self.df["Time"].max(), 0.5)
+        self.df["TimeBin"] = pd.cut(
+            self.df["Time"], bins=time_bins_filtered, labels=time_bins_filtered[:-1]
+        )
+        df_binned_filtered = (
+            self.df.groupby(["TimeBin", "Scenario"])["Distance"].mean().reset_index()
+        )
+        df_binned_filtered["TimeBin"] = df_binned_filtered["TimeBin"].astype(float)
+
+        # Identify common scenarios
+        common_scenarios = set(preferences_df["Scenarios"]).intersection(set(df_binned_filtered["Scenario"]))
+
+        # Filter data to include only common scenarios
+        preferences_df = preferences_df[preferences_df["Scenarios"].isin(common_scenarios)]
+        df_binned_filtered = df_binned_filtered[df_binned_filtered["Scenario"].isin(common_scenarios)]
+
+        # Assign consistent colors to scenarios
+        color_map = px.colors.qualitative.Set1  # Select a color palette
+        scenario_colors = {scenario: color_map[i % len(color_map)] for i, scenario in enumerate(common_scenarios)}
+
+        # Create subplots
+        fig = make_subplots(
+            rows=1, cols=2, 
+            subplot_titles=["Preferred Scenario", "Average Overtaking Distance Over Time"],
+            shared_yaxes=False
+        )
+
+        # Add Bar Chart (Left)
+        for scenario in common_scenarios:
+            scenario_df = preferences_df[preferences_df["Scenarios"] == scenario]
+            fig.add_trace(
+                go.Bar(
+                    x=scenario_df["Scenarios"], 
+                    y=scenario_df["Preference"], 
+                    name=scenario,
+                    marker=dict(color=scenario_colors[scenario])
+                ),
+                row=1, col=1
+            )
+
+        # Add Line Chart (Right)
+        for scenario in common_scenarios:
+            scenario_df = df_binned_filtered[df_binned_filtered["Scenario"] == scenario]
+            fig.add_trace(
+                go.Scatter(
+                    x=scenario_df["TimeBin"], 
+                    y=scenario_df["Distance"], 
+                    mode='lines', 
+                    name=scenario,
+                    line=dict(color=scenario_colors[scenario])
+                ),
+                row=1, col=2
+            )
+
+        # Update layout
+        fig.update_layout(
+            template=self.template,
+            showlegend=True,
+            width=1000,
+            height=500
+        )
+
+        fig.show()
 
 if __name__ == "__main__":
     scenarios_path = Simulator.get_configs("files_simulator")
@@ -314,10 +401,12 @@ if __name__ == "__main__":
     )
     sim.read_data(False, False)
 
-    sim.plot_min_distance()
+    # sim.plot_min_distance()
 
-    sim.plot_mean_speed()
+    # sim.plot_mean_speed()
 
-    sim.plot_preferences()
+    #sim.plot_preferences()
 
-    sim.plot_overtaking_distance()
+    sim.plot_combined_figure()
+
+    # sim.plot_overtaking_distance()
