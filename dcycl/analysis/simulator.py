@@ -70,7 +70,7 @@ class Simulator(object):
                 content = json.load(f)
         return content[entry_name]
 
-    def __init__(self, files_data: list, save_p: bool, load_p: bool, save_csv: bool):
+    def __init__(self, files_data: str, save_p: bool, load_p: bool, save_csv: bool):
         # files with raw data
         self.files_data = files_data  # Simulator/path
         # save data as pickle file
@@ -82,19 +82,9 @@ class Simulator(object):
 
         self.template = Simulator.get_configs("plotly_template")
 
-    def analysis():
-        """
-        average speed per scenario
-        average distance per scenario - averaged minimum distance
-        bar chart for preferences
-        average overtaking distance over time + t-test
-        + use plotly template from config
-        """
-
     def plot_preferences(self):
-        preferences_df = pd.read_csv(
-            "/home/chachi/code/geo/cyclist-distance-crowdsourced/dcycl/analysis/Simulator/distance Preference grapth/prefernces.csv"
-        )
+        preferences_file = Simulator.get_configs("simulator_preferences_file")
+        preferences_df = pd.read_csv(preferences_file)
 
         fig = px.bar(
             preferences_df,
@@ -192,11 +182,10 @@ class Simulator(object):
             dataframe: updated dataframe.
         """
 
-        scenario_folder_path = "/home/chachi/code/geo/cyclist-distance-crowdsourced/dcycl/analysis/Simulator/path"
-        scenario_files = os.listdir(scenario_folder_path)
+        scenario_files = os.listdir(self.files_data)
 
         for scenario in scenario_files:
-            scenario_path = os.path.join(scenario_folder_path, scenario)
+            scenario_path = os.path.join(self.files_data, scenario)
             csv_files = [f for f in os.listdir(scenario_path) if f.endswith(".csv")]
 
             for participant_id, csv_file in enumerate(csv_files):
@@ -257,8 +246,7 @@ class Simulator(object):
 
 
 if __name__ == "__main__":
-    # analysis = Analysis()
-    scenarios_path = Simulator.get_configs("files_simulator_scenario_path")
+    scenarios_path = Simulator.get_configs("files_simulator")
     sim = Simulator(
         scenarios_path,
         False,
