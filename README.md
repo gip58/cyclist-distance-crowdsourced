@@ -1,4 +1,4 @@
-# Analysing trust in a traffic scene with an automated vehicle
+# Enhancing lateral overtaking distance for cyclist safety in the EU
 
 This project defines a framework for evaluating different technologies in a traffic environment involving a cyclist and a vehicle. The jsPsych framework is used for the frontend. In the description below, it is assumed that the repository is stored in the folder cyclist-distance-crowdsourced. Terminal commands assume macOS.
 
