@@ -10,6 +10,7 @@ import plotly as py
 import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+from scipy.stats import ttest_ind
 
 # import dcycl as dc
 
@@ -322,74 +323,159 @@ class Simulator(object):
         pass
 
     def plot_combined_figure(self, save_fig=False):
-            # Load preferences data
+        # Load preferences data
         preferences_file = Simulator.get_configs("simulator_preferences_file")
         preferences_df = pd.read_csv(preferences_file)
 
-        # Load overtaking distance data
-        time_bins_filtered = np.arange(4, self.df["Time"].max(), 0.5)
-        self.df["TimeBin"] = pd.cut(
-            self.df["Time"], bins=time_bins_filtered, labels=time_bins_filtered[:-1]
-        )
+        # Ensure data is binned before analysis
+        bin_size = 0.5  # Define bin size
+        self.df = self.bin_data(self.df, 'Time', bin_size)
+
+        # Compute the average overtaking distance per time bin per scenario
         df_binned_filtered = (
-            self.df.groupby(["TimeBin", "Scenario"])["Distance"].mean().reset_index()
+            self.df.groupby(["TimeBin", "Scenario"], observed=True)["Distance"].mean().reset_index()
         )
+
+        # Convert TimeBin to numeric
         df_binned_filtered["TimeBin"] = df_binned_filtered["TimeBin"].astype(float)
 
-        # Identify common scenarios
-        common_scenarios = set(preferences_df["Scenarios"]).intersection(set(df_binned_filtered["Scenario"]))
+        # Define the fixed order of scenarios
+        scenario_order = [
+            "Laser Projection",
+            "Vertical Signage",
+            "Road Markings",
+            "Car Projection System",
+            "Center Line and Side-Line Markings",  # Control scenario (S5)
+            "Unprotected Cycling Path",
+            "No Road Markings"
+        ]
 
-        # Filter data to include only common scenarios
-        preferences_df = preferences_df[preferences_df["Scenarios"].isin(common_scenarios)]
-        df_binned_filtered = df_binned_filtered[df_binned_filtered["Scenario"].isin(common_scenarios)]
+        # Mapping for shorter t-test labels
+        ttest_labels = {scenario: f"S{i+1}" for i, scenario in enumerate(scenario_order)}
 
-        # Assign consistent colors to scenarios
-        color_map = px.colors.qualitative.Set1  # Select a color palette
-        scenario_colors = {scenario: color_map[i % len(color_map)] for i, scenario in enumerate(common_scenarios)}
+        # Custom color mapping
+        scenario_colors = {
+            "Laser Projection": "#636EFA",
+            "Vertical Signage": "#EF553B",
+            "Road Markings": "#00CC96",
+            "Car Projection System": "#AB63FA",
+            "Center Line and Side-Line Markings": "#FFA15A",
+            "Unprotected Cycling Path": "#19D3F3",
+            "No Road Markings": "#FF6692",
+        }
 
-        # Create subplots
+        # Create subplots (Balanced width)
         fig = make_subplots(
-            rows=1, cols=2, 
-            subplot_titles=["Preferred Scenario", "Average Overtaking Distance Over Time"],
+            rows=1, cols=2,
+            column_widths=[0.65, 0.35],  # More space for the left graph
+            subplot_titles=["Overtaking Distance Over Time", "Preferred Scenario (Space)"],
             shared_yaxes=False
         )
 
-        # Add Bar Chart (Left)
-        for scenario in common_scenarios:
-            scenario_df = preferences_df[preferences_df["Scenarios"] == scenario]
+        # ---- Line Chart (Left) ----
+        for scenario in scenario_order:
+            if scenario in df_binned_filtered["Scenario"].values:
+                scenario_df = df_binned_filtered[df_binned_filtered["Scenario"] == scenario]
+                fig.add_trace(
+                    go.Scatter(
+                        x=scenario_df["TimeBin"], 
+                        y=scenario_df["Distance"], 
+                        mode='lines',  
+                        name=scenario,
+                        line=dict(color=scenario_colors[scenario])
+                    ),
+                    row=1, col=1
+                )
+
+        # ---- Bar Chart (Right) ----
+        for scenario in scenario_order:
+            if scenario in preferences_df["Scenarios"].values:
+                scenario_df = preferences_df[preferences_df["Scenarios"] == scenario]
+                fig.add_trace(
+                    go.Bar(
+                        x=scenario_df["Scenarios"], 
+                        y=scenario_df["Preference"], 
+                        name=scenario,
+                        marker=dict(color=scenario_colors[scenario]),
+                        showlegend=False
+                    ),
+                    row=1, col=2
+                )
+
+        # ---- Perform t-tests and Display Only Scenario Comparison ----
+        control_scenario = "Center Line and Side-Line Markings"  # S5
+        x_pos = 40  # Move text near x=40
+        y_start = -7  # Start in the lower right area
+        significant_tests = []  # Store only significant results
+
+        # Iterate over scenarios and perform t-tests
+        for scenario in scenario_order:
+            if scenario != control_scenario and scenario in self.df["Scenario"].values:
+                ttest_result = self.perform_ttest(control_scenario, scenario, bin_size)
+
+                if ttest_result is not None:  # ✅ Check if t-test found significance
+                    scenario_label, p_value = ttest_result  # ✅ Unpack single result
+                    significant_tests.append(f"t-test(S5, {ttest_labels[scenario_label]}): p={p_value:.3f}")
+
+        # ---- Add significant t-tests as text in the circled area ----
+        for i, text in enumerate(significant_tests):
             fig.add_trace(
-                go.Bar(
-                    x=scenario_df["Scenarios"], 
-                    y=scenario_df["Preference"], 
-                    name=scenario,
-                    marker=dict(color=scenario_colors[scenario])
+                go.Scatter(
+                    x=[x_pos],  # Position text near x=40
+                    y=[y_start - i * 1.5],  # Space out each t-test result
+                    text=[text],
+                    mode="text",
+                    textfont=dict(size=14),
+                    showlegend=False
                 ),
                 row=1, col=1
             )
 
-        # Add Line Chart (Right)
-        for scenario in common_scenarios:
-            scenario_df = df_binned_filtered[df_binned_filtered["Scenario"] == scenario]
-            fig.add_trace(
-                go.Scatter(
-                    x=scenario_df["TimeBin"], 
-                    y=scenario_df["Distance"], 
-                    mode='lines', 
-                    name=scenario,
-                    line=dict(color=scenario_colors[scenario])
-                ),
-                row=1, col=2
-            )
-
-        # Update layout
+        # Update Layout
         fig.update_layout(
             template=self.template,
             showlegend=True,
-            width=1000,
-            height=500
+            width=1500,  # Balanced width
+            height=800,
+            font=dict(size=16),
+            title_text="Combined Visualization of Scenario Preferences and Overtaking Distances with Statistical Significance",
         )
 
+        # Remove X-axis labels from bar chart
+        fig.update_xaxes(showticklabels=False, title_text="", row=1, col=2)
+
         fig.show()
+
+    def bin_data(self, df, time_column, bin_size):
+        """Bin the data into specified intervals."""
+        time_bins = np.arange(df[time_column].min(), df[time_column].max() + bin_size, bin_size)
+        df['TimeBin'] = pd.cut(df[time_column], bins=time_bins, labels=time_bins[:-1])
+        return df
+
+    def perform_ttest(self, scenario1, scenario2, bin_size=0.5):
+        """Perform a t-test between two scenarios on overtaking distance."""
+        self.df = self.bin_data(self.df, 'Time', bin_size)
+
+        significant_tests = []  # Store only significant p-values
+        
+        for time_bin in self.df["TimeBin"].unique():
+            data1 = self.df[(self.df["Scenario"] == scenario1) & (self.df["TimeBin"] == time_bin)]["Distance"]
+            data2 = self.df[(self.df["Scenario"] == scenario2) & (self.df["TimeBin"] == time_bin)]["Distance"]
+
+            if len(data1) > 2 and len(data2) > 2:  # Ensure enough data points
+                t_stat, p_value = ttest_ind(data1, data2, equal_var=False)
+                if p_value < 0.05:  # ✅ Only store significant results
+                    significant_tests.append(p_value)
+
+        # ✅ Return the most significant result (smallest p-value)
+        if significant_tests:
+            return scenario2, min(significant_tests)  
+
+        return None  # ✅ No significant results
+
+
+
+
 
 if __name__ == "__main__":
     scenarios_path = Simulator.get_configs("files_simulator")
@@ -410,3 +496,6 @@ if __name__ == "__main__":
     sim.plot_combined_figure()
 
     # sim.plot_overtaking_distance()
+
+    t_stat, p_value = sim.perform_ttest("Laser Projection", "Vertical Signage")
+    print(f"T-statistic: {t_stat}, P-value: {p_value}")
