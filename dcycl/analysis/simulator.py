@@ -177,7 +177,7 @@ class Simulator(object):
             filtered_df,
             x="Scenario",
             y="Distance",
-            title="Minimum distance per scenario",
+            title="Comparison of distance across scenarios (mean displayed)",
             color="Scenario",
             template=self.template,
         )
@@ -194,7 +194,16 @@ class Simulator(object):
             )
 
         # Remove legend
-        fig.update_layout(showlegend=False,font=dict(family=font_family, size=font_size))
+        fig.update_layout(
+            
+            title=dict(
+                text="Comparison of distance across scenarios (mean displayed)",
+                x=0.5,  # Center the title
+                xanchor="center",  # Ensure text is centered
+                y=0.95,  # Adjust the vertical position slightly
+                yanchor="top"  # Anchor the title from the top
+            ),
+            showlegend=False,font=dict(family=font_family, size=font_size))
 
         fig.show()
 

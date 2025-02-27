@@ -3009,11 +3009,11 @@ class Analysis:
         if remove_margins:
             fig.update_layout(margin=dict(l=2, r=2, t=20, b=12))
         # save as eps
-        if save_eps:
-            fig.write_image(os.path.join(path, name + '.eps'), width=width, height=height)
+        #if save_eps:
+        #    fig.write_image(os.path.join(path, name + '.eps'), width=width, height=height)
             # also save the final figure
-            if save_final:
-                fig.write_image(os.path.join(path_final, name + '.eps'), width=width, height=height)
+        #    if save_final:
+        #        fig.write_image(os.path.join(path_final, name + '.eps'), width=width, height=height)
         # save as png
         if save_png:
             fig.write_image(os.path.join(path, name + '.png'), width=width, height=height)
