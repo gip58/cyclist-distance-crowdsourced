@@ -90,7 +90,15 @@ class Simulator(object):
 
         self.template = Simulator.get_configs("plotly_template")
 
+
+
+
     def plot_preferences(self, save_fig=True):
+        # Load global font settings from the config file
+        font_family = Simulator.get_configs("font_family")  
+        font_size = Simulator.get_configs("font_size")  
+
+
         preferences_file = Simulator.get_configs("simulator_preferences_file")
         preferences_df = pd.read_csv(preferences_file)
 
@@ -102,6 +110,7 @@ class Simulator(object):
             color="Scenarios",
             template=self.template,
         )
+        fig.update_layout(font=dict(family=font_family, size=font_size))
         fig.show()
 
         import plotly.graph_objects as go
@@ -119,12 +128,17 @@ class Simulator(object):
             yaxis_title="Preference",
             template=self.template,
         )
+        fig.update_layout(font=dict(family=font_family, size=font_size))
         fig.show()
 
         if save_fig:
             self.save_plotly(fig, "preferences")
 
     def plot_mean_speed(self, save_fig=True):
+        # Load global font settings from the config file
+        font_family = Simulator.get_configs("font_family")  
+        font_size = Simulator.get_configs("font_size")  
+
         # Getting average speed per scenario
         averaged_df = (
             self.df.groupby(["ScenarioID", "Scenario", "Participant"])
@@ -140,13 +154,17 @@ class Simulator(object):
             color="Scenario",
             template=self.template,
         )
-        fig.update_layout(legend=dict(x=0.3, y=1.1))  # TODO: Play around with location)
+        fig.update_layout(legend=dict(x=0.3, y=1.1),font=dict(family=font_family, size=font_size))  # TODO: Play around with location)
         fig.show()
 
         if save_fig:
             self.save_plotly(fig, "mean_speed")
 
     def plot_min_distance(self, save_fig=True):
+        # Load global font settings from the config file
+        font_family = Simulator.get_configs("font_family")  
+        font_size = Simulator.get_configs("font_size")  
+
         # Getting Minimum distance per scenario
         min_df = self.df.groupby(["ScenarioID", "Participant"]).min().reset_index()
         filtered_df = min_df[10 > min_df["Distance"]]
@@ -176,7 +194,7 @@ class Simulator(object):
             )
 
         # Remove legend
-        fig.update_layout(showlegend=False)
+        fig.update_layout(showlegend=False,font=dict(family=font_family, size=font_size))
 
         fig.show()
 
@@ -214,6 +232,7 @@ class Simulator(object):
             },
             template=self.template,
         )
+        fig.update_layout(font=dict(family=font_family, size=font_size))
 
         fig_line.show()
 
@@ -337,6 +356,10 @@ class Simulator(object):
         pass
 
     def plot_combined_figure(self, save_fig=True):
+        # ✅ Load global font settings from the config file
+        font_family = Simulator.get_configs("font_family")  # Example: "Open Sans, verdana, arial, sans-serif"
+        font_size = Simulator.get_configs("font_size")  # Example: 12
+
         # Load preferences data
         preferences_file = Simulator.get_configs("simulator_preferences_file")
         preferences_df = pd.read_csv(preferences_file)
@@ -458,9 +481,12 @@ class Simulator(object):
         fig.update_layout(
             template=self.template,
             showlegend=True,
-            width=1300,  
-            height=600,  
-            font=dict(size=16),
+            width=1320,  
+            height=680,  
+            font=dict(
+            family=font_family,  # Load from config
+            size=font_size,  # Load from config
+            ),
 
             # Move Main Title to the Top
             title=dict(
@@ -473,8 +499,8 @@ class Simulator(object):
 
             # Adjust Legend Position (Fixed Top-Right)
             legend=dict(
-                x=1,  
-                y=1,  
+                x=0.95,  
+                y=0.99,  
                 xanchor="right",
                 yanchor="top",
                 font=dict(size=14),
