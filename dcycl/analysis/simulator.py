@@ -10,7 +10,10 @@ import plotly as py
 import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+import scipy.stats as stats
 from scipy.stats import ttest_ind
+
+
 
 # import dcycl as dc
 
@@ -87,7 +90,7 @@ class Simulator(object):
 
         self.template = Simulator.get_configs("plotly_template")
 
-    def plot_preferences(self, save_fig=False):
+    def plot_preferences(self, save_fig=True):
         preferences_file = Simulator.get_configs("simulator_preferences_file")
         preferences_df = pd.read_csv(preferences_file)
 
@@ -121,7 +124,7 @@ class Simulator(object):
         if save_fig:
             self.save_plotly(fig, "preferences")
 
-    def plot_mean_speed(self, save_fig=False):
+    def plot_mean_speed(self, save_fig=True):
         # Getting average speed per scenario
         averaged_df = (
             self.df.groupby(["ScenarioID", "Scenario", "Participant"])
@@ -143,17 +146,15 @@ class Simulator(object):
         if save_fig:
             self.save_plotly(fig, "mean_speed")
 
-    def plot_min_distance(self, save_fig=False):
+    def plot_min_distance(self, save_fig=True):
         # Getting Minimum distance per scenario
         min_df = self.df.groupby(["ScenarioID", "Participant"]).min().reset_index()
         filtered_df = min_df[10 > min_df["Distance"]]
-        # print(df_scenario_1.keys())
-        # print(min_distances)
 
-        # fig = go.Figure()
-        # for scenario in filtered_df.columns:
-        #     values = filtered_df[filtered_df["Scenario"] == scenario][" Distance"]
-        #     fig.add_trace(go.Box(values, name=scenario))
+        # Calculate the mean distance for each scenario
+        mean_values = filtered_df.groupby("Scenario")["Distance"].mean()
+
+        # Create the box plot
         fig = px.box(
             filtered_df,
             x="Scenario",
@@ -162,14 +163,27 @@ class Simulator(object):
             color="Scenario",
             template=self.template,
         )
-        fig.update_layout(legend=dict(x=0.3, y=1.1))  # TODO: Play around with location
+
+        # Add mean values as annotations
+        for scenario, mean in mean_values.items():
+            fig.add_annotation(
+                x=scenario,
+                y=mean,
+                text=f"{mean:.2f}",  # Format to 2 decimal places
+                showarrow=False,
+                font=dict(size=12, color="black"),
+                yshift=10  # Adjust position above the box
+            )
+
+        # Remove legend
+        fig.update_layout(showlegend=False)
 
         fig.show()
 
         if save_fig:
             self.save_plotly(fig, "min_distance")
 
-    def plot_overtaking_distance(self, save_fig=False):
+    def plot_overtaking_distance(self, save_fig=True):
         # Bin time into 0.5s intervals
         time_bins_filtered = np.arange(4, self.df["Time"].max(), 0.5)
         self.df["TimeBin"] = pd.cut(
@@ -322,13 +336,13 @@ class Simulator(object):
     def filter_data(self, df):
         pass
 
-    def plot_combined_figure(self, save_fig=False):
+    def plot_combined_figure(self, save_fig=True):
         # Load preferences data
         preferences_file = Simulator.get_configs("simulator_preferences_file")
         preferences_df = pd.read_csv(preferences_file)
 
         # Ensure data is binned before analysis
-        bin_size = 0.5  # Define bin size
+        bin_size = 0.5
         self.df = self.bin_data(self.df, 'Time', bin_size)
 
         # Compute the average overtaking distance per time bin per scenario
@@ -350,8 +364,37 @@ class Simulator(object):
             "No Road Markings"
         ]
 
-        # Mapping for shorter t-test labels
-        ttest_labels = {scenario: f"S{i+1}" for i, scenario in enumerate(scenario_order)}
+        # Define scenario mapping to use S1, S2, etc.
+        scenario_mapping = {
+            "Laser Projection": "S1",
+            "Vertical Signage": "S2",
+            "Road Markings": "S3",
+            "Car Projection System": "S4",
+            "Center Line and Side-Line Markings": "S5",  # Control scenario
+            "Unprotected Cycling Path": "S6",
+            "No Road Markings": "S7"
+        }
+
+        # Define control scenario for statistical comparison
+        control_scenario = "Center Line and Side-Line Markings"
+
+        # Compute t-tests between control scenario and other scenarios
+        ttest_results = []
+        control_distances = df_binned_filtered[df_binned_filtered["Scenario"] == control_scenario]["Distance"]
+
+        for scenario in scenario_order:
+            if scenario != control_scenario:
+                scenario_distances = df_binned_filtered[df_binned_filtered["Scenario"] == scenario]["Distance"]
+
+                # Perform independent t-test
+                t_stat, p_value = stats.ttest_ind(control_distances, scenario_distances, equal_var=False, nan_policy='omit')
+
+                # Convert scenario names to S1, S2, etc.
+                s_control = scenario_mapping[control_scenario]  # Always "S5"
+                s_scenario = scenario_mapping[scenario]
+
+                # Store result for annotation
+                ttest_results.append(f"t-test({s_scenario}, {s_control}): p={p_value:.3f}")
 
         # Custom color mapping
         scenario_colors = {
@@ -364,15 +407,15 @@ class Simulator(object):
             "No Road Markings": "#FF6692",
         }
 
-        # Create subplots (Balanced width)
+        # ✅ Proper subplot alignment with adjusted row heights
         fig = make_subplots(
-            rows=1, cols=2,
-            column_widths=[0.65, 0.35],  # More space for the left graph
-            subplot_titles=["Overtaking Distance Over Time", "Preferred Scenario (Space)"],
-            shared_yaxes=False
+            rows=1, cols=2,  
+            column_widths=[0.75, 0.25],  # Ensure the left plot is wider
+            shared_yaxes=False,
+            horizontal_spacing=0.05  
         )
 
-        # ---- Line Chart (Left) ----
+        # ---- Line Chart (Curvature Graph - Left Side) ----
         for scenario in scenario_order:
             if scenario in df_binned_filtered["Scenario"].values:
                 scenario_df = df_binned_filtered[df_binned_filtered["Scenario"] == scenario]
@@ -384,10 +427,13 @@ class Simulator(object):
                         name=scenario,
                         line=dict(color=scenario_colors[scenario])
                     ),
-                    row=1, col=1
+                    row=1, col=1  
                 )
 
-        # ---- Bar Chart (Right) ----
+        # ✅ Set Y-axis labels correctly
+        fig.update_yaxes(title_text="Overtaking Distance (m)", range=[0, df_binned_filtered["Distance"].max()], row=1, col=1)
+
+        # ---- Bar Chart (Aligned Right) ----
         for scenario in scenario_order:
             if scenario in preferences_df["Scenarios"].values:
                 scenario_df = preferences_df[preferences_df["Scenarios"] == scenario]
@@ -399,52 +445,81 @@ class Simulator(object):
                         marker=dict(color=scenario_colors[scenario]),
                         showlegend=False
                     ),
-                    row=1, col=2
+                    row=1, col=2  
                 )
 
-        # ---- Perform t-tests and Display Only Scenario Comparison ----
-        control_scenario = "Center Line and Side-Line Markings"  # S5
-        x_pos = 40  # Move text near x=40
-        y_start = -7  # Start in the lower right area
-        significant_tests = []  # Store only significant results
+        # ✅ Set Y-axis labels correctly for bar chart
+        fig.update_yaxes(title_text="Prefered Scenarios", range=[0, preferences_df["Preference"].max()* 1.75], row=1, col=2)
 
-        # Iterate over scenarios and perform t-tests
-        for scenario in scenario_order:
-            if scenario != control_scenario and scenario in self.df["Scenario"].values:
-                ttest_result = self.perform_ttest(control_scenario, scenario, bin_size)
+        # ✅ Align x-axes properly
+        fig.update_xaxes(matches="x")  
 
-                if ttest_result is not None:  # ✅ Check if t-test found significance
-                    scenario_label, p_value = ttest_result  # ✅ Unpack single result
-                    significant_tests.append(f"t-test(S5, {ttest_labels[scenario_label]}): p={p_value:.3f}")
-
-        # ---- Add significant t-tests as text in the circled area ----
-        for i, text in enumerate(significant_tests):
-            fig.add_trace(
-                go.Scatter(
-                    x=[x_pos],  # Position text near x=40
-                    y=[y_start - i * 1.5],  # Space out each t-test result
-                    text=[text],
-                    mode="text",
-                    textfont=dict(size=14),
-                    showlegend=False
-                ),
-                row=1, col=1
-            )
-
-        # Update Layout
+        # ✅ Layout Adjustments
         fig.update_layout(
             template=self.template,
             showlegend=True,
-            width=1500,  # Balanced width
-            height=800,
+            width=1300,  
+            height=600,  
             font=dict(size=16),
-            title_text="Combined Visualization of Scenario Preferences and Overtaking Distances with Statistical Significance",
+
+            # Move Main Title to the Top
+            title=dict(
+                text="Combined Visualization of Scenario Preferences and Overtaking Distances with Statistical Significance",
+                x=0.5,
+                y=0.98,
+                xanchor="center",
+                yanchor="top",
+            ),
+
+            # Adjust Legend Position (Fixed Top-Right)
+            legend=dict(
+                x=1,  
+                y=1,  
+                xanchor="right",
+                yanchor="top",
+                font=dict(size=14),
+                traceorder="normal"
+            ),
         )
 
-        # Remove X-axis labels from bar chart
+        # ✅ Remove X-axis labels from bar chart to reduce clutter
         fig.update_xaxes(showticklabels=False, title_text="", row=1, col=2)
 
+        # ✅ Adjust subplot titles to match alignment
+        fig.update_annotations([
+            dict(
+                x=0.35, y=-0.12,  
+                xref="paper", yref="paper",
+                text="Overtaking Distance Over Time",
+                showarrow=False,
+                font=dict(size=16)
+            ),
+            dict(
+                x=0., y=-0.12,  
+                xref="paper", yref="paper",
+                text="Preferred Scenario (Space)",
+                showarrow=False,
+                font=dict(size=16)
+            )
+        ])
+
+        # ✅ Add t-test results as an annotation at the right side of the figure
+        fig.add_annotation(
+            x=0.6, y=0.1,  # Position towards the right, properly aligned
+            xref="paper", yref="paper",
+            text="<br>".join(ttest_results),  # Formatting for better readability
+            showarrow=False,
+            font=dict(size=14),
+            align="left"
+        )
+
         fig.show()
+
+        if save_fig:
+            self.save_plotly(fig, "combined_figure")
+
+
+
 
     def bin_data(self, df, time_column, bin_size):
         """Bin the data into specified intervals."""
@@ -487,15 +562,15 @@ if __name__ == "__main__":
     )
     sim.read_data(False, False)
 
-    # sim.plot_min_distance()
+    sim.plot_min_distance()
 
-    # sim.plot_mean_speed()
+    sim.plot_mean_speed()
 
-    #sim.plot_preferences()
+    sim.plot_preferences()
 
     sim.plot_combined_figure()
 
-    # sim.plot_overtaking_distance()
+    sim.plot_overtaking_distance()
 
     t_stat, p_value = sim.perform_ttest("Laser Projection", "Vertical Signage")
     print(f"T-statistic: {t_stat}, P-value: {p_value}")
