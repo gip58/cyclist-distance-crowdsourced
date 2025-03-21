@@ -1,4 +1,4 @@
-# by Pavlo Bazilinskyy <pavlo.bazilinskyy@gmail.com>
+
 import json
 import os
 import pandas as pd

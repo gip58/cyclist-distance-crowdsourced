@@ -1,4 +1,4 @@
-# by Pavlo Bazilinskyy <pavlo.bazilinskyy@gmail.com>
+
 import os
 import matplotlib
 import matplotlib.pyplot as plt

@@ -1,4 +1,4 @@
-# by Pavlo Bazilinskyy <pavlo.bazilinskyy@gmail.com>
+
 import requests
 import pandas as pd
 from tqdm import tqdm

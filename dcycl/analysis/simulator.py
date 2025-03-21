@@ -1,4 +1,4 @@
-# by Giovanni Sapienza () and Pavlo Bazilinskyy <pavlo.bazilinskyy@gmail.com>
+
 
 
 import json
@@ -28,20 +28,20 @@ class Simulator(object):
     df = pd.DataFrame()
 
     scenario_names = {
-        1: "Laser Projection",
-        2: "Vertical Signage",
-        3: "Road Markings",
-        4: "Car Projection System",
-        5: "Center Line and Side-Line Markings",
-        6: "Unprotected Cycling Path",
-        7: "No Road Markings",
-        "Scenario_1": "Laser Projection",
-        "Scenario_2": "Vertical Signage",
-        "Scenario_3": "Road Markings",
-        "Scenario_4": "Car Projection System",
-        "Scenario_5": "Center Line and Side-Line Markings",
-        "Scenario_6": "Unprotected Cycling Path",
-        "Scenario_7": "No Road Markings",
+        1: "Laser projection",
+        2: "Vertical signage",
+        3: "Road markings",
+        4: "Car projection system",
+        5: "Center line and side-line markings",
+        6: "Unprotected cycling path",
+        7: "No road markings",
+        "Scenario_1": "Laser projection",
+        "Scenario_2": "Vertical signage",
+        "Scenario_3": "Road markings",
+        "Scenario_4": "Car projection system",
+        "Scenario_5": "Center line and side-line markings",
+        "Scenario_6": "Unprotected cycling path",
+        "Scenario_7": "No road markings",
     }
 
     # set template for plotly output
@@ -387,28 +387,28 @@ class Simulator(object):
 
         # Define the fixed order of scenarios
         scenario_order = [
-            "Laser Projection",
-            "Vertical Signage",
-            "Road Markings",
-            "Car Projection System",
-            "Center Line and Side-Line Markings",  # Control scenario (S5)
-            "Unprotected Cycling Path",
-            "No Road Markings"
+            "Laser projection",
+            "Vertical signage",
+            "Road markings",
+            "Car projection system",
+            "Center line and side-line markings",  # Control scenario (S5)
+            "Unprotected cycling path",
+            "No road markings"
         ]
 
         # Define scenario mapping to use S1, S2, etc.
         scenario_mapping = {
-            "Laser Projection": "S1",
-            "Vertical Signage": "S2",
-            "Road Markings": "S3",
-            "Car Projection System": "S4",
-            "Center Line and Side-Line Markings": "S5",  # Control scenario
-            "Unprotected Cycling Path": "S6",
-            "No Road Markings": "S7"
+            "Laser projection": "S1",
+            "Vertical signage": "S2",
+            "Road markings": "S3",
+            "Car projection system": "S4",
+            "Center line and side-line markings": "S5",  # Control scenario
+            "Unprotected cycling path": "S6",
+            "No road markings": "S7"
         }
 
         # Define control scenario for statistical comparison
-        control_scenario = "Center Line and Side-Line Markings"
+        control_scenario = "Center line and side-line markings"
 
         # Compute t-tests between control scenario and other scenarios
         ttest_results = []
@@ -430,13 +430,13 @@ class Simulator(object):
 
         # Custom color mapping
         scenario_colors = {
-            "Laser Projection": "#636EFA",
-            "Vertical Signage": "#EF553B",
-            "Road Markings": "#00CC96",
-            "Car Projection System": "#AB63FA",
-            "Center Line and Side-Line Markings": "#FFA15A",
-            "Unprotected Cycling Path": "#19D3F3",
-            "No Road Markings": "#FF6692",
+            "Laser projection": "#636EFA",
+            "Vertical signage": "#EF553B",
+            "Road markings": "#00CC96",
+            "Car projection system": "#AB63FA",
+            "Center line and side-line markings": "#FFA15A",
+            "Unprotected cycling path": "#19D3F3",
+            "No road markings": "#FF6692",
         }
 
         # ✅ Proper subplot alignment with adjusted row heights
@@ -463,7 +463,7 @@ class Simulator(object):
                 )
 
         # ✅ Set Y-axis labels correctly
-        fig.update_yaxes(title_text="Overtaking Distance (m)", range=[0, df_binned_filtered["Distance"].max()], row=1, col=1)
+        fig.update_yaxes(title_text="Overtaking distance (m)", range=[0, df_binned_filtered["Distance"].max()], row=1, col=1)
 
         # ---- Bar Chart (Aligned Right) ----
         for scenario in scenario_order:
@@ -481,7 +481,7 @@ class Simulator(object):
                 )
 
         # ✅ Set Y-axis labels correctly for bar chart
-        fig.update_yaxes(title_text="Prefered Scenarios", range=[0, preferences_df["Preference"].max()* 1.75], row=1, col=2)
+        fig.update_yaxes(title_text="Prefered scenarios", range=[0, preferences_df["Preference"].max()* 1.75], row=1, col=2)
 
         # ✅ Align x-axes properly
         fig.update_xaxes(matches="x")  
@@ -499,7 +499,6 @@ class Simulator(object):
 
             # Move Main Title to the Top
             title=dict(
-                text="Combined Visualization of Scenario Preferences and Overtaking Distances with Statistical Significance",
                 x=0.5,
                 y=0.98,
                 xanchor="center",
@@ -525,14 +524,14 @@ class Simulator(object):
             dict(
                 x=0.35, y=-0.12,  
                 xref="paper", yref="paper",
-                text="Overtaking Distance Over Time",
+                text="Overtaking distance over time",
                 showarrow=False,
                 font=dict(size=16)
             ),
             dict(
                 x=0., y=-0.12,  
                 xref="paper", yref="paper",
-                text="Preferred Scenario (Space)",
+                text="Preferred scenario (Space)",
                 showarrow=False,
                 font=dict(size=16)
             )
@@ -607,5 +606,5 @@ if __name__ == "__main__":
 
     sim.plot_overtaking_distance()
 
-    t_stat, p_value = sim.perform_ttest("Laser Projection", "Vertical Signage")
+    t_stat, p_value = sim.perform_ttest("Laser projection", "Vertical signage")
     print(f"T-statistic: {t_stat}, P-value: {p_value}")

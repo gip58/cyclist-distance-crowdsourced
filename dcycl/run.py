@@ -1,4 +1,3 @@
-# by Pavlo Bazilinskyy <pavlo.bazilinskyy@gmail.com>
 import os
 from statistics import mean
 
@@ -113,7 +112,7 @@ if __name__ == "__main__":
         # process post-trial questions and update mapping
         mapping = heroku.process_stimulus_questions(questions)
         # rename columns with responses to post-stimulus questions to meaningful names
-        mapping = mapping.rename(columns={"slider-0": "space", "slider-1": "estimate"})
+        mapping = mapping.rename(columns={"slider-0": "Perceived sufficient space", "slider-1": "Participants estimate"}) 
         # export to pickle
         dc.common.save_to_p("mapping.p", mapping, "mapping of stimuli")
     else:
@@ -208,7 +207,7 @@ if __name__ == "__main__":
                 # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(
                     df,
-                    y=["space", "estimate"],
+                    y=["Perceived sufficient space", "Participants estimate"],
                     # hardcode based on the longest stimulus
                     xaxis_kp_range=[0, 20],
                     # hardcode based on the highest recorded value
@@ -516,7 +515,7 @@ if __name__ == "__main__":
                     "Vertical sign",
                     "Danish sign",
                     "Car laser projection",
-                    "Control",
+                    "Center line and side-line markings",
                     "Unprotected cycling path",
                     "No road markings",
                 ],
@@ -569,7 +568,7 @@ if __name__ == "__main__":
             # post stimulus questions for all stimuli
             analysis.bar(
                 mapping,
-                y=["space", "estimate"],
+                y=["Perceived sufficient space", "Participants estimate"],
                 stacked=False,
                 show_text_labels=True,
                 pretty_text=True,
@@ -583,7 +582,7 @@ if __name__ == "__main__":
             #     ids = [stim*3, stim*3 + 1, stim*3 + 2]
             #     df = mapping[mapping['id'].isin(ids)]
             #     analysis.bar(df,
-            #                  y=['space', 'estimate'],
+            #                  y=["Perceived sufficient space", "Participants estimate"],
             #                  stacked=False,
             #                  show_text_labels=True,
             #                  pretty_text=True,
@@ -594,7 +593,7 @@ if __name__ == "__main__":
             #     ids = [dist*3, dist*3 + 1, dist*3 + 2]
             #     df = mapping[mapping['id'].isin(ids)]
             #     analysis.bar(df,
-            #                  y=['space', 'estimate'],
+            #                  y=["Perceived sufficient space", "Participants estimate"],
             #                  stacked=False,
             #                  show_text_labels=True,
             #                  pretty_text=True,
@@ -983,7 +982,7 @@ if __name__ == "__main__":
                 analysis.create_animation_all_stimuli(num_stimuli)
         # Visualisation of eye tracking data
         if SHOW_OUTPUT_SM:
-            logger.info("Giovanni, put yout stuff here.")
+            logger.info(" put yout stuff here.")
             # all keypresses with confidence interval
             analysis.plot_kp(
                 mapping,
