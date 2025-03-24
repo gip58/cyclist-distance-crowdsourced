@@ -112,7 +112,7 @@ if __name__ == "__main__":
         # process post-trial questions and update mapping
         mapping = heroku.process_stimulus_questions(questions)
         # rename columns with responses to post-stimulus questions to meaningful names
-        mapping = mapping.rename(columns={"slider-0": "Perceived sufficient space", "slider-1": "Participants estimate"}) 
+        mapping = mapping.rename(columns={"slider-0": "Perceived sufficient space", "slider-1": "Participants estimate in (m)"}) 
         # export to pickle
         dc.common.save_to_p("mapping.p", mapping, "mapping of stimuli")
     else:
@@ -207,7 +207,7 @@ if __name__ == "__main__":
                 # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(
                     df,
-                    y=["Perceived sufficient space", "Participants estimate"],
+                    y=["Perceived sufficient space", "Participants estimate in (m)"],
                     # hardcode based on the longest stimulus
                     xaxis_kp_range=[0, 20],
                     # hardcode based on the highest recorded value
@@ -410,13 +410,13 @@ if __name__ == "__main__":
                         mapping.loc[mapping["interaction"] == "control"]["kp_raw"].iloc[
                             0
                         ]
-                    ),  # Control vs Danish sign  # noqa: E501
+                    ),  # Control vs Road markings  # noqa: E501
                     "signal_2": dc.common.vertical_sum(
-                        mapping.loc[mapping["interaction"] == "danish_sign"][
+                        mapping.loc[mapping["interaction"] == "Road_markings"][
                             "kp_raw"
                         ].iloc[0]
                     ),  # noqa: E501
-                    "label": "ttest(Control, Danish sign)",
+                    "label": "ttest(Control, Road markings)",
                     "paired": True,
                 },
                 {
@@ -482,7 +482,7 @@ if __name__ == "__main__":
                             ].iloc[0]
                         ),  # noqa: E501
                         dc.common.vertical_sum(
-                            mapping.loc[mapping["interaction"] == "danish_sign"][
+                            mapping.loc[mapping["interaction"] == "Road_markings"][
                                 "kp_raw"
                             ].iloc[0]
                         ),  # noqa: E501
@@ -513,9 +513,9 @@ if __name__ == "__main__":
                 y_legend=[
                     "Bike laser projection",
                     "Vertical sign",
-                    "Danish sign",
+                    "Road markings",
                     "Car laser projection",
-                    "Center line and side-line markings",
+                    "Center line and side-line markings (control)",
                     "Unprotected cycling path",
                     "No road markings",
                 ],
@@ -568,7 +568,7 @@ if __name__ == "__main__":
             # post stimulus questions for all stimuli
             analysis.bar(
                 mapping,
-                y=["Perceived sufficient space", "Participants estimate"],
+                y=["Perceived sufficient space", "Participants estimate in (m)"],
                 stacked=False,
                 show_text_labels=True,
                 pretty_text=True,
@@ -582,7 +582,7 @@ if __name__ == "__main__":
             #     ids = [stim*3, stim*3 + 1, stim*3 + 2]
             #     df = mapping[mapping['id'].isin(ids)]
             #     analysis.bar(df,
-            #                  y=["Perceived sufficient space", "Participants estimate"],
+            #                  y=["Perceived sufficient space", "Participants estimate in (m)"],
             #                  stacked=False,
             #                  show_text_labels=True,
             #                  pretty_text=True,
@@ -593,7 +593,7 @@ if __name__ == "__main__":
             #     ids = [dist*3, dist*3 + 1, dist*3 + 2]
             #     df = mapping[mapping['id'].isin(ids)]
             #     analysis.bar(df,
-            #                  y=["Perceived sufficient space", "Participants estimate"],
+            #                  y=["Perceived sufficient space", "Participants estimate in (m)"],
             #                  stacked=False,
             #                  show_text_labels=True,
             #                  pretty_text=True,

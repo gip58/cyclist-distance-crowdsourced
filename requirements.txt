@@ -15,4 +15,5 @@ setuptools==68.0.0
 Shapely==2.0.6
 statsmodels==0.14.4
 tqdm==4.66.1
+kaleido==0.1.0.post1
 xmltodict==0.13.0

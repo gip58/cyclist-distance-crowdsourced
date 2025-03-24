@@ -323,7 +323,7 @@ class Simulator(object):
         name,
         width=1320,
         height=680,
-        save_eps=False,
+        save_eps=True,
         save_png=True,
         save_html=True,
     ):
@@ -358,6 +358,13 @@ class Simulator(object):
                 os.path.join(self.folder_figures, name + ".png"),
                 width=width,
                 height=height,
+            )
+            # also save the final figure
+        if save_eps:
+            fig.write_image(
+                os.path.join(self.folder_figures, name + '.eps'), 
+                width=width, 
+                height=height
             )
             # also save the final figure
 

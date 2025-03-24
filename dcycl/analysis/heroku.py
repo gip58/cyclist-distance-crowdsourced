@@ -248,6 +248,9 @@ class Heroku:
                         questions = []
                         answers = []
                         for key, value in responses.items():
+                            if key == 'slider-1':
+                                 # Modify slider-1 data (scale from 0-100 to 0.5-2.5 meters)
+                                 value = 0.5 + (int(value) / 100) * 2
                             questions.append(key)
                             answers.append(int(value))
                         # check if values were recorded previously
