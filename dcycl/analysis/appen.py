@@ -5,7 +5,6 @@ import os
 from collections import Counter
 from pycountry_convert import country_alpha2_to_country_name, country_name_to_country_alpha3
 
-
 import dcycl as dc
 
 logger = dc.CustomLogger(__name__)  # use custom logger
@@ -27,46 +26,48 @@ class Appen:
     # mapping between appen column names and readable names
     columns_mapping = {'_started_at': 'start',
                        '_created_at': 'end',
-                       'about_how_many_kilometers_miles_did_you_drive_in_the_last_12_months': 'milage',  # noqa: E501
-                       'at_which_age_did_you_obtain_your_first_license_for_driving_a_car': 'year_license',  # noqa: E501
-                       'have_you_read_and_understood_the_above_instructions': 'instructions',  # noqa: E501
+                       'about_how_many_kilometers_miles_did_you_drive_in_the_last_12_months': 'milage',
+                       'are_you_aware_of_any_laws_or_guidelines_in_your_country_or_within_the_eu_that_specify_the_minimum_distance_a_car_should_maintain_when_overtaking_a_cyclist': 'cycling_distance',  # noqa: E501
+                       'as_a_cyclist_what_are_your_biggest_concerns_when_vehicles_overtake_you_on_the_road': 'cycling_concerns',  # noqa: E501
+                       'at_which_age_did_you_obtain_your_first_license_for_driving_a_car': 'year_license',
+                       'do_you_change_your_behaviour_when_driving_in_areas_with_many_ciclysts_if_so_how': 'change_behaviour',  # noqa: E501
+                       'have_you_read_and_understood_the_above_instructions': 'instructions',
                        'do_you_consent_to_participate_in_this_study_in_the_way_that_is_described_in_the_information_shown_above': 'consent',  # noqa: E501
+                       'do_you_hold_a_valid_drivers_license': 'valid_license',
+                       'do_you_think_the_current_laws_or_guidelines_are_sufficient_to_ensure_cyclists_safety_why_or_why_not': 'cycling_laws',  # noqa: E501
+                       'from_which_country_is_the_driving_license_issued': 'license_country',  # noqa: E501
+                       'have_you_ever_felt_pressured_by_other_drivers_or_traffic_conditions_to_overtake_a_cyclist_more_closely_than_you_would_prefer': 'cycling_pressure',  # noqa: E501
+                       'have_you_ever_had_a_near_accident_or_an_accident_due_to_a_vehicle_overtaking_you_too_close_how_did_that_experience_impact_your_sense_of_safety_while_cycling': 'cycling_overtake',  # noqa: E501
+                       'how_do_you_feel_about_sharing_the_road_with_cyclists_do_you_think_there_should_be_more_infrastructure_dedicated_to_cyclists_such_as_cycling_lanes': 'cycling_infrastructure',  # noqa: E501
+                       'if_you_cycle_do_you_alter_your_route_or_timing_to_avoid_areas_where_drivers_tend_to_pass_too_closely': 'cycling_route',  # noqa: E501
                        'how_many_accidents_were_you_involved_in_when_driving_a_car_in_the_last_3_years_please_include_all_accidents_regardless_of_how_they_were_caused_how_slight_they_were_or_where_they_happened': 'accidents',  # noqa: E501
                        'becoming_angered_by_a_particular_type_of_driver_and_indicate_your_hostility_by_whatever_means_you_can': 'dbq1_anger',  # noqa: E501
-                       'disregarding_the_speed_limit_on_a_motorway': 'dbq2_speed_motorway',  # noqa: E501
-                       'disregarding_the_speed_limit_on_a_residential_road': 'dbq3_speed_residential',  # noqa: E501
+                       'disregarding_the_speed_limit_on_a_motorway': 'dbq2_speed_motorway',
+                       'disregarding_the_speed_limit_on_a_residential_road': 'dbq3_speed_residential',
                        'driving_so_close_to_the_car_in_front_that_it_would_be_difficult_to_stop_in_an_emergency': 'dbq4_headway',  # noqa: E501
                        'racing_away_from_traffic_lights_with_the_intention_of_beating_the_driver_next_to_you': 'dbq5_traffic_lights',  # noqa: E501
-                       'sounding_your_horn_to_indicate_your_annoyance_with_another_road_user': 'dbq6_horn',  # noqa: E501
-                       'using_a_phone_in_your_hands_while_driving': 'dbq7_mobile',  # noqa: E501
-                       'doing_my_best_not_to_be_obstacle_for_other_drivers': 'dbq8_others',  # noqa: E501
+                       'sounding_your_horn_to_indicate_your_annoyance_with_another_road_user': 'dbq6_horn',
+                       'using_a_phone_in_your_hands_while_driving': 'dbq7_mobile',
+                       'doing_my_best_not_to_be_obstacle_for_other_drivers': 'dbq8_others',
                        'if_you_answered_other_in_the_previous_question_please_describe_your_experiences_below': 'experiences_other',  # noqa: E501
                        'if_you_answered_other_in_the_previous_question_please_describe_your_input_device_below': 'device_other',  # noqa: E501
                        'in_which_type_of_place_are_you_located_now': 'place',
                        'if_you_answered_other_in_the_previous_question_please_describe_the_place_where_you_are_located_now_below': 'place_other',  # noqa: E501
-                       'in_which_year_do_you_think_that_most_cars_will_be_able_to_drive_fully_automatically_in_your_country_of_residence': 'year_ad',  # noqa: E501
-                       'on_average_how_often_did_you_drive_a_car_in_the_last_12_months': 'driving_freq',  # noqa: E501
-                       'please_provide_any_suggestions_that_could_help_engineers_to_build_safe_and_enjoyable_automated_cars': 'suggestions_ad',  # noqa: E501
-                       'type_the_code_that_you_received_at_the_end_of_the_experiment': 'worker_code',  # noqa: E501
+                       'on_average_how_often_did_you_drive_a_car_in_the_last_12_months': 'driving_freq',
+                       'on_average_how_often_did_you_drive_a_bicycle_in_the_last_12_months': 'cycling_freq',
+                       'please_provide_an_estimate_of_what_you_believe_the_minimum_distance_for_overtaking_a_cyclist_should_be_in_metres': 'cycling_overtake_m',  # noqa: E501
+                       'please_provide_any_suggestions_that_could_help_engineers_to_build_safe_and_enjoyable_interaction_between_all_road_user': 'suggestions_ad',  # noqa: E501
+                       'type_the_code_that_you_received_at_the_end_of_the_experiment': 'worker_code',
+                       'what_challenges_have_you_encountered_when_trying_to_maintain_a_safe_distance_from_cyclists_while_driving': 'cycling_challenges',  # noqa: E501
+                       'what_factors_influence_your_decision_on_how_much_space_to_leave_when_overtaking_a_cyclist_eg_road_width_speed_traffic_conditions': 'cycling_factors',  # noqa: E501
+                       'what_if_anything_would_encourage_you_to_consistently_maintain_a_safe_distance_when_overtaking_cyclists_eg_stricter_laws_better_infrastructure_personal_experiences': 'cycling_encouragement',  # noqa: E501
                        'what_is_your_age': 'age',
                        'what_is_your_gender': 'gender',
-                       'what_is_the_highest_level_of_education_you_have_completed': 'education',  # noqa: E501
-                       'which_input_device_are_you_using_now': 'device',
-                       'if_you_answered_other_in_the_previous_question_please_describe_your_input_device_below': 'device_other',  # noqa: E501
-                       'i_would_like_to_communicate_with_other_road_users_while_driving_for_instance_using_eye_contact_gestures_verbal_communication_etc': 'communication_others',  # noqa: E501
-                       'i_am_worried_about_where_all_this_technology_is_leading': 'technology_worried',  # noqa: E501
-                       'i_enjoy_making_use_of_the_latest_technological_products_and_services_when_i_have_the_opportunity': 'technology_enjoyment',  # noqa: E501
-                       'science_and_technology_are_making_our_lives_healthier_easier_and_more_comfortable': 'technology_lives_easier',  # noqa: E501
-                       'science_and_technology_make_our_way_of_life_change_too_fast': 'technology_lives_change',  # noqa: E501
-                       'im_not_interested_in_new_technologies': 'technology_not_interested',  # noqa: E501
-                       'machines_are_taking_over_some_of_the_roles_that_humans_should_have': 'machines_roles',  # noqa: E501
-                       'new_technologies_are_all_about_making_profits_rather_than_making_peoples_lives_better': 'machines_profit',  # noqa: E501
-                       'please_indicate_your_general_attitude_towards_automated_cars': 'attitude_ad',  # noqa: E501
-                       'when_the_automated_cars_are_put_into_use_i_will_feel_comfortable_about_driving_on_roads_alongside_automated_cars': 'driving_alongside_ad',  # noqa: E501
-                       'when_the_automated_cars_are_put_into_use_i_will_feel_more_comfortable_about_using_an_automated_car_instead_of_driving_a_manually_driven_car': 'driving_in_ad',  # noqa: E501
-                       'who_do_you_think_is_more_capable_of_conducting_drivingrelated_tasks': 'capability_ad',  # noqa: E501
-                       'which_options_best_describes_your_experience_with_automated_cars': 'experience_ad',  # noqa: E501
-                       'if_yes_please_provide_your_email_address': 'email'}  # noqa: E501
+                       'when_overtaking_a_cyclist_how_do_you_determine_a_safe_distance': 'cycling_determening',
+                       'while_driving_have_you_ever_encountered_a_traffic_situation_where_you_were_required_to_overtake_a_cyclist': 'cycling_required',  # noqa: E501
+                       'what_is_the_highest_level_of_education_you_have_completed': 'education',
+                       'what_is_your_primary_mode_of_transportation': 'mode_transportation',
+                       'which_input_device_are_you_using_now': 'device'}
 
     def __init__(self,
                  files_data: list,

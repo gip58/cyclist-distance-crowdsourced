@@ -56,7 +56,6 @@ Percentage of participants pressing the response key as a function of elapsed vi
 [![plot_all_all_videos 3](figures/kp_interaction-bike_laser_projection-vertical_sign-danish_sign-car_laser_projection-control-unprotected_c.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_interaction-bike_laser_projection-vertical_sign-danish_sign-car_laser_projection-control-unprotected_c.html)
 Percentage of participants pressing the response key as a function of elapsed video time for grouped scenarios.
 
-
 ### Keypress Percentage by Scenario
 [![plot_keypress_by_scenario 1](figures/kp_videos_sliders_0,1,2.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_0%2C1%2C2.html)
  Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 1.
@@ -79,6 +78,19 @@ Percentage of participants pressing the response key as a function of elapsed vi
 [![plot_keypress_by_scenario 7](figures/kp_videos_sliders_18,19,20.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_18%2C19%2C20.html)
 Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 7.
 
+### Simulator experiment
+[![mean-distance](figures/min_distance.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/min_distance.html)
+Mean distance of overtaking in the simulator experiment.
+
+[![mean-distance](figures/mean_speed.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/mean_speed.html)
+Mean speed of overtaking in the simulator experiment.
+
+[![preferences](figures/preferences.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/preferences.html)
+Preferences of concepts in simulator experiment.
+
+[![overtaking distance](figures/overtaking_distance.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/overtaking_distance.html)
+Average overtaking distance over time for different scenario.
+
 #### Correlation and scatter matrices
 ![correlation matrix](https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/corr_matrix.jpg)  
 Correlation matrix.
@@ -86,13 +98,13 @@ Correlation matrix.
 [![scatter matrix](figures/scatter_matrix.png)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/scatter_matrix.html)  
 Scatter matrix.
 
-## Area of Interest (AOI)
+<!-- ## Area of Interest (AOI)
 ### For all participants
 [![end-slider](figures/hist_end2-scenario_number-0.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_end2-scenario_number-0.html)
 Participants end slider responses to which scenario was most helpful.
 
 [![end-slider 2](figures/hist_end2-slider-0-0.png?raw=true)](https://htmlpreview.github.io/?https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_end2-slider-0-0.html)
-Participants end slider responses experienced to stress.
+Participants end slider responses experienced to stress. -->
 
 #### Information on participants
 [![end-slider 3](figures/hist_driving_freq.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_driving_freq.html)
@@ -112,13 +124,6 @@ Map of distribution of gender.
 
 [![end-slider 4](figures/hist_cycling_freq.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_cycling_freq.html)
 Participants cycling experiences.
-
-### For only lab participants
-[![lab-results](figures/plotly_graph_recorded_distace.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/plotly_graph_recorded_distace.html)
-Participants distance record per scenario.
-
-[![lab-results](figures/preferences_distances.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/preferences_distances.htmll)
-Participants preferences and average distance of the overtake.
 
 ## Troubleshooting
 ### Troubleshooting setup

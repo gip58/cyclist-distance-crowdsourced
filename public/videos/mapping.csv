@@ -5,9 +5,9 @@ id,video_id,interaction,interaction_type,distance,overtake,video_length,min_dur,
 3,V3,vertical_sign,1,0.8,14100,19366,18366,20366
 4,V4,vertical_sign,1,1.6,14100,19366,18366,20366
 5,V5,vertical_sign,1,2.4,14100,19366,18366,20366
-6,V6,Road_markings,2,0.8,14100,19366,18366,20366
-7,V7,Road_markings,2,1.6,14100,19366,18366,20366
-8,V8,Road_markings,2,2.4,14100,19366,18366,20366
+6,V6,road_markings,2,0.8,14100,19366,18366,20366
+7,V7,road_markings,2,1.6,14100,19366,18366,20366
+8,V8,road_markings,2,2.4,14100,19366,18366,20366
 9,V9,car_laser_projection,3,0.8,14100,19366,18366,20366
 10,V10,car_laser_projection,3,1.6,14100,19366,18366,20366
 11,V11,car_laser_projection,3,2.4,14100,19366,18366,20366

@@ -111,7 +111,8 @@ class Heroku:
                 data_list += f.readlines()
                 f.close()
             # hold info on previous row for worker
-            prev_row_info = pd.DataFrame(columns=['worker_code', 'time_elapsed'])
+            prev_row_info = pd.DataFrame(columns=['worker_code',
+                                                  'time_elapsed'])
             prev_row_info.set_index('worker_code', inplace=True)
             # read rows in data
             for row in tqdm(data_list):  # tqdm adds progress bar
@@ -126,7 +127,8 @@ class Heroku:
                 # last time_elapsed for logging duration of trial and stimulus
                 elapsed_l = 0
                 elapsed_l_stim = 0
-                # record worker_code in the row. assuming that each row has at least one worker_code
+                # record worker_code in the row. assuming that each row has at
+                # least one worker_code
                 worker_code = [d['worker_code'] for d in list_row['data'] if 'worker_code' in d][0]
                 # go over cells in the row with data
                 for data_cell in list_row['data']:
@@ -136,7 +138,8 @@ class Heroku:
                             # piece of meta data found, update dictionary
                             dict_row[key] = data_cell[key]
                             if key == 'worker_code':
-                                logger.debug('{}: working with row with data.', data_cell['worker_code'])
+                                logger.debug('{}: working with row with data.',
+                                             data_cell['worker_code'])
                     # check if stimulus data is present
                     if 'stimulus' in data_cell.keys():
                         # record last timestamp before video
@@ -145,8 +148,7 @@ class Heroku:
                             # the length of the stimulus
                             if 'time_elapsed' in data_cell.keys():
                                 elapsed_l_stim = float(data_cell['time_elapsed'])
-                        # extract name of stimulus after last slash
-                        # list of stimuli. use 1st
+                        # extract name of stimulus after last slash list of stimuli. use 1st
                         if isinstance(data_cell['stimulus'], list):
                             stim_no_path = data_cell['stimulus'][0].rsplit('/', 1)[-1]
                         # single stimulus
@@ -154,18 +156,13 @@ class Heroku:
                             stim_no_path = data_cell['stimulus'].rsplit('/', 1)[-1]
                         # remove extension
                         stim_no_path = os.path.splitext(stim_no_path)[0]
-                        # skip is videos from instructions
-                        if 'video_test_' in stim_no_path:
-                            continue
-                        # Check if it is a block with stimulus and not an
-                        # instructions block
+                        # check if it is a block with stimulus and not an instructions block
                         if (dc.common.search_dict(self.prefixes, stim_no_path)
                                 is not None):
                             # stimulus is found
                             logger.debug('Found stimulus {}.', stim_no_path)
                             if self.prefixes['stimulus'] in stim_no_path:
-                                # Record that stimulus was detected for the
-                                # cells to follow
+                                # record that stimulus was detected for the cells to follow
                                 stim_name = stim_no_path
                                 # record trial of stimulus
                                 stim_trial = data_cell['trial_index']
@@ -207,7 +204,7 @@ class Heroku:
                             dict_row[stim_name + '-rt'].extend(rt)
                     # eye tracking data
                     if 'webgazer_data' in data_cell.keys() and stim_name != '':
-                        # record eye tracking data
+                        # record given keypresses
                         et_data = data_cell['webgazer_data']
                         logger.debug('Found {} points in eye tracking data.', len(et_data))
                         # extract x,y,t values
@@ -235,11 +232,11 @@ class Heroku:
                         else:
                             # previous values found
                             dict_row[stim_name + '-t'].extend(t)
-                    # questions after stimulus
+                    # slider questions after stimulus
                     if ('response' in data_cell.keys() and stim_name != '' and
                        data_cell['response'] is not None):
                         # check if it is not dictionary
-                        if 'slider-0' not in data_cell['response']:
+                        if 'slider-0' not in data_cell['response'] or 'scenario_number' in data_cell['response']:
                             continue
                         # record given answers
                         responses = data_cell['response']
@@ -249,8 +246,8 @@ class Heroku:
                         answers = []
                         for key, value in responses.items():
                             if key == 'slider-1':
-                                 # Modify slider-1 data (scale from 0-100 to 0.5-2.5 meters)
-                                 value = 0.5 + (int(value) / 100) * 2
+                                # Modify slider-1 data (scale from 0-100 to 0.5-2.5 meters)
+                                value = 0.5 + (int(value) / 100) * 2
                             questions.append(key)
                             answers.append(int(value))
                         # check if values were recorded previously
@@ -293,24 +290,34 @@ class Heroku:
                         else:
                             # previous values found
                             dict_row[stim_name + '-time'].extend(time)
-                    # sliders after experiment
-                    if ('response' in data_cell.keys() and stim_name == '' and
-                       data_cell['response'] is not None):
+                    # questions after experiment
+                    if ('response' in data_cell.keys() and stim_name == '' and data_cell['response'] is not None):
                         # check if it is not post-trial data
-                        if 'slider-5' not in data_cell['response']:
+                        if 'slider-2' not in data_cell['response'] and 'scenario_number' not in data_cell['response']:
                             continue
-                        # record given keypresses
+                        # record given responses
                         responses_end = data_cell['response']
-                        logger.debug('Found responses to the questions in ' +
-                                     'the end {}.', responses_end)
-                        for key, value in responses_end.items():
-                            # check if values not already recorded
-                            if stim_name + 'end-' + key not in dict_row.keys():
-                                # first value
-                                dict_row['end-' + key] = value
-                            else:
-                                # previous values found
-                                dict_row['end-' + key].extend(value)
+                        logger.debug('Found responses to the slider questions in the end {}.', responses_end)
+                        # slider questions
+                        if 'slider-2' in data_cell['response']:
+                            for key, value in responses_end.items():
+                                # check if values not already recorded
+                                if stim_name + 'end-' + key not in dict_row.keys():
+                                    # first value
+                                    dict_row['end-' + key] = value
+                                else:
+                                    # previous values found
+                                    dict_row['end-' + key].extend(value)
+                        # free form
+                        else:
+                            for key, value in responses_end.items():
+                                # check if values not already recorded
+                                if stim_name + 'end2-' + key not in dict_row.keys():
+                                    # first value
+                                    dict_row['end2-' + key] = value
+                                else:
+                                    # previous values found
+                                    dict_row['end2-' + key].extend(value)
                     # record last time_elapsed
                     if 'time_elapsed' in data_cell.keys():
                         elapsed_l = float(data_cell['time_elapsed'])
@@ -352,7 +359,7 @@ class Heroku:
             df = df.transpose()
             # report people that attempted study
             unique_worker_codes = df['worker_code'].drop_duplicates()
-            logger.info('People who attempted to participate: {}', unique_worker_codes.shape[0])
+            logger.info('People who attempted to participate: {}.', unique_worker_codes.shape[0])
             # filter data
             if filter_data:
                 df = self.filter_data(df)
@@ -367,12 +374,8 @@ class Heroku:
             dc.common.save_to_p(self.file_p, df, 'heroku data')
         # save to csv
         if self.save_csv:
-            # build path
-            if not os.path.exists(dc.settings.output_dir):
-                os.makedirs(dc.settings.output_dir)
-            # save to file
             df.to_csv(os.path.join(dc.settings.output_dir, self.file_data_csv), index=False)
-            logger.info('Saved heroku data to csv file {}', self.file_data_csv + '.csv')
+            logger.info('Saved heroku data to csv file {}.', self.file_data_csv + '.csv')
         # update attribute
         self.heroku_data = df
         # return df with data

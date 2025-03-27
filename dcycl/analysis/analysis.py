@@ -26,9 +26,11 @@ from scipy.stats.kde import gaussian_kde
 from scipy.stats import ttest_rel, ttest_ind, f_oneway
 import cv2
 from statsmodels.stats.anova import anova_lm
-from statsmodels.formula.api import ols 
+from statsmodels.formula.api import ols
 
 import dcycl as dc
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 matplotlib.use('TkAgg')
@@ -2985,7 +2987,6 @@ class Analysis:
             os.makedirs(path)
         # build path for final figure
         path_final = os.path.join(dc.settings.root_dir, self.folder_figures)
-        print(path_final)
         if save_final and not os.path.exists(path_final):
             os.makedirs(path_final)
         # limit name to max 200 char (for Windows)
@@ -3499,3 +3500,326 @@ class Analysis:
                                        font=dict(size=events_annotations_font_size, color=events_annotations_colour))
                 # increase counter of lines drawn
                 counter_lines = counter_lines + 1
+
+    def plot_combined_figure(self, df, save_file=False, save_final=False):
+        # Load preferences data
+        preferences_file = dc.common.get_configs("simulator_preferences_file")
+        preferences_df = pd.read_csv(preferences_file)
+
+        # Ensure data is binned before analysis
+        bin_size = 0.5
+        df = self.bin_data(df, 'Time', bin_size)
+
+        # Compute the average overtaking distance per time bin per scenario
+        df_binned_filtered = (
+            df.groupby(["TimeBin", "Scenario"], observed=True)["Distance"].mean().reset_index()
+        )
+
+        # Convert TimeBin to numeric
+        df_binned_filtered["TimeBin"] = df_binned_filtered["TimeBin"].astype(float)
+
+        # Define the fixed order of scenarios
+        scenario_order = [
+            "Laser projection",
+            "Vertical signage",
+            "Road markings",
+            "Car projection system",
+            "Center line and side-line markings",  # Control scenario (S5)
+            "Unprotected cycling path",
+            "No road markings"
+        ]
+
+        # Define scenario mapping to use S1, S2, etc.
+        scenario_mapping = {
+            "Laser projection": "S1",
+            "Vertical signage": "S2",
+            "Road markings": "S3",
+            "Car projection system": "S4",
+            "Center line and side-line markings": "S5",  # Control scenario
+            "Unprotected cycling path": "S6",
+            "No road markings": "S7"
+        }
+
+        # Define control scenario for statistical comparison
+        control_scenario = "Center line and side-line markings"
+
+        # Compute t-tests between control scenario and other scenarios
+        ttest_results = []
+        control_distances = df_binned_filtered[df_binned_filtered["Scenario"] == control_scenario]["Distance"]
+
+        for scenario in scenario_order:
+            if scenario != control_scenario:
+                scenario_distances = df_binned_filtered[df_binned_filtered["Scenario"] == scenario]["Distance"]
+
+                # Perform independent t-test
+                t_stat, p_value = ttest_ind(control_distances, scenario_distances, equal_var=False, nan_policy='omit')
+
+                # Convert scenario names to S1, S2, etc.
+                s_control = scenario_mapping[control_scenario]  # Always "S5"
+                s_scenario = scenario_mapping[scenario]
+
+                # Store result for annotation
+                ttest_results.append(f"t-test({s_scenario}, {s_control}): p={p_value:.3f}")
+
+        # Custom color mapping
+        scenario_colors = {
+            "Laser projection": "#636EFA",
+            "Vertical signage": "#EF553B",
+            "Road markings": "#00CC96",
+            "Car projection system": "#AB63FA",
+            "Center line and side-line markings": "#FFA15A",
+            "Unprotected cycling path": "#19D3F3",
+            "No road markings": "#FF6692",
+        }
+
+        # Proper subplot alignment with adjusted row heights
+        fig = subplots.make_subplots(rows=1,
+                                     cols=2,  
+                                     column_widths=[0.75, 0.25],  # Ensure the left plot is wider
+                                     shared_yaxes=False,
+                                     horizontal_spacing=0.05)
+
+        # ---- Line Chart (Curvature Graph - Left Side) ----
+        for scenario in scenario_order:
+            if scenario in df_binned_filtered["Scenario"].values:
+                scenario_df = df_binned_filtered[df_binned_filtered["Scenario"] == scenario]
+                fig.add_trace(
+                    go.Scatter(
+                        x=scenario_df["TimeBin"], 
+                        y=scenario_df["Distance"], 
+                        mode='lines',  
+                        name=scenario,
+                        line=dict(color=scenario_colors[scenario])
+                    ),
+                    row=1, col=1  
+                )
+
+        # Set Y-axis labels correctly
+        fig.update_yaxes(title_text="Overtaking distance (m)", range=[0, df_binned_filtered["Distance"].max()], row=1,
+                         col=1)
+
+        # ---- Bar Chart (Aligned Right) ----
+        for scenario in scenario_order:
+            if scenario in preferences_df["Scenarios"].values:
+                scenario_df = preferences_df[preferences_df["Scenarios"] == scenario]
+                fig.add_trace(
+                    go.Bar(
+                        x=scenario_df["Scenarios"], 
+                        y=scenario_df["Preference"], 
+                        name=scenario,
+                        marker=dict(color=scenario_colors[scenario]),
+                        showlegend=False
+                    ),
+                    row=1, col=2  
+                )
+
+        # Set Y-axis labels correctly for bar chart
+        fig.update_yaxes(title_text="Prefered scenarios", range=[0, preferences_df["Preference"].max() * 1.75], row=1,
+                         col=2)
+
+        # Align x-axes properly
+        fig.update_xaxes(matches="x")  
+
+        # Layout Adjustments
+        fig.update_layout(
+            template=self.template,
+            showlegend=True,
+            width=1320,  
+            height=680,  
+            font=dict(
+                family=dc.common.get_configs("font_family"),  # Load from config
+                size=dc.common.get_configs("font_size"),  # Load from config
+            ),
+
+            # Move Main Title to the Top
+            title=dict(
+                x=0.5,
+                y=0.98,
+                xanchor="center",
+                yanchor="top",
+            ),
+
+            # Adjust Legend Position (Fixed Top-Right)
+            legend=dict(
+                x=0.95,  
+                y=0.99,  
+                xanchor="right",
+                yanchor="top",
+                font=dict(size=14),
+                traceorder="normal"
+            ),
+        )
+
+        # Remove X-axis labels from bar chart to reduce clutter
+        fig.update_xaxes(showticklabels=False, title_text="", row=1, col=2)
+
+        # Adjust subplot titles to match alignment
+        fig.update_annotations([
+            dict(
+                x=0.35, y=-0.12,  
+                xref="paper", yref="paper",
+                text="Overtaking distance over time",
+                showarrow=False,
+                font=dict(size=16)
+            ),
+            dict(
+                x=0., y=-0.12,  
+                xref="paper", yref="paper",
+                text="Preferred scenario (Space)",
+                showarrow=False,
+                font=dict(size=16)
+            )
+        ])
+
+        # Add t-test results as an annotation at the right side of the figure
+        fig.add_annotation(
+            x=0.6, y=0.1,  # Position towards the right, properly aligned
+            xref="paper", yref="paper",
+            text="<br>".join(ttest_results),  # Formatting for better readability
+            showarrow=False,
+            font=dict(size=14),
+            align="left"
+        )
+
+        if save_file:
+            self.save_plotly(fig, "combined_figure")
+        # open it in localhost instead
+        else:
+            fig.show()
+
+    def bin_data(self, df, time_column, bin_size):
+        """Bin the data into specified intervals."""
+        time_bins = np.arange(df[time_column].min(), df[time_column].max() + bin_size, bin_size)
+        df['TimeBin'] = pd.cut(df[time_column], bins=time_bins, labels=time_bins[:-1])
+        return df
+
+    def perform_ttest(self, df, scenario1, scenario2, bin_size=0.5):
+        """Perform a t-test between two scenarios on overtaking distance."""
+        df = self.bin_data(df, 'Time', bin_size)
+
+        significant_tests = []  # Store only significant p-values
+        
+        for time_bin in df["TimeBin"].unique():
+            data1 = df[(df["Scenario"] == scenario1) & (df["TimeBin"] == time_bin)]["Distance"]
+            data2 = df[(df["Scenario"] == scenario2) & (df["TimeBin"] == time_bin)]["Distance"]
+
+            if len(data1) > 2 and len(data2) > 2:  # Ensure enough data points
+                t_stat, p_value = ttest_ind(data1, data2, equal_var=False)
+                if p_value < 0.05:  # Only store significant results
+                    significant_tests.append(p_value)
+
+        # Return the most significant result (smallest p-value)
+        if significant_tests:
+            return scenario2, min(significant_tests)  
+
+        return None  # No significant results 
+
+    def mean_speed(self, df, save_file=False, save_final=False):
+        # Load global font settings from the config file
+        font_family = dc.common.get_configs("font_family")  
+        font_size = dc.common.get_configs("font_size")  
+
+        # Getting average speed per scenario
+        averaged_df = (df.groupby(["ScenarioID", "Scenario", "Participant"]).mean().reset_index())
+        filtered_df = averaged_df[averaged_df["Speed"] > 1]
+        fig = px.box(
+            filtered_df,
+            x="Scenario",
+            y="Speed",
+            color="Scenario",
+            template=self.template,
+        )
+        # TODO: Play around with location)
+        fig.update_layout(legend=dict(x=0.3, y=1.1), font=dict(family=font_family, size=font_size))
+
+        # save file to local output folder
+        if save_file:
+            self.save_plotly(fig=fig,
+                             name="mean_speed",
+                             remove_margins=True,
+                             save_final=save_final)  # also save as "final" figure
+        # open it in localhost instead
+        else:
+            fig.show()
+
+    def min_distance(self, df, save_file=False, save_final=False):
+        # Getting Minimum distance per scenario
+        min_df = df.groupby(["ScenarioID", "Participant"]).min().reset_index()
+        filtered_df = min_df[10 > min_df["Distance"]]
+
+        # Calculate the mean distance for each scenario
+        mean_values = filtered_df.groupby("Scenario")["Distance"].mean()
+
+        # Create the box plot
+        fig = px.box(
+            filtered_df,
+            x="Scenario",
+            y="Distance",
+            color="Scenario",
+            template=self.template,
+        )
+
+        # Add mean values as annotations
+        for scenario, mean in mean_values.items():
+            fig.add_annotation(
+                x=scenario,
+                y=mean,
+                text=f"{mean:.2f}",  # Format to 2 decimal places
+                showarrow=False,
+                font=dict(size=12, color="black"),
+                yshift=10  # Adjust position above the box
+            )
+
+        # Remove legend
+        fig.update_layout(showlegend=False,
+                          font=dict(family=dc.common.get_configs("font_family"),
+                                    size=dc.common.get_configs("font_size")))
+
+        # save file to local output folder
+        if save_file:
+            self.save_plotly(fig=fig,
+                             name="min_distance",
+                             remove_margins=True,
+                             save_final=save_final)  # also save as "final" figure
+        # open it in localhost instead
+        else:
+            fig.show()
+
+    def overtaking_distance(self, df, save_file=False, save_final=False):
+        # Bin time into 0.5s intervals
+        time_bins_filtered = np.arange(4, df["Time"].max(), 0.5)
+        df["TimeBin"] = pd.cut(
+            df["Time"], bins=time_bins_filtered, labels=time_bins_filtered[:-1]
+        )
+
+        # Compute the average overtaking distance for each time bin within each scenario
+        df_binned_filtered = (df.groupby(["TimeBin", "Scenario"])["Distance"].mean().reset_index())
+        df_binned_filtered["TimeBin"] = df_binned_filtered["TimeBin"].astype(float)  # Convert to numeric
+
+        # -----------------------------
+        # Create Line Plot (Overtaking Distance Over Time)
+        # -----------------------------
+        fig = px.line(
+            df_binned_filtered,
+            x="TimeBin",
+            y="Distance",
+            color="Scenario",
+            labels={
+                "TimeBin": "Time (s)",
+                "Distance": "Average Overtaking Distance (m)",
+                "Scenario": "Scenario",
+            },
+            template=self.template,
+        )
+        fig.update_layout(font=dict(family=dc.common.get_configs("font_family"),
+                                    size=dc.common.get_configs("font_size")))
+
+        # save file to local output folder
+        if save_file:
+            self.save_plotly(fig=fig,
+                             name="overtaking_distance",
+                             remove_margins=True,
+                             save_final=save_final)  # also save as "final" figure
+        # open it in localhost instead
+        else:
+            fig.show()
