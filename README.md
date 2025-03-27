@@ -1,5 +1,4 @@
 # Enhancing lateral overtaking distance for cyclist safety in the EU
-
 This project defines a framework for evaluating different technologies in a traffic environment involving a cyclist and a vehicle. The jsPsych framework is used for the frontend. In the description below, it is assumed that the repository is stored in the folder cyclist-distance-crowdsourced. Terminal commands assume macOS.
 
 ## Setup
@@ -59,28 +58,26 @@ Percentage of participants pressing the response key as a function of elapsed vi
 
 
 ### Keypress Percentage by Scenario
-
-
 [![plot_keypress_by_scenario 1](figures/kp_videos_sliders_0,1,2.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_0%2C1%2C2.html)
- Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 1
+ Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 1.
 
 [![plot_keypress_by_scenario 2](figures/kp_videos_sliders_3,4,5.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_3%2C4%2C5.html)
-Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 2
+Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 2.
 
 [![plot_keypress_by_scenario 3](figures/kp_videos_sliders_6,7,8.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_6%2C7%2C8.html)
-Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 3
+Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 3.
 
 [![plot_keypress_by_scenario 4](figures/kp_videos_sliders_9,10,11.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_9%2C10%2C11.html)
-Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 4
+Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 4.
 
 [![plot_keypress_by_scenario 5](figures/kp_videos_sliders_12,13,14.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_12%2C13%2C14.htmll)
-Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 5
+Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 5.
 
 [![plot_keypress_by_scenario 6](figures/kp_videos_sliders_15,16,17.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_15%2C16%2C17.html)
-Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 6
+Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 6.
 
 [![plot_keypress_by_scenario 7](figures/kp_videos_sliders_18,19,20.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos_sliders_18%2C19%2C20.html)
-Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 7
+Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 7.
 
 #### Correlation and scatter matrices
 ![correlation matrix](https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/corr_matrix.jpg)  
@@ -92,15 +89,14 @@ Scatter matrix.
 ## Area of Interest (AOI)
 ### For all participants
 [![end-slider](figures/hist_end2-scenario_number-0.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_end2-scenario_number-0.html)
-Participants end slider respones to wich scenario was most helfull
+Participants end slider responses to which scenario was most helpful.
 
 [![end-slider 2](figures/hist_end2-slider-0-0.png?raw=true)](https://htmlpreview.github.io/?https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_end2-slider-0-0.html)
-Participants end slider respones experienced to stress
+Participants end slider responses experienced to stress.
 
 #### Information on participants
-
 [![end-slider 3](figures/hist_driving_freq.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_driving_freq.html)
-Participants driving experiences
+Participants driving experiences.
 
 [![year of license](figures/map_year_license.png)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/map_year_license.html)  
 Year of obtaining driver's license.
@@ -115,14 +111,14 @@ Map of age of participants.
 Map of distribution of gender.
 
 [![end-slider 4](figures/hist_cycling_freq.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_cycling_freq.html)
-Participants cycling experiences
+Participants cycling experiences.
 
 ### For only lab participants
 [![lab-results](figures/plotly_graph_recorded_distace.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/plotly_graph_recorded_distace.html)
-Participants distance record per scenario
+Participants distance record per scenario.
 
 [![lab-results](figures/preferences_distances.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/preferences_distances.htmll)
-Participants preferences and avrage distance of the overtake
+Participants preferences and average distance of the overtake.
 
 ## Troubleshooting
 ### Troubleshooting setup

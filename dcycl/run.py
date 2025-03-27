@@ -11,22 +11,6 @@ dc.logs(show_level="info", show_color=True)
 logger = dc.CustomLogger(__name__)  # use custom logger
 
 # const
-# SAVE_P = True  # save pickle files with data
-# LOAD_P = False  # load pickle files with data
-# SAVE_CSV = True  # load csv files with data
-# FILTER_DATA = True  # filter Appen and heroku data
-# CLEAN_DATA = True  # clean Appen data
-# REJECT_CHEATERS = False  # reject cheaters on Appen
-# CALC_COORDS = False  # extract points from heroku data
-# UPDATE_MAPPING = True  # update mapping with keypress data
-# SHOW_OUTPUT = True  # should figures be plotted
-# SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
-# SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
-# SHOW_OUTPUT_PP = True  # should figures with info about participants
-# SHOW_OUTPUT_ET = False  # should figures for eye tracking
-# SHOW_OUTPUT_SM = True  # should figures for eye tracking be plotted
-
-# for debugging, skip processing
 SAVE_P = True  # save pickle files with data
 LOAD_P = False  # load pickle files with data
 SAVE_CSV = True  # load csv files with data
@@ -36,13 +20,29 @@ REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = False  # extract points from heroku data
 UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
-SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
-SHOW_OUTPUT_ST = True  # should figures with stimulus data be plotted
-SHOW_OUTPUT_PP = True  # should figures with info about participants be plotted
-SHOW_OUTPUT_ET = False  # should figures for eye tracking be plotted
+SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
+SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
+SHOW_OUTPUT_PP = True  # should figures with info about participants
+SHOW_OUTPUT_ET = False  # should figures for eye tracking
 SHOW_OUTPUT_SM = True  # should figures for eye tracking be plotted
+SHOW_OUTPUT_LAB = True  # should figures for simulation be plotted
 
-SHOW_SIMULATION = True  # should figures for simulation be plotted
+# for debugging, skip processing
+# SAVE_P = False  # save pickle files with data
+# LOAD_P = True  # load pickle files with data
+# SAVE_CSV = True  # load csv files with data
+# FILTER_DATA = True  # filter Appen and heroku data
+# CLEAN_DATA = True  # clean Appen data
+# REJECT_CHEATERS = False  # reject cheaters on Appen
+# CALC_COORDS = False  # extract points from heroku data
+# UPDATE_MAPPING = True  # update mapping with keypress data
+# SHOW_OUTPUT = True  # should figures be plotted
+# SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted
+# SHOW_OUTPUT_ST = True  # should figures with stimulus data be plotted
+# SHOW_OUTPUT_PP = True  # should figures with info about participants be plotted
+# SHOW_OUTPUT_ET = False  # should figures for eye tracking be plotted
+# SHOW_OUTPUT_SM = True  # should figures for eye tracking be plotted
+# SHOW_OUTPUT_LAB = True  # should figures for simulation be plotted
 
 
 if __name__ == "__main__":
@@ -61,10 +61,10 @@ if __name__ == "__main__":
     # read appen data
     appen_data = appen.read_data(filter_data=FILTER_DATA, clean_data=CLEAN_DATA)
     # create object for working with appen data
-    files_simulator = dc.common.get_configs("files_simulator")
-    simulator = dc.analysis.Simulator(
-        files_data=files_simulator, save_p=SAVE_P, load_p=LOAD_P, save_csv=SAVE_CSV
-    )
+    simulator = dc.analysis.Simulator(files_data=dc.common.get_configs("files_simulator"),
+                                      save_p=SAVE_P,
+                                      load_p=LOAD_P,
+                                      save_csv=SAVE_CSV)
     # read simulator data
     simulator_data = simulator.read_data(filter_data=FILTER_DATA)
     # read frames
@@ -79,9 +79,7 @@ if __name__ == "__main__":
     qa.reject_users()
     qa.ban_users()
     # merge heroku and appen dataframes into one
-    all_data = heroku_data.merge(
-        appen_data, left_on="worker_code", right_on="worker_code"
-    )
+    all_data = heroku_data.merge(appen_data, left_on="worker_code", right_on="worker_code")
     logger.info("Data from {} participants included in analysis.", all_data.shape[0])
     heroku_data = all_data[all_data.columns.intersection(heroku_data_keys)]
     appen_data = all_data[all_data.columns.intersection(appen_data_keys)]
@@ -105,14 +103,14 @@ if __name__ == "__main__":
         # process keypresses and update mapping
         mapping = heroku.process_kp(heroku_data, filter_length=False)
         # post-trial questions to process
-        questions = [
-            {"question": "slider-0", "type": "num"},
-            {"question": "slider-1", "type": "num"},
-        ]
+        questions = [{"question": "slider-0", "type": "num"},
+                     {"question": "slider-1", "type": "num"}
+                     ]
         # process post-trial questions and update mapping
         mapping = heroku.process_stimulus_questions(questions)
         # rename columns with responses to post-stimulus questions to meaningful names
-        mapping = mapping.rename(columns={"slider-0": "Perceived sufficient space", "slider-1": "Participants estimate in (m)"}) 
+        mapping = mapping.rename(columns={"slider-0": "Perceived sufficient space",
+                                          "slider-1": "Participants estimate in (m)"}) 
         # export to pickle
         dc.common.save_to_p("mapping.p", mapping, "mapping of stimuli")
     else:
@@ -1000,11 +998,11 @@ if __name__ == "__main__":
         if figures:
             plt.show()
 
-    if SHOW_SIMULATION:
-        simulator.plot_min_distance(save_fig = True)
+    if SHOW_OUTPUT_LAB:
+        simulator.plot_min_distance(save_fig=True)
 
-        simulator.plot_mean_speed(save_fig = True)
+        simulator.plot_mean_speed(save_fig=True)
 
-        simulator.plot_preferences(save_fig = True)
+        simulator.plot_preferences(save_fig=True)
 
-        simulator.plot_overtaking_distance(save_fig = True)
+        simulator.plot_overtaking_distance(save_fig=True)

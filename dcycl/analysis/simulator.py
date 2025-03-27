@@ -1,9 +1,4 @@
-
-
-
-import json
 import os
-
 import numpy as np
 import pandas as pd
 import plotly as py
@@ -13,13 +8,7 @@ import plotly.graph_objects as go
 import scipy.stats as stats
 from scipy.stats import ttest_ind
 
-
-
-# import dcycl as dc
-
-# from analysis import Analysis
-
-# logger = dc.CustomLogger(__name__)  # use custom logger
+import dcycl as dc
 
 
 class Simulator(object):
@@ -47,35 +36,6 @@ class Simulator(object):
     # set template for plotly output
     template = ""
 
-    @staticmethod
-    def get_configs(
-        entry_name: str,
-        config_file_name: str = "config",
-        config_default_file_name: str = "default.config",
-    ):
-        """
-        Open the config file and return the requested entry.
-        If no config file is found, open default.config.
-        """
-        # check if config file is updated
-        try:
-            with open(
-                os.path.join(
-                    os.path.normpath(os.path.join(os.path.dirname(__file__), "../..")),
-                    config_file_name,
-                )
-            ) as f:
-                content = json.load(f)
-        except FileNotFoundError:
-            with open(
-                os.path.join(
-                    os.path.normpath(os.path.join(os.path.dirname(__file__), "../..")),
-                    config_default_file_name,
-                )
-            ) as f:
-                content = json.load(f)
-        return content[entry_name]
-
     def __init__(self, files_data: str, save_p: bool, load_p: bool, save_csv: bool):
         # files with raw data
         self.files_data = files_data  # Simulator/path
@@ -86,20 +46,15 @@ class Simulator(object):
         # save data as csv file
         self.save_csv = save_csv
         # folder for saving figures
-        self.folder_figures = Simulator.get_configs("simulator_folder_figures")
+        self.folder_figures = 'figures'
 
-        self.template = Simulator.get_configs("plotly_template")
-
-
-
+        self.template = dc.common.get_configs("plotly_template")
 
     def plot_preferences(self, save_fig=True):
         # Load global font settings from the config file
-        font_family = Simulator.get_configs("font_family")  
-        font_size = Simulator.get_configs("font_size")  
-
-
-        preferences_file = Simulator.get_configs("simulator_preferences_file")
+        font_family = dc.common.get_configs("font_family")  
+        font_size = dc.common.get_configs("font_size")
+        preferences_file = dc.common.get_configs("simulator_preferences_file")
         preferences_df = pd.read_csv(preferences_file)
 
         fig = px.bar(
@@ -136,8 +91,8 @@ class Simulator(object):
 
     def plot_mean_speed(self, save_fig=True):
         # Load global font settings from the config file
-        font_family = Simulator.get_configs("font_family")  
-        font_size = Simulator.get_configs("font_size")  
+        font_family = dc.common.get_configs("font_family")  
+        font_size = dc.common.get_configs("font_size")  
 
         # Getting average speed per scenario
         averaged_df = (
@@ -154,17 +109,14 @@ class Simulator(object):
             color="Scenario",
             template=self.template,
         )
-        fig.update_layout(legend=dict(x=0.3, y=1.1),font=dict(family=font_family, size=font_size))  # TODO: Play around with location)
+        # TODO: Play around with location)
+        fig.update_layout(legend=dict(x=0.3, y=1.1), font=dict(family=font_family, size=font_size))
         fig.show()
 
         if save_fig:
             self.save_plotly(fig, "mean_speed")
 
     def plot_min_distance(self, save_fig=True):
-        # Load global font settings from the config file
-        font_family = Simulator.get_configs("font_family")  
-        font_size = Simulator.get_configs("font_size")  
-
         # Getting Minimum distance per scenario
         min_df = self.df.groupby(["ScenarioID", "Participant"]).min().reset_index()
         filtered_df = min_df[10 > min_df["Distance"]]
@@ -203,7 +155,8 @@ class Simulator(object):
                 y=0.95,  # Adjust the vertical position slightly
                 yanchor="top"  # Anchor the title from the top
             ),
-            showlegend=False,font=dict(family=font_family, size=font_size))
+            showlegend=False, font=dict(family=dc.common.get_configs("font_family"),
+                                        size=dc.common.get_configs("font_size")))
 
         fig.show()
 
@@ -241,7 +194,8 @@ class Simulator(object):
             },
             template=self.template,
         )
-        fig.update_layout(font=dict(family=font_family, size=font_size))
+        fig_line.update_layout(font=dict(family=dc.common.get_configs("font_family"),
+                                         size=dc.common.get_configs("font_size")))
 
         fig_line.show()
 
@@ -349,20 +303,20 @@ class Simulator(object):
         if save_html:
             py.offline.plot(
                 fig,
-                filename=os.path.join(self.folder_figures, name + ".html"),
+                filename=os.path.join(os.path.join(dc.settings.output_dir, self.folder_figures), name + ".html"),
                 auto_open=False,
             )
         # save as png
         if save_png:
             fig.write_image(
-                os.path.join(self.folder_figures, name + ".png"),
+                os.path.join(os.path.join(dc.settings.output_dir, self.folder_figures), name + ".png"),
                 width=width,
                 height=height,
             )
             # also save the final figure
         if save_eps:
             fig.write_image(
-                os.path.join(self.folder_figures, name + '.eps'), 
+                os.path.join(os.path.join(dc.settings.output_dir, self.folder_figures), name + '.eps'), 
                 width=width, 
                 height=height
             )
@@ -372,12 +326,12 @@ class Simulator(object):
         pass
 
     def plot_combined_figure(self, save_fig=True):
-        # ✅ Load global font settings from the config file
-        font_family = Simulator.get_configs("font_family")  # Example: "Open Sans, verdana, arial, sans-serif"
-        font_size = Simulator.get_configs("font_size")  # Example: 12
+        # Load global font settings from the config file
+        font_family = dc.common.get_configs("font_family")  # Example: "Open Sans, verdana, arial, sans-serif"
+        font_size = dc.common.get_configs("font_size")  # Example: 12
 
         # Load preferences data
-        preferences_file = Simulator.get_configs("simulator_preferences_file")
+        preferences_file = dc.common.get_configs("simulator_preferences_file")
         preferences_df = pd.read_csv(preferences_file)
 
         # Ensure data is binned before analysis
@@ -426,7 +380,8 @@ class Simulator(object):
                 scenario_distances = df_binned_filtered[df_binned_filtered["Scenario"] == scenario]["Distance"]
 
                 # Perform independent t-test
-                t_stat, p_value = stats.ttest_ind(control_distances, scenario_distances, equal_var=False, nan_policy='omit')
+                t_stat, p_value = stats.ttest_ind(control_distances, scenario_distances, equal_var=False,
+                                                  nan_policy='omit')
 
                 # Convert scenario names to S1, S2, etc.
                 s_control = scenario_mapping[control_scenario]  # Always "S5"
@@ -446,7 +401,7 @@ class Simulator(object):
             "No road markings": "#FF6692",
         }
 
-        # ✅ Proper subplot alignment with adjusted row heights
+        # Proper subplot alignment with adjusted row heights
         fig = make_subplots(
             rows=1, cols=2,  
             column_widths=[0.75, 0.25],  # Ensure the left plot is wider
@@ -469,8 +424,9 @@ class Simulator(object):
                     row=1, col=1  
                 )
 
-        # ✅ Set Y-axis labels correctly
-        fig.update_yaxes(title_text="Overtaking distance (m)", range=[0, df_binned_filtered["Distance"].max()], row=1, col=1)
+        # Set Y-axis labels correctly
+        fig.update_yaxes(title_text="Overtaking distance (m)", range=[0, df_binned_filtered["Distance"].max()], row=1,
+                         col=1)
 
         # ---- Bar Chart (Aligned Right) ----
         for scenario in scenario_order:
@@ -487,21 +443,22 @@ class Simulator(object):
                     row=1, col=2  
                 )
 
-        # ✅ Set Y-axis labels correctly for bar chart
-        fig.update_yaxes(title_text="Prefered scenarios", range=[0, preferences_df["Preference"].max()* 1.75], row=1, col=2)
+        # Set Y-axis labels correctly for bar chart
+        fig.update_yaxes(title_text="Prefered scenarios", range=[0, preferences_df["Preference"].max() * 1.75], row=1,
+                         col=2)
 
-        # ✅ Align x-axes properly
+        # Align x-axes properly
         fig.update_xaxes(matches="x")  
 
-        # ✅ Layout Adjustments
+        # Layout Adjustments
         fig.update_layout(
             template=self.template,
             showlegend=True,
             width=1320,  
             height=680,  
             font=dict(
-            family=font_family,  # Load from config
-            size=font_size,  # Load from config
+                family=font_family,  # Load from config
+                size=font_size,  # Load from config
             ),
 
             # Move Main Title to the Top
@@ -523,10 +480,10 @@ class Simulator(object):
             ),
         )
 
-        # ✅ Remove X-axis labels from bar chart to reduce clutter
+        # Remove X-axis labels from bar chart to reduce clutter
         fig.update_xaxes(showticklabels=False, title_text="", row=1, col=2)
 
-        # ✅ Adjust subplot titles to match alignment
+        # Adjust subplot titles to match alignment
         fig.update_annotations([
             dict(
                 x=0.35, y=-0.12,  
@@ -544,7 +501,7 @@ class Simulator(object):
             )
         ])
 
-        # ✅ Add t-test results as an annotation at the right side of the figure
+        # Add t-test results as an annotation at the right side of the figure
         fig.add_annotation(
             x=0.6, y=0.1,  # Position towards the right, properly aligned
             xref="paper", yref="paper",
@@ -558,9 +515,6 @@ class Simulator(object):
 
         if save_fig:
             self.save_plotly(fig, "combined_figure")
-
-
-
 
     def bin_data(self, df, time_column, bin_size):
         """Bin the data into specified intervals."""
@@ -580,38 +534,11 @@ class Simulator(object):
 
             if len(data1) > 2 and len(data2) > 2:  # Ensure enough data points
                 t_stat, p_value = ttest_ind(data1, data2, equal_var=False)
-                if p_value < 0.05:  # ✅ Only store significant results
+                if p_value < 0.05:  # Only store significant results
                     significant_tests.append(p_value)
 
-        # ✅ Return the most significant result (smallest p-value)
+        # Return the most significant result (smallest p-value)
         if significant_tests:
             return scenario2, min(significant_tests)  
 
-        return None  # ✅ No significant results
-
-
-
-
-
-if __name__ == "__main__":
-    scenarios_path = Simulator.get_configs("files_simulator")
-    sim = Simulator(
-        scenarios_path,
-        False,
-        False,
-        False,
-    )
-    sim.read_data(False, False)
-
-    sim.plot_min_distance()
-
-    sim.plot_mean_speed()
-
-    sim.plot_preferences()
-
-    sim.plot_combined_figure()
-
-    sim.plot_overtaking_distance()
-
-    t_stat, p_value = sim.perform_ttest("Laser projection", "Vertical signage")
-    print(f"T-statistic: {t_stat}, P-value: {p_value}")
+        return None  # No significant results    

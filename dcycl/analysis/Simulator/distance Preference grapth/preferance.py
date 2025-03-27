@@ -26,6 +26,7 @@ bar_colors = [
 # Create the figure
 fig = go.Figure()
 
+
 def adjust_shade(color, factor=0.9):
     # Convert hex to RGB
     r = int(color[1:3], 16)
@@ -37,6 +38,7 @@ def adjust_shade(color, factor=0.9):
     b = max(0, min(255, int(b * factor)))
     # Convert back to hex
     return f'#{r:02X}{g:02X}{b:02X}'
+
 
 # Add bar chart for preferences with slightly adjusted border colors
 for scenario, preference, color in zip(scenarios, preferences, bar_colors):
@@ -114,7 +116,7 @@ fig.update_layout(
             family="Times New Roman",
             size=12
         ),
-                orientation="v",  # Vertical alignment of legend items
+        orientation="v",  # Vertical alignment of legend items
         x=1.05,  # Positioning on the right side
         y=1,     # Align top
         xanchor="left",
