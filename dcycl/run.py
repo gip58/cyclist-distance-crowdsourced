@@ -103,8 +103,8 @@ if __name__ == "__main__":
         # process post-trial questions and update mapping
         mapping = heroku.process_stimulus_questions(questions)
         # rename columns with responses to post-stimulus questions to meaningful names
-        mapping = mapping.rename(columns={'slider-0': 'space',
-                                          'slider-1': 'estimate'})
+        mapping = mapping.rename(columns={'slider-0': 'perceived sufficient space',
+                                          'slider-1': 'estimation of distance to cyclist'})
         # export to pickle
         dc.common.save_to_p('mapping.p', mapping, 'mapping of stimuli')
     else:
@@ -154,7 +154,7 @@ if __name__ == "__main__":
                                   'label': 'anova'}]
                 # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(df,
-                                               y=['space', 'estimate'],
+                                               y=['perceived sufficient space', 'estimation of distance to cyclist'],
                                                # hardcode based on the longest stimulus
                                                xaxis_kp_range=[0, 20],
                                                # hardcode based on the highest recorded value
@@ -339,7 +339,7 @@ if __name__ == "__main__":
         if SHOW_OUTPUT_ST:
             # post stimulus questions for all stimuli
             analysis.bar(mapping,
-                         y=['space', 'estimate'],
+                         y=['perceived sufficient space', 'estimation of distance to cyclist'],
                          stacked=False,
                          show_text_labels=True,
                          pretty_text=True,
@@ -352,7 +352,7 @@ if __name__ == "__main__":
             #     ids = [stim*3, stim*3 + 1, stim*3 + 2]
             #     df = mapping[mapping['id'].isin(ids)]
             #     analysis.bar(df,
-            #                  y=['space', 'estimate'],
+            #                  y=['perceived sufficient space', 'estimation of distance to cyclist'],
             #                  stacked=False,
             #                  show_text_labels=True,
             #                  pretty_text=True,
@@ -363,7 +363,7 @@ if __name__ == "__main__":
             #     ids = [dist*3, dist*3 + 1, dist*3 + 2]
             #     df = mapping[mapping['id'].isin(ids)]
             #     analysis.bar(df,
-            #                  y=['space', 'estimate'],
+            #                  y=['perceived sufficient space', 'estimation of distance to cyclist'],
             #                  stacked=False,
             #                  show_text_labels=True,
             #                  pretty_text=True,
