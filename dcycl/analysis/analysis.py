@@ -2113,7 +2113,7 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_kp_slider_videos(self, df, y: list, y_legend=None, x=None, events=None, events_width=1, events_dash='dot',
+    def plot_kp_slider_videos(self, df, y: list, y_legend_kp=None, x=None, events=None, events_width=1, events_dash='dot',
                               events_colour='black', events_annotations_font_size=20,
                               events_annotations_colour='black', xaxis_kp_title='Time (s)',
                               yaxis_kp_title='Percentage of trials with response key pressed',
@@ -2126,13 +2126,13 @@ class Analysis:
                               ttest_marker_size=3,  ttest_marker_colour='black', ttest_annotations_font_size=10,
                               ttest_annotations_colour='black', anova_signals=None, anova_marker='cross',
                               anova_marker_size=3, anova_marker_colour='black', anova_annotations_font_size=10,
-                              anova_annotations_colour='black', ttest_anova_row_height=0.5, yaxis_step=10):
+                              anova_annotations_colour='black', ttest_anova_row_height=0.5, yaxis_step=10, y_legend_bar=None):
         """Plot keypresses with multiple variables as a filter and slider questions for the stimuli.
 
         Args:
             df (dataframe): dataframe with stimuli data.
             y (list): column names of dataframe to plot.
-            y_legend (list, optional): names for variables to be shown in the legend.
+            y_legend_kp (list, optional): names for variables for keypress data to be shown in the legend.
             x (list): values in index of dataframe to plot for. If no value is given, the index of df is used.
             events (list, optional): list of events to draw formatted as values on x axis.
             events_width (int, optional): thickness of the vertical lines.
@@ -2176,6 +2176,7 @@ class Analysis:
             anova_annotations_colour (str, optional): colour of annotations for ANOVA.
             ttest_anova_row_height (int, optional): height of row of ttest/anova markers.
             yaxis_step (int): step between ticks on y axis.
+            y_legend_bar (list, optional): names for variables for bar data to be shown in the legend.
         """
         logger.info('Creating figure keypress and slider data for {}.', df.index.tolist())
         # calculate times
@@ -2201,6 +2202,12 @@ class Analysis:
         # plot keypress data
         for index, row in df.iterrows():
             values = row['kp']  # keypress data
+            row_number = df.index.get_loc(index)  # get the row number
+            # custom labels for legend
+            if y_legend_kp:
+                name = y_legend_kp[row_number]
+            else:
+                name = os.path.splitext(index)[0]
             # smoothen signal
             if self.smoothen_signal:
                 values = self.smoothen_filter(values)
@@ -2208,7 +2215,7 @@ class Analysis:
             fig.add_trace(go.Scatter(y=values,
                                      mode='lines',
                                      x=times,
-                                     name=os.path.splitext(index)[0]),
+                                     name=name),
                           row=1,
                           col=1)
         # draw events
@@ -2243,8 +2250,8 @@ class Analysis:
         else:
             text = None
         # custom labels for legend
-        if y_legend:
-            name = y_legend[0]
+        if y_legend_bar:
+            name = y_legend_bar[0]
         else:
             name = y[0]
         # plot variable
@@ -2262,8 +2269,8 @@ class Analysis:
         else:
             text = None
         # custom labels for legend
-        if y_legend:
-            name = y_legend[1]
+        if y_legend_bar:
+            name = y_legend_bar[1]
         else:
             name = y[1]
         # plot variable

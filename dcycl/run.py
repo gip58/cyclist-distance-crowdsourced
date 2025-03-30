@@ -11,24 +11,8 @@ dc.logs(show_level="info", show_color=True)
 logger = dc.CustomLogger(__name__)  # use custom logger
 
 # const
-SAVE_P = True  # save pickle files with data
-LOAD_P = False  # load pickle files with data
-SAVE_CSV = True  # load csv files with data
-FILTER_DATA = True  # filter Appen and heroku data
-CLEAN_DATA = True  # clean Appen data
-REJECT_CHEATERS = False  # reject cheaters on Appen
-CALC_COORDS = False  # extract points from heroku data
-UPDATE_MAPPING = True  # update mapping with keypress data
-SHOW_OUTPUT = True  # should figures be plotted
-SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
-SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
-SHOW_OUTPUT_PP = True  # should figures with info about participants
-SHOW_OUTPUT_ET = False  # should figures for eye tracking
-SHOW_OUTPUT_SM = True  # should figures for eye tracking be plotted
-
-# for debugging, skip processing
-# SAVE_P = False  # save pickle files with data
-# LOAD_P = True  # load pickle files with data
+# SAVE_P = True  # save pickle files with data
+# LOAD_P = False  # load pickle files with data
 # SAVE_CSV = True  # load csv files with data
 # FILTER_DATA = True  # filter Appen and heroku data
 # CLEAN_DATA = True  # clean Appen data
@@ -41,6 +25,22 @@ SHOW_OUTPUT_SM = True  # should figures for eye tracking be plotted
 # SHOW_OUTPUT_PP = True  # should figures with info about participants
 # SHOW_OUTPUT_ET = False  # should figures for eye tracking
 # SHOW_OUTPUT_SM = True  # should figures for eye tracking be plotted
+
+# for debugging, skip processing
+SAVE_P = False  # save pickle files with data
+LOAD_P = True  # load pickle files with data
+SAVE_CSV = True  # load csv files with data
+FILTER_DATA = True  # filter Appen and heroku data
+CLEAN_DATA = True  # clean Appen data
+REJECT_CHEATERS = False  # reject cheaters on Appen
+CALC_COORDS = False  # extract points from heroku data
+UPDATE_MAPPING = True  # update mapping with keypress data
+SHOW_OUTPUT = True  # should figures be plotted
+SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
+SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
+SHOW_OUTPUT_PP = True  # should figures with info about participants
+SHOW_OUTPUT_ET = False  # should figures for eye tracking
+SHOW_OUTPUT_SM = True  # should figures for eye tracking be plotted
 
 
 if __name__ == "__main__":
@@ -103,8 +103,8 @@ if __name__ == "__main__":
         # process post-trial questions and update mapping
         mapping = heroku.process_stimulus_questions(questions)
         # rename columns with responses to post-stimulus questions to meaningful names
-        mapping = mapping.rename(columns={'slider-0': 'perceived sufficient space',
-                                          'slider-1': 'estimation of distance to cyclist'})
+        mapping = mapping.rename(columns={'slider-0': 'Perceived sufficient space',
+                                          'slider-1': 'Estimation of distance to cyclist'})
         # export to pickle
         dc.common.save_to_p('mapping.p', mapping, 'mapping of stimuli')
     else:
@@ -127,34 +127,36 @@ if __name__ == "__main__":
                 # ids of stimuli that belong to the same group
                 ids = [stim*3, stim*3 + 1, stim*3 + 2]
                 df = mapping[mapping['id'].isin(ids)]
+                # change names of videos V to overtaking distances
+                df.index = df.index.map({'V' + str(ids[0]): '0.8 m', 'V' + str(ids[1]): '1.6 m', 'V' + str(ids[2]): '2.4 m'}.get)  
                 # extract timestamps of events
                 events = []
                 # add info to dictionary of events to be passed for plotting
                 events.append({'id': 1,
-                               'start': df.loc['V' + str(ids[0]), 'overtake'] / 1000,  # type: ignore
-                               'end': df.loc['V' + str(ids[0]), 'overtake'] / 1000,  # type: ignore
+                               'start': df.loc['0.8 m', 'overtake'] / 1000,  # type: ignore
+                               'end': df.loc['0.8 m', 'overtake'] / 1000,  # type: ignore
                                'annotation': None})
                 # prepare pairs of signals to compare with ttest
-                ttest_signals = [{'signal_1': df.loc['V' + str(ids[0])]['kp_raw'][0],  # 0 and 1 = between
-                                  'signal_2': df.loc['V' + str(ids[1])]['kp_raw'][0],
-                                  'label': 'ttest(' + 'V' + str(ids[0]) + ',' + 'V' + str(ids[1]) + ')',
+                ttest_signals = [{'signal_1': df.loc['0.8 m']['kp_raw'][0],  # 0 and 1 = between
+                                  'signal_2': df.loc['1.6 m']['kp_raw'][0],
+                                  'label': 'ttest(' + '0.8 m' + ',' + '1.6 m' + ')',
                                   'paired': True},
-                                 {'signal_1': df.loc['V' + str(ids[0])]['kp_raw'][0],  # 0 and 2 = between
-                                  'signal_2': df.loc['V' + str(ids[2])]['kp_raw'][0],
-                                  'label': 'ttest(' + 'V' + str(ids[0]) + ',' + 'V' + str(ids[2]) + ')',
+                                 {'signal_1': df.loc['0.8 m']['kp_raw'][0],  # 0 and 2 = between
+                                  'signal_2': df.loc['2.4 m']['kp_raw'][0],
+                                  'label': 'ttest(' + '0.8 m' + ',' + '2.4 m' + ')',
                                   'paired': True},
-                                 {'signal_1': df.loc['V' + str(ids[1])]['kp_raw'][0],  # 1 and 2 = between
-                                  'signal_2': df.loc['V' + str(ids[2])]['kp_raw'][0],
-                                  'label': 'ttest(' + 'V' + str(ids[1]) + ',' + 'V' + str(ids[2]) + ')',
+                                 {'signal_1': df.loc['1.6 m']['kp_raw'][0],  # 1 and 2 = between
+                                  'signal_2': df.loc['2.4 m']['kp_raw'][0],
+                                  'label': 'ttest(' + '1.6 m' + ',' + '2.4 m' + ')',
                                   'paired': True}]
                 # prepare signals to compare with oneway ANOVA on the res level
-                anova_signals = [{'signals': [df.loc['V' + str(ids[0])]['kp_raw'][0],  # keypress data
-                                              df.loc['V' + str(ids[1])]['kp_raw'][0],
-                                              df.loc['V' + str(ids[2])]['kp_raw'][0]],
+                anova_signals = [{'signals': [df.loc['0.8 m']['kp_raw'][0],  # keypress data
+                                              df.loc['1.6 m']['kp_raw'][0],
+                                              df.loc['2.4 m']['kp_raw'][0]],
                                   'label': 'anova'}]
                 # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(df,
-                                               y=['perceived sufficient space', 'estimation of distance to cyclist'],
+                                               y=['Perceived sufficient space', 'Estimation of distance to cyclist'],
                                                # hardcode based on the longest stimulus
                                                xaxis_kp_range=[0, 20],
                                                # hardcode based on the highest recorded value
@@ -171,6 +173,7 @@ if __name__ == "__main__":
                                                stacked=False,
                                                yaxis_slider_show=False,
                                                font_size=16,
+                                               y_legend_kp=['0.8 m', '1.6 m', '2.4 m'],
                                                legend_x=0.71,
                                                legend_y=1.0,
                                                fig_save_width=1600,   # preserve ratio 225x152
@@ -339,7 +342,7 @@ if __name__ == "__main__":
         if SHOW_OUTPUT_ST:
             # post stimulus questions for all stimuli
             analysis.bar(mapping,
-                         y=['perceived sufficient space', 'estimation of distance to cyclist'],
+                         y=['Perceived sufficient space', 'Estimation of distance to cyclist'],
                          stacked=False,
                          show_text_labels=True,
                          pretty_text=True,
@@ -352,7 +355,7 @@ if __name__ == "__main__":
             #     ids = [stim*3, stim*3 + 1, stim*3 + 2]
             #     df = mapping[mapping['id'].isin(ids)]
             #     analysis.bar(df,
-            #                  y=['perceived sufficient space', 'estimation of distance to cyclist'],
+            #                  y=['Perceived sufficient space', 'Estimation of distance to cyclist'],
             #                  stacked=False,
             #                  show_text_labels=True,
             #                  pretty_text=True,
@@ -363,7 +366,7 @@ if __name__ == "__main__":
             #     ids = [dist*3, dist*3 + 1, dist*3 + 2]
             #     df = mapping[mapping['id'].isin(ids)]
             #     analysis.bar(df,
-            #                  y=['perceived sufficient space', 'estimation of distance to cyclist'],
+            #                  y=['Perceived sufficient space', 'Estimation of distance to cyclist'],
             #                  stacked=False,
             #                  show_text_labels=True,
             #                  pretty_text=True,
