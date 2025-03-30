@@ -3389,9 +3389,10 @@ class Analysis:
                 fig.add_annotation(text=signals['label'],
                                    # put labels at the start of the x axis, as they are likely no significant effects
                                    # in the start of the trial
-                                   x=1,
+                                   x=0.2,
                                    # draw in the negative range of y axis
                                    y=-ttest_anova_row_height - counter_ttest * ttest_anova_row_height,
+                                   xanchor="left",  # aligns the left edge
                                    showarrow=False,
                                    font=dict(size=ttest_annotations_font_size, color=ttest_annotations_colour))
                 # increase counter of lines drawn
@@ -3435,9 +3436,10 @@ class Analysis:
                 fig.add_annotation(text=signals['label'],
                                    # put labels at the start of the x axis, as they are likely no significant effects
                                    # in the start of the trial
-                                   x=1,
+                                   x=0.2,
                                    # draw in the negative range of y axis
                                    y=-ttest_anova_row_height - counter_anova * ttest_anova_row_height,
+                                   xanchor="left",  # aligns the left edge
                                    showarrow=False,
                                    font=dict(size=anova_annotations_font_size, color=anova_annotations_colour))
                 # increase counter of lines drawn
@@ -3505,10 +3507,17 @@ class Analysis:
                                        y=yaxis_range[1] - counter_lines * 2 - 1,  # use ylim value and draw lower
                                        showarrow=False,
                                        font=dict(size=events_annotations_font_size, color=events_annotations_colour))
+                # just draw text label
+                else:
+                    fig.add_annotation(text=event['annotation'],
+                                       x=event['start'] + 0.7,
+                                       y=yaxis_range[1] - counter_lines * 2 - 0.1,  # use ylim value and draw lower
+                                       showarrow=False,
+                                       font=dict(size=events_annotations_font_size, color=events_annotations_colour))
                 # increase counter of lines drawn
                 counter_lines = counter_lines + 1
 
-    def plot_combined_figure(self, df, save_file=False, save_final=False):
+    def combined_figure(self, df, save_file=False, save_final=False):
         # Load preferences data
         preferences_file = dc.common.get_configs("simulator_preferences_file")
         preferences_df = pd.read_csv(preferences_file)
@@ -3532,7 +3541,7 @@ class Analysis:
             "Road markings",
             "Car projection system",
             "Center line and side-line markings",  # Control scenario (S5)
-            "Unprotected cycling path",
+            "Unprotected cycle path",
             "No road markings"
         ]
 
@@ -3543,7 +3552,7 @@ class Analysis:
             "Road markings": "S3",
             "Car projection system": "S4",
             "Center line and side-line markings": "S5",  # Control scenario
-            "Unprotected cycling path": "S6",
+            "Unprotected cycle path": "S6",
             "No road markings": "S7"
         }
 
@@ -3575,7 +3584,7 @@ class Analysis:
             "Road markings": "#00CC96",
             "Car projection system": "#AB63FA",
             "Center line and side-line markings": "#FFA15A",
-            "Unprotected cycling path": "#19D3F3",
+            "Unprotected cycle path": "#19D3F3",
             "No road markings": "#FF6692",
         }
 
@@ -3693,6 +3702,7 @@ class Analysis:
         # open it in localhost instead
         else:
             fig.show()
+        # fig.show()
 
     def bin_data(self, df, time_column, bin_size):
         """Bin the data into specified intervals."""
@@ -3737,7 +3747,7 @@ class Analysis:
             template=self.template,
         )
         # TODO: Play around with location)
-        fig.update_layout(legend=dict(x=0.3, y=1.1), font=dict(family=font_family, size=font_size))
+        fig.update_layout(legend=dict(x=0.85, y=0.95), font=dict(family=font_family, size=font_size))
 
         # save file to local output folder
         if save_file:

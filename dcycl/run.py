@@ -36,9 +36,9 @@ REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = False  # extract points from heroku data
 UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
-SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
-SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
-SHOW_OUTPUT_PP = True  # should figures with info about participants
+SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted-
+SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
+SHOW_OUTPUT_PP = False  # should figures with info about participants
 SHOW_OUTPUT_ET = False  # should figures for eye tracking
 SHOW_OUTPUT_SM = True  # should figures for eye tracking be plotted
 
@@ -103,8 +103,8 @@ if __name__ == "__main__":
         # process post-trial questions and update mapping
         mapping = heroku.process_stimulus_questions(questions)
         # rename columns with responses to post-stimulus questions to meaningful names
-        mapping = mapping.rename(columns={'slider-0': 'Perceived sufficient space',
-                                          'slider-1': 'Estimation of distance to cyclist'})
+        mapping = mapping.rename(columns={'slider-0': 'Perceived space',
+                                          'slider-1': 'Estimation (m)'})
         # export to pickle
         dc.common.save_to_p('mapping.p', mapping, 'mapping of stimuli')
     else:
@@ -117,10 +117,10 @@ if __name__ == "__main__":
         # Visualisation of keypress data
         if SHOW_OUTPUT_KP:
             # all keypresses with confidence interval
-            analysis.plot_kp(mapping,
-                             conf_interval=0.95,
-                             save_file=True,
-                             save_final=dc.common.get_configs('save_figures'))
+            # analysis.plot_kp(mapping,
+            #                  conf_interval=0.95,
+            #                  save_file=True,
+            #                  save_final=dc.common.get_configs('save_figures'))
             # keypresses of groups of stimuli
             logger.info('Creating bar plots of keypress data for groups of stimuli.')
             for stim in tqdm(range(int(num_stimuli/3))):  # tqdm adds progress bar
@@ -135,19 +135,19 @@ if __name__ == "__main__":
                 events.append({'id': 1,
                                'start': df.loc['0.8 m', 'overtake'] / 1000,  # type: ignore
                                'end': df.loc['0.8 m', 'overtake'] / 1000,  # type: ignore
-                               'annotation': None})
+                               'annotation': 'Overtake'})
                 # prepare pairs of signals to compare with ttest
                 ttest_signals = [{'signal_1': df.loc['0.8 m']['kp_raw'][0],  # 0 and 1 = between
                                   'signal_2': df.loc['1.6 m']['kp_raw'][0],
-                                  'label': 'ttest(' + '0.8 m' + ',' + '1.6 m' + ')',
+                                  'label': 'ttest(0.8 m, 1.6 m)',
                                   'paired': True},
                                  {'signal_1': df.loc['0.8 m']['kp_raw'][0],  # 0 and 2 = between
                                   'signal_2': df.loc['2.4 m']['kp_raw'][0],
-                                  'label': 'ttest(' + '0.8 m' + ',' + '2.4 m' + ')',
+                                  'label': 'ttest(0.8 m, 2.4 m)',
                                   'paired': True},
                                  {'signal_1': df.loc['1.6 m']['kp_raw'][0],  # 1 and 2 = between
                                   'signal_2': df.loc['2.4 m']['kp_raw'][0],
-                                  'label': 'ttest(' + '1.6 m' + ',' + '2.4 m' + ')',
+                                  'label': 'ttest(1.6 m, 2.4 m)',
                                   'paired': True}]
                 # prepare signals to compare with oneway ANOVA on the res level
                 anova_signals = [{'signals': [df.loc['0.8 m']['kp_raw'][0],  # keypress data
@@ -156,23 +156,23 @@ if __name__ == "__main__":
                                   'label': 'anova'}]
                 # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(df,
-                                               y=['Perceived sufficient space', 'Estimation of distance to cyclist'],
+                                               y=['Perceived space', 'Estimation (m)'],
                                                # hardcode based on the longest stimulus
                                                xaxis_kp_range=[0, 20],
                                                # hardcode based on the highest recorded value
                                                yaxis_kp_range=[0, 20],
-                                               yaxis_step=5,
+                                               yaxis_step=2,
                                                events=events,
                                                events_width=1,
                                                events_dash='dot',
                                                events_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                               events_annotations_font_size=12,
+                                               events_annotations_font_size=18,
                                                events_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                yaxis_slider_title=None,
                                                show_text_labels=True,
                                                stacked=False,
                                                yaxis_slider_show=False,
-                                               font_size=16,
+                                               font_size=18,
                                                y_legend_kp=['0.8 m', '1.6 m', '2.4 m'],
                                                legend_x=0.71,
                                                legend_y=1.0,
@@ -182,15 +182,15 @@ if __name__ == "__main__":
                                                ttest_marker='circle',
                                                ttest_marker_size=3,
                                                ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                               ttest_annotations_font_size=10,
+                                               ttest_annotations_font_size=18,
                                                ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                anova_signals=anova_signals,
                                                anova_marker='cross',
                                                anova_marker_size=3,
                                                anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                               anova_annotations_font_size=10,
+                                               anova_annotations_font_size=18,
                                                anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                               ttest_anova_row_height=0.5,
+                                               ttest_anova_row_height=0.6,
                                                name_file='kp_videos_sliders_'+','.join([str(i) for i in ids]),
                                                save_file=True,
                                                save_final=dc.common.get_configs('save_figures'))
@@ -230,7 +230,7 @@ if __name__ == "__main__":
                                       'distance',
                                       # custom labels for slider questions in the legend
                                       y_legend=['0.8 m', '1.6 m', '2.4 m'],
-                                      font_size=16,
+                                      font_size=18,
                                       legend_x=0.9,
                                       legend_y=1.0,
                                       show_menu=False,
@@ -239,26 +239,26 @@ if __name__ == "__main__":
                                       xaxis_range=[0, 20],
                                       # hardcode based on the highest recorded value
                                       yaxis_range=[0, 20],
-                                      yaxis_step=5,
+                                      yaxis_step=2,
                                       events=events,
                                       events_width=1,
                                       events_dash='dot',
                                       events_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      events_annotations_font_size=12,
+                                      events_annotations_font_size=18,
                                       events_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_signals=ttest_signals,
                                       ttest_marker='circle',
                                       ttest_marker_size=3,
                                       ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      ttest_annotations_font_size=10,
+                                      ttest_annotations_font_size=18,
                                       ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       anova_signals=anova_signals,
                                       anova_marker='cross',
                                       anova_marker_size=3,
                                       anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      anova_annotations_font_size=10,
+                                      anova_annotations_font_size=18,
                                       anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      ttest_anova_row_height=0.5,
+                                      ttest_anova_row_height=0.6,
                                       save_file=True,
                                       save_final=dc.common.get_configs('save_figures'))
             # keypress based on the type of interaction
@@ -300,14 +300,14 @@ if __name__ == "__main__":
             analysis.plot_kp_variable(mapping,
                                       'interaction',
                                       # custom labels for slider questions in the legend
-                                      y_legend=['Bike laser projection',
+                                      y_legend=['Laser projection',
                                                 'Vertical sign',
-                                                'Danish sign',
-                                                'Car laser projection',
-                                                'Control',
-                                                'Unprotected cycling path',
+                                                'Road marking',
+                                                'Car projection system',
+                                                'Centre line and side-line markings',
+                                                'Unprotected cycle path',
                                                 'No road markings'],
-                                      font_size=16,
+                                      font_size=18,
                                       legend_x=0.9,
                                       legend_y=1.0,
                                       show_menu=False,
@@ -316,33 +316,33 @@ if __name__ == "__main__":
                                       xaxis_range=[0, 20],
                                       # hardcode based on the highest recorded value
                                       yaxis_range=[0, 20],
-                                      yaxis_step=5,
+                                      yaxis_step=2,
                                       events=events,
                                       events_width=1,
                                       events_dash='dot',
                                       events_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      events_annotations_font_size=12,
+                                      events_annotations_font_size=18,
                                       events_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_signals=ttest_signals,
                                       ttest_marker='circle',
                                       ttest_marker_size=3,
                                       ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      ttest_annotations_font_size=10,
+                                      ttest_annotations_font_size=18,
                                       ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       anova_signals=anova_signals,
                                       anova_marker='cross',
                                       anova_marker_size=3,
                                       anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      anova_annotations_font_size=10,
+                                      anova_annotations_font_size=18,
                                       anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      ttest_anova_row_height=0.5,
+                                      ttest_anova_row_height=0.6,
                                       save_file=True,
                                       save_final=dc.common.get_configs('save_figures'))
         # Visualisation of stimulus data
         if SHOW_OUTPUT_ST:
             # post stimulus questions for all stimuli
             analysis.bar(mapping,
-                         y=['Perceived sufficient space', 'Estimation of distance to cyclist'],
+                         y=['Perceived space', 'Estimation (m)'],
                          stacked=False,
                          show_text_labels=True,
                          pretty_text=True,
@@ -355,7 +355,7 @@ if __name__ == "__main__":
             #     ids = [stim*3, stim*3 + 1, stim*3 + 2]
             #     df = mapping[mapping['id'].isin(ids)]
             #     analysis.bar(df,
-            #                  y=['Perceived sufficient space', 'Estimation of distance to cyclist'],
+            #                  y=['Perceived space', 'Estimation (m)'],
             #                  stacked=False,
             #                  show_text_labels=True,
             #                  pretty_text=True,
@@ -366,7 +366,7 @@ if __name__ == "__main__":
             #     ids = [dist*3, dist*3 + 1, dist*3 + 2]
             #     df = mapping[mapping['id'].isin(ids)]
             #     analysis.bar(df,
-            #                  y=['Perceived sufficient space', 'Estimation of distance to cyclist'],
+            #                  y=['Perceived space', 'Estimation (m)'],
             #                  stacked=False,
             #                  show_text_labels=True,
             #                  pretty_text=True,
@@ -667,19 +667,20 @@ if __name__ == "__main__":
                 analysis.create_animation_all_stimuli(num_stimuli)
         # Visualisation of simulator data
         if SHOW_OUTPUT_SM:
-            analysis.min_distance(simulator_data, save_file=True, save_final=True)
-            analysis.mean_speed(simulator_data, save_file=True, save_final=True)
-            preferences_df = pd.read_csv(dc.common.get_configs("simulator_preferences_file"))
-            analysis.bar(preferences_df,
-                         y=['Preference'],
-                         # x=['Scenarios'],
-                         stacked=False,
-                         show_text_labels=True,
-                         pretty_text=True,
-                         name_file='preferences',
-                         save_file=True,
-                         save_final=dc.common.get_configs('save_figures'))
-            analysis.overtaking_distance(simulator_data, save_file=True, save_final=True)
+            # analysis.min_distance(simulator_data, save_file=True, save_final=True)
+            # analysis.mean_speed(simulator_data, save_file=True, save_final=True)
+            # preferences_df = pd.read_csv(dc.common.get_configs("simulator_preferences_file"))
+            # analysis.bar(preferences_df,
+            #              y=['Preference'],
+            #              # x=['Scenarios'],
+            #              stacked=False,
+            #              show_text_labels=True,
+            #              pretty_text=True,
+            #              name_file='preferences',
+            #              save_file=True,
+            #              save_final=dc.common.get_configs('save_figures'))
+            # analysis.overtaking_distance(simulator_data, save_file=True, save_final=True)
+            analysis.combined_figure(simulator_data, save_file=True, save_final=True)
         # collect figure objects
         figures = [
             manager.canvas.figure
