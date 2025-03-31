@@ -36,9 +36,9 @@ REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = False  # extract points from heroku data
 UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
-SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
-SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
-SHOW_OUTPUT_PP = True  # should figures with info about participants
+SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted-
+SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
+SHOW_OUTPUT_PP = False  # should figures with info about participants
 SHOW_OUTPUT_ET = False  # should figures for eye tracking
 SHOW_OUTPUT_SM = True  # should figures for simulator data
 
@@ -57,7 +57,7 @@ if __name__ == "__main__":
     # read appen data
     appen_data = appen.read_data(filter_data=FILTER_DATA, clean_data=CLEAN_DATA)
     # create object for working with appen data
-    simulator = dc.analysis.Simulator(files_data=dc.common.get_configs("files_simulator"),
+    simulator = dc.analysis.Simulator(files_simulator=dc.common.get_configs("files_simulator"),
                                       save_p=SAVE_P,
                                       load_p=LOAD_P,
                                       save_csv=SAVE_CSV)
@@ -669,18 +669,11 @@ if __name__ == "__main__":
         if SHOW_OUTPUT_SM:
             analysis.min_distance(simulator_data, save_file=True, save_final=True)
             analysis.mean_speed(simulator_data, save_file=True, save_final=True)
-            preferences_df = pd.read_csv(dc.common.get_configs("simulator_preferences_file"))
-            analysis.bar(preferences_df,
-                         y=['Preference'],
-                         # x=['Scenarios'],
-                         stacked=False,
-                         show_text_labels=True,
-                         pretty_text=True,
-                         name_file='preferences',
-                         save_file=True,
-                         save_final=dc.common.get_configs('save_figures'))
+
             analysis.overtaking_distance(simulator_data, save_file=True, save_final=True)
             # analysis.combined_figure(simulator_data, save_file=True, save_final=True)
+            # analysis.combined_figure(simulator_data, save_file=True, save_final=True)
+            simulator.get_preferences()
         # collect figure objects
         figures = [
             manager.canvas.figure

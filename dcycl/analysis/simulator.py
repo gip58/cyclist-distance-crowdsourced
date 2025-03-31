@@ -1,8 +1,10 @@
 import os
 import pandas as pd
-
+import logging
 import dcycl as dc
 
+dc.logs(show_level="info", show_color=True)
+logger = dc.CustomLogger(__name__)  # use custom logger
 
 class Simulator(object):
     """Working with data from simulator."""
@@ -29,9 +31,9 @@ class Simulator(object):
     # set template for plotly output
     template = ""
 
-    def __init__(self, files_data: str, save_p: bool, load_p: bool, save_csv: bool):
+    def __init__(self, files_simulator: str, save_p: bool, load_p: bool, save_csv: bool):
         # files with raw data
-        self.files_data = files_data  # Simulator/path
+        self.files_simulator = files_simulator
         # save data as pickle file
         self.save_p = save_p
         # load data as pickle file
@@ -53,15 +55,14 @@ class Simulator(object):
             dataframe: updated dataframe.
         """
 
-        scenario_files = os.listdir(self.files_data)
+        scenario_files = os.listdir(os.path.join(self.files_simulator, "data"))
 
         for scenario in scenario_files:
             # skip .DS_Store file
             if scenario == ".DS_Store":
                 continue
-            scenario_path = os.path.join(self.files_data, scenario)
+            scenario_path = os.path.join(os.path.join(self.files_simulator, "data"), scenario)
             csv_files = [f for f in os.listdir(scenario_path) if f.endswith(".csv")]
-
             for participant_id, csv_file in enumerate(csv_files):
                 file_path = os.path.join(scenario_path, csv_file)
                 df_scenario = pd.read_csv(file_path)
@@ -78,4 +79,17 @@ class Simulator(object):
         return self.df
 
     def filter_data(self, df):
-        pass   
+        pass
+
+    def get_preferences(self):
+        raw_data_file = os.path.join(self.files_simulator, "simulator_questionnaire_after.csv")
+        df = pd.read_csv(raw_data_file)
+        preferred_col = "Which of the seven scenarios, featuring various technologies such as road markings or laser projections, was most helpful in accurately determining the distance between the car and the cyclist?"
+        counts = df[preferred_col].value_counts()
+        logger.info("Preference counts per scenario:")
+        for scenario, count in counts.items():
+                logger.info(f"{scenario}: {count}")
+
+
+        # compute sums for preferences
+        

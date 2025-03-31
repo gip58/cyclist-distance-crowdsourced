@@ -3519,8 +3519,32 @@ class Analysis:
 
     def combined_figure(self, df, save_file=False, save_final=False):
         # Load preferences data
-        preferences_file = dc.common.get_configs("simulator_preferences_file")
-        preferences_df = pd.read_csv(preferences_file)
+        raw_data_file = dc.common.get_configs("simulator_raw_data_file")
+        raw_df = pd.read_csv(raw_data_file)
+
+        preferred_col = "Which of the seven scenarios, featuring various technologies such as road markings or laser projections, was most helpful in accurately determining the distance between the car and the cyclist?"
+
+        # Mapping from "Scenario X" to proper scenario names
+        text_to_scenario_name = {
+            "Scenario 1": "Laser projection",
+            "Scenario 2": "Vertical signage",
+            "Scenario 3": "Road markings",
+            "Scenario 4": "Car projection system",
+            "Scenario 5": "Center line and side-line markings",
+            "Scenario 6": "Unprotected cycle path",
+            "Scenario 7": "No road markings"
+        }
+
+        # Extract "Scenario X" from full answer and map to clean scenario name
+        raw_df['ScenarioKey'] = raw_df[preferred_col].str.extract(r'(Scenario \d+)')
+        raw_df['Scenarios'] = raw_df['ScenarioKey'].map(text_to_scenario_name)
+
+        preferences_df = (
+            raw_df['Scenarios']
+            .value_counts()
+            .rename_axis('Scenarios')
+            .reset_index(name='Preference')
+        )
 
         # Ensure data is binned before analysis
         bin_size = 0.5
@@ -3533,7 +3557,7 @@ class Analysis:
 
         # Convert TimeBin to numeric
         df_binned_filtered["TimeBin"] = df_binned_filtered["TimeBin"].astype(float)
-
+        
         # Define the fixed order of scenarios
         scenario_order = [
             "Laser projection",
