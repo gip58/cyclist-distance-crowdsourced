@@ -36,11 +36,11 @@ REJECT_CHEATERS = False  # reject cheaters on Appen
 CALC_COORDS = False  # extract points from heroku data
 UPDATE_MAPPING = True  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
-SHOW_OUTPUT_KP = False  # should figures with keypress data be plotted-
-SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
-SHOW_OUTPUT_PP = False  # should figures with info about participants
+SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
+SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
+SHOW_OUTPUT_PP = True  # should figures with info about participants
 SHOW_OUTPUT_ET = False  # should figures for eye tracking
-SHOW_OUTPUT_SM = True  # should figures for eye tracking be plotted
+SHOW_OUTPUT_SM = True  # should figures for simulator data
 
 
 if __name__ == "__main__":
@@ -305,7 +305,7 @@ if __name__ == "__main__":
                                                 'Road marking',
                                                 'Car projection system',
                                                 'Centre line and side-line markings',
-                                                'Unprotected cycle path',
+                                                'Unprotected cycling path',
                                                 'No road markings'],
                                       font_size=18,
                                       legend_x=0.9,
@@ -667,20 +667,20 @@ if __name__ == "__main__":
                 analysis.create_animation_all_stimuli(num_stimuli)
         # Visualisation of simulator data
         if SHOW_OUTPUT_SM:
-            # analysis.min_distance(simulator_data, save_file=True, save_final=True)
-            # analysis.mean_speed(simulator_data, save_file=True, save_final=True)
-            # preferences_df = pd.read_csv(dc.common.get_configs("simulator_preferences_file"))
-            # analysis.bar(preferences_df,
-            #              y=['Preference'],
-            #              # x=['Scenarios'],
-            #              stacked=False,
-            #              show_text_labels=True,
-            #              pretty_text=True,
-            #              name_file='preferences',
-            #              save_file=True,
-            #              save_final=dc.common.get_configs('save_figures'))
-            # analysis.overtaking_distance(simulator_data, save_file=True, save_final=True)
-            analysis.combined_figure(simulator_data, save_file=True, save_final=True)
+            analysis.min_distance(simulator_data, save_file=True, save_final=True)
+            analysis.mean_speed(simulator_data, save_file=True, save_final=True)
+            preferences_df = pd.read_csv(dc.common.get_configs("simulator_preferences_file"))
+            analysis.bar(preferences_df,
+                         y=['Preference'],
+                         # x=['Scenarios'],
+                         stacked=False,
+                         show_text_labels=True,
+                         pretty_text=True,
+                         name_file='preferences',
+                         save_file=True,
+                         save_final=dc.common.get_configs('save_figures'))
+            analysis.overtaking_distance(simulator_data, save_file=True, save_final=True)
+            # analysis.combined_figure(simulator_data, save_file=True, save_final=True)
         # collect figure objects
         figures = [
             manager.canvas.figure
