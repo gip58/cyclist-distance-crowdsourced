@@ -14,12 +14,11 @@ Configuration of the project needs to be defined in `cyclist-distance-crowdsourc
 * `allowed_min_time`: the cut-off for minimal time of participation for filtering.
 * `num_repeat`: number of times each stimulus is repeated.
 * `kp_resolution`: bin size in ms in which data is stored.
-* `allowed_stimulus_wrong_duration`: if the percentage of videos with abnormal length is above this value, exclude participant from analysis.
-* `allowed_mistakes_signs`: number of allowed mistakes in the questions about traffic signs.
-* `sign_answers`: answers to the questions on traffic signs.
 * `mask_id`: number for masking worker IDs in appen data.
+* `allowed_stimulus_wrong_duration`: if the percentage of videos with abnormal length is above this value, exclude participant from analysis.
 * `files_heroku`: files with data from heroku.
 * `files_appen`: files with data from appen.
+* `files_simulator`: files with data from the simulator experiment.
 * `file_cheaters`: CSV file with cheaters for flagging.
 * `path_source`: path with source files for the stimuli from the Unity3D project.
 * `path_stimuli`: path consisting of all videos included in the survey.
@@ -28,12 +27,10 @@ Configuration of the project needs to be defined in `cyclist-distance-crowdsourc
 * `stimulus_width`: width of stimuli.
 * `stimulus_height`: height of stimuli.
 * `aoi`: csv file with AOI data.
-* `only_lab`: toggle to process data from the lab experiment only.
 * `smoothen_signal`: toggle to apply filter to smoothen data.,
 * `freq`: frequency used by One Euro Filter.
 * `mincutoff`: minimal cutoff used by One Euro Filter.
 * `beta`: beta value used by One Euro Filter.
-* `dcutoff`: d-cutoff value used by One Euro Filter.
 * `font_family`: font family to be used on the figures.
 * `font_size`: font size to be used on the figures.
 * `p_value`: p value used for ttest.

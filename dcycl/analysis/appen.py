@@ -387,7 +387,7 @@ class Appen:
         logger.info('Gender: {}', count.most_common())
         # info on most represted countries in minutes
         count = Counter(df['country'])
-        logger.info('Countires: {}', count.most_common())
+        logger.info('Countries: {}', count.most_common())
         # info on duration in minutes
         logger.info('Time of participation: mean={:,.2f} min, median={:,.2f} min, std={:,.2f} min.',
                     df['time'].mean() / 60,

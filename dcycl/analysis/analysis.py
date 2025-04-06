@@ -2060,8 +2060,7 @@ class Analysis:
         # buttons with the names of stimuli
         buttons = list([dict(label='All',
                              method='update',
-                             args=[{'visible': [True] * df.shape[0]},
-                                   {'title': 'Keypresses for individual stimuli', 'showlegend': True}])])
+                             args=[{'visible': [True] * df.shape[0]}])])
         # show menu with selection of variable to plot
         if show_menu:
             # counter for traversing through stimuli
@@ -2113,8 +2112,8 @@ class Analysis:
         else:
             fig.show()
 
-    def plot_kp_slider_videos(self, df, y: list, y_legend_kp=None, x=None, events=None, events_width=1, events_dash='dot',
-                              events_colour='black', events_annotations_font_size=20,
+    def plot_kp_slider_videos(self, df, y: list, y_legend_kp=None, x=None, events=None, events_width=1,
+                              events_dash='dot', events_colour='black', events_annotations_font_size=20,
                               events_annotations_colour='black', xaxis_kp_title='Time (s)',
                               yaxis_kp_title='Percentage of trials with response key pressed',
                               xaxis_kp_range=None, yaxis_kp_range=None, stacked=False, pretty_text=False,
@@ -2126,7 +2125,8 @@ class Analysis:
                               ttest_marker_size=3,  ttest_marker_colour='black', ttest_annotations_font_size=10,
                               ttest_annotations_colour='black', anova_signals=None, anova_marker='cross',
                               anova_marker_size=3, anova_marker_colour='black', anova_annotations_font_size=10,
-                              anova_annotations_colour='black', ttest_anova_row_height=0.5, yaxis_step=10, y_legend_bar=None):
+                              anova_annotations_colour='black', ttest_anova_row_height=0.5, yaxis_step=10,
+                              y_legend_bar=None):
         """Plot keypresses with multiple variables as a filter and slider questions for the stimuli.
 
         Args:
@@ -2304,7 +2304,6 @@ class Analysis:
         # update axis
         fig.update_xaxes(title_text=None, row=1, col=2)
         fig.update_xaxes(title_text=None, row=2, col=2)
-        fig.update_yaxes(title_text=yaxis_slider_title, row=1, col=1)
         fig.update_yaxes(title_text=yaxis_slider_title, row=2, col=2)
         fig.update_yaxes(visible=yaxis_slider_show, row=1, col=2)
         fig.update_yaxes(visible=yaxis_slider_show, row=2, col=2)
@@ -2321,7 +2320,7 @@ class Analysis:
         if stacked:
             fig.update_layout(barmode='stack')
         # legend
-        fig.update_layout(legend=dict(x=legend_x, y=legend_y))
+        fig.update_layout(legend=dict(x=legend_x, y=legend_y, bgcolor='rgba(0,0,0,0)'))
         # update font family
         if font_family:
             # use given value
@@ -2358,7 +2357,7 @@ class Analysis:
                          ttest_annotations_font_size=10, ttest_annotations_colour='black', anova_signals=None,
                          anova_marker='cross', anova_marker_size=3, anova_marker_colour='black',
                          anova_annotations_font_size=10, anova_annotations_colour='black', ttest_anova_row_height=0.5,
-                         yaxis_step=10):
+                         yaxis_step=10, xaxis_step=5):
         """Plot figures of values of a certain variable.
 
         Args:
@@ -2528,9 +2527,10 @@ class Analysis:
         else:
             # use value from config file
             fig.update_layout(font=dict(size=dc.common.get_configs('font_size')))
+        fig.update_xaxes(dtick=xaxis_step)
         # legend
         if legend_x and legend_y:
-            fig.update_layout(legend=dict(x=legend_x, y=legend_y))
+            fig.update_layout(legend=dict(x=legend_x, y=legend_y, bgcolor='rgba(0,0,0,0)'))
         # save file to local output folder
         if save_file:
             self.save_plotly(fig=fig,
@@ -3522,7 +3522,9 @@ class Analysis:
         raw_data_file = dc.common.get_configs("simulator_raw_data_file")
         raw_df = pd.read_csv(raw_data_file)
 
-        preferred_col = "Which of the seven scenarios, featuring various technologies such as road markings or laser projections, was most helpful in accurately determining the distance between the car and the cyclist?"
+        preferred_col = "Which of the seven scenarios, featuring various technologies such as road markings or " + \
+                        "laser projections, was most helpful in accurately determining the distance between the " + \
+                        "car and the cyclist?"
 
         # Mapping from "Scenario X" to proper scenario names
         text_to_scenario_name = {
@@ -3826,20 +3828,27 @@ class Analysis:
         else:
             fig.show()
 
-    def overtaking_distance(self, df, save_file=False, save_final=False):
-        # Bin time into 0.5s intervals
-        time_bins_filtered = np.arange(4, df["Time"].max(), 0.5)
+    def overtaking_distance(self, df, save_file=False, save_final=False, legend_position="right"):
+        # Bin time into kp_resolution intervals
+        time_bins_filtered = np.arange(4, df["Time"].max(), dc.common.get_configs("kp_resolution") / 1000)
         df["TimeBin"] = pd.cut(
             df["Time"], bins=time_bins_filtered, labels=time_bins_filtered[:-1]
         )
 
         # Compute the average overtaking distance for each time bin within each scenario
-        df_binned_filtered = (df.groupby(["TimeBin", "Scenario"])["Distance"].mean().reset_index())
-        df_binned_filtered["TimeBin"] = df_binned_filtered["TimeBin"].astype(float)  # Convert to numeric
+        df_binned_filtered = (
+            df.groupby(["TimeBin", "Scenario"])["Distance"].mean().reset_index()
+        )
+        df_binned_filtered["TimeBin"] = df_binned_filtered["TimeBin"].astype(float)
 
-        # -----------------------------
+        # smoothen signal
+        if self.smoothen_signal:
+            df_binned_filtered["TimeBin"] = self.smoothen_filter(df_binned_filtered["TimeBin"])
+
+        # start from t=5 s
+        df_binned_filtered = df_binned_filtered[df_binned_filtered["TimeBin"] >= 5]
+
         # Create Line Plot (Overtaking Distance Over Time)
-        # -----------------------------
         fig = px.line(
             df_binned_filtered,
             x="TimeBin",
@@ -3847,20 +3856,43 @@ class Analysis:
             color="Scenario",
             labels={
                 "TimeBin": "Time (s)",
-                "Distance": "Average Overtaking Distance (m)",
+                "Distance": "Lateral distance between car and bicycle (m)",
                 "Scenario": "Scenario",
             },
             template=self.template,
         )
-        fig.update_layout(font=dict(family=dc.common.get_configs("font_family"),
-                                    size=dc.common.get_configs("font_size")))
 
-        # save file to local output folder
+        fig.update_layout(
+            font=dict(
+                family=dc.common.get_configs("font_family"),
+                size=dc.common.get_configs("font_size")
+            )
+        )
+
+        # Legend position handling
+        legend_positions = {
+            "top-left": dict(x=0, y=1, xanchor="left", yanchor="top"),
+            "top-right": dict(x=1, y=1, xanchor="right", yanchor="top"),
+            "bottom-left": dict(x=0, y=0, xanchor="left", yanchor="bottom"),
+            "bottom-right": dict(x=0.97, y=0, xanchor="right", yanchor="bottom"),
+            "center-right": dict(x=1, y=0.5, xanchor="left", yanchor="middle"),
+            "center-left": dict(x=0, y=0.5, xanchor="right", yanchor="middle"),
+            "top-center": dict(x=0.5, y=1, xanchor="center", yanchor="top"),
+            "bottom-center": dict(x=0.5, y=0, xanchor="center", yanchor="bottom"),
+            "right": dict(x=1.02, y=1, xanchor="left", yanchor="top"),  # Default
+        }
+
+        legend_layout = legend_positions.get(legend_position, legend_positions["right"])
+        legend_layout.update(bgcolor='rgba(0,0,0,0)')  # transparent background
+        fig.update_layout(legend=legend_layout)
+
+        # Save file or show plot
         if save_file:
-            self.save_plotly(fig=fig,
-                             name="overtaking_distance",
-                             remove_margins=True,
-                             save_final=save_final)  # also save as "final" figure
-        # open it in localhost instead
+            self.save_plotly(
+                fig=fig,
+                name="overtaking_distance",
+                remove_margins=True,
+                save_final=save_final
+            )
         else:
             fig.show()
