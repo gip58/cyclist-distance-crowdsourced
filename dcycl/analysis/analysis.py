@@ -3362,41 +3362,43 @@ class Analysis:
                 self.save_stats_csv(t=list(range(len(signals['signal_1']))),
                                     p_values=p_values,
                                     name_file=signals['label'] + '_' + name_file + '.csv')
-                # add to the plot
-                # plot stars based on random lists
-                marker_x = []  # x-coordinates for stars
-                marker_y = []  # y-coordinates for stars
-                # assuming `times` and `signals['signal_1']` correspond to x and y data points
-                for i in range(len(significance)):
-                    if significance[i] == 1:  # if value indicates a star
-                        marker_x.append(times[i])  # use the corresponding x-coordinate
-                        # dynamically set y-coordinate, offset by ttest_anova_row_height for each signal_index
-                        marker_y.append(-ttest_anova_row_height - counter_ttest * ttest_anova_row_height)
-                # add scatter plot trace with cleaned data
-                fig.add_trace(go.Scatter(x=marker_x,
-                                         y=marker_y,
-                                         # list of possible values: https://plotly.com/python/marker-style
-                                         mode='markers',
-                                         marker=dict(symbol=ttest_marker,  # marker
-                                                     size=ttest_marker_size,  # adjust size
-                                                     color=ttest_marker_colour),  # adjust colour
-                                         text=p_values,
-                                         showlegend=False,
-                                         hovertemplate=signals['label'] + ': time=%{x}, p_value=%{text}'),
-                              row=1,
-                              col=1)
-                # add label with signals that are compared
-                fig.add_annotation(text=signals['label'],
-                                   # put labels at the start of the x axis, as they are likely no significant effects
-                                   # in the start of the trial
-                                   x=0.2,
-                                   # draw in the negative range of y axis
-                                   y=-ttest_anova_row_height - counter_ttest * ttest_anova_row_height,
-                                   xanchor="left",  # aligns the left edge
-                                   showarrow=False,
-                                   font=dict(size=ttest_annotations_font_size, color=ttest_annotations_colour))
-                # increase counter of lines drawn
-                counter_ttest = counter_ttest + 1
+                # only proceed if there are significant results
+                if any(significance):  # Check if any significance is true (i.e., any stars)
+                    # add to the plot
+                    # plot stars based on random lists
+                    marker_x = []  # x-coordinates for stars
+                    marker_y = []  # y-coordinates for stars
+                    # assuming `times` and `signals['signal_1']` correspond to x and y data points
+                    for i in range(len(significance)):
+                        if significance[i] == 1:  # if value indicates a star
+                            marker_x.append(times[i])  # use the corresponding x-coordinate
+                            # dynamically set y-coordinate, offset by ttest_anova_row_height for each signal_index
+                            marker_y.append(-ttest_anova_row_height - counter_ttest * ttest_anova_row_height)
+                    # add scatter plot trace with cleaned data
+                    fig.add_trace(go.Scatter(x=marker_x,
+                                             y=marker_y,
+                                             # list of possible values: https://plotly.com/python/marker-style
+                                             mode='markers',
+                                             marker=dict(symbol=ttest_marker,  # marker
+                                                         size=ttest_marker_size,  # adjust size
+                                                         color=ttest_marker_colour),  # adjust colour
+                                             text=p_values,
+                                             showlegend=False,
+                                             hovertemplate=signals['label'] + ': time=%{x}, p_value=%{text}'),
+                                  row=1,
+                                  col=1)
+                    # add label with signals that are compared
+                    fig.add_annotation(text=signals['label'],
+                                       # put labels at the start of the x axis, as they are likely no significant effects
+                                       # in the start of the trial
+                                       x=0.2,
+                                       # draw in the negative range of y axis
+                                       y=-ttest_anova_row_height - counter_ttest * ttest_anova_row_height,
+                                       xanchor="left",  # aligns the left edge
+                                       showarrow=False,
+                                       font=dict(size=ttest_annotations_font_size, color=ttest_annotations_colour))
+                    # increase counter of lines drawn
+                    counter_ttest = counter_ttest + 1
         # output ANOVA
         if anova_signals:
             # if ttest was plotted, take into account for y of the first row or marker
@@ -3410,38 +3412,40 @@ class Analysis:
                 self.save_stats_csv(t=list(range(len(signals['signals'][0]))),
                                     p_values=p_values,
                                     name_file=signals['label'] + '_' + name_file + '.csv')
-                # add to the plot
-                marker_x = []  # x-coordinates for stars
-                marker_y = []  # y-coordinates for stars
-                # assuming `times` and `signals['signal_1']` correspond to x and y data points
-                for i in range(len(significance)):
-                    if significance[i] == 1:  # if value indicates a star
-                        marker_x.append(times[i])  # use the corresponding x-coordinate
-                        # dynamically set y-coordinate, slightly offset for each signal_index
-                        marker_y.append(-ttest_anova_row_height - counter_anova * ttest_anova_row_height)
-                # add scatter plot trace with cleaned data
-                fig.add_trace(go.Scatter(x=marker_x,
-                                         y=marker_y,
-                                         # list of possible values: https://plotly.com/python/marker-style
-                                         mode='markers',
-                                         marker=dict(symbol=anova_marker,  # marker
-                                                     size=anova_marker_size,  # adjust size
-                                                     color=anova_marker_colour),  # adjust colour
-                                         text=p_values,
-                                         showlegend=False,
-                                         hovertemplate='time=%{x}, p_value=%{text}'),
-                              row=1,
-                              col=1)
-                # add label with signals that are compared
-                fig.add_annotation(text=signals['label'],
-                                   # put labels at the start of the x axis, as they are likely no significant effects
-                                   # in the start of the trial
-                                   x=0.2,
-                                   # draw in the negative range of y axis
-                                   y=-ttest_anova_row_height - counter_anova * ttest_anova_row_height,
-                                   xanchor="left",  # aligns the left edge
-                                   showarrow=False,
-                                   font=dict(size=anova_annotations_font_size, color=anova_annotations_colour))
+                # only proceed if there are significant results
+                if any(significance):  # Check if any significance is true (i.e., any stars)
+                    # add to the plot
+                    marker_x = []  # x-coordinates for stars
+                    marker_y = []  # y-coordinates for stars
+                    # assuming `times` and `signals['signal_1']` correspond to x and y data points
+                    for i in range(len(significance)):
+                        if significance[i] == 1:  # if value indicates a star
+                            marker_x.append(times[i])  # use the corresponding x-coordinate
+                            # dynamically set y-coordinate, slightly offset for each signal_index
+                            marker_y.append(-ttest_anova_row_height - counter_anova * ttest_anova_row_height)
+                    # add scatter plot trace with cleaned data
+                    fig.add_trace(go.Scatter(x=marker_x,
+                                             y=marker_y,
+                                             # list of possible values: https://plotly.com/python/marker-style
+                                             mode='markers',
+                                             marker=dict(symbol=anova_marker,  # marker
+                                                         size=anova_marker_size,  # adjust size
+                                                         color=anova_marker_colour),  # adjust colour
+                                             text=p_values,
+                                             showlegend=False,
+                                             hovertemplate='time=%{x}, p_value=%{text}'),
+                                  row=1,
+                                  col=1)
+                    # add label with signals that are compared
+                    fig.add_annotation(text=signals['label'],
+                                       # put labels at the start of the x axis, as they are likely no significant effects
+                                       # in the start of the trial
+                                       x=0.2,
+                                       # draw in the negative range of y axis
+                                       y=-ttest_anova_row_height - counter_anova * ttest_anova_row_height,
+                                       xanchor="left",  # aligns the left edge
+                                       showarrow=False,
+                                       font=dict(size=anova_annotations_font_size, color=anova_annotations_colour))
                 # increase counter of lines drawn
                 counter_anova = counter_anova + 1
         # hide ticks of negative values on y axis assuming that ticks are at step of 5

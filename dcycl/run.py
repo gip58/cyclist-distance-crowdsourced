@@ -210,18 +210,6 @@ if __name__ == "__main__":
                                     save_final=dc.common.get_configs('save_figures'))
             # keypress based on the type of distance
             # prepare pairs of signals to compare with ttest
-            # ttest_signals = [{'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 0.8]['kp_raw'].iloc[0]),  # 0.8 m vs 1.6 m # noqa: E501
-            #                   'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 1.6]['kp_raw'].iloc[0]),  # noqa: E501
-            #                   'label': 'ttest(0.8 m, 1.6 m)',
-            #                   'paired': True},
-            #                  {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 0.8]['kp_raw'].iloc[0]),  # 0.8 m vs 2.4 m  # noqa: E501
-            #                   'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 2.4]['kp_raw'].iloc[0]),  # noqa: E501
-            #                   'label': 'ttest(0.8 m, 2.4 m)',
-            #                   'paired': True},
-            #                  {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 1.6]['kp_raw'].iloc[0]),  # 1.6 m vs 2.4 m  # noqa: E501
-            #                   'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 2.4]['kp_raw'].iloc[0]),  # noqa: E501
-            #                   'label': 'ttest(1.6 m, 2.4 m)',
-            #                   'paired': True}]
             ttest_signals = [{'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 0.8]['kp_raw'].iloc[0]),  # 0.8 m vs 1.6 m # noqa: E501
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 1.6]['kp_raw'].iloc[0]),  # noqa: E501
                               'label': 'ttest(0.8 m, 1.6 m)',
@@ -229,6 +217,10 @@ if __name__ == "__main__":
                              {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 0.8]['kp_raw'].iloc[0]),  # 0.8 m vs 2.4 m  # noqa: E501
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 2.4]['kp_raw'].iloc[0]),  # noqa: E501
                               'label': 'ttest(0.8 m, 2.4 m)',
+                              'paired': True},
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 1.6]['kp_raw'].iloc[0]),  # 1.6 m vs 2.4 m  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['distance'] == 2.4]['kp_raw'].iloc[0]),  # noqa: E501
+                              'label': 'ttest(1.6 m, 2.4 m)',
                               'paired': True}]
             # prepare signals to compare with oneway ANOVA on the res level
             anova_signals = [{'signals': [dc.common.vertical_sum(mapping.loc[mapping['distance'] == 0.8]['kp_raw'].iloc[0]),   # keypress data  # noqa: E501
@@ -273,43 +265,39 @@ if __name__ == "__main__":
                                       save_final=dc.common.get_configs('save_figures'))
             # keypress based on the type of interaction
             # prepare pairs of signals to compare with ttest
-            # ttest_signals = [{'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Bike laser projection  # noqa: E501
-            #                   'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'bike_laser_projection']['kp_raw'].iloc[0]),  # noqa: E501
-            #                   'label': 'ttest(Control, Bike laser projection)',
-            #                   'paired': True},
-            #                  {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Vertical sign  # noqa: E501
-            #                   'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'vertical_sign']['kp_raw'].iloc[0]),  # noqa: E501
-            #                   'label': 'ttest(Control, Vertical sign)',
-            #                   'paired': True},
-            #                  {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Danish sign  # noqa: E501
-            #                   'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'road_markings']['kp_raw'].iloc[0]),  # noqa: E501
-            #                   'label': 'ttest(Control, Road markings)',
-            #                   'paired': True},
-            #                  {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Car laser projection  # noqa: E501
-            #                   'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'car_laser_projection']['kp_raw'].iloc[0]),  # noqa: E501
-            #                   'label': 'ttest(Control, Car laser projection)',
-            #                   'paired': True},
-            #                  {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Unprotected cycling path  # noqa: E501
-            #                   'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'unprotected_cycling_path']['kp_raw'].iloc[0]),  # noqa: E501
-            #                   'label': 'ttest(Control, Unprotected cycling path)',
-            #                   'paired': True},
-            #                  {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs No road markings  # noqa: E501
-            #                   'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'no_road_markings']['kp_raw'].iloc[0]),  # noqa: E501
-            #                   'label': 'ttest(Control, No road markings)',
-            #                   'paired': True}]
-            ttest_signals = [{'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Unprotected cycling path  # noqa: E501
+            ttest_signals = [{'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Bike laser projection  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'bike_laser_projection']['kp_raw'].iloc[0]),  # noqa: E501
+                              'label': 'ttest(Control, Bike laser projection)',
+                              'paired': True},
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Vertical sign  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'vertical_sign']['kp_raw'].iloc[0]),  # noqa: E501
+                              'label': 'ttest(Control, Vertical sign)',
+                              'paired': True},
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Danish sign  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'road_markings']['kp_raw'].iloc[0]),  # noqa: E501
+                              'label': 'ttest(Control, Road markings)',
+                              'paired': True},
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Car laser projection  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'car_laser_projection']['kp_raw'].iloc[0]),  # noqa: E501
+                              'label': 'ttest(Control, Car laser projection)',
+                              'paired': True},
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Unprotected cycling path  # noqa: E501
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'unprotected_cycling_path']['kp_raw'].iloc[0]),  # noqa: E501
                               'label': 'ttest(Control, Unprotected cycling path)',
+                              'paired': True},
+                             {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs No road markings  # noqa: E501
+                              'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'no_road_markings']['kp_raw'].iloc[0]),  # noqa: E501
+                              'label': 'ttest(Control, No road markings)',
                               'paired': True}]
             # prepare signals to compare with oneway ANOVA on the res level
-            # anova_signals = [{'signals': [dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),                   # keypress data  # noqa: E501
-            #                               dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'bike_laser_projection']['kp_raw'].iloc[0]),     # noqa: E501
-            #                               dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'vertical_sign']['kp_raw'].iloc[0]),             # noqa: E501
-            #                               dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'road_markings']['kp_raw'].iloc[0]),             # noqa: E501
-            #                               dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'car_laser_projection']['kp_raw'].iloc[0]),      # noqa: E501
-            #                               dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'unprotected_cycling_path']['kp_raw'].iloc[0]),  # noqa: E501
-            #                               dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'no_road_markings']['kp_raw'].iloc[0])],         # noqa: E501
-            #                   'label': 'anova'}]
+            anova_signals = [{'signals': [dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),                   # keypress data  # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'bike_laser_projection']['kp_raw'].iloc[0]),     # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'vertical_sign']['kp_raw'].iloc[0]),             # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'road_markings']['kp_raw'].iloc[0]),             # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'car_laser_projection']['kp_raw'].iloc[0]),      # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'unprotected_cycling_path']['kp_raw'].iloc[0]),  # noqa: E501
+                                          dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'no_road_markings']['kp_raw'].iloc[0])],         # noqa: E501
+                              'label': 'anova'}]
             # plot keypress data
             analysis.plot_kp_variable(mapping,
                                       'interaction',
@@ -343,7 +331,7 @@ if __name__ == "__main__":
                                       ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_annotations_font_size=18,
                                       ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      anova_signals=None,
+                                      anova_signals=anova_signals,
                                       anova_marker='cross',
                                       anova_marker_size=3,
                                       anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
