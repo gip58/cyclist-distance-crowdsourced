@@ -2126,7 +2126,7 @@ class Analysis:
                               ttest_annotations_colour='black', anova_signals=None, anova_marker='cross',
                               anova_marker_size=3, anova_marker_colour='black', anova_annotations_font_size=10,
                               anova_annotations_colour='black', ttest_anova_row_height=0.5, yaxis_step=10,
-                              y_legend_bar=None):
+                              y_legend_bar=None, line_width=1):
         """Plot keypresses with multiple variables as a filter and slider questions for the stimuli.
 
         Args:
@@ -2177,6 +2177,7 @@ class Analysis:
             ttest_anova_row_height (int, optional): height of row of ttest/anova markers.
             yaxis_step (int): step between ticks on y axis.
             y_legend_bar (list, optional): names for variables for bar data to be shown in the legend.
+            line_width (int): width of the keypress line.
         """
         logger.info('Creating figure keypress and slider data for {}.', df.index.tolist())
         # calculate times
@@ -2215,6 +2216,7 @@ class Analysis:
             fig.add_trace(go.Scatter(y=values,
                                      mode='lines',
                                      x=times,
+                                     line=dict(width=line_width),
                                      name=name),
                           row=1,
                           col=1)
@@ -2357,7 +2359,7 @@ class Analysis:
                          ttest_annotations_font_size=10, ttest_annotations_colour='black', anova_signals=None,
                          anova_marker='cross', anova_marker_size=3, anova_marker_colour='black',
                          anova_annotations_font_size=10, anova_annotations_colour='black', ttest_anova_row_height=0.5,
-                         yaxis_step=10, xaxis_step=5):
+                         yaxis_step=10, xaxis_step=5, line_width=1):
         """Plot figures of values of a certain variable.
 
         Args:
@@ -2401,6 +2403,7 @@ class Analysis:
             anova_annotations_colour (str, optional): colour of annotations for ANOVA.
             ttest_anova_row_height (int, optional): height of row of ttest/anova markers.
             yaxis_step (int): step between ticks on y axis.
+            line_width (int): width of the keypress line.
         """
         logger.info('Creating visualisation of keypresses based on values {} of variable {}.', values, variable)
         # calculate times
@@ -2454,6 +2457,7 @@ class Analysis:
             fig.add_trace(go.Scatter(y=extracted_data[data]['data'],
                                      mode='lines',
                                      x=times,
+                                     line=dict(width=line_width),
                                      name=name),
                           row=1,
                           col=1)
@@ -3389,8 +3393,8 @@ class Analysis:
                                   col=1)
                     # add label with signals that are compared
                     fig.add_annotation(text=signals['label'],
-                                       # put labels at the start of the x axis, as they are likely no significant effects
-                                       # in the start of the trial
+                                       # put labels at the start of the x axis, as they are likely no significant
+                                       # effects in the start of the trial
                                        x=0.2,
                                        # draw in the negative range of y axis
                                        y=-ttest_anova_row_height - counter_ttest * ttest_anova_row_height,
@@ -3438,8 +3442,8 @@ class Analysis:
                                   col=1)
                     # add label with signals that are compared
                     fig.add_annotation(text=signals['label'],
-                                       # put labels at the start of the x axis, as they are likely no significant effects
-                                       # in the start of the trial
+                                       # put labels at the start of the x axis, as they are likely no significant
+                                       # effects in the start of the trial
                                        x=0.2,
                                        # draw in the negative range of y axis
                                        y=-ttest_anova_row_height - counter_anova * ttest_anova_row_height,
@@ -3739,27 +3743,6 @@ class Analysis:
         time_bins = np.arange(df[time_column].min(), df[time_column].max() + bin_size, bin_size)
         df['TimeBin'] = pd.cut(df[time_column], bins=time_bins, labels=time_bins[:-1])
         return df
-
-    def perform_ttest(self, df, scenario1, scenario2, bin_size=0.5):
-        """Perform a t-test between two scenarios on overtaking distance."""
-        df = self.bin_data(df, 'Time', bin_size)
-
-        significant_tests = []  # Store only significant p-values
-        
-        for time_bin in df["TimeBin"].unique():
-            data1 = df[(df["Scenario"] == scenario1) & (df["TimeBin"] == time_bin)]["Distance"]
-            data2 = df[(df["Scenario"] == scenario2) & (df["TimeBin"] == time_bin)]["Distance"]
-
-            if len(data1) > 2 and len(data2) > 2:  # Ensure enough data points
-                t_stat, p_value = ttest_ind(data1, data2, equal_var=False)
-                if p_value < 0.05:  # Only store significant results
-                    significant_tests.append(p_value)
-
-        # Return the most significant result (smallest p-value)
-        if significant_tests:
-            return scenario2, min(significant_tests)  
-
-        return None  # No significant results 
 
     def mean_speed(self, df, save_file=False, save_final=False):
         # Load global font settings from the config file

@@ -394,3 +394,13 @@ class Appen:
                     df['time'].median() / 60,
                     df['time'].std() / 60)
         logger.info('Oldest timestamp={}, newest timestamp={}.', df['start'].min(), df['start'].max())
+        # info on age of obtaining license
+        logger.info('Age of obtaining license: mean={:,.2f} years, median={:,.2f} years, std={:,.2f} years.',
+                    df['year_license'].mean(),
+                    df['year_license'].median(),
+                    df['year_license'].std())
+        # info on age of obtaining license
+        logger.info('Average EU overtaking distance: mean={:,.2f} m, median={:,.2f} m, std={:,.2f} m.',
+                    df['cycling_overtake_m'].mean(),
+                    df['cycling_overtake_m'].median(),
+                    df['cycling_overtake_m'].std())

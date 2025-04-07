@@ -154,7 +154,7 @@ if __name__ == "__main__":
                 anova_signals = [{'signals': [df.loc['0.8 m']['kp_raw'][0],  # keypress data
                                               df.loc['1.6 m']['kp_raw'][0],
                                               df.loc['2.4 m']['kp_raw'][0]],
-                                  'label': 'anova'}]
+                                  'label': 'ANOVA'}]
                 # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(df,
                                                y=['Perceived space', 'Estimation (m)'],
@@ -226,7 +226,7 @@ if __name__ == "__main__":
             anova_signals = [{'signals': [dc.common.vertical_sum(mapping.loc[mapping['distance'] == 0.8]['kp_raw'].iloc[0]),   # keypress data  # noqa: E501
                                           dc.common.vertical_sum(mapping.loc[mapping['distance'] == 1.6]['kp_raw'].iloc[0]),   # noqa: E501
                                           dc.common.vertical_sum(mapping.loc[mapping['distance'] == 2.4]['kp_raw'].iloc[0])],  # noqa: E501
-                              'label': 'anova'}]
+                              'label': 'ANOVA'}]
             # plot keypress data
             analysis.plot_kp_variable(mapping,
                                       'distance',
@@ -297,7 +297,7 @@ if __name__ == "__main__":
                                           dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'car_laser_projection']['kp_raw'].iloc[0]),      # noqa: E501
                                           dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'unprotected_cycling_path']['kp_raw'].iloc[0]),  # noqa: E501
                                           dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'no_road_markings']['kp_raw'].iloc[0])],         # noqa: E501
-                              'label': 'anova'}]
+                              'label': 'ANOVA'}]
             # plot keypress data
             analysis.plot_kp_variable(mapping,
                                       'interaction',
