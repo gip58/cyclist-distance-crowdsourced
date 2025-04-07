@@ -39,7 +39,7 @@ SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
 SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
 SHOW_OUTPUT_PP = False  # should figures with info about participants
 SHOW_OUTPUT_ET = False  # should figures for eye tracking
-SHOW_OUTPUT_SM = False  # should figures for simulator data
+SHOW_OUTPUT_SM = True  # should figures for simulator data
 
 
 if __name__ == "__main__":
@@ -103,7 +103,7 @@ if __name__ == "__main__":
         mapping = heroku.process_stimulus_questions(questions)
         # rename columns with responses to post-stimulus questions to meaningful names
         mapping = mapping.rename(columns={'slider-0': 'Perceived space',
-                                          'slider-1': 'Estimation (m)'})
+                                          'slider-1': 'Estimated overtaking distance (m)'})
         # export to pickle
         dc.common.save_to_p('mapping.p', mapping, 'mapping of stimuli')
     else:
@@ -158,7 +158,7 @@ if __name__ == "__main__":
                                   'label': 'ANOVA'}]
                 # plot keypress data and slider questions
                 analysis.plot_kp_slider_videos(df,
-                                               y=['Perceived space', 'Estimation (m)'],
+                                               y=['Perceived space', 'Estimated overtaking distance (m)'],
                                                # hardcode based on the longest stimulus
                                                xaxis_kp_range=[0, 20],
                                                # hardcode based on the highest recorded value
@@ -170,13 +170,14 @@ if __name__ == "__main__":
                                                events_width=1,
                                                events_dash='dot',
                                                events_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                               events_annotations_font_size=18,
+                                               events_annotations_font_size=dc.common.get_configs('font_size'),
                                                events_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                yaxis_slider_title=None,
                                                show_text_labels=True,
                                                stacked=False,
                                                yaxis_slider_show=False,
-                                               font_size=18,
+                                               font_size=dc.common.get_configs('font_size'),
+                                               bar_font_size=dc.common.get_configs('font_size') - 4,
                                                y_legend_kp=['0.8 m', '1.6 m', '2.4 m'],
                                                legend_x=0.01,
                                                legend_y=1.0,
@@ -186,13 +187,13 @@ if __name__ == "__main__":
                                                ttest_marker='circle',
                                                ttest_marker_size=4,
                                                ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                               ttest_annotations_font_size=18,
+                                               ttest_annotations_font_size=dc.common.get_configs('font_size'),
                                                ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                anova_signals=anova_signals,
                                                anova_marker='cross',
                                                anova_marker_size=4,
                                                anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                               anova_annotations_font_size=18,
+                                               anova_annotations_font_size=dc.common.get_configs('font_size'),
                                                anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                ttest_anova_row_height=0.8,
                                                name_file='kp_videos_sliders_'+','.join([str(i) for i in ids]),
@@ -236,7 +237,7 @@ if __name__ == "__main__":
                                       'distance',
                                       # custom labels for slider questions in the legend
                                       y_legend=['0.8 m', '1.6 m', '2.4 m'],
-                                      font_size=18,
+                                      font_size=dc.common.get_configs('font_size'),
                                       legend_x=0.01,
                                       legend_y=1.0,
                                       show_menu=False,
@@ -252,19 +253,19 @@ if __name__ == "__main__":
                                       events_width=1,
                                       events_dash='dot',
                                       events_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      events_annotations_font_size=18,
+                                      events_annotations_font_size=dc.common.get_configs('font_size'),
                                       events_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_signals=ttest_signals,
                                       ttest_marker='circle',
                                       ttest_marker_size=4,
                                       ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      ttest_annotations_font_size=18,
+                                      ttest_annotations_font_size=dc.common.get_configs('font_size'),
                                       ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       anova_signals=anova_signals,
                                       anova_marker='cross',
                                       anova_marker_size=4,
                                       anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      anova_annotations_font_size=18,
+                                      anova_annotations_font_size=dc.common.get_configs('font_size'),
                                       anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_anova_row_height=0.8,
                                       save_file=True,
@@ -315,7 +316,7 @@ if __name__ == "__main__":
                                                 'Centre line and side-line markings',
                                                 'Unprotected cycling path',
                                                 'No road markings'],
-                                      font_size=18,
+                                      font_size=dc.common.get_configs('font_size'),
                                       legend_x=0.01,
                                       legend_y=1.0,
                                       show_menu=False,
@@ -331,19 +332,19 @@ if __name__ == "__main__":
                                       events_width=1,
                                       events_dash='dot',
                                       events_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      events_annotations_font_size=18,
+                                      events_annotations_font_size=dc.common.get_configs('font_size'),
                                       events_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_signals=ttest_signals,
                                       ttest_marker='circle',
                                       ttest_marker_size=4,
                                       ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      ttest_annotations_font_size=18,
+                                      ttest_annotations_font_size=dc.common.get_configs('font_size'),
                                       ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       anova_signals=anova_signals,
                                       anova_marker='cross',
                                       anova_marker_size=4,
                                       anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      anova_annotations_font_size=18,
+                                      anova_annotations_font_size=dc.common.get_configs('font_size'),
                                       anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_anova_row_height=0.8,
                                       save_file=True,
@@ -352,7 +353,7 @@ if __name__ == "__main__":
         if SHOW_OUTPUT_ST:
             # post stimulus questions for all stimuli
             analysis.bar(mapping,
-                         y=['Perceived space', 'Estimation (m)'],
+                         y=['Perceived space', 'Estimated overtaking distance (m)'],
                          stacked=False,
                          show_text_labels=True,
                          pretty_text=True,

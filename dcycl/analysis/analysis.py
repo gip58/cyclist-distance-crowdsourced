@@ -2123,11 +2123,11 @@ class Analysis:
                               yaxis_ticklabels_slider_show=False, name_file='kp_videos_sliders', save_file=False,
                               save_final=False, fig_save_width=1320, fig_save_height=680, legend_x=0.7, legend_y=0.95,
                               font_family=None, font_size=None, ttest_signals=None, ttest_marker='circle',
-                              ttest_marker_size=3,  ttest_marker_colour='black', ttest_annotations_font_size=10,
+                              ttest_marker_size=3, ttest_marker_colour='black', ttest_annotations_font_size=10,
                               ttest_annotations_colour='black', anova_signals=None, anova_marker='cross',
                               anova_marker_size=3, anova_marker_colour='black', anova_annotations_font_size=10,
                               anova_annotations_colour='black', ttest_anova_row_height=0.5, xaxis_step=5,
-                              yaxis_step=5, y_legend_bar=None, line_width=1):
+                              yaxis_step=5, y_legend_bar=None, line_width=1, bar_font_size=None):
         """Plot keypresses with multiple variables as a filter and slider questions for the stimuli.
 
         Args:
@@ -2192,6 +2192,7 @@ class Analysis:
                                      specs=[[{"rowspan": 2}, {}],
                                             [None, {}]],
                                      horizontal_spacing=0.05,
+                                     # vertical_spacing=0.1,
                                      shared_xaxes=False,
                                      shared_yaxes=False)
         # adjust ylim, if ttest results need to be plotted
@@ -2262,13 +2263,21 @@ class Analysis:
             name = y_legend_bar[0]
         else:
             name = y[0]
-        # plot variable
+        # # plot variable
+        # if bar_font_size:
+        #     font_size = bar_font_size
+        # else:
+        #     font_size = font_size
         fig.add_trace(go.Bar(x=x,
                              y=df[y[0]],
                              name=name,
                              orientation=orientation,
                              text=text,
-                             textposition='auto'),
+                             textfont=dict(size=bar_font_size),
+                             textposition='auto',
+                             marker=dict(
+                                color='purple'  # bar color
+                             )),
                       row=1,
                       col=2)
         # plot 2nd variable at bottom
@@ -2287,7 +2296,11 @@ class Analysis:
                              name=name,
                              orientation=orientation,
                              text=text,
-                             textposition='auto'),
+                             textfont=dict(size=bar_font_size),
+                             textposition='auto',
+                             marker=dict(
+                                color='orange'  # bar color
+                             )),
                       row=2,
                       col=2)
         # draw ttest and anova rows
@@ -3583,8 +3596,8 @@ class Analysis:
                 # just draw text label
                 else:
                     fig.add_annotation(text=event['annotation'],
-                                       x=event['start'] + 0.7,
-                                       y=yaxis_range[1] - counter_lines * 2 - 0.1,  # use ylim value and draw lower
+                                       x=event['start'] + 1.1,
+                                       y=yaxis_range[1] - counter_lines * 2 - 0.2,  # use ylim value and draw lower
                                        showarrow=False,
                                        font=dict(size=events_annotations_font_size, color=events_annotations_colour))
                 # increase counter of lines drawn
