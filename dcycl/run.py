@@ -312,7 +312,7 @@ if __name__ == "__main__":
                                       y_legend=['Laser projection',
                                                 'Vertical sign',
                                                 'Road marking',
-                                                'Car projection system',
+                                                'Car projection',
                                                 'Centre line and side-line markings',
                                                 'Unprotected cycling path',
                                                 'No road markings'],
