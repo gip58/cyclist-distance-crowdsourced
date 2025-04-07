@@ -44,13 +44,13 @@ Analysis can be started by running python `cyclist-distance-crowdsourced/dcycl/r
 
 ## Keypress data
 ### All participants
-[![plot_all_all_videos 1](figures/kp_videos.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos.html)
+[![kp_videos](figures/kp_videos.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_videos.html)
 Percentage of participants pressing the response key as a function of elapsed video time for all stimuli for all participants.
 
-[![plot_all_all_videos 2](figures/kp_distance-0.8-1.6-2.4.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_distance-0.8-1.6-2.4)
+[![kp_distance](figures/kp_distance-0.8-1.6-2.4.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_distance-0.8-1.6-2.4)
 Percentage of participants pressing the response key as a function of elapsed video time for all stimuli grouped by distance.
 
-[![plot_all_all_videos 3](figures/kp_interaction-bike_laser_projection-vertical_sign-danish_sign-car_laser_projection-control-unprotected_c.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_interaction-bike_laser_projection-vertical_sign-danish_sign-car_laser_projection-control-unprotected_c.html)
+[![kp_interaction](figures/kp_interaction-bike_laser_projection-vertical_sign-danish_sign-car_laser_projection-control-unprotected_c.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_interaction-bike_laser_projection-vertical_sign-danish_sign-car_laser_projection-control-unprotected_c.html)
 Percentage of participants pressing the response key as a function of elapsed video time for grouped scenarios.
 
 ### Keypress Percentage by Scenario
@@ -76,10 +76,10 @@ Percentage of participants pressing the response key as a function of elapsed vi
 Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 7.
 
 ### Simulator experiment
-[![mean-distance](figures/min_distance.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/min_distance.html)
+[![min_distance](figures/min_distance.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/min_distance.html)
 Mean distance of overtaking in the simulator experiment.
 
-[![mean-distance](figures/mean_speed.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/mean_speed.html)
+[![mean_speed](figures/mean_speed.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/mean_speed.html)
 Mean speed of overtaking in the simulator experiment.
 
 [![preferences](figures/preferences.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/preferences.html)
@@ -89,7 +89,7 @@ Preferences of concepts in simulator experiment.
 Average overtaking distance over time for different scenario.
 
 #### Correlation and scatter matrices
-![correlation matrix](https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/corr_matrix.jpg)  
+![correlation matrix](https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/corr_matrix.jpg)
 Correlation matrix.
 
 [![scatter matrix](figures/scatter_matrix.png)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/scatter_matrix.html)  

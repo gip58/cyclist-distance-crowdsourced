@@ -39,7 +39,7 @@ SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
 SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
 SHOW_OUTPUT_PP = False  # should figures with info about participants
 SHOW_OUTPUT_ET = False  # should figures for eye tracking
-SHOW_OUTPUT_SM = True  # should figures for simulator data
+SHOW_OUTPUT_SM = False  # should figures for simulator data
 
 
 if __name__ == "__main__":
@@ -116,10 +116,11 @@ if __name__ == "__main__":
         # Visualisation of keypress data
         if SHOW_OUTPUT_KP:
             # all keypresses with confidence interval
-            # analysis.plot_kp(mapping,
-            #                  conf_interval=0.95,
-            #                  save_file=True,
-            #                  save_final=dc.common.get_configs('save_figures'))
+            analysis.plot_kp(mapping,
+                             conf_interval=0.95,
+                             save_file=True,
+                             line_width=3,
+                             save_final=dc.common.get_configs('save_figures'))
             # keypresses of groups of stimuli
             logger.info('Creating bar plots of keypress data for groups of stimuli.')
             for stim in tqdm(range(int(num_stimuli/3))):  # tqdm adds progress bar
@@ -162,7 +163,9 @@ if __name__ == "__main__":
                                                xaxis_kp_range=[0, 20],
                                                # hardcode based on the highest recorded value
                                                yaxis_kp_range=[0, 20],
+                                               xaxis_step=2,
                                                yaxis_step=2,
+                                               line_width=3,
                                                events=events,
                                                events_width=1,
                                                events_dash='dot',
@@ -181,17 +184,17 @@ if __name__ == "__main__":
                                                # fig_save_height=1080,  # preserve ratio 225x152
                                                ttest_signals=ttest_signals,
                                                ttest_marker='circle',
-                                               ttest_marker_size=3,
+                                               ttest_marker_size=4,
                                                ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                ttest_annotations_font_size=18,
                                                ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                anova_signals=anova_signals,
                                                anova_marker='cross',
-                                               anova_marker_size=3,
+                                               anova_marker_size=4,
                                                anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                                anova_annotations_font_size=18,
                                                anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                               ttest_anova_row_height=0.6,
+                                               ttest_anova_row_height=0.8,
                                                name_file='kp_videos_sliders_'+','.join([str(i) for i in ids]),
                                                save_file=True,
                                                save_final=dc.common.get_configs('save_figures'))
@@ -207,6 +210,7 @@ if __name__ == "__main__":
                                     show_menu=False,
                                     show_title=False,
                                     save_file=True,
+                                    yaxis_range=[0, 20],
                                     save_final=dc.common.get_configs('save_figures'))
             # keypress based on the type of distance
             # prepare pairs of signals to compare with ttest
@@ -241,7 +245,9 @@ if __name__ == "__main__":
                                       xaxis_range=[0, 20],
                                       # hardcode based on the highest recorded value
                                       yaxis_range=[0, 20],
+                                      xaxis_step=2,
                                       yaxis_step=2,
+                                      line_width=3,
                                       events=events,
                                       events_width=1,
                                       events_dash='dot',
@@ -250,17 +256,17 @@ if __name__ == "__main__":
                                       events_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_signals=ttest_signals,
                                       ttest_marker='circle',
-                                      ttest_marker_size=3,
+                                      ttest_marker_size=4,
                                       ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_annotations_font_size=18,
                                       ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       anova_signals=anova_signals,
                                       anova_marker='cross',
-                                      anova_marker_size=3,
+                                      anova_marker_size=4,
                                       anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       anova_annotations_font_size=18,
                                       anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      ttest_anova_row_height=0.6,
+                                      ttest_anova_row_height=0.8,
                                       save_file=True,
                                       save_final=dc.common.get_configs('save_figures'))
             # keypress based on the type of interaction
@@ -318,7 +324,9 @@ if __name__ == "__main__":
                                       xaxis_range=[0, 20],
                                       # hardcode based on the highest recorded value
                                       yaxis_range=[0, 20],
+                                      xaxis_step=2,
                                       yaxis_step=2,
+                                      line_width=3,
                                       events=events,
                                       events_width=1,
                                       events_dash='dot',
@@ -327,17 +335,17 @@ if __name__ == "__main__":
                                       events_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_signals=ttest_signals,
                                       ttest_marker='circle',
-                                      ttest_marker_size=3,
+                                      ttest_marker_size=4,
                                       ttest_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       ttest_annotations_font_size=18,
                                       ttest_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       anova_signals=anova_signals,
                                       anova_marker='cross',
-                                      anova_marker_size=3,
+                                      anova_marker_size=4,
                                       anova_marker_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
                                       anova_annotations_font_size=18,
                                       anova_annotations_colour='white' if dc.common.get_configs('plotly_template') == 'plotly_dark' else 'black',  # noqa: E501
-                                      ttest_anova_row_height=0.6,
+                                      ttest_anova_row_height=0.8,
                                       save_file=True,
                                       save_final=dc.common.get_configs('save_figures'))
         # Visualisation of stimulus data
@@ -383,7 +391,10 @@ if __name__ == "__main__":
                                  save_file=True,
                                  save_final=dc.common.get_configs('save_figures'))
             # create correlation matrix
-            analysis.scatter_matrix(df, columns_drop=columns_drop, diagonal_visible=False, save_file=True,
+            analysis.scatter_matrix(df,
+                                    columns_drop=columns_drop,
+                                    diagonal_visible=False,
+                                    save_file=True,
                                     save_final=dc.common.get_configs('save_figures'))
             # end questions - sliders
             df = heroku_data

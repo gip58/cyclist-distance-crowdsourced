@@ -614,7 +614,7 @@ class Analysis:
             self.save_fig(self.image, temp_fig, name)
         return self.g
 
-    def corr_matrix(self, df, columns_drop, name_file='corr_matrix.jpg', save_file=False, save_final=False):
+    def corr_matrix(self, df, columns_drop, name_file='corr_matrix', save_file=False, save_final=False):
         """
         Output correlation matrix.
 
@@ -1480,7 +1480,7 @@ class Analysis:
     def plot_kp(self, df, col='kp', conf_interval=None, xaxis_title='Time (s)',
                 yaxis_title='Percentage of trials with response key pressed', xaxis_range=None,
                 yaxis_range=None, name_file='kp', save_file=False, save_final=False, fig_save_width=1320,
-                fig_save_height=680, font_family=None, font_size=None):
+                fig_save_height=680, font_family=None, font_size=None, line_width=1):
         """Plot keypress or distance data.
 
         Args:
@@ -1498,6 +1498,7 @@ class Analysis:
             fig_save_height (int, optional): height of figures to be saved.
             font_family (str, optional): font family to be used across the figure. None = use config value.
             font_size (int, optional): font size to be used across the figure. None = use config value.
+            line_width (int): width of the keypress line.
         """
         logger.info('Creating visualisations of keypresses for all data.')
         # calculate times
@@ -1516,7 +1517,7 @@ class Analysis:
         # create figure
         fig = go.Figure()
         # plot keypresses
-        fig = px.line(y=kp_data, x=times, title='Keypresses for all stimuli')
+        fig = px.line(y=kp_data, x=times)
         # show confidence interval
         if conf_interval:
             # calculate confidence interval
@@ -1527,7 +1528,7 @@ class Analysis:
                                      y=y_upper,
                                      mode='lines',
                                      fillcolor='rgba(0,100,80,0.2)',
-                                     line=dict(color='rgba(255,255,255,0)'),
+                                     line=dict(color='rgba(255,255,255,0)', width=line_width),
                                      hoverinfo="skip",
                                      showlegend=False))
             fig.add_trace(go.Scatter(name='Lower bound',
@@ -2125,8 +2126,8 @@ class Analysis:
                               ttest_marker_size=3,  ttest_marker_colour='black', ttest_annotations_font_size=10,
                               ttest_annotations_colour='black', anova_signals=None, anova_marker='cross',
                               anova_marker_size=3, anova_marker_colour='black', anova_annotations_font_size=10,
-                              anova_annotations_colour='black', ttest_anova_row_height=0.5, yaxis_step=10,
-                              y_legend_bar=None, line_width=1):
+                              anova_annotations_colour='black', ttest_anova_row_height=0.5, xaxis_step=5,
+                              yaxis_step=5, y_legend_bar=None, line_width=1):
         """Plot keypresses with multiple variables as a filter and slider questions for the stimuli.
 
         Args:
@@ -2175,6 +2176,7 @@ class Analysis:
             anova_annotations_font_size (int, optional): font size of annotations for ANOVA.
             anova_annotations_colour (str, optional): colour of annotations for ANOVA.
             ttest_anova_row_height (int, optional): height of row of ttest/anova markers.
+            xaxis_step (int): step between ticks on x axis.
             yaxis_step (int): step between ticks on y axis.
             y_legend_bar (list, optional): names for variables for bar data to be shown in the legend.
             line_width (int): width of the keypress line.
@@ -2230,8 +2232,12 @@ class Analysis:
                          events_annotations_font_size=events_annotations_font_size,
                          events_annotations_colour=events_annotations_colour)
         # update axis
-        fig.update_xaxes(title_text=xaxis_kp_title, range=xaxis_kp_range, row=1, col=1)
-        fig.update_yaxes(title_text=yaxis_kp_title, range=yaxis_kp_range, row=1, col=1)
+        # update axis
+        if xaxis_step:
+            fig.update_xaxes(title_text=xaxis_kp_title, range=xaxis_kp_range, dtick=xaxis_step, row=1, col=1)
+        else:
+            fig.update_xaxes(title_text=xaxis_kp_title, range=xaxis_kp_range, row=1, col=1)
+        fig.update_yaxes(title_text=yaxis_kp_title, showgrid=False, range=yaxis_kp_range, row=1, col=1)
         # prettify text
         if pretty_text:
             for variable in y:
@@ -2315,6 +2321,18 @@ class Analysis:
         fig.update_yaxes(showticklabels=yaxis_ticklabels_slider_show, row=2, col=2)
         # update template
         fig.update_layout(template=self.template)
+        # manually add grid lines for non-negative y values only
+        for y in range(0, yaxis_kp_range[1] + 1, yaxis_step):
+            fig.add_shape(type="line",
+                          x0=fig.layout.xaxis.range[0] if fig.layout.xaxis.range else 0,
+                          x1=fig.layout.xaxis.range[1] if fig.layout.xaxis.range else 1,
+                          y0=y,
+                          y1=y,
+                          line=dict(color='#333333' if dc.common.get_configs('plotly_template') == 'plotly_dark' else '#e5ecf6',  # noqa: E501
+                                    width=1),
+                          xref='x',
+                          yref='y',
+                          layer='below')
         # format text labels
         if show_text_labels:
             fig.update_traces(texttemplate='%{text:.2f}')
@@ -2359,7 +2377,7 @@ class Analysis:
                          ttest_annotations_font_size=10, ttest_annotations_colour='black', anova_signals=None,
                          anova_marker='cross', anova_marker_size=3, anova_marker_colour='black',
                          anova_annotations_font_size=10, anova_annotations_colour='black', ttest_anova_row_height=0.5,
-                         yaxis_step=10, xaxis_step=5, line_width=1):
+                         xaxis_step=5, yaxis_step=5, line_width=1):
         """Plot figures of values of a certain variable.
 
         Args:
@@ -2402,6 +2420,7 @@ class Analysis:
             anova_annotations_font_size (int, optional): font size of annotations for ANOVA.
             anova_annotations_colour (str, optional): colour of annotations for ANOVA.
             ttest_anova_row_height (int, optional): height of row of ttest/anova markers.
+            xaxis_step (int): step between ticks on x axis.
             yaxis_step (int): step between ticks on y axis.
             line_width (int): width of the keypress line.
         """
@@ -2462,11 +2481,20 @@ class Analysis:
                           row=1,
                           col=1)
         # update layout
-        fig.update_layout(template=self.template,
-                          xaxis_title=xaxis_title,
-                          yaxis_title=yaxis_title,
-                          xaxis_range=xaxis_range,
-                          yaxis_range=yaxis_range)
+        fig.update_layout(template=self.template)
+        # update axis
+        if xaxis_step:
+            fig.update_xaxes(title_text=xaxis_title, range=xaxis_range, dtick=xaxis_step, row=1, col=1)
+        else:
+            fig.update_xaxes(title_text=xaxis_title, range=xaxis_range, row=1, col=1)
+        fig.update_yaxes(
+            title_text=yaxis_title,
+            showgrid=False,  # we're drawing custom grid lines below
+            range=[0, yaxis_range[1]] if yaxis_range else None,
+            dtick=yaxis_step,
+            row=1,
+            col=1
+        )
         # draw events
         self.draw_events(fig=fig,
                          yaxis_range=yaxis_range,
@@ -2517,6 +2545,26 @@ class Analysis:
         # update layout
         if show_title:
             fig['layout']['title'] = 'Keypresses for ' + variable
+        # determine grid color based on theme
+        template = dc.common.get_configs('plotly_template')
+        grid_color = '#333333' if template == 'plotly_dark' else '#ebf0f8'
+
+        # define y range to draw grid lines
+        y_min = 0
+        y_max = yaxis_range[1] if yaxis_range else 100
+
+        for y in range(y_min, y_max + 1, yaxis_step):
+            fig.add_shape(
+                type="line",
+                x0=fig.layout.xaxis.range[0] if fig.layout.xaxis.range else 0,
+                x1=fig.layout.xaxis.range[1] if fig.layout.xaxis.range else 1,
+                y0=y,
+                y1=y,
+                line=dict(color=grid_color, width=1),
+                xref='x',
+                yref='y',
+                layer='below'
+            )
         # update font family
         if font_family:
             # use given value
@@ -3052,7 +3100,7 @@ class Analysis:
         if not os.path.exists(path):
             os.makedirs(path)
         # build path for final figure
-        path_final = os.path.join(dc.settings.output_dir, self.folder_figures)
+        path_final = os.path.join(dc.settings.root_dir, self.folder_figures)
         if save_final and not os.path.exists(path_final):
             os.makedirs(path_final)
         # limit name to max 200 char (for Windows)
@@ -3062,10 +3110,11 @@ class Analysis:
         if remove_margins:
             fig.update_layout(margin=dict(l=2, r=2, t=20, b=12))
         # save file
-        plt.savefig(os.path.join(path, name), bbox_inches='tight', pad_inches=pad_inches)
+        plt.savefig(os.path.join(path, name + '.jpg'), bbox_inches='tight', pad_inches=pad_inches)
         # also save the final figure
         if save_final:
-            plt.savefig(os.path.join(path_final, name), bbox_inches='tight', pad_inches=pad_inches)
+            print("saving")
+            plt.savefig(os.path.join(path_final, name + '.jpg'), bbox_inches='tight', pad_inches=pad_inches)
         # clear figure from memory
         plt.close(fig)
 
@@ -3453,8 +3502,24 @@ class Analysis:
                 # increase counter of lines drawn
                 counter_anova = counter_anova + 1
         # hide ticks of negative values on y axis assuming that ticks are at step of 5
-        r = range(0, fig.layout['yaxis']['range'][1] + 1, yaxis_step)
-        fig.update_layout(yaxis={'tickvals': list(r), 'ticktext': [t if t >= 0 else '' for t in r]})
+        # calculate number of rows below x-axis (from t-test and anova)
+        n_rows = counter_ttest + (counter_anova - counter_ttest if counter_anova > 0 else 0)
+
+        # extend y-axis range downwards if needed
+        min_y = -ttest_anova_row_height * (n_rows + 1)
+        max_y = yaxis_range[1]
+
+        # generate new y-axis ticks from extended min_y to max_y, but hide the negative ones
+        r = range(0, int(max_y) + 1, yaxis_step)
+        tickvals = list(r)
+        ticktext = [str(t) if t >= 0 else '' for t in r]
+
+        # apply updated layout
+        fig.update_layout(yaxis=dict(
+            range=[min_y, max_y],
+            tickvals=tickvals,
+            ticktext=ticktext
+        ))
 
     def draw_events(self, fig, yaxis_range, events, events_width, events_dash, events_colour,
                     events_annotations_font_size, events_annotations_colour):
