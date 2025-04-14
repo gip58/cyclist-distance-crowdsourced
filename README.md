@@ -50,7 +50,7 @@ Percentage of participants pressing the response key as a function of elapsed vi
 [![kp_distance](figures/kp_distance-0.8-1.6-2.4.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_distance-0.8-1.6-2.4)
 Percentage of participants pressing the response key as a function of elapsed video time for all stimuli grouped by distance.
 
-[![kp_interaction](figures/kp_interaction-bike_laser_projection-vertical_sign-danish_sign-car_laser_projection-control-unprotected_c.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_interaction-bike_laser_projection-vertical_sign-danish_sign-car_laser_projection-control-unprotected_c.html)
+[![kp_interaction](figures/kp_interaction-bike_laser_projection-vertical_sign-road_markings-car_laser_projection-control-unprotected_cycling_path-no_road_mark.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/kp_interaction-bike_laser_projection-vertical_sign-road_markings-car_laser_projection-control-unprotected_cycling_path-no_road_mark.html)
 Percentage of participants pressing the response key as a function of elapsed video time for grouped scenarios.
 
 ### Keypress Percentage by Scenario
