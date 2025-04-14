@@ -76,14 +76,14 @@ Percentage of participants pressing the response key as a function of elapsed vi
 Percentage of participants pressing the response key as a function of elapsed video time and responses to post-stimulus questions for scenario 7.
 
 ### Simulator experiment
-[![min_distance](figures/min_distance.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/min_distance.html)
+<!-- [![min_distance](figures/min_distance.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/min_distance.html)
 Mean distance of overtaking in the simulator experiment.
 
 [![mean_speed](figures/mean_speed.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/mean_speed.html)
 Mean speed of overtaking in the simulator experiment.
 
 [![preferences](figures/preferences.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/preferences.html)
-Preferences of concepts in simulator experiment.
+Preferences of concepts in simulator experiment. -->
 
 [![overtaking distance](figures/overtaking_distance.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/overtaking_distance.html)
 Average overtaking distance over time for different scenario.
