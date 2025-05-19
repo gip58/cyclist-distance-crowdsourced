@@ -40,7 +40,7 @@ Configuration of the project needs to be defined in `cyclist-distance-crowdsourc
 The source files of the video stimuli are outputted from Unity to `config.path_source`. To prepare them for the crowdsourced setup `python cyclist-distance-crowdsourced/preparation/process_videos.py`. Videos will be outputted to `config.path_stimuli`.
 
 ## Analysis
-Analysis can be started by running python `cyclist-distance-crowdsourced/dcycl/run.py`. A number of CSV files used for data processing are saved in `cyclist-distance-crowdsourced/_output`. Visualisations of all data are saved in `cyclist-distance-crowdsourced/_output/figures/`.
+Analysis can be started by running python `cyclist-distance-crowdsourced/dcycl/run.py`. A number of CSV files used for data processing are saved in `cyclist-distance-crowdsourced/_output`. Visualisations of all data are saved in `cyclist-distance-crowdsourced/_output/figures`.
 
 ## Keypress data
 ### All participants
@@ -88,7 +88,7 @@ Preferences of concepts in simulator experiment. -->
 [![overtaking distance](figures/overtaking_distance.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/overtaking_distance.html)
 Average overtaking distance over time for different scenario.
 
-#### Correlation and scatter matrices
+## Correlation and scatter matrices
 ![correlation matrix](https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/corr_matrix.jpg)
 Correlation matrix.
 
@@ -103,7 +103,7 @@ Participants end slider responses to which scenario was most helpful.
 [![end-slider 2](figures/hist_end2-slider-0-0.png?raw=true)](https://htmlpreview.github.io/?https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_end2-slider-0-0.html)
 Participants end slider responses experienced to stress. -->
 
-#### Information on participants
+## Information on participants
 [![end-slider 3](figures/hist_driving_freq.png?raw=true)](https://htmlpreview.github.io/?https://github.com/gip58/cyclist-distance-crowdsourced/blob/main/figures/hist_driving_freq.html)
 Participants driving experiences.
 
