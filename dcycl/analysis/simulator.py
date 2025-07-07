@@ -1,10 +1,10 @@
 import os
 import pandas as pd
-import logging
 import dcycl as dc
 
 dc.logs(show_level="info", show_color=True)
 logger = dc.CustomLogger(__name__)  # use custom logger
+
 
 class Simulator(object):
     """Working with data from simulator."""
@@ -16,14 +16,14 @@ class Simulator(object):
         2: "Vertical signage",
         3: "Road markings",
         4: "Car projection system",
-        5: "Center line and side-line markings",
+        5: "Centre line and side-line markings",
         6: "Unprotected cycling path",
         7: "No road markings",
         "Scenario_1": "Laser projection",
         "Scenario_2": "Vertical signage",
         "Scenario_3": "Road markings",
         "Scenario_4": "Car projection system",
-        "Scenario_5": "Center line and side-line markings",
+        "Scenario_5": "Centre line and side-line markings",
         "Scenario_6": "Unprotected cycling path",
         "Scenario_7": "No road markings",
     }
@@ -82,14 +82,10 @@ class Simulator(object):
         pass
 
     def get_preferences(self):
-        raw_data_file = os.path.join(self.files_simulator, "simulator_questionnaire_after.csv")
+        raw_data_file = os.path.join(self.files_simulator, "simulator_questionnaire_results.csv")
         df = pd.read_csv(raw_data_file)
         preferred_col = "Which of the seven scenarios, featuring various technologies such as road markings or laser projections, was most helpful in accurately determining the distance between the car and the cyclist?"
         counts = df[preferred_col].value_counts()
         logger.info("Preference counts per scenario:")
         for scenario, count in counts.items():
-                logger.info(f"{scenario}: {count}")
-
-
-        # compute sums for preferences
-        
+            logger.info(f"{scenario}: {count}")

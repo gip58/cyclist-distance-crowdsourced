@@ -3618,7 +3618,7 @@ class Analysis:
             "Scenario 2": "Vertical signage",
             "Scenario 3": "Road markings",
             "Scenario 4": "Car projection system",
-            "Scenario 5": "Center line and side-line markings",
+            "Scenario 5": "Centre line and side-line markings",
             "Scenario 6": "Unprotected cycle path",
             "Scenario 7": "No road markings"
         }
@@ -3652,7 +3652,7 @@ class Analysis:
             "Vertical signage",
             "Road markings",
             "Car projection system",
-            "Center line and side-line markings",  # Control scenario (S5)
+            "Centre line and side-line markings",  # Control scenario (S5)
             "Unprotected cycle path",
             "No road markings"
         ]
@@ -3663,13 +3663,13 @@ class Analysis:
             "Vertical signage": "S2",
             "Road markings": "S3",
             "Car projection system": "S4",
-            "Center line and side-line markings": "S5",  # Control scenario
+            "Centre line and side-line markings": "S5",  # Control scenario
             "Unprotected cycle path": "S6",
             "No road markings": "S7"
         }
 
         # Define control scenario for statistical comparison
-        control_scenario = "Center line and side-line markings"
+        control_scenario = "Centre line and side-line markings"
 
         # Compute t-tests between control scenario and other scenarios
         ttest_results = []
@@ -3695,7 +3695,7 @@ class Analysis:
             "Vertical signage": "#EF553B",
             "Road markings": "#00CC96",
             "Car projection system": "#AB63FA",
-            "Center line and side-line markings": "#FFA15A",
+            "Centre line and side-line markings": "#FFA15A",
             "Unprotected cycle path": "#19D3F3",
             "No road markings": "#FF6692",
         }

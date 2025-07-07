@@ -274,27 +274,27 @@ if __name__ == "__main__":
             # prepare pairs of signals to compare with ttest
             ttest_signals = [{'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Bike laser projection  # noqa: E501
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'bike_laser_projection']['kp_raw'].iloc[0]),  # noqa: E501
-                              'label': 'ttest(Control, Bike laser projection)',
+                              'label': 'ttest(Centre line and side-line markings, Bike laser projection)',
                               'paired': True},
                              {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Vertical sign  # noqa: E501
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'vertical_sign']['kp_raw'].iloc[0]),  # noqa: E501
-                              'label': 'ttest(Control, Vertical sign)',
+                              'label': 'ttest(Centre line and side-line markings, Vertical sign)',
                               'paired': True},
                              {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Danish sign  # noqa: E501
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'road_markings']['kp_raw'].iloc[0]),  # noqa: E501
-                              'label': 'ttest(Control, Road markings)',
+                              'label': 'ttest(Centre line and side-line markings, Road markings)',
                               'paired': True},
                              {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Car laser projection  # noqa: E501
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'car_laser_projection']['kp_raw'].iloc[0]),  # noqa: E501
-                              'label': 'ttest(Control, Car laser projection)',
+                              'label': 'ttest(Centre line and side-line markings, Car laser projection)',
                               'paired': True},
                              {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs Unprotected cycling path  # noqa: E501
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'unprotected_cycling_path']['kp_raw'].iloc[0]),  # noqa: E501
-                              'label': 'ttest(Control, Unprotected cycling path)',
+                              'label': 'ttest(Centre line and side-line markings, Unprotected cycling path)',
                               'paired': True},
                              {'signal_1': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),  # Control vs No road markings  # noqa: E501
                               'signal_2': dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'no_road_markings']['kp_raw'].iloc[0]),  # noqa: E501
-                              'label': 'ttest(Control, No road markings)',
+                              'label': 'ttest(Centre line and side-line markings, No road markings)',
                               'paired': True}]
             # prepare signals to compare with oneway ANOVA on the res level
             anova_signals = [{'signals': [dc.common.vertical_sum(mapping.loc[mapping['interaction'] == 'control']['kp_raw'].iloc[0]),                   # keypress data  # noqa: E501
