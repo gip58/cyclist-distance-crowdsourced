@@ -36,8 +36,8 @@ CALC_COORDS = False  # extract points from heroku data
 UPDATE_MAPPING = False  # update mapping with keypress data
 SHOW_OUTPUT = True  # should figures be plotted
 SHOW_OUTPUT_KP = True  # should figures with keypress data be plotted-
-SHOW_OUTPUT_ST = False  # should figures with stimulus data to be plotted
-SHOW_OUTPUT_PP = False  # should figures with info about participants
+SHOW_OUTPUT_ST = True  # should figures with stimulus data to be plotted
+SHOW_OUTPUT_PP = True  # should figures with info about participants
 SHOW_OUTPUT_ET = False  # should figures for eye tracking
 SHOW_OUTPUT_SM = True  # should figures for simulator data
 

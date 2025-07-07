@@ -3874,7 +3874,7 @@ class Analysis:
                 y=mean,
                 text=f"{mean:.2f}",  # Format to 2 decimal places
                 showarrow=False,
-                font=dict(size=12, color="black"),
+                font=dict(size=dc.common.get_configs("font_size"), family=dc.common.get_configs("font_family"), color="black"),
                 yshift=10  # Adjust position above the box
             )
 
@@ -3927,13 +3927,6 @@ class Analysis:
             template=self.template,
         )
 
-        fig.update_layout(
-            font=dict(
-                family=dc.common.get_configs("font_family"),
-                size=dc.common.get_configs("font_size")
-            )
-        )
-
         # Legend position handling
         legend_positions = {
             "top-left": dict(x=0, y=1, xanchor="left", yanchor="top"),
@@ -3949,7 +3942,15 @@ class Analysis:
 
         legend_layout = legend_positions.get(legend_position, legend_positions["right"])
         legend_layout.update(bgcolor='rgba(0,0,0,0)')  # transparent background
+        fig.update_layout(legend=dict(title=''))  # remove title
         fig.update_layout(legend=legend_layout)
+
+        fig.update_layout(
+            font=dict(
+                family=dc.common.get_configs("font_family"),
+                size=dc.common.get_configs("font_size")
+            )
+        )
 
         # Save file or show plot
         if save_file:
